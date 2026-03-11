@@ -1,0 +1,6 @@
+[gd_resource type="AbilitySystemCueAnimation" format=3]
+
+[resource]
+cue_tag = &"cue.animation.idle"
+animation_name = "idle"
+event_type = 1

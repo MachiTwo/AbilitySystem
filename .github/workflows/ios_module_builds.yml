@@ -1,0 +1,117 @@
+name: 🍏 iOS Module
+
+on:
+
+  workflow_call:
+    inputs:
+      target:
+        required: true
+        type: string
+      arch:
+        required: true
+        type: string
+      zyris_version:
+        required: true
+        type: string
+      plugin_version:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: 🏗️ Module Build (iOS, ${{ inputs.target }}, ${{ inputs.arch }})
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Ability System
+        uses: actions/checkout@v4.2.2
+        with:
+          submodules: true
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Checkout ZyrisEngine (no-ability-system)
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ env.ZYRIS_REPO }}
+          ref: ${{ env.ZYRIS_BRANCH }}
+          path: zyris
+
+      - name: Move Ability System to modules
+        shell: bash
+        run: mv src zyris/modules/${{ env.MODULE_NAME }}
+
+      - name: Set up macOS toolchain
+        run: xcode-select -p
+
+      - name: Setup Python and SCons
+        uses: ./.github/actions/zyris-deps
+
+      - name: Restore .scons_cache
+        uses: ./.github/actions/zyris-cache-restore
+        with:
+          scons-cache: ${{ github.workspace }}/.scons-cache
+          cache-name: ios_${{ inputs.arch }}_${{ inputs.target }}_engine-${{ env.ZYRIS_VER }}
+
+      - name: Setup Vulkan SDK
+        id: vulkan-sdk
+        working-directory: zyris
+        shell: bash
+        run: |
+          if sh misc/scripts/install_vulkan_sdk_macos.sh; then
+            echo "VULKAN_ENABLED=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::iOS: Vulkan SDK installation failed, building without Vulkan support."
+            echo "VULKAN_ENABLED=no" >> "$GITHUB_OUTPUT"
+          fi
+        continue-on-error: true
+
+      - name: Build Zyris (iOS Target)
+        working-directory: zyris
+        shell: bash
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons-cache/
+        run: |
+          VULKAN_ARG="vulkan=${{ steps.vulkan-sdk.outputs.VULKAN_ENABLED }}"
+          scons platform=ios target=${{ inputs.target }} arch=${{ inputs.arch }} precision=single -j2 $VULKAN_ARG
+
+      - name: Save .scons_cache
+        uses: ./.github/actions/zyris-cache-save
+        with:
+          scons-cache: ${{ github.workspace }}/.scons-cache
+          cache-name: ios_${{ inputs.arch }}_${{ inputs.target }}_engine-${{ env.ZYRIS_VER }}
+
+      - name: Prepare Artifact
+        shell: bash
+        run: |
+          cd zyris/bin/
+
+          # Clean versions
+          PLUGIN_VER=$(echo "${{ inputs.plugin_version }}" | tr '-' '.')
+          ZYRIS_VER=$(echo "${{ inputs.zyris_version }}" | tr '-' '.')
+
+          # iOS is standard for now
+          MODULE_PART="standard."
+
+          # Final name
+          FINAL_NAME="${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.ios.${{ inputs.arch }}.zip"
+
+          # Use find for robust binary discovery
+          BINARY_PATH=$(find . -maxdepth 1 -name "*ios*" -not -path '*/.*' | head -n 1)
+          if [ -n "$BINARY_PATH" ]; then
+            zip -j ../../out/$FINAL_NAME "$BINARY_PATH"
+          else
+            echo "::error::Binary not found for zipping"
+            ls -F
+            exit 1
+          fi
+          echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.ios.${{ inputs.arch }}" >> $GITHUB_ENV
+          echo "file_name=$FINAL_NAME" >> $GITHUB_ENV
+
+      - name: Upload Zyris Binary (with Module)
+        uses: actions/upload-artifact@v4.6.1
+        with:
+          name: ${{ env.artifact_name }}
+          path: out/${{ env.file_name }}

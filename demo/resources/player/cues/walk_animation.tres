@@ -1,0 +1,6 @@
+[gd_resource type="AbilitySystemCueAnimation" format=3]
+
+[resource]
+cue_tag = &"cue.animation.walk"
+animation_name = "walk"
+event_type = 1

@@ -1,0 +1,276 @@
+/**************************************************************************/
+/*  ability_system_attribute_set.cpp                                      */
+/**************************************************************************/
+/*                         This file is part of:                          */
+/*                             GODOT ENGINE                               */
+/*                        https://godotengine.org                         */
+/**************************************************************************/
+/* Copyright (c) 2014-present Godot Engine contributors (see AUTHORS.md). */
+/* Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.                  */
+/*                                                                        */
+/* Permission is hereby granted, free of charge, to any person obtaining  */
+/* a copy of this software and associated documentation files (the        */
+/* "Software"), to deal in the Software without restriction, including    */
+/* without limitation the rights to use, copy, modify, merge, publish,    */
+/* distribute, sublicense, and/or sell copies of the Software, and to     */
+/* permit persons to whom the Software is furnished to do so, subject to  */
+/* the following conditions:                                              */
+/*                                                                        */
+/* The above copyright notice and this permission notice shall be         */
+/* included in all copies or substantial portions of the Software.        */
+/*                                                                        */
+/* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,        */
+/* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF     */
+/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. */
+/* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY   */
+/* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,   */
+/* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE      */
+/* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
+/**************************************************************************/
+
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+#include "src/resources/ability_system_attribute_set.h"
+#include "src/core/ability_system.h"
+#include "src/resources/ability_system_attribute.h"
+#else
+#include "modules/ability_system/core/ability_system.h"
+#include "modules/ability_system/resources/ability_system_attribute.h"
+#include "modules/ability_system/resources/ability_system_attribute_set.h"
+#endif
+
+namespace godot {
+
+void AbilitySystemAttributeSet::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("set_attribute_definitions", "definitions"), &AbilitySystemAttributeSet::set_attribute_definitions);
+	ClassDB::bind_method(D_METHOD("get_attribute_definitions"), &AbilitySystemAttributeSet::get_attribute_definitions);
+	ClassDB::bind_method(D_METHOD("add_attribute_definition", "attribute"), &AbilitySystemAttributeSet::add_attribute_definition);
+	ClassDB::bind_method(D_METHOD("remove_attribute_definition", "name"), &AbilitySystemAttributeSet::remove_attribute_definition);
+	ClassDB::bind_method(D_METHOD("get_attribute_definition", "name"), &AbilitySystemAttributeSet::get_attribute_definition);
+
+	ClassDB::bind_method(D_METHOD("set_unlocked_abilities", "abilities"), &AbilitySystemAttributeSet::set_unlocked_abilities);
+	ClassDB::bind_method(D_METHOD("get_unlocked_abilities"), &AbilitySystemAttributeSet::get_unlocked_abilities);
+
+	ClassDB::bind_method(D_METHOD("get_attribute_value", "name"), &AbilitySystemAttributeSet::get_attribute_value);
+	ClassDB::bind_method(D_METHOD("get_attribute_base_value", "name"), &AbilitySystemAttributeSet::get_attribute_base_value);
+	ClassDB::bind_method(D_METHOD("set_attribute_base_value", "name", "value"), &AbilitySystemAttributeSet::set_attribute_base_value);
+	ClassDB::bind_method(D_METHOD("has_attribute", "name"), &AbilitySystemAttributeSet::has_attribute);
+	ClassDB::bind_method(D_METHOD("get_attribute_list"), &AbilitySystemAttributeSet::get_attribute_list);
+
+	ClassDB::bind_method(D_METHOD("add_modifier", "name", "value", "type"), &AbilitySystemAttributeSet::add_modifier, DEFVAL(MODIFIER_ADD));
+	ClassDB::bind_method(D_METHOD("remove_modifier", "name", "value", "type"), &AbilitySystemAttributeSet::remove_modifier, DEFVAL(MODIFIER_ADD));
+
+	ClassDB::bind_method(D_METHOD("_on_attribute_value_changed", "old_value", "new_value", "name"), &AbilitySystemAttributeSet::_on_attribute_value_changed);
+	ClassDB::bind_method(D_METHOD("_on_attribute_limits_changed", "min_value", "max_value", "name"), &AbilitySystemAttributeSet::_on_attribute_limits_changed);
+
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "attribute_definitions", PROPERTY_HINT_ARRAY_TYPE, "AbilitySystemAttribute"), "set_attribute_definitions", "get_attribute_definitions");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "unlocked_abilities", PROPERTY_HINT_ARRAY_TYPE, "AbilitySystemAbility"), "set_unlocked_abilities", "get_unlocked_abilities");
+
+	ADD_SIGNAL(MethodInfo("attribute_changed", PropertyInfo(Variant::STRING_NAME, "attribute_name"), PropertyInfo(Variant::FLOAT, "old_value"), PropertyInfo(Variant::FLOAT, "new_value")));
+
+	BIND_ENUM_CONSTANT(MODIFIER_ADD);
+	BIND_ENUM_CONSTANT(MODIFIER_MULTIPLY);
+}
+
+void AbilitySystemAttributeSet::add_attribute_definition(Ref<AbilitySystemAttribute> p_attribute) {
+	ERR_FAIL_COND(p_attribute.is_null());
+	if (attribute_definitions.find(p_attribute) == -1) {
+		attribute_definitions.push_back(p_attribute);
+		_bind_attribute_signals(p_attribute);
+
+		AttributeValue val;
+		val.base_value = p_attribute->get_base_value();
+		val.current_value = val.base_value;
+		attributes[p_attribute->get_attribute_name()] = val;
+
+		if (AbilitySystem::get_singleton()) {
+			AbilitySystem::get_singleton()->register_tag(p_attribute->get_attribute_name(), AbilitySystem::TAG_TYPE_NAME, get_instance_id());
+		}
+	}
+}
+
+void AbilitySystemAttributeSet::remove_attribute_definition(const StringName &p_name) {
+	for (int i = 0; i < attribute_definitions.size(); i++) {
+		Ref<AbilitySystemAttribute> attr = attribute_definitions[i];
+		if (attr.is_valid() && attr->get_attribute_name() == p_name) {
+			_unbind_attribute_signals(attr);
+			attribute_definitions.remove_at(i);
+			attributes.erase(p_name);
+			return;
+		}
+	}
+}
+
+Ref<AbilitySystemAttribute> AbilitySystemAttributeSet::get_attribute_definition(const StringName &p_name) const {
+	return _find_attribute_by_name(p_name);
+}
+
+void AbilitySystemAttributeSet::set_attribute_definitions(const TypedArray<AbilitySystemAttribute> &p_definitions) {
+	// Cleanup old
+	for (int i = 0; i < attribute_definitions.size(); i++) {
+		Ref<AbilitySystemAttribute> attr = attribute_definitions[i];
+		if (attr.is_valid()) {
+			_unbind_attribute_signals(attr);
+		}
+	}
+
+	attribute_definitions = p_definitions;
+	attributes.clear();
+
+	for (int i = 0; i < attribute_definitions.size(); i++) {
+		Ref<AbilitySystemAttribute> attr = attribute_definitions[i];
+		if (attr.is_valid()) {
+			_bind_attribute_signals(attr);
+			AttributeValue val;
+			val.base_value = attr->get_base_value();
+			val.current_value = val.base_value;
+			attributes[attr->get_attribute_name()] = val;
+
+			if (AbilitySystem::get_singleton()) {
+				AbilitySystem::get_singleton()->register_tag(attr->get_attribute_name(), AbilitySystem::TAG_TYPE_NAME, get_instance_id());
+			}
+		}
+	}
+}
+
+TypedArray<AbilitySystemAttribute> AbilitySystemAttributeSet::get_attribute_definitions() const {
+	return attribute_definitions;
+}
+
+void AbilitySystemAttributeSet::set_attribute_base_value(const StringName &p_name, float p_value) {
+	Ref<AbilitySystemAttribute> attr = _find_attribute_by_name(p_name);
+	if (attr.is_valid()) {
+		attr->set_base_value(p_value); // This will trigger _on_attribute_value_changed
+	}
+}
+
+float AbilitySystemAttributeSet::get_attribute_base_value(const StringName &p_name) const {
+	if (attributes.has(p_name)) {
+		return attributes[p_name].base_value;
+	}
+	return 0.0f;
+}
+
+void AbilitySystemAttributeSet::set_attribute_current_value(const StringName &p_name, float p_value) {
+	if (attributes.has(p_name)) {
+		attributes[p_name].current_value = p_value;
+	}
+}
+
+float AbilitySystemAttributeSet::get_attribute_current_value(const StringName &p_name) const {
+	if (attributes.has(p_name)) {
+		return attributes[p_name].current_value;
+	}
+	return 0.0f;
+}
+
+float AbilitySystemAttributeSet::get_attribute_value(const StringName &p_name) const {
+	return get_attribute_current_value(p_name);
+}
+
+bool AbilitySystemAttributeSet::has_attribute(const StringName &p_name) const {
+	return attributes.has(p_name);
+}
+
+TypedArray<StringName> AbilitySystemAttributeSet::get_attribute_list() const {
+	TypedArray<StringName> res;
+	for (const KeyValue<StringName, AttributeValue> &E : attributes) {
+		res.push_back(E.key);
+	}
+	return res;
+}
+
+void AbilitySystemAttributeSet::reset_current_values() {
+	for (KeyValue<StringName, AttributeValue> &E : attributes) {
+		E.value.current_value = E.value.base_value;
+	}
+}
+
+void AbilitySystemAttributeSet::_on_attribute_value_changed(float p_old_value, float p_new_value, const StringName &p_name) {
+	if (attributes.has(p_name)) {
+		attributes[p_name].base_value = p_new_value;
+		attributes[p_name].current_value += (p_new_value - p_old_value);
+		emit_signal("attribute_changed", p_name, p_old_value, p_new_value);
+	}
+}
+
+void AbilitySystemAttributeSet::_on_attribute_limits_changed(float p_min_value, float p_max_value, const StringName &p_name) {
+	// Limits changes might force a base value clamp
+	Ref<AbilitySystemAttribute> attr = _find_attribute_by_name(p_name);
+	if (attr.is_valid()) {
+		float old_base = attr->get_base_value();
+		float new_base = CLAMP(old_base, p_min_value, p_max_value);
+		if (old_base != new_base) {
+			attr->set_base_value(new_base);
+		}
+	}
+}
+
+Ref<AbilitySystemAttribute> AbilitySystemAttributeSet::_find_attribute_by_name(const StringName &p_name) const {
+	for (int i = 0; i < attribute_definitions.size(); i++) {
+		Ref<AbilitySystemAttribute> attr = attribute_definitions[i];
+		if (attr.is_valid() && attr->get_attribute_name() == p_name) {
+			return attr;
+		}
+	}
+	return Ref<AbilitySystemAttribute>();
+}
+
+void AbilitySystemAttributeSet::_bind_attribute_signals(Ref<AbilitySystemAttribute> p_attribute) {
+	if (p_attribute.is_valid()) {
+		if (!p_attribute->is_connected("value_changed", callable_mp(this, &AbilitySystemAttributeSet::_on_attribute_value_changed))) {
+			p_attribute->connect("value_changed", callable_mp(this, &AbilitySystemAttributeSet::_on_attribute_value_changed).bind(p_attribute->get_attribute_name()));
+		}
+		if (!p_attribute->is_connected("limits_changed", callable_mp(this, &AbilitySystemAttributeSet::_on_attribute_limits_changed))) {
+			p_attribute->connect("limits_changed", callable_mp(this, &AbilitySystemAttributeSet::_on_attribute_limits_changed).bind(p_attribute->get_attribute_name()));
+		}
+	}
+}
+
+void AbilitySystemAttributeSet::_unbind_attribute_signals(Ref<AbilitySystemAttribute> p_attribute) {
+	if (p_attribute.is_valid()) {
+		if (p_attribute->is_connected("value_changed", callable_mp(this, &AbilitySystemAttributeSet::_on_attribute_value_changed))) {
+			p_attribute->disconnect("value_changed", callable_mp(this, &AbilitySystemAttributeSet::_on_attribute_value_changed));
+		}
+		if (p_attribute->is_connected("limits_changed", callable_mp(this, &AbilitySystemAttributeSet::_on_attribute_limits_changed))) {
+			p_attribute->disconnect("limits_changed", callable_mp(this, &AbilitySystemAttributeSet::_on_attribute_limits_changed));
+		}
+	}
+}
+
+void AbilitySystemAttributeSet::add_modifier(const StringName &p_name, float p_value, ModifierType p_type) {
+	if (attributes.has(p_name)) {
+		if (p_type == MODIFIER_ADD) {
+			attributes[p_name].current_value += p_value;
+		} else if (p_type == MODIFIER_MULTIPLY) {
+			attributes[p_name].current_value *= p_value;
+		}
+	}
+}
+
+void AbilitySystemAttributeSet::remove_modifier(const StringName &p_name, float p_value, ModifierType p_type) {
+	if (attributes.has(p_name)) {
+		if (p_type == MODIFIER_ADD) {
+			attributes[p_name].current_value -= p_value;
+		} else if (p_type == MODIFIER_MULTIPLY) {
+			if (p_value != 0) {
+				attributes[p_name].current_value /= p_value;
+			}
+		}
+	}
+}
+
+AbilitySystemAttributeSet::AbilitySystemAttributeSet() {
+}
+
+AbilitySystemAttributeSet::~AbilitySystemAttributeSet() {
+	for (int i = 0; i < attribute_definitions.size(); i++) {
+		Ref<AbilitySystemAttribute> attr = attribute_definitions[i];
+		if (attr.is_valid()) {
+			_unbind_attribute_signals(attr);
+		}
+	}
+	attribute_definitions.clear();
+	attributes.clear();
+}
+
+} // namespace godot

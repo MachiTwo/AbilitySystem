@@ -1,0 +1,9 @@
+[gd_resource type="AbilitySystemEffect" format=3]
+
+[resource]
+duration = 0.0
+modifiers = Array[AbilitySystem.ModifierData]([{
+"attribute_name": &"attack_speed",
+"operation": 0,
+"magnitude": 0.0
+}])

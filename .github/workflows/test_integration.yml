@@ -1,0 +1,80 @@
+name: 🧪 Test Integration (LimboAI Demo)
+
+on:
+  workflow_call:
+    inputs:
+      plugin-version:
+        required: true
+        type: string
+
+jobs:
+  test-integration:
+    name: 🧪 Test Integration (LimboAI Demo)
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Restore GDExtension Cache (Internal)
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-linux-x86_64-single-editor
+          fail-on-cache-miss: true
+
+      - name: Build Demo Environment
+        shell: bash
+        run: |
+          mkdir -p demo/addons
+
+          # Move ability_system (Now from tmp-builds/out/)
+          cp -r tmp-builds/out/addons/${{ env.MODULE_NAME }} demo/addons/ 2>/dev/null || true
+
+          # Download LimboAI
+          URL="https://github.com/${{ env.PROJECT_INTEGRATION_GITHUB }}/releases/download/v${{ env.PROJECT_INTEGRATION_VERSION }}/${{ env.PROJECT_INTEGRATION_PACKAGE_PLUGIN }}"
+          echo "Downloading $URL"
+          wget --tries=5 --waitretry=5 "$URL" -O limboai.zip
+
+          # Unpack LimboAI
+          mkdir -p tmp-limbo
+          unzip limboai.zip -d tmp-limbo
+
+          # Find the LimboAI plugin folder
+          LIMBO_DIR=$(find tmp-limbo -maxdepth 3 -type d -name "${{ env.PROJECT_INTEGRATION_NAME }}" | head -n 1)
+          if [ -n "$LIMBO_DIR" ]; then
+            cp -r "$LIMBO_DIR" demo/addons/
+          else
+            echo "Failed to find LimboAI directory inside the downloaded zip"
+            exit 1
+          fi
+
+      - name: Setup Godot
+        shell: bash
+        run: |
+          GODOT_VERSION="${{ env.GODOT_VERSION_FOR_EXPORT }}"
+          URL="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          BIN_NAME="Godot_v${GODOT_VERSION}_linux.x86_64"
+          wget --tries=5 --waitretry=5 "$URL" -O godot.zip
+          unzip godot.zip
+          chmod +x "$BIN_NAME"
+          echo "GODOT_BIN=$(pwd)/$BIN_NAME" >> $GITHUB_ENV
+
+      - name: Run All Tests (Unit, Integration & Demo)
+        shell: bash
+        run: |
+          echo "Running C++ Unit Tests..."
+          python utility/tests.py unit
+
+          echo "Running C++ Integration Tests..."
+          python utility/tests.py integration
+
+          echo "Running Demo Integration (LimboAI)..."
+          python utility/tests.py demo

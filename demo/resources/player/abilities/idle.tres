@@ -1,0 +1,11 @@
+[gd_resource type="AbilitySystemAbility" format=3 uid="uid://bxb2utfoghi8q"]
+
+[ext_resource type="AbilitySystemCueAnimation" path="res://resources/player/cues/idle_animation.tres" id="1"]
+
+[resource]
+ability_name = "Idle"
+ability_tag = &"ability.skill.idle"
+cues = Array[AbilitySystemCue]([ExtResource("1")])
+activation_owned_tags = Array[StringName]([&"ability.skill.idle"])
+activation_blocked_tags = Array[StringName]([&"state.stunned", &"state.dead"])
+ability_duration_policy = 2

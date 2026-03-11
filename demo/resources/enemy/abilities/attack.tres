@@ -1,0 +1,5 @@
+[gd_resource type="AbilitySystemAbility" format=3]
+
+[resource]
+ability_name = "Enemy Attack"
+ability_tag = &"ability.skill.attack"

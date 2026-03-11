@@ -1,0 +1,49 @@
+[configuration]
+
+entry_symbol = "ability_system_library_init"
+compatibility_minimum = "4.2"
+
+[libraries]
+
+macos.debug = "res://addons/ability_system/bin/libability_system.macos.editor.dylib"
+macos.release = "res://addons/ability_system/bin/libability_system.macos.template_release.dylib"
+
+windows.debug.x86_32 = "res://addons/ability_system/bin/ability_system.windows.editor.x86_32.dll"
+windows.release.x86_32 = "res://addons/ability_system/bin/ability_system.windows.template_release.x86_32.dll"
+windows.debug.x86_64 = "res://addons/ability_system/bin/ability_system.windows.editor.x86_64.dll"
+windows.release.x86_64 = "res://addons/ability_system/bin/ability_system.windows.template_release.x86_64.dll"
+
+linux.debug.x86_64 = "res://addons/ability_system/bin/libability_system.linux.editor.x86_64.so"
+linux.release.x86_64 = "res://addons/ability_system/bin/libability_system.linux.template_release.x86_64.so"
+linux.debug.x86_32 = "res://addons/ability_system/bin/libability_system.linux.editor.x86_32.so"
+linux.release.x86_32 = "res://addons/ability_system/bin/libability_system.linux.template_release.x86_32.so"
+linux.debug.arm64 = "res://addons/ability_system/bin/libability_system.linux.editor.arm64.so"
+linux.release.arm64 = "res://addons/ability_system/bin/libability_system.linux.template_release.arm64.so"
+linux.debug.arm32 = "res://addons/ability_system/bin/libability_system.linux.editor.arm32.so"
+linux.release.arm32 = "res://addons/ability_system/bin/libability_system.linux.template_release.arm32.so"
+
+android.debug.arm64 = "res://addons/ability_system/bin/libability_system.android.editor.arm64.so"
+android.release.arm64 = "res://addons/ability_system/bin/libability_system.android.template_release.arm64.so"
+android.debug.arm32 = "res://addons/ability_system/bin/libability_system.android.editor.arm32.so"
+android.release.arm32 = "res://addons/ability_system/bin/libability_system.android.template_release.arm32.so"
+android.debug.x86_64 = "res://addons/ability_system/bin/libability_system.android.editor.x86_64.so"
+android.release.x86_64 = "res://addons/ability_system/bin/libability_system.android.template_release.x86_64.so"
+android.debug.x86_32 = "res://addons/ability_system/bin/libability_system.android.editor.x86_32.so"
+android.release.x86_32 = "res://addons/ability_system/bin/libability_system.android.template_release.x86_32.so"
+
+ios.debug.arm64 = "res://addons/ability_system/bin/libability_system.ios.editor.arm64.dylib"
+ios.release.arm64 = "res://addons/ability_system/bin/libability_system.ios.template_release.arm64.dylib"
+
+web.debug.wasm32 = "res://addons/ability_system/bin/libability_system.web.editor.wasm32.wasm"
+web.release.wasm32 = "res://addons/ability_system/bin/libability_system.web.template_release.wasm32.wasm"
+
+[icons]
+
+AbilitySystem = "res://addons/ability_system/icons/AbilitySystem.svg"
+AbilitySystemAbility = "res://addons/ability_system/icons/AbilitySystemAbility.svg"
+AbilitySystemAttribute = "res://addons/ability_system/icons/AbilitySystemAttribute.svg"
+AbilitySystemAttributeSet = "res://addons/ability_system/icons/AbilitySystemAttributeSet.svg"
+AbilitySystemComponent = "res://addons/ability_system/icons/AbilitySystemComponent.svg"
+AbilitySystemCue = "res://addons/ability_system/icons/AbilitySystemCue.svg"
+AbilitySystemEffect = "res://addons/ability_system/icons/AbilitySystemEffect.svg"
+AbilitySystemTagSpec = "res://addons/ability_system/icons/AbilitySystemTagContainer.svg"

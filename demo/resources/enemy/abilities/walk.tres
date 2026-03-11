@@ -1,0 +1,7 @@
+[gd_resource type="AbilitySystemAbility" format=3]
+
+[resource]
+ability_name = "Enemy Walk"
+ability_tag = &"ability.skill.walk"
+activation_owned_tags = Array[StringName]([&"ability.skill.walk"])
+activation_blocked_tags = Array[StringName]([&"ability.skill.idle", &"character.state.dead"])

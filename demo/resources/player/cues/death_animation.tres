@@ -1,0 +1,6 @@
+[gd_resource type="AbilitySystemCueAnimation" format=3]
+
+[resource]
+cue_tag = &"cue.animation.death"
+animation_name = "dead"
+event_type = 1

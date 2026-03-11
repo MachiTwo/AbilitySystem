@@ -1,0 +1,74 @@
+name: "Update Doc Classes"
+description: "Runs Zyris doctool to update XML class references and checks for modifications."
+
+inputs:
+  docs_path:
+    description: "The path to the documentation directory"
+    required: false
+    default: "zyris/modules/ability_system/doc_classes"
+
+outputs:
+  docs_modified:
+    description: "True if doctool modified any XML files, false otherwise."
+    value: ${{ steps.run_doctool.outputs.docs_modified }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run Doctool and Check Diffs
+      id: run_doctool
+      shell: bash
+      run: |
+        # Search for any executable binary containing 'linuxbsd.editor'
+        BIN_PATH=$(find zyris/bin -name "*linuxbsd.editor*" -type f -executable | head -n 1)
+        if [ -z "$BIN_PATH" ]; then
+          echo "Error: Zyris/Godot editor executable not found in zyris/bin."
+          ls -R zyris/bin/
+          exit 1
+        fi
+
+        ABS_GODOT_BIN=$(realpath "$BIN_PATH")
+        DOCS_PATH="${{ inputs.docs_path }}"
+
+        # Determine cwd and rel_docs_path dynamically
+        CWD="."
+        REL_DOCS_PATH="$DOCS_PATH"
+
+        if [[ "$DOCS_PATH" == *"zyris/"* ]]; then
+          CWD="zyris"
+          REL_DOCS_PATH=${DOCS_PATH#*zyris/}
+        fi
+
+        echo "Step 1: Running Zyris doctool in $CWD..."
+        cd "$CWD"
+
+        if [ "$CWD" == "zyris" ]; then
+          # Running from inside the engine root helps Zyris correctly target module in-place
+          "$ABS_GODOT_BIN" --doctool . --headless --quit
+        else
+          "$ABS_GODOT_BIN" --doctool "$DOCS_PATH" --headless --quit
+        fi
+
+        echo "Step 2: Checking for modifications in $REL_DOCS_PATH..."
+        STATUS=$(git status --porcelain "$REL_DOCS_PATH")
+
+        if [ -n "$STATUS" ]; then
+          echo "docs_modified=true" >> "$GITHUB_OUTPUT"
+          echo "Documentation has been modified by Zyris's doctool."
+          echo ""
+          echo "--- Documentation Diff ---"
+          git diff --color "$REL_DOCS_PATH" || true
+
+          UNTRACKED=$(git ls-files --others --exclude-standard "$REL_DOCS_PATH")
+          if [ -n "$UNTRACKED" ]; then
+            echo ""
+            echo "--- New Documentation Files ---"
+            echo "$UNTRACKED"
+          fi
+
+          echo ""
+          echo "API changes detected. The CI will automatically commit the updated XMLs."
+        else
+          echo "docs_modified=false" >> "$GITHUB_OUTPUT"
+          echo "No changes detected in documentation."
+        fi

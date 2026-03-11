@@ -1,0 +1,6 @@
+[gd_resource type="AbilitySystemAttribute" format=3]
+
+[resource]
+attribute_name = &"Mana"
+base_value = 0.0
+max_value = 0.0

@@ -1,0 +1,6 @@
+[gd_resource type="AbilitySystemAttribute" format=3]
+
+[resource]
+attribute_name = &"Health"
+base_value = 50.0
+max_value = 50.0

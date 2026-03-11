@@ -1,0 +1,130 @@
+name: 🌐 Web Module
+
+on:
+  workflow_call:
+    inputs:
+      target:
+        required: true
+        type: string
+      arch:
+        required: true
+        type: string
+      zyris_version:
+        required: true
+        type: string
+      plugin_version:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      target:
+        required: true
+        type: string
+        default: "template_release"
+      arch:
+        required: true
+        type: string
+        default: "wasm32"
+      zyris_version:
+        required: true
+        type: string
+        default: "4.2" # Placeholder, adjust as needed
+      plugin_version:
+        required: true
+        type: string
+        default: "0.1" # Placeholder, adjust as needed
+
+jobs:
+  build:
+    name: 🏗️ Module Build (Web, ${{ inputs.target }}, ${{ inputs.arch }})
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Ability System
+        uses: actions/checkout@v4.2.2
+        with:
+          submodules: true
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Checkout ZyrisEngine (no-ability-system)
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ env.ZYRIS_REPO }}
+          ref: ${{ env.ZYRIS_BRANCH }}
+          path: zyris
+
+      - name: Move Ability System to modules
+        shell: bash
+        run: mv src zyris/modules/${{ env.MODULE_NAME }}
+
+      - name: Setup Emscripten
+        uses: mymindstorm/setup-emsdk@v14
+        with:
+          version: ${{ env.EM_VERSION }}
+
+      - name: Set up toolchains
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential scons pkg-config libx11-dev libxcursor-dev \
+            libxi-dev libxinerama-dev libxrandr-dev libgl1-mesa-dev libglu1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev libfontconfig1-dev
+
+      - name: Setup Python and SCons
+        uses: ./.github/actions/zyris-deps
+
+      - name: Restore .scons_cache
+        uses: ./.github/actions/zyris-cache-restore
+        with:
+          scons-cache: ${{ github.workspace }}/.scons-cache
+          cache-name: web_${{ inputs.arch }}_${{ inputs.target }}_engine-${{ env.ZYRIS_VER }}
+
+      - name: Build Zyris (Web Target)
+        working-directory: zyris
+        shell: bash
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons-cache/
+        run: |
+          scons platform=web target=${{ inputs.target }} arch=${{ inputs.arch }} precision=single -j2
+
+      - name: Save .scons_cache
+        uses: ./.github/actions/zyris-cache-save
+        with:
+          scons-cache: ${{ github.workspace }}/.scons-cache
+          cache-name: web_${{ inputs.arch }}_${{ inputs.target }}_engine-${{ env.ZYRIS_VER }}
+
+      - name: Prepare Artifact
+        shell: bash
+        run: |
+          cd zyris/bin/
+
+          # Clean versions
+          PLUGIN_VER=$(echo "${{ inputs.plugin_version }}" | tr '-' '.')
+          ZYRIS_VER=$(echo "${{ inputs.zyris_version }}" | tr '-' '.')
+
+          # Web is standard for now
+          MODULE_PART="standard."
+
+          # Final name
+          FINAL_NAME="${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.web.${{ inputs.arch }}.zip"
+
+          # Web builds generate .js and .wasm files. We package them together.
+          # Use find for robust discovery of compiled web files
+          WEB_FILES=$(find . -maxdepth 1 -name "*.js" -o -name "*.wasm" -not -path '*/.*')
+          if [ -n "$WEB_FILES" ]; then
+            zip -j ../../out/$FINAL_NAME $WEB_FILES
+          else
+            echo "::error::Web binaries (.js, .wasm) not found for zipping"
+            ls -F
+            exit 1
+          fi
+          echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.web.${{ inputs.arch }}" >> $GITHUB_ENV
+          echo "file_name=$FINAL_NAME" >> $GITHUB_ENV
+
+      - name: Upload Zyris Binary (with Module)
+        uses: actions/upload-artifact@v4.6.1
+        with:
+          name: ${{ env.artifact_name }}
+          path: out/${{ env.file_name }}

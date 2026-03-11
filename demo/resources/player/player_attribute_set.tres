@@ -1,0 +1,32 @@
+[gd_resource type="AbilitySystemAttributeSet" format=3 uid="uid://c4iafjh3jgv0j"]
+
+[ext_resource type="AbilitySystemAbility" uid="uid://dkxce2ikcnex7" path="res://resources/player/abilities/attack.tres" id="5"]
+[ext_resource type="AbilitySystemAbility" uid="uid://bxb2utfoghi8q" path="res://resources/player/abilities/idle.tres" id="6"]
+[ext_resource type="AbilitySystemAbility" uid="uid://dgvg6cgi268vn" path="res://resources/player/abilities/walk.tres" id="7"]
+[ext_resource type="AbilitySystemAbility" path="res://resources/player/abilities/death.tres" id="8"]
+[ext_resource type="AbilitySystemAbility" path="res://resources/player/abilities/hurt.tres" id="9"]
+
+[sub_resource type="AbilitySystemAttribute" id="AbilitySystemAttribute_hyrsj"]
+attribute_name = "Health"
+max_value = 200.0
+base_value = 180.0
+
+[sub_resource type="AbilitySystemAttribute" id="AbilitySystemAttribute_utbh5"]
+attribute_name = "Mana"
+max_value = 150.0
+base_value = 150.0
+
+[sub_resource type="AbilitySystemAttribute" id="AbilitySystemAttribute_82yfk"]
+attribute_name = "move_speed"
+min_value = 20.0
+max_value = 500.0
+base_value = 200.0
+
+[sub_resource type="AbilitySystemAttribute" id="AbilitySystemAttribute_ghoen"]
+attribute_name = "attack_speed"
+max_value = 3.0
+base_value = 1.0
+
+[resource]
+attribute_definitions = Array[AbilitySystemAttribute]([SubResource("AbilitySystemAttribute_hyrsj"), SubResource("AbilitySystemAttribute_utbh5"), SubResource("AbilitySystemAttribute_82yfk"), SubResource("AbilitySystemAttribute_ghoen")])
+unlocked_abilities = Array[AbilitySystemAbility]([ExtResource("5"), ExtResource("6"), ExtResource("7"), ExtResource("8"), ExtResource("9")])

@@ -1,0 +1,13 @@
+[gd_resource type="AbilitySystemAttributeSet" format=3]
+
+[ext_resource type="AbilitySystemAttribute" path="res://resources/enemy/attributes/health.tres" id="1"]
+[ext_resource type="AbilitySystemAttribute" path="res://resources/enemy/attributes/mana.tres" id="2"]
+[ext_resource type="AbilitySystemAbility" path="res://resources/enemy/abilities/attack.tres" id="3"]
+[ext_resource type="AbilitySystemAbility" path="res://resources/enemy/abilities/idle.tres" id="4"]
+[ext_resource type="AbilitySystemAbility" path="res://resources/enemy/abilities/walk.tres" id="5"]
+[ext_resource type="AbilitySystemAbility" path="res://resources/enemy/abilities/death.tres" id="6"]
+[ext_resource type="AbilitySystemAbility" path="res://resources/enemy/abilities/hurt.tres" id="7"]
+
+[resource]
+attribute_definitions = [ExtResource("1"), ExtResource("2")]
+unlocked_abilities = [ExtResource("3"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7")]

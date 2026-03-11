@@ -1,0 +1,54 @@
+name: 🚀 Post Release
+
+on:
+  workflow_call:
+    inputs:
+      tag_name:
+        required: true
+        type: string
+      plugin_version:
+        required: true
+        type: string
+      is_release:
+        required: true
+        type: boolean
+
+jobs:
+  delivery:
+    name: 🚀 Final Delivery (GitHub Release)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Download All Artifacts
+        uses: actions/download-artifact@v4.1.9
+        with:
+          path: out/
+          merge-multiple: true
+
+      - name: List Artifacts for Verification
+        shell: bash
+        run: |
+          echo "Files ready for delivery:"
+          ls -R out/
+
+      - name: Create GitHub Release
+        if: inputs.is_release
+        uses: softprops/action-gh-release@v2.2.1
+        with:
+          tag_name: ${{ inputs.tag_name }}
+          name: ${{ env.PROJECT_ID }} v${{ inputs.plugin_version }}
+          body_path: release_note.md
+          draft: false
+          prerelease: false
+          files: |
+            out/*.zip

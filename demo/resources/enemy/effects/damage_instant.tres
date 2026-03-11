@@ -1,0 +1,10 @@
+[gd_resource type="AbilitySystemEffect" format=3]
+
+[resource]
+effect_name = "Instant Damage"
+effect_tag = &"effect.damage"
+duration_policy = 0
+modifiers = 1
+modifiers/0/attribute = &"Health"
+modifiers/0/operation = 0
+modifiers/0/magnitude = -10.0

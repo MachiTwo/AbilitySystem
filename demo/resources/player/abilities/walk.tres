@@ -1,0 +1,11 @@
+[gd_resource type="AbilitySystemAbility" format=3 uid="uid://dgvg6cgi268vn"]
+
+[ext_resource type="AbilitySystemCueAnimation" path="res://resources/player/cues/walk_animation.tres" id="1"]
+
+[resource]
+ability_name = "Walk"
+ability_tag = &"ability.skill.walk"
+cues = Array[AbilitySystemCue]([ExtResource("1")])
+activation_owned_tags = Array[StringName]([&"ability.skill.walk"])
+activation_blocked_tags = Array[StringName]([&"state.stunned", &"state.dead"])
+ability_duration_policy = 2

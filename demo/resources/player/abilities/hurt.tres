@@ -1,0 +1,12 @@
+[gd_resource type="AbilitySystemAbility" format=3]
+
+[ext_resource type="AbilitySystemCueAnimation" path="res://resources/player/cues/hurt_animation.tres" id="1"]
+
+[resource]
+ability_name = "Hurt"
+ability_tag = &"character.state.hurt"
+cues = Array[AbilitySystemCue]([ExtResource("1")])
+ability_duration_policy = 1
+ability_duration = 0.4
+activation_owned_tags = Array[StringName]([&"character.state.hurt"])
+activation_blocked_tags = Array[StringName]([&"character.state.dead"])

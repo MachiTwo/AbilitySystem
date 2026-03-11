@@ -1,0 +1,20 @@
+[gd_resource type="AbilitySystemAbility" format=3 uid="uid://dkxce2ikcnex7"]
+
+[ext_resource type="AbilitySystemCueAnimation" path="res://resources/player/cues/attack_animation.tres" id="1"]
+[ext_resource type="AbilitySystemEffect" path="res://resources/player/effects/damage_instant.tres" id="2"]
+
+[resource]
+ability_name = "Player Attack"
+ability_tag = &"ability.skill.attack"
+activation_owned_tags = Array[StringName]([&"state.attacking"])
+activation_blocked_tags = Array[StringName]([&"cooldown.attack", &"state.stunned", &"state.dead", &"state.attacking"])
+cues = Array[AbilitySystemCue]([ExtResource("1")])
+effect = ExtResource("2")
+ability_duration_policy = 1
+ability_duration = 0.4
+cooldown_duration = 0.5
+cooldown_tags = Array[StringName]([&"cooldown.attack"])
+costs = Array[Dictionary]([{
+"amount": -10.0,
+"attribute": &"Mana"
+}])

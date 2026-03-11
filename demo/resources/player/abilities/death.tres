@@ -1,0 +1,8 @@
+[gd_resource type="AbilitySystemAbility" format=3]
+
+[ext_resource type="AbilitySystemCueAnimation" path="res://resources/player/cues/death_animation.tres" id="1"]
+
+[resource]
+ability_name = "Death"
+ability_tag = &"character.state.dead"
+cues = Array[AbilitySystemCue]([ExtResource("1")])

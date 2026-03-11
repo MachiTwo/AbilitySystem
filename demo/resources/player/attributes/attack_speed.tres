@@ -1,0 +1,6 @@
+[gd_resource type="AbilitySystemAttribute" format=3]
+
+[resource]
+attribute_name = &"attack_speed"
+base_value = 1.0
+max_value = 3.0

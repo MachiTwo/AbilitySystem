@@ -1,0 +1,6 @@
+[gd_resource type="AbilitySystemCueAnimation" format=3]
+
+[resource]
+cue_tag = &"cue.animation.attack"
+animation_name = "attack_1"
+event_type = 1
