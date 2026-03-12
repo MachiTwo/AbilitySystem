@@ -5,7 +5,7 @@ extends CanvasLayer
 func _ready():
 	var player = get_tree().get_first_node_in_group("player")
 	if player:
-		var asc = player.get_node("AbilitySystemComponent")
+		var asc = player.get_node("ASComponent")
 		asc.attribute_changed.connect(_on_player_attribute_changed)
 		# Initialize value
 		_update_health(asc.get_attribute_value_by_tag(&"Health"))

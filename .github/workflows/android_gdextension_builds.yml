@@ -19,7 +19,7 @@ jobs:
       fail-fast: false
       matrix:
         target: [editor, template_release]
-        arch: [arm64, arm32, x86_64, x86_32]
+        arch: [arm64, x86_64]
         float-precision: [single]
 
     steps:
@@ -60,7 +60,7 @@ jobs:
         uses: ./.github/actions/zyris-cache-restore
         with:
           scons-cache: ${{ github.workspace }}/.scons-cache
-          cache-name: gdext_android_${{ matrix.arch }}_${{ matrix.target_engine }}-${{ env.GODOT_VERSION }}
+          cache-name: gdext_android_${{ matrix.arch }}_${{ matrix.target }}-${{ env.GODOT_VERSION }}
 
       - name: Build GDExtension (Android Target)
         shell: bash
@@ -73,7 +73,7 @@ jobs:
         uses: ./.github/actions/zyris-cache-save
         with:
           scons-cache: ${{ github.workspace }}/.scons-cache
-          cache-name: gdext_android_${{ matrix.arch }}_${{ matrix.target_engine }}-${{ env.GODOT_VERSION }}
+          cache-name: gdext_android_${{ matrix.arch }}_${{ matrix.target }}-${{ env.GODOT_VERSION }}
 
       - name: Prepare Plugin Structure
         shell: bash

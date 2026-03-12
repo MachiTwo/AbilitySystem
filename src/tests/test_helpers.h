@@ -33,31 +33,33 @@
 #include "doctest.h"
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-#include "src/core/ability_system_ability_spec.h"
-#include "src/core/ability_system_effect_spec.h"
-#include "src/resources/ability_system_ability.h"
-#include "src/resources/ability_system_ability_container.h"
-#include "src/resources/ability_system_attribute.h"
-#include "src/resources/ability_system_attribute_set.h"
-#include "src/resources/ability_system_effect.h"
-#include "src/scene/ability_system_component.h"
+#include "src/core/as_ability_spec.h"
+#include "src/core/as_effect_spec.h"
+#include "src/resources/as_ability.h"
+#include "src/resources/as_attribute.h"
+#include "src/resources/as_attribute_set.h"
+#include "src/resources/as_container.h"
+#include "src/resources/as_effect.h"
+#include "src/scene/as_component.h"
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #else
 #include "core/object/class_db.h"
-#include "modules/ability_system/core/ability_system_ability_spec.h"
-#include "modules/ability_system/core/ability_system_effect_spec.h"
-#include "modules/ability_system/resources/ability_system_ability.h"
-#include "modules/ability_system/resources/ability_system_ability_container.h"
-#include "modules/ability_system/resources/ability_system_attribute.h"
-#include "modules/ability_system/resources/ability_system_attribute_set.h"
-#include "modules/ability_system/resources/ability_system_effect.h"
-#include "modules/ability_system/scene/ability_system_component.h"
+#include "modules/ability_system/core/as_ability_spec.h"
+#include "modules/ability_system/core/as_effect_spec.h"
+#include "modules/ability_system/resources/as_ability.h"
+#include "modules/ability_system/resources/as_attribute.h"
+#include "modules/ability_system/resources/as_attribute_set.h"
+#include "modules/ability_system/resources/as_container.h"
+#include "modules/ability_system/resources/as_effect.h"
+#include "modules/ability_system/scene/as_component.h"
 #include "scene/main/node.h"
 #endif
 
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
+#endif
 
 /**
  * Helper macros and functions for unit testing the Ability System.
@@ -65,8 +67,8 @@ using namespace godot;
 
 // --- Factory Helpers (Atomic) ---
 
-inline Ref<AbilitySystemAttribute> create_test_attribute(const StringName &p_name, float p_base = 100.0f, float p_min = 0.0f, float p_max = 999.0f) {
-	Ref<AbilitySystemAttribute> attr;
+inline Ref<ASAttribute> create_test_attribute(const StringName &p_name, float p_base = 100.0f, float p_min = 0.0f, float p_max = 999.0f) {
+	Ref<ASAttribute> attr;
 	attr.instantiate();
 	attr->set_attribute_name(p_name);
 	attr->set_base_value(p_base);
@@ -75,8 +77,8 @@ inline Ref<AbilitySystemAttribute> create_test_attribute(const StringName &p_nam
 	return attr;
 }
 
-inline Ref<AbilitySystemEffect> create_test_effect(const StringName &p_name, AbilitySystemEffect::DurationPolicy p_policy = AbilitySystemEffect::POLICY_INSTANT, float p_duration = 0.0f) {
-	Ref<AbilitySystemEffect> effect;
+inline Ref<ASEffect> create_test_effect(const StringName &p_name, ASEffect::DurationPolicy p_policy = ASEffect::POLICY_INSTANT, float p_duration = 0.0f) {
+	Ref<ASEffect> effect;
 	effect.instantiate();
 	effect->set_effect_tag(p_name);
 	effect->set_duration_policy(p_policy);
@@ -84,14 +86,14 @@ inline Ref<AbilitySystemEffect> create_test_effect(const StringName &p_name, Abi
 	return effect;
 }
 
-inline Ref<AbilitySystemEffect> make_instant_effect(const StringName &p_name, const StringName &p_attr, float p_amount) {
-	Ref<AbilitySystemEffect> effect = create_test_effect(p_name, AbilitySystemEffect::POLICY_INSTANT);
-	effect->add_modifier(p_attr, AbilitySystemEffect::OP_ADD, p_amount);
+inline Ref<ASEffect> make_instant_effect(const StringName &p_name, const StringName &p_attr, float p_amount) {
+	Ref<ASEffect> effect = create_test_effect(p_name, ASEffect::POLICY_INSTANT);
+	effect->add_modifier(p_attr, ASEffect::OP_ADD, p_amount);
 	return effect;
 }
 
-inline Ref<AbilitySystemEffect> make_duration_effect(const StringName &p_name, float p_duration, const StringName &p_attr = "", float p_amount = 0.0f, AbilitySystemEffect::ModifierOp p_op = AbilitySystemEffect::OP_ADD, const StringName &p_granted_tag = "") {
-	Ref<AbilitySystemEffect> effect = create_test_effect(p_name, AbilitySystemEffect::POLICY_DURATION, p_duration);
+inline Ref<ASEffect> make_duration_effect(const StringName &p_name, float p_duration, const StringName &p_attr = "", float p_amount = 0.0f, ASEffect::ModifierOp p_op = ASEffect::OP_ADD, const StringName &p_granted_tag = "") {
+	Ref<ASEffect> effect = create_test_effect(p_name, ASEffect::POLICY_DURATION, p_duration);
 	if (p_attr != StringName()) {
 		effect->add_modifier(p_attr, p_op, p_amount);
 	}
@@ -103,18 +105,20 @@ inline Ref<AbilitySystemEffect> make_duration_effect(const StringName &p_name, f
 	return effect;
 }
 
-inline Ref<AbilitySystemAbility> create_test_ability(const StringName &p_name, const StringName &p_tag) {
-	Ref<AbilitySystemAbility> ability;
+inline Ref<ASAbility> create_test_ability(const StringName &p_name, const StringName &p_tag) {
+	Ref<ASAbility> ability;
 	ability.instantiate();
 	ability->set_ability_name(p_name);
 	ability->set_ability_tag(p_tag);
 	return ability;
 }
 
-inline Ref<AbilitySystemAbility> make_ability(const StringName &p_name, const StringName &p_tag, Ref<AbilitySystemEffect> p_effect = nullptr, float p_cost_amount = 0.0f, const StringName &p_cost_attr = "") {
-	Ref<AbilitySystemAbility> ability = create_test_ability(p_name, p_tag);
+inline Ref<ASAbility> make_ability(const StringName &p_name, const StringName &p_tag, Ref<ASEffect> p_effect = nullptr, float p_cost_amount = 0.0f, const StringName &p_cost_attr = "") {
+	Ref<ASAbility> ability = create_test_ability(p_name, p_tag);
 	if (p_effect.is_valid()) {
-		ability->set_effect(p_effect);
+		TypedArray<ASEffect> effects;
+		effects.push_back(p_effect);
+		ability->set_effects(effects);
 	}
 	if (p_cost_attr != StringName()) {
 		ability->add_cost(p_cost_attr, p_cost_amount);
@@ -124,23 +128,23 @@ inline Ref<AbilitySystemAbility> make_ability(const StringName &p_name, const St
 
 // --- Scenario Factories (Complex) ---
 
-inline AbilitySystemComponent *make_standard_asc(float p_health = 100.0f, float p_mana = 80.0f, float p_stamina = 80.0f) {
-	Ref<AbilitySystemAttributeSet> set;
+inline ASComponent *make_standard_asc(float p_health = 100.0f, float p_mana = 80.0f, float p_stamina = 80.0f) {
+	Ref<ASAttributeSet> set;
 	set.instantiate();
 	set->add_attribute_definition(create_test_attribute("Health", p_health));
 	set->add_attribute_definition(create_test_attribute("Mana", p_mana));
 	set->add_attribute_definition(create_test_attribute("Stamina", p_stamina));
 
-	AbilitySystemComponent *asc = memnew(AbilitySystemComponent);
+	ASComponent *asc = memnew(ASComponent);
 	asc->add_attribute_set(set);
 	return asc;
 }
 
-inline AbilitySystemComponent *make_warrior_asc() {
+inline ASComponent *make_warrior_asc() {
 	return make_standard_asc(150.0f, 20.0f, 120.0f); // High health/stamina, low mana
 }
 
-inline AbilitySystemComponent *make_mage_asc() {
+inline ASComponent *make_mage_asc() {
 	return make_standard_asc(80.0f, 200.0f, 50.0f); // Low health/stamina, high mana
 }
 
@@ -166,11 +170,11 @@ inline AbilitySystemComponent *make_mage_asc() {
 
 // --- Debug Helpers ---
 
-inline String debug_active_effects(AbilitySystemComponent *p_asc) {
+inline String debug_active_effects(ASComponent *p_asc) {
 	String out = "[";
-	TypedArray<AbilitySystemEffectSpec> effects = p_asc->get_active_effects_debug();
+	TypedArray<ASEffectSpec> effects = p_asc->get_active_effects_debug();
 	for (int i = 0; i < effects.size(); i++) {
-		Ref<AbilitySystemEffectSpec> spec = effects[i];
+		Ref<ASEffectSpec> spec = effects[i];
 		if (spec.is_valid() && spec->get_effect().is_valid()) {
 			out += spec->get_effect()->get_effect_tag();
 			if (i < effects.size() - 1) {
@@ -182,11 +186,11 @@ inline String debug_active_effects(AbilitySystemComponent *p_asc) {
 	return out;
 }
 
-inline String debug_unlocked_abilities(AbilitySystemComponent *p_asc) {
+inline String debug_unlocked_abilities(ASComponent *p_asc) {
 	String out = "[Unlocked: ";
-	TypedArray<AbilitySystemAbilitySpec> unlocked = p_asc->get_unlocked_abilities_debug();
+	TypedArray<ASAbilitySpec> unlocked = p_asc->get_unlocked_abilities_debug();
 	for (int i = 0; i < unlocked.size(); i++) {
-		Ref<AbilitySystemAbilitySpec> spec = unlocked[i];
+		Ref<ASAbilitySpec> spec = unlocked[i];
 		if (spec.is_valid() && spec->get_ability().is_valid()) {
 			out += spec->get_ability()->get_ability_name();
 			if (i < unlocked.size() - 1) {
@@ -195,9 +199,9 @@ inline String debug_unlocked_abilities(AbilitySystemComponent *p_asc) {
 		}
 	}
 	out += " | Active: ";
-	TypedArray<AbilitySystemAbilitySpec> active = p_asc->get_active_abilities_debug();
+	TypedArray<ASAbilitySpec> active = p_asc->get_active_abilities_debug();
 	for (int i = 0; i < active.size(); i++) {
-		Ref<AbilitySystemAbilitySpec> spec = active[i];
+		Ref<ASAbilitySpec> spec = active[i];
 		if (spec.is_valid() && spec->get_ability().is_valid()) {
 			out += spec->get_ability()->get_ability_name();
 			if (i < active.size() - 1) {

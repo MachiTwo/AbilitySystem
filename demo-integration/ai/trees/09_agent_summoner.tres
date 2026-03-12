@@ -1,0 +1,86 @@
+[gd_resource type="BehaviorTree" format=3 uid="uid://cpxk7jnqpwwlc"]
+
+[ext_resource type="Script" uid="uid://bicxffqmm7ek" path="res://ai/tasks/select_random_nearby_pos.gd" id="1_sgn0p"]
+[ext_resource type="Script" uid="uid://df82exuqnfdb2" path="res://ai/tasks/arrive_pos.gd" id="2_pshl2"]
+[ext_resource type="Script" path="res://ai/tasks/activate_ability.gd" id="3_04unm"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_58oq1"]
+var/speed/name = &"speed"
+var/speed/type = 3
+var/speed/value = 300.0
+var/speed/hint = 1
+var/speed/hint_string = "10,1000,10"
+var/summon_cooldown/name = &"summon_cooldown"
+var/summon_cooldown/type = 1
+var/summon_cooldown/value = false
+var/summon_cooldown/hint = 0
+var/summon_cooldown/hint_string = ""
+
+[sub_resource type="BTAction" id="BTAction_as_idle"]
+script = ExtResource("3_04unm")
+ability_tag = &"state.idle"
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_0wc6p"]
+
+[sub_resource type="BTSequence" id="BTSequence_kwkxc"]
+custom_name = "Summoning sickness"
+children = [SubResource("BTAction_as_idle"), SubResource("BTRandomWait_0wc6p")]
+
+[sub_resource type="BTRunLimit" id="BTRunLimit_x2jr4"]
+children = [SubResource("BTSequence_kwkxc")]
+
+[sub_resource type="BBVariant" id="BBVariant_y3x7n"]
+resource_name = "6"
+saved_value = 6
+type = 2
+
+[sub_resource type="BTCheckAgentProperty" id="BTCheckAgentProperty_olmdj"]
+property = &"summon_count"
+check_type = 1
+value = SubResource("BBVariant_y3x7n")
+
+[sub_resource type="BTComment" id="BTComment_ef6y0"]
+custom_name = "Ability System handles cooldown via ability.skill.summon"
+
+[sub_resource type="BTAction" id="BTAction_as_summon"]
+script = ExtResource("3_04unm")
+ability_tag = &"ability.skill.summon"
+
+[sub_resource type="BTWait" id="BTWait_tdhfn"]
+
+[sub_resource type="BTSequence" id="BTSequence_2n742"]
+custom_name = "Summon minion"
+children = [SubResource("BTCheckAgentProperty_olmdj"), SubResource("BTAction_as_summon"), SubResource("BTWait_tdhfn")]
+
+[sub_resource type="BTAction" id="BTAction_33wje"]
+script = ExtResource("1_sgn0p")
+range_max = 700.0
+
+[sub_resource type="BTAction" id="BTAction_as_walk"]
+script = ExtResource("3_04unm")
+ability_tag = &"state.walk"
+
+[sub_resource type="BTAction" id="BTAction_dfifw"]
+script = ExtResource("2_pshl2")
+
+[sub_resource type="BTTimeLimit" id="BTTimeLimit_i05cm"]
+children = [SubResource("BTAction_dfifw")]
+time_limit = 3.0
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_axjfh"]
+
+[sub_resource type="BTSequence" id="BTSequence_ks71q"]
+custom_name = "Chill"
+children = [SubResource("BTAction_as_idle"), SubResource("BTRandomWait_axjfh")]
+
+[sub_resource type="BTSequence" id="BTSequence_dss4d"]
+custom_name = "Reposition"
+children = [SubResource("BTAction_33wje"), SubResource("BTAction_as_walk"), SubResource("BTTimeLimit_i05cm"), SubResource("BTSequence_ks71q")]
+
+[sub_resource type="BTSelector" id="BTSelector_gp6q5"]
+children = [SubResource("BTRunLimit_x2jr4"), SubResource("BTSequence_2n742"), SubResource("BTSequence_dss4d")]
+
+[resource]
+description = "Refactored to use ASPlugin for everything."
+blackboard_plan = SubResource("BlackboardPlan_58oq1")
+root_task = SubResource("BTSelector_gp6q5")

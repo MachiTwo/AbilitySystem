@@ -63,7 +63,7 @@ def generate_version_header():
     if not os.path.exists(core_dir):
         os.makedirs(core_dir)
 
-    header_path = os.path.join(core_dir, "ability_system_version.gen.h")
+    header_path = os.path.join(core_dir, "as_version.gen.h")
 
     with open(header_path, "w") as f:
         f.write(
@@ -80,7 +80,7 @@ def generate_version_header():
 #define ABILITY_SYSTEM_VERSION_SHORT_HASH "{git_short_hash}"
 
 #define ABILITY_SYSTEM_VERSION_DOC_BRANCH "{doc_branch}"
-#define ABILITY_SYSTEM_VERSION_DOC_URL "https://github.com/MachiTwo/AbilitySystemPlugin"
+#define ABILITY_SYSTEM_VERSION_DOC_URL "https://github.com/MachiTwo/AbilitySystem"
 
 #endif // ABILITY_SYSTEM_VERSION_GEN_H
 """.format(**version_info)

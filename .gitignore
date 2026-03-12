@@ -1,22 +1,14 @@
 # Godot auto generated files
 *.gen.*
 .godot/
+*/Godot/
 
 # Ignore library files but not the gdextension file
-demo/bin/*
-!demo/bin/android
-demo/bin/android/*
-!demo/bin/android/.gitkeep
-!demo/bin/linux
-demo/bin/linux/*
-!demo/bin/linux/.gitkeep
-!demo/bin/macos
-demo/bin/macos/*
-!demo/bin/macos/.gitkeep
-!demo/bin/windows
-demo/bin/windows/*
-!demo/bin/windows/.gitkeep
-!demo/bin/*.gdextension
+addons/ability_system/bin/*
+!addons/ability_system/bin/.gitkeep
+addons/limboai/*
+!addons/limboai/.gitkeep
+!addons/ability_system/*.gdextension
 .sconsign*.dblite
 
 # Ignore custom.py
@@ -45,6 +37,7 @@ compile_commands.json
 
 # Other stuff
 *.log
+.cache
 
 # VSCode
 .vscode/*
@@ -57,8 +50,6 @@ compile_commands.json
 # Cmake
 cmake-build*
 CMakeUserPresets.json
-/demo/addons
-/demo-limbo/addons
 *.import
 *.uid
 *.exp
@@ -67,6 +58,13 @@ CMakeUserPresets.json
 /bin
 *.exe
 *.ilk
+
 /godot-cpp
-/demo/Godot
 *.txt
+!requirements.txt
+
+#demo
+
+/demo/addons
+/demo-integration/addons
+/.cache

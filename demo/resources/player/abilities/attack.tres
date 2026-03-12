@@ -1,20 +1,20 @@
-[gd_resource type="AbilitySystemAbility" format=3 uid="uid://dkxce2ikcnex7"]
+[gd_resource type="ASAbility" format=3 uid="uid://dkxce2ikcnex7"]
 
-[ext_resource type="AbilitySystemCueAnimation" path="res://resources/player/cues/attack_animation.tres" id="1"]
-[ext_resource type="AbilitySystemEffect" path="res://resources/player/effects/damage_instant.tres" id="2"]
+[ext_resource type="ASCueAnimation" uid="uid://clpiofajni63j" path="res://resources/player/cues/attack_animation.tres" id="1"]
+[ext_resource type="ASEffect" uid="uid://be5a4s5b6v7r1" path="res://resources/player/effects/damage_instant.tres" id="2"]
 
 [resource]
 ability_name = "Player Attack"
 ability_tag = &"ability.skill.attack"
 activation_owned_tags = Array[StringName]([&"state.attacking"])
 activation_blocked_tags = Array[StringName]([&"cooldown.attack", &"state.stunned", &"state.dead", &"state.attacking"])
-cues = Array[AbilitySystemCue]([ExtResource("1")])
-effect = ExtResource("2")
+effects = Array[ASEffect]([ExtResource("2")])
+cues = Array[ASCue]([ExtResource("1")])
 ability_duration_policy = 1
-ability_duration = 0.4
+ability_duration = 0.6
 cooldown_duration = 0.5
 cooldown_tags = Array[StringName]([&"cooldown.attack"])
 costs = Array[Dictionary]([{
-"amount": -10.0,
+"amount": 10.0,
 "attribute": &"Mana"
 }])

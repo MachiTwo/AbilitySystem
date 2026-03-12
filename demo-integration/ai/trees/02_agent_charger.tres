@@ -1,0 +1,119 @@
+[gd_resource type="BehaviorTree" format=3 uid="uid://ylife72ym5et"]
+
+[ext_resource type="Script" uid="uid://ccr43pgd4488l" path="res://ai/tasks/get_first_in_group.gd" id="1_657p6"]
+[ext_resource type="Script" uid="uid://ct71h72pech3b" path="res://ai/tasks/select_flanking_pos.gd" id="2_t3udh"]
+[ext_resource type="Script" uid="uid://df82exuqnfdb2" path="res://ai/tasks/arrive_pos.gd" id="3_u2ra5"]
+[ext_resource type="Script" uid="uid://dbo0kq2cwb4qv" path="res://ai/tasks/face_target.gd" id="4_xwjl7"]
+[ext_resource type="Script" uid="uid://b8ljqe213ud7d" path="res://ai/tasks/move_forward.gd" id="5_ucvak"]
+[ext_resource type="Script" path="res://ai/tasks/activate_ability.gd" id="6_as"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_qd806"]
+var/speed/name = &"speed"
+var/speed/type = 3
+var/speed/value = 400.0
+var/speed/hint = 1
+var/speed/hint_string = "10,1000,10"
+var/charge_speed/name = &"charge_speed"
+var/charge_speed/type = 3
+var/charge_speed/value = 1000.0
+var/charge_speed/hint = 1
+var/charge_speed/hint_string = "10,1000,10"
+
+[sub_resource type="BTAction" id="BTAction_as_idle"]
+script = ExtResource("6_as")
+ability_tag = &"state.idle"
+target_var = &""
+wait_until_ended = false
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_cedqr"]
+
+[sub_resource type="BTSequence" id="BTSequence_l6m3e"]
+custom_name = "Chill"
+children = [SubResource("BTAction_as_idle"), SubResource("BTRandomWait_cedqr")]
+
+[sub_resource type="BTAction" id="BTAction_as_walk"]
+script = ExtResource("6_as")
+ability_tag = &"state.walk"
+target_var = &""
+wait_until_ended = false
+
+[sub_resource type="BTAction" id="BTAction_as_charge"]
+script = ExtResource("6_as")
+ability_tag = &"ability.skill.charge"
+target_var = &""
+wait_until_ended = true
+
+[sub_resource type="BBVariant" id="BBVariant_r8iux"]
+resource_name = "$charge_speed"
+value_source = 1
+variable = &"charge_speed"
+type = 3
+
+[sub_resource type="BTAction" id="BTAction_vsl7v"]
+script = ExtResource("5_ucvak")
+speed = SubResource("BBVariant_r8iux")
+
+[sub_resource type="BTParallel" id="BTParallel_q4p4m"]
+custom_name = "Charge!"
+children = [SubResource("BTAction_as_charge"), SubResource("BTAction_vsl7v")]
+
+[sub_resource type="BTAction" id="BTAction_as_attack"]
+script = ExtResource("6_as")
+ability_tag = &"ability.skill.attack"
+target_var = &"target"
+wait_until_ended = true
+
+[sub_resource type="BBVariant" id="BBVariant_a6rge"]
+resource_name = "target"
+saved_value = &"target"
+type = 1
+
+[sub_resource type="BTAction" id="BTAction_18yps"]
+script = ExtResource("1_657p6")
+group = &"player"
+output_var = SubResource("BBVariant_a6rge")
+
+[sub_resource type="BBVariant" id="BBVariant_r8gpe"]
+resource_name = "$target"
+value_source = 1
+variable = &"target"
+type = 1
+
+[sub_resource type="BTAction" id="BTAction_lkvio"]
+script = ExtResource("2_t3udh")
+target_var = SubResource("BBVariant_r8gpe")
+range_min = 200
+range_max = 300
+
+[sub_resource type="BTAction" id="BTAction_v7unf"]
+script = ExtResource("3_u2ra5")
+speed_var = &"speed"
+
+[sub_resource type="BTSequence" id="BTSequence_6id86"]
+custom_name = "Flank"
+children = [SubResource("BTAction_lkvio"), SubResource("BTAction_as_walk"), SubResource("BTAction_v7unf")]
+
+[sub_resource type="BBVariant" id="BBVariant_6x0d4"]
+resource_name = "$target"
+value_source = 1
+variable = &"target"
+type = 1
+
+[sub_resource type="BTAction" id="BTAction_u15m2"]
+script = ExtResource("4_xwjl7")
+target_var = SubResource("BBVariant_6x0d4")
+
+[sub_resource type="BTSequence" id="BTSequence_vunv1"]
+custom_name = "Charge Attack"
+children = [SubResource("BTAction_u15m2"), SubResource("BTParallel_q4p4m"), SubResource("BTAction_as_attack")]
+
+[sub_resource type="BTSelector" id="BTSelector_s108q"]
+children = [SubResource("BTSequence_6id86"), SubResource("BTSequence_vunv1"), SubResource("BTSequence_l6m3e")]
+
+[sub_resource type="BTSequence" id="BTSequence_pjuov"]
+children = [SubResource("BTAction_18yps"), SubResource("BTSelector_s108q")]
+
+[resource]
+description = "Refactored to use ASPlugin for everything."
+blackboard_plan = SubResource("BlackboardPlan_qd806")
+root_task = SubResource("BTSequence_pjuov")

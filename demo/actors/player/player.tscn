@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://ps2dg6b71li8"]
 
 [ext_resource type="Script" uid="uid://dpwow1shlres1" path="res://actors/player/player.gd" id="1_ogt8j"]
-[ext_resource type="AbilitySystemAbilityContainer" uid="uid://kp3qmrsjw82k" path="res://resources/player/player_ability_container.tres" id="2_388e2"]
+[ext_resource type="ASContainer" uid="uid://kp3qmrsjw82k" path="res://resources/player/player_container.tres" id="2_388e2"]
 [ext_resource type="SpriteFrames" uid="uid://mxtc0iuo4707" path="res://resources/player/player_sprite_frames.tres" id="3_ax26v"]
-[ext_resource type="Script" uid="uid://b8kmgo623avr1" path="res://actors/player/ability_system_component.gd" id="3_lsqbn"]
+[ext_resource type="Script" uid="uid://b8kmgo623avr1" path="res://actors/player/as_component.gd" id="3_lsqbn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2142t"]
 size = Vector2(20, 18)
@@ -15,8 +15,8 @@ size = Vector2(26, 24)
 platform_floor_layers = 4294967040
 script = ExtResource("1_ogt8j")
 
-[node name="AbilitySystemComponent" type="AbilitySystemComponent" parent="." unique_id=1883005895]
-ability_container = ExtResource("2_388e2")
+[node name="ASComponent" type="ASComponent" parent="." unique_id=1883005895]
+container = ExtResource("2_388e2")
 script = ExtResource("3_lsqbn")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=573974758]
@@ -40,13 +40,13 @@ autoplay = "idle"
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1945932514]
 zoom = Vector2(2, 2)
 
-[connection signal="ability_activated" from="AbilitySystemComponent" to="." method="_on_ability_system_component_ability_activated"]
-[connection signal="ability_ended" from="AbilitySystemComponent" to="." method="_on_ability_system_component_ability_ended"]
-[connection signal="ability_failed" from="AbilitySystemComponent" to="." method="_on_ability_system_component_ability_failed"]
-[connection signal="attribute_changed" from="AbilitySystemComponent" to="." method="_on_ability_system_component_attribute_changed"]
-[connection signal="cooldown_ended" from="AbilitySystemComponent" to="." method="_on_ability_system_component_cooldown_ended"]
-[connection signal="cooldown_started" from="AbilitySystemComponent" to="." method="_on_ability_system_component_cooldown_started"]
-[connection signal="effect_applied" from="AbilitySystemComponent" to="." method="_on_ability_system_component_effect_applied"]
-[connection signal="effect_removed" from="AbilitySystemComponent" to="." method="_on_ability_system_component_effect_removed"]
-[connection signal="tag_changed" from="AbilitySystemComponent" to="." method="_on_ability_system_component_tag_changed"]
-[connection signal="tag_event_received" from="AbilitySystemComponent" to="." method="_on_ability_system_component_tag_event_received"]
+[connection signal="ability_activated" from="ASComponent" to="." method="_on_as_component_ability_activated"]
+[connection signal="ability_ended" from="ASComponent" to="." method="_on_as_component_ability_ended"]
+[connection signal="ability_failed" from="ASComponent" to="." method="_on_as_component_ability_failed"]
+[connection signal="attribute_changed" from="ASComponent" to="." method="_on_as_component_attribute_changed"]
+[connection signal="cooldown_ended" from="ASComponent" to="." method="_on_as_component_cooldown_ended"]
+[connection signal="cooldown_started" from="ASComponent" to="." method="_on_as_component_cooldown_started"]
+[connection signal="effect_applied" from="ASComponent" to="." method="_on_as_component_effect_applied"]
+[connection signal="effect_removed" from="ASComponent" to="." method="_on_as_component_effect_removed"]
+[connection signal="tag_changed" from="ASComponent" to="." method="_on_as_component_tag_changed"]
+[connection signal="tag_event_received" from="ASComponent" to="." method="_on_as_component_tag_event_received"]

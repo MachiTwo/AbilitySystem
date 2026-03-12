@@ -1,0 +1,14 @@
+[gd_resource type="ASEffect" format=3]
+
+[resource]
+effect_name = "Burning"
+effect_tag = &"effect.burn"
+granted_tags = Array[StringName]([&"state.burning"])
+duration_policy = 1 # DURATION
+duration_magnitude = 5.0
+period = 1.0
+execute_periodic_tick_on_application = true
+modifiers = 1
+modifiers/0/attribute = &"attribute.health"
+modifiers/0/operation = 0 # ADD
+modifiers/0/magnitude = -5.0

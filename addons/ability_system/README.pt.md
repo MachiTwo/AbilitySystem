@@ -1,5 +1,10 @@
 # Ability System - Lógica Orientada a Dados para Godot 4.x
 
+<p align="center">
+  <img src="doc/images/logo.svg" width="600" alt="Ability System Logo">
+</p>
+<br/>
+
 [![Godot Engine](https://img.shields.io/badge/Godot-4.6-blue?logo=godot-engine&logoColor=white)](https://godotengine.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -7,7 +12,7 @@
 > **Leia isto em outros idiomas / Read this in other languages:**
 > [**Português**](README.pt.md) | [**English**](README.md)
 
-O **Ability System** é um framework poderoso para criação de combate, habilidades e atributos modulares. Projetado para escalar desde mecânicas simples até sistemas complexos de RPG — tudo com alta performance em C++ e arquitetura modular.
+O **Ability System** (AS) é um framework poderoso para criação de combate, habilidades e atributos modulares. Projetado para escalar desde mecânicas simples até sistemas complexos de RPG — tudo com alta performance em C++ e arquitetura modular.
 
 ---
 
@@ -32,7 +37,7 @@ Uma base de código C++ unificada alimenta ambas as versões, utilizando um sist
 
 ## 🏗️ Guia de Início Rápido
 
-Transforme seu gameplay em dados com estes passos fundamentais. Vamos construir um sistema onde interações sociais e combate coexistem.
+Transforme sua lógica de jogo em dados com estes passos fundamentais. Vamos construir um sistema onde interações sociais e combate coexistem.
 
 ### 1. Acesse o Gerenciador de Tags
 
@@ -139,33 +144,33 @@ func _on_tag_changed(tag: StringName, is_present: bool):
 
 ### 🧠 Componentes Principais
 
-| Componente | Propósito | Destaques |
-| :--- | :--- | :--- |
-| **AbilitySystem** | Coordenador Global. | Registro central de Tags, integração com Project Settings. |
+| Componente                 | Propósito                  | Destaques                                                  |
+| :------------------------- | :------------------------- | :--------------------------------------------------------- |
+| **AbilitySystem**          | Coordenador Global.        | Registro central de Tags, integração com Project Settings. |
 | **AbilitySystemComponent** | Processador do Ator (ASC). | Concede/Ativa habilidades, gerencia efeitos, dispara Cues. |
 
 ### ⚙️ Recursos
 
-| Resource | Propósito | Destaques |
-| :--- | :--- | :--- |
-| **Ability** | Lógica de uma ação. | Custos, Cooldowns e Tags de Ativação nativos. |
-| **Effect** | Pacote de alteração. | Dano instantâneo, buffs temporários ou passivas. |
-| **AttributeSet** | Container de stats. | Gerencia coleções de atributos. Instância única por ator. |
-| **Attribute** | Definição de stat. | Esquema individual de HP, Mana com limites. |
-| **AbilityContainer** | Blueprint de Arquétipo. | Catálogo de habilidades e efeitos permitidos. |
-| **Task** | Lógica Assíncrona. | Lida com esperas, delays e timing de animações em habilidades. |
-| **Cue** | Base de Feedback. | Lógica de ativação de eventos audiovisuais. |
-| **CueAnimation** | Feedback de Animação. | Especializado em tocar montagens nos atores. |
-| **CueAudio** | Feedback de Áudio. | Especializado em tocar sons espaciais ou globais. |
+| Resource             | Propósito               | Destaques                                                      |
+| :------------------- | :---------------------- | :------------------------------------------------------------- |
+| **Ability**          | Lógica de uma ação.     | Custos, Cooldowns e Tags de Ativação nativos.                  |
+| **Effect**           | Pacote de alteração.    | Dano instantâneo, buffs temporários ou passivas.               |
+| **AttributeSet**     | Container de stats.     | Gerencia coleções de atributos. Instância única por ator.      |
+| **Attribute**        | Definição de stat.      | Esquema individual de HP, Mana com limites.                    |
+| **AbilityContainer** | Blueprint de Arquétipo. | Catálogo de habilidades e efeitos permitidos.                  |
+| **Task**             | Lógica Assíncrona.      | Lida com esperas, delays e timing de animações em habilidades. |
+| **Cue**              | Base de Feedback.       | Lógica de ativação de eventos audiovisuais.                    |
+| **CueAnimation**     | Feedback de Animação.   | Especializado em tocar montagens nos atores.                   |
+| **CueAudio**         | Feedback de Áudio.      | Especializado em tocar sons espaciais ou globais.              |
 
 ### 🚀 Objetos de Runtime (Specs)
 
-| Spec | Propósito | Dados Chave |
-| :--- | :--- | :--- |
-| **AbilitySpec** | Instância de habilidade. | Nível, estado ativo, consultas de cooldown/custo. |
-| **EffectSpec** | Instância de efeito. | Duração restante, stacks, posição (Variant). |
-| **CueSpec** | Contexto de feedback. | Magnitude, referências de origem/alvo, dados de impacto. |
-| **TagSpec** | Gestão de Tags. | Container de alta performance para tags de estado do ator. |
+| Spec            | Propósito                | Dados Chave                                                |
+| :-------------- | :----------------------- | :--------------------------------------------------------- |
+| **AbilitySpec** | Instância de habilidade. | Nível, estado ativo, consultas de cooldown/custo.          |
+| **EffectSpec**  | Instância de efeito.     | Duração restante, stacks, posição (Variant).               |
+| **CueSpec**     | Contexto de feedback.    | Magnitude, referências de origem/alvo, dados de impacto.   |
+| **TagSpec**     | Gestão de Tags.          | Container de alta performance para tags de estado do ator. |
 
 ---
 

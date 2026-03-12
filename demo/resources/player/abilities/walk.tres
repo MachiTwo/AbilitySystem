@@ -1,11 +1,12 @@
-[gd_resource type="AbilitySystemAbility" format=3 uid="uid://dgvg6cgi268vn"]
+[gd_resource type="ASAbility" format=3 uid="uid://dgvg6cgi268vn"]
 
-[ext_resource type="AbilitySystemCueAnimation" path="res://resources/player/cues/walk_animation.tres" id="1"]
+[ext_resource type="ASCueAnimation" uid="uid://3mavp2326ovq" path="res://resources/player/cues/walk_animation.tres" id="1"]
 
 [resource]
 ability_name = "Walk"
 ability_tag = &"ability.skill.walk"
-cues = Array[AbilitySystemCue]([ExtResource("1")])
 activation_owned_tags = Array[StringName]([&"ability.skill.walk"])
 activation_blocked_tags = Array[StringName]([&"state.stunned", &"state.dead"])
+cues = Array[ASCue]([ExtResource("1")])
 ability_duration_policy = 2
+

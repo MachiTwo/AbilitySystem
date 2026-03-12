@@ -1,0 +1,20 @@
+[gd_resource type="ASAbility" script_class="ASAbility" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://resources/abilities/summon_logic.gd" id="1_logic"]
+[ext_resource type="ASCueAnimation" path="res://resources/cues/cue_summon.tres" id="1"]
+
+[resource]
+script = ExtResource("1_logic")
+ability_name = "Summon Minion"
+ability_tag = &"ability.skill.summon"
+activation_owned_tags = Array[StringName]([&"state.summoning"])
+activation_blocked_tags = Array[StringName]([&"state.dead", &"state.summoning"])
+cues = Array[ASCue]([ExtResource("1")])
+costs = Array[Dictionary]([{
+"amount": 20.0,
+"attribute": &"attribute.mana"
+}])
+ability_duration_policy = 1
+ability_duration = 1.0
+cooldown_duration = 6.0
+cooldown_tags = Array[StringName]([&"cooldown.summon"])

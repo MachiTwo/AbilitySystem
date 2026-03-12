@@ -1,0 +1,19 @@
+[gd_resource type="ASAbility" format=3]
+
+[ext_resource type="ASCueAnimation" path="res://resources/cues/cue_charge.tres" id="1"]
+
+[resource]
+ability_name = "Charge"
+ability_tag = &"ability.skill.charge"
+activation_owned_tags = Array[StringName]([&"state.charging"])
+activation_blocked_tags = Array[StringName]([&"state.dead", &"state.charging"])
+activation_cancel_tags = Array[StringName]([&"state.walk", &"state.idle"])
+cues = Array[ASCue]([ExtResource("1")])
+costs = Array[Dictionary]([{
+"amount": 15.0,
+"attribute": &"Stamina"
+}])
+ability_duration_policy = 1
+ability_duration = 1.5
+cooldown_duration = 3.0
+cooldown_tags = Array[StringName]([&"cooldown.charge"])

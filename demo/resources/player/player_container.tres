@@ -1,0 +1,18 @@
+[gd_resource type="ASContainer" format=3 uid="uid://kp3qmrsjw82k"]
+
+[ext_resource type="ASAbility" uid="uid://dkxce2ikcnex7" path="res://resources/player/abilities/attack.tres" id="1"]
+[ext_resource type="ASAbility" uid="uid://bxb2utfoghi8q" path="res://resources/player/abilities/idle.tres" id="2"]
+[ext_resource type="ASAbility" uid="uid://dgvg6cgi268vn" path="res://resources/player/abilities/walk.tres" id="3"]
+[ext_resource type="ASAttributeSet" uid="uid://c4iafjh3jgv0j" path="res://resources/player/player_attribute_set.tres" id="4"]
+[ext_resource type="ASAbility" uid="uid://bavm5k37qo42l" path="res://resources/player/abilities/death.tres" id="5"]
+[ext_resource type="ASAbility" uid="uid://cw350pj4n1g6u" path="res://resources/player/abilities/hurt.tres" id="6"]
+[ext_resource type="ASEffect" path="res://resources/player/effects/damage_instant.tres" id="7"]
+[ext_resource type="ASCueAnimation" uid="uid://clpiofajni63j" path="res://resources/player/cues/attack_animation.tres" id="8"]
+[ext_resource type="ASCueAnimation" uid="uid://dc65h7bpv308j" path="res://resources/player/cues/idle_animation.tres" id="9"]
+[ext_resource type="ASCueAnimation" uid="uid://3mavp2326ovq" path="res://resources/player/cues/walk_animation.tres" id="10"]
+
+[resource]
+abilities = Array[ASAbility]([ExtResource("1"), ExtResource("2"), ExtResource("3"), ExtResource("5"), ExtResource("6")])
+attribute_set = ExtResource("4")
+effects = Array[ASEffect]([ExtResource("7")])
+cues = Array[ASCue]([ExtResource("8"), ExtResource("9"), ExtResource("10")])

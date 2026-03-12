@@ -1,6 +1,7 @@
-[gd_resource type="AbilitySystemCueAnimation" format=3]
+[gd_resource type="ASCueAnimation" format=3 uid="uid://dc65h7bpv308j"]
 
 [resource]
-cue_tag = &"cue.animation.idle"
 animation_name = "idle"
 event_type = 1
+cue_tag = &"ability.skill.idle"
+activation_blocked_tags = Array[StringName]([&"state.attacking"])

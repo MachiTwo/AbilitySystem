@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@onready var asc: AbilitySystemComponent = $AbilitySystemComponent
+@onready var asc: ASComponent = $ASComponent
 @onready var sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var attack_area: Area2D = $Area2D
 @onready var audio_player: AudioStreamPlayer2D = $AudioStreamPlayer2D
@@ -9,11 +9,14 @@ var is_dead = false
 
 func _ready() -> void:
 	print("DEBUG: Player _ready chamado")
+	asc.set_animation_player(sprite)
 	asc.set_audio_player(audio_player)
 	
 	asc.attribute_changed.connect(_on_attribute_changed)
 	asc.ability_activated.connect(_on_ability_activated)
 	asc.ability_ended.connect(_on_ability_ended)
+	asc.effects_applied_to_self.connect(_on_effects_applied_to_self)
+	asc.effects_ready_for_others.connect(_on_effects_ready_for_others)
 	
 	await get_tree().process_frame
 	
@@ -57,20 +60,15 @@ func _physics_process(delta: float) -> void:
 
 	move_and_slide()
 
-func _on_ability_activated(spec: AbilitySystemAbilitySpec):
+func _on_ability_activated(spec: ASAbilitySpec):
 	var ability = spec.get_ability()
 	var tag = ability.get_ability_tag()
 	print("DEBUG: Ability Activated: ", tag)
 	match tag:
-		&"ability.skill.attack":
-			# O hit do ataque deve ser disparado por um GameplayCue ou sinal de animação.
-			# Para simplificar a demo sem timers, chamamos o hit logo após o início por enquanto
-			# ou via sinal de 'frame_changed' do AnimatedSprite.
-			_do_attack_hit() 
 		&"character.state.dead":
 			is_dead = true
 
-func _on_ability_ended(spec: AbilitySystemAbilitySpec, _cancelled: bool):
+func _on_ability_ended(spec: ASAbilitySpec, _cancelled: bool):
 	var tag = spec.get_ability().get_ability_tag()
 	print("DEBUG: Ability Ended: ", tag, " Cancelled: ", _cancelled)
 	
@@ -80,9 +78,11 @@ func _on_ability_ended(spec: AbilitySystemAbilitySpec, _cancelled: bool):
 		_refresh_base_state()
 
 func _refresh_base_state():
+	# Se ainda estivermos atacando, não devemos forçar idle/walk
+	if asc.has_tag(&"state.attacking"):
+		return
+		
 	# Força a atualização do estado visual baseado no movimento atual.
-	# Como Idle/Walk são habilidades INFINITAS que já estão ativas, 
-	# nós apenas notificamos o sprite para voltar a tocá-las.
 	var direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
 	if direction:
 		if asc.has_tag(&"ability.skill.walk"):
@@ -91,16 +91,28 @@ func _refresh_base_state():
 		if asc.has_tag(&"ability.skill.idle"):
 			sprite.play("idle")
 
-func _do_attack_hit():
-	print("DEBUG: Doing attack hit check")
+func _on_effects_ready_for_others(ability_spec: ASAbilitySpec, effects: Array[ASEffect]):
+	print("DEBUG: Effects ready for others: ", effects.size())
+	# Se a habilidade for de ataque, aplicamos os efeitos na área
+	if ability_spec.get_ability().get_ability_tag() == &"ability.skill.attack":
+		_do_attack_hit(effects)
+
+func _on_effects_applied_to_self(ability_spec: ASAbilitySpec, effect_specs: Array[ASEffectSpec]):
+	print("DEBUG: Effects applied to self: ", effect_specs.size())
+	for spec in effect_specs:
+		print("  - Applied: ", spec.get_effect().get_effect_name())
+
+func _do_attack_hit(effects: Array[ASEffect]):
+	print("DEBUG: Doing attack hit check with provided effects")
 	for area in attack_area.get_overlapping_areas():
 		var parent = area.get_parent()
-		if parent is Enemy:
-			print("DEBUG: Hit enemy: ", parent.name)
-			var enemy_asc = parent.get_node("AbilitySystemComponent")
-			var effect = load("res://resources/enemy/effects/damage_instant.tres")
-			var spec = asc.make_outgoing_spec(effect, 1.0, parent)
-			asc.apply_effect_spec_to_target(spec, enemy_asc)
+		# Verificamos se o pai tem um ASC (pode ser Enemy ou outro destructible)
+		var enemy_asc = parent.get_node_or_null("ASComponent")
+		if enemy_asc:
+			print("DEBUG: Applying ability effects to: ", parent.name)
+			for effect in effects:
+				var spec = asc.make_outgoing_spec(effect, 1.0, parent)
+				asc.apply_effect_spec_to_target(spec, enemy_asc)
 
 func _on_attribute_changed(attr: StringName, old: float, new: float):
 	print("DEBUG: Attribute Changed: ", attr, " Old: ", old, " New: ", new)
@@ -117,29 +129,35 @@ func _die_cleanup():
 	await get_tree().create_timer(2.0).timeout
 	get_tree().reload_current_scene()
 
-func _on_ability_system_component_ability_activated(ability_spec: AbilitySystemAbilitySpec) -> void:
+func _on_as_component_ability_activated(ability_spec: ASAbilitySpec) -> void:
 	print("DEBUG: Signal ability_activated received for ", ability_spec.get_ability().get_ability_tag())
 
-func _on_ability_system_component_ability_failed(ability_name: StringName, reason: String) -> void:
+func _on_as_component_ability_failed(ability_name: StringName, reason: String) -> void:
 	print("DEBUG: Ability Failed: ", ability_name, " Reason: ", reason)
 
-func _on_ability_system_component_attribute_changed(attribute_name: StringName, old_value: float, new_value: float) -> void:
+func _on_as_component_attribute_changed(attribute_name: StringName, old_value: float, new_value: float) -> void:
 	pass
 
-func _on_ability_system_component_cooldown_ended(ability_tag: StringName) -> void:
+func _on_as_component_cooldown_ended(ability_tag: StringName) -> void:
 	pass
 
-func _on_ability_system_component_cooldown_started(ability_tag: StringName, duration: float) -> void:
+func _on_as_component_cooldown_started(ability_tag: StringName, duration: float) -> void:
 	pass
 
-func _on_ability_system_component_effect_applied(effect_spec: AbilitySystemEffectSpec) -> void:
+func _on_as_component_effect_applied(effect_spec: ASEffectSpec) -> void:
 	pass
 
-func _on_ability_system_component_effect_removed(effect_spec: AbilitySystemEffectSpec) -> void:
+func _on_as_component_effect_removed(effect_spec: ASEffectSpec) -> void:
 	pass
 
-func _on_ability_system_component_tag_changed(tag_name: StringName, is_present: bool) -> void:
+func _on_as_component_tag_changed(tag_name: StringName, is_present: bool) -> void:
 	pass
 
-func _on_ability_system_component_tag_event_received(event_tag: StringName, data: Dictionary) -> void:
+func _on_as_component_tag_event_received(event_tag: StringName, data: Dictionary) -> void:
 	pass
+
+
+
+
+func _on_area_2d_body_entered(body: Node2D) -> void:
+	pass # Replace with function body.

@@ -1,4 +1,4 @@
-[gd_resource type="AbilitySystemCueAnimation" format=3]
+[gd_resource type="ASCueAnimation" format=3]
 
 [resource]
 cue_tag = &"cue.animation.death"

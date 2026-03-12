@@ -1,4 +1,4 @@
-[gd_resource type="AbilitySystemAbility" format=3]
+[gd_resource type="ASAbility" format=3]
 
 [resource]
 ability_name = "Enemy Idle"

@@ -1,0 +1,140 @@
+[gd_resource type="BehaviorTree" format=3 uid="uid://cpcnbi81jqge4"]
+
+[ext_resource type="Script" uid="uid://ccr43pgd4488l" path="res://ai/tasks/get_first_in_group.gd" id="1_ce4la"]
+[ext_resource type="Script" uid="uid://b7v2utjmtge0x" path="res://ai/tasks/in_range.gd" id="2_atyuj"]
+[ext_resource type="Script" uid="uid://dbo0kq2cwb4qv" path="res://ai/tasks/face_target.gd" id="3_3mw7l"]
+[ext_resource type="Script" uid="uid://bi5e8366xi5s5" path="res://ai/tasks/back_away.gd" id="4_6dr32"]
+[ext_resource type="Script" uid="uid://ct71h72pech3b" path="res://ai/tasks/select_flanking_pos.gd" id="5_dho0d"]
+[ext_resource type="Script" uid="uid://df82exuqnfdb2" path="res://ai/tasks/arrive_pos.gd" id="6_0pfsl"]
+[ext_resource type="Script" path="res://ai/tasks/activate_ability.gd" id="7_act_ab"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_8ay3j"]
+var/speed/name = &"speed"
+var/speed/type = 3
+var/speed/value = 400.0
+var/speed/hint = 1
+var/speed/hint_string = "10,1000,10"
+
+[sub_resource type="BTAction" id="BTAction_as_idle"]
+script = ExtResource("7_act_ab")
+ability_tag = &"state.idle"
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_j6cjm"]
+min_duration = 2.0
+max_duration = 3.0
+
+[sub_resource type="BTSequence" id="BTSequence_5thv4"]
+custom_name = "Chill"
+children = [SubResource("BTAction_as_idle"), SubResource("BTRandomWait_j6cjm")]
+
+[sub_resource type="BTCooldown" id="BTCooldown_oms7a"]
+children = [SubResource("BTSequence_5thv4")]
+trigger_on_failure = true
+
+[sub_resource type="BTAction" id="BTAction_ohfp7"]
+script = ExtResource("1_ce4la")
+group = &"player"
+
+[sub_resource type="BTCondition" id="BTCondition_7a5nv"]
+script = ExtResource("2_atyuj")
+distance_max = 150.0
+
+[sub_resource type="BTAction" id="BTAction_ddvrs"]
+script = ExtResource("3_3mw7l")
+
+[sub_resource type="BTAction" id="BTAction_as_attack"]
+script = ExtResource("7_act_ab")
+ability_tag = &"ability.skill.attack"
+wait_until_ended = true
+
+[sub_resource type="BTCooldown" id="BTCooldown_ejg6q"]
+children = [SubResource("BTAction_as_attack")]
+duration = 3.0
+
+[sub_resource type="BTSequence" id="BTSequence_eikr4"]
+custom_name = "Melee"
+children = [SubResource("BTAction_ohfp7"), SubResource("BTCondition_7a5nv"), SubResource("BTAction_ddvrs"), SubResource("BTCooldown_ejg6q")]
+
+[sub_resource type="BTCondition" id="BTCondition_h75v8"]
+script = ExtResource("2_atyuj")
+distance_max = 300.0
+
+[sub_resource type="BTAction" id="BTAction_wpt7j"]
+script = ExtResource("3_3mw7l")
+
+[sub_resource type="BTAction" id="BTAction_as_walk_back"]
+script = ExtResource("7_act_ab")
+ability_tag = &"state.walk"
+
+[sub_resource type="BTAction" id="BTAction_h2efl"]
+script = ExtResource("4_6dr32")
+
+[sub_resource type="BTTimeLimit" id="BTTimeLimit_wm5g2"]
+children = [SubResource("BTAction_h2efl")]
+time_limit = 1.0
+
+[sub_resource type="BTSequence" id="wh4dl"]
+custom_name = "Back away"
+children = [SubResource("BTCondition_h75v8"), SubResource("BTAction_wpt7j"), SubResource("BTAction_as_walk_back"), SubResource("BTTimeLimit_wm5g2")]
+
+[sub_resource type="BTComment" id="BTComment_mqte5"]
+custom_name = "Get into position"
+
+[sub_resource type="BTAction" id="BTAction_as_walk"]
+script = ExtResource("7_act_ab")
+ability_tag = &"state.walk"
+
+[sub_resource type="BTAction" id="BTAction_4mmh0"]
+script = ExtResource("5_dho0d")
+range_min = 400
+range_max = 600
+
+[sub_resource type="BTAction" id="BTAction_vb5c3"]
+script = ExtResource("6_0pfsl")
+
+[sub_resource type="BTTimeLimit" id="BTTimeLimit_jyks2"]
+children = [SubResource("BTAction_vb5c3")]
+
+[sub_resource type="BTComment" id="BTComment_ym6nj"]
+custom_name = "Short break before action"
+
+[sub_resource type="BTAction" id="BTAction_fkevy"]
+script = ExtResource("3_3mw7l")
+
+[sub_resource type="BTAction" id="BTAction_as_idle_break"]
+script = ExtResource("7_act_ab")
+ability_tag = &"state.idle"
+
+[sub_resource type="BTWait" id="BTWait_42smh"]
+duration = 0.2
+
+[sub_resource type="BTComment" id="BTComment_nbp2b"]
+custom_name = "Spit fire!"
+
+[sub_resource type="BTAction" id="BTAction_as_spit"]
+script = ExtResource("7_act_ab")
+ability_tag = &"ability.skill.fireball"
+wait_until_ended = true
+
+[sub_resource type="BTComment" id="BTComment_fndxk"]
+custom_name = "Wind down"
+
+[sub_resource type="BTAction" id="BTAction_as_idle_end"]
+script = ExtResource("7_act_ab")
+ability_tag = &"state.idle"
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_v0el8"]
+min_duration = 0.7
+max_duration = 1.5
+
+[sub_resource type="BTSequence" id="BTSequence_djtph"]
+custom_name = "Spit fire"
+children = [SubResource("BTComment_mqte5"), SubResource("BTAction_as_walk"), SubResource("BTAction_4mmh0"), SubResource("BTTimeLimit_jyks2"), SubResource("BTComment_ym6nj"), SubResource("BTAction_fkevy"), SubResource("BTAction_as_idle_break"), SubResource("BTWait_42smh"), SubResource("BTComment_nbp2b"), SubResource("BTAction_as_spit"), SubResource("BTComment_fndxk"), SubResource("BTAction_as_idle_end"), SubResource("BTRandomWait_v0el8")]
+
+[sub_resource type="BTSelector" id="BTSelector_feba6"]
+children = [SubResource("BTCooldown_oms7a"), SubResource("BTSequence_eikr4"), SubResource("wh4dl"), SubResource("BTSequence_djtph")]
+
+[resource]
+description = "Refactored to use AbilitySystem abilities."
+blackboard_plan = SubResource("BlackboardPlan_8ay3j")
+root_task = SubResource("BTSelector_feba6")

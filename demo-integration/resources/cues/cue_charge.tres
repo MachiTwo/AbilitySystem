@@ -1,0 +1,7 @@
+[gd_resource type="ASCueAnimation" format=3]
+
+[resource]
+cue_name = "Charge Animation"
+cue_tag = &"cue.anim.charge"
+event_type = 1
+animation_name = "charge"

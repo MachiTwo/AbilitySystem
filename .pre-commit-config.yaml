@@ -6,8 +6,9 @@ exclude: |
     .*godot-cpp/.*|
     .*reverse-engineering/.*|
     .*demo/.*|
-    .*demo-limbo/.*|
+    .*demo-integration/.*|
     .*src/tests/doctest.h|
+    .*doc/source/classes/.*|
     .*\.md*
   )$
 
@@ -101,3 +102,12 @@ repos:
       - id: check-jsonschema
         files: ^core/extension/gdextension_interface\.json$
         args: ["--schemafile", "core/extension/gdextension_interface.schema.json"]
+
+  - repo: local
+    hooks:
+      - id: make-rst
+        name: make-rst
+        language: python
+        entry: python utility/make_rst.py --output doc/source/classes src/doc_classes
+        files: ^(src/doc_classes)/.*\.xml$
+        pass_filenames: false

@@ -1,0 +1,6 @@
+[gd_resource type="ASCueAudio" format=3]
+
+[resource]
+cue_name = "Hurt SFX"
+cue_tag = &"cue.snd.hurt"
+event_type = 0 # ON_EXECUTE

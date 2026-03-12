@@ -1,0 +1,12 @@
+[gd_resource type="ASEffect" format=3]
+
+[resource]
+effect_name = "Attack Buff"
+effect_tag = &"effect.attack_buff"
+granted_tags = Array[StringName]([&"state.attack_buffed"])
+duration_policy = 1 # DURATION
+duration_magnitude = 10.0
+modifiers = 1
+modifiers/0/attribute = &"attribute.attack_power"
+modifiers/0/operation = 1 # MULTIPLY
+modifiers/0/magnitude = 1.3

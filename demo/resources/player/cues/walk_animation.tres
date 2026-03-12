@@ -1,6 +1,7 @@
-[gd_resource type="AbilitySystemCueAnimation" format=3]
+[gd_resource type="ASCueAnimation" format=3 uid="uid://3mavp2326ovq"]
 
 [resource]
-cue_tag = &"cue.animation.walk"
 animation_name = "walk"
 event_type = 1
+cue_tag = &"ability.skill.walk"
+activation_blocked_tags = Array[StringName]([&"state.attacking"])

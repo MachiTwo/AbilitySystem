@@ -1,0 +1,11 @@
+[gd_resource type="ASAbility" format=3]
+
+[ext_resource type="ASCueAnimation" path="res://resources/cues/cue_idle.tres" id="1"]
+
+[resource]
+ability_name = "Idle"
+ability_tag = &"state.idle"
+activation_owned_tags = Array[StringName]([&"state.idle"])
+activation_blocked_tags = Array[StringName]([&"state.dead", &"state.attacking", &"state.hurt"])
+cues = Array[ASCue]([ExtResource("1")])
+ability_duration_policy = 2

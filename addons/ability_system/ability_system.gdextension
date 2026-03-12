@@ -1,6 +1,6 @@
 [configuration]
 
-entry_symbol = "ability_system_library_init"
+entry_symbol = "as_library_init"
 compatibility_minimum = "4.2"
 
 [libraries]
@@ -40,10 +40,10 @@ web.release.wasm32 = "res://addons/ability_system/bin/libability_system.web.temp
 [icons]
 
 AbilitySystem = "res://addons/ability_system/icons/AbilitySystem.svg"
-AbilitySystemAbility = "res://addons/ability_system/icons/AbilitySystemAbility.svg"
-AbilitySystemAttribute = "res://addons/ability_system/icons/AbilitySystemAttribute.svg"
-AbilitySystemAttributeSet = "res://addons/ability_system/icons/AbilitySystemAttributeSet.svg"
-AbilitySystemComponent = "res://addons/ability_system/icons/AbilitySystemComponent.svg"
-AbilitySystemCue = "res://addons/ability_system/icons/AbilitySystemCue.svg"
-AbilitySystemEffect = "res://addons/ability_system/icons/AbilitySystemEffect.svg"
-AbilitySystemTagSpec = "res://addons/ability_system/icons/AbilitySystemTagContainer.svg"
+ASAbility = "res://addons/ability_system/icons/ASAbility.svg"
+ASAttribute = "res://addons/ability_system/icons/ASAttribute.svg"
+ASAttributeSet = "res://addons/ability_system/icons/ASAttributeSet.svg"
+ASComponent = "res://addons/ability_system/icons/ASComponent.svg"
+ASCue = "res://addons/ability_system/icons/ASCue.svg"
+ASEffect = "res://addons/ability_system/icons/ASEffect.svg"
+ASTagSpec = "res://addons/ability_system/icons/ASTagContainer.svg"

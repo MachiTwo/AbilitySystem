@@ -4,7 +4,7 @@
 		Central authority for Tags.
 	</brief_description>
 	<description>
-		[AbilitySystem] is a singleton that manages the global registry of Tags for the project.
+		[AbilitySystem] is a singleton that manages the global registry of Tags for the project (v0.1.0 Stable).
 	</description>
 	<tutorials>
 	</tutorials>

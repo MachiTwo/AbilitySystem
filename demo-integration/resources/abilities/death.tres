@@ -1,0 +1,12 @@
+[gd_resource type="ASAbility" format=3]
+
+[ext_resource type="ASCueAnimation" path="res://resources/cues/cue_death.tres" id="1"]
+
+[resource]
+ability_name = "Death"
+ability_tag = &"state.dead"
+activation_owned_tags = Array[StringName]([&"state.dead"])
+# When dead, we can't do anything else.
+activation_blocked_tags = Array[StringName]([&"state.dead"])
+cues = Array[ASCue]([ExtResource("1")])
+ability_duration_policy = 2 # Infinite until cleanup

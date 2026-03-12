@@ -38,7 +38,9 @@
 #include "core/object/ref_counted.h"
 #endif
 
-namespace godot {
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
 
 class ASTestSignalWatcher : public RefCounted {
 	GDCLASS(ASTestSignalWatcher, RefCounted);
@@ -59,5 +61,3 @@ protected:
 		ClassDB::bind_method(D_METHOD("_on_signal_received", "a", "b"), &ASTestSignalWatcher::_on_signal_received, DEFVAL(Variant()), DEFVAL(Variant()));
 	}
 };
-
-} // namespace godot

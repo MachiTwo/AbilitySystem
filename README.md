@@ -1,5 +1,10 @@
 # Ability System - Data-Driven Abilities for Godot 4.x
 
+<p align="center">
+  <img src="doc/images/logo.svg" width="600" alt="Ability System Logo">
+</p>
+<br/>
+
 [![Godot Engine](https://img.shields.io/badge/Godot-4.6-blue?logo=godot-engine&logoColor=white)](https://godotengine.org)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
@@ -7,7 +12,7 @@
 > **Leia isto em outros idiomas / Read this in other languages:**
 > [**Português**](README.pt.md) | [**English**](README.md)
 
-**Ability System** is a powerful framework for creating modular combat, abilities, and attributes. Designed to scale from simple mechanics (jump, dash) to complex RPG systems with buffs, debuffs, and advanced damage calculations—all with high-performance C++ at its core.
+**Ability System** (AS) is a powerful framework for creating modular combat, abilities, and attributes. Designed to scale from simple mechanics to complex RPG systems — all with high C++ performance and modular architecture.
 
 ---
 
@@ -32,7 +37,7 @@ A unified C++ codebase powers both versions, using a robust preprocessor system 
 
 ## 🏗️ Quick Start Guide
 
-Transform your gameplay into data with these core steps. We will build a system where social interactions and combat coexist.
+Transform your game logic into data with these core steps. We will build a system where social interactions and combat coexist.
 
 ### 1. Access the Tag Manager
 
@@ -139,33 +144,33 @@ func _on_tag_changed(tag: StringName, is_present: bool):
 
 ### 🧠 Core Components
 
-| Component | Purpose | Key Features |
-| :--- | :--- | :--- |
-| **AbilitySystem** | Global Coordinator. | Central Tag Registry, Project Settings integration. |
+| Component                  | Purpose                  | Key Features                                                |
+| :------------------------- | :----------------------- | :---------------------------------------------------------- |
+| **AbilitySystem**          | Global Coordinator.      | Central Tag Registry, Project Settings integration.         |
 | **AbilitySystemComponent** | Actor's Processor (ASC). | Grants/Activates abilities, manages effects, triggers Cues. |
 
 ### ⚙️ Resources
 
-| Resource | Purpose | Key Features |
-| :--- | :--- | :--- |
-| **Ability** | Logic of an action. | Native Costs, Cooldowns, and Activation Tags. |
-| **Effect** | Modification package. | Instant damage, timed buffs, or infinite passives. |
-| **AttributeSet** | Stat container. | Manages collections of attributes. Deep-duplicated per actor. |
-| **Attribute** | Stat definition. | Individual HP, Mana, XP schema with clamping. |
-| **AbilityContainer** | Archetype Blueprint. | Catalog of allowed abilities, effects, and starting stats. |
-| **Task** | Async logic. | Handles waits, delays, and animation timing in abilities. |
-| **Cue** | Feedback Base. | Event activation logic for audiovisual effects. |
-| **CueAnimation** | Animation Feedback. | Specialized for playing montages on actors. |
-| **CueAudio** | Audio Feedback. | Specialized for playing spatial or global sound. |
+| Resource             | Purpose               | Key Features                                                  |
+| :------------------- | :-------------------- | :------------------------------------------------------------ |
+| **Ability**          | Logic of an action.   | Native Costs, Cooldowns, and Activation Tags.                 |
+| **Effect**           | Modification package. | Instant damage, timed buffs, or infinite passives.            |
+| **AttributeSet**     | Stat container.       | Manages collections of attributes. Deep-duplicated per actor. |
+| **Attribute**        | Stat definition.      | Individual HP, Mana, XP schema with clamping.                 |
+| **AbilityContainer** | Archetype Blueprint.  | Catalog of allowed abilities, effects, and starting stats.    |
+| **Task**             | Async logic.          | Handles waits, delays, and animation timing in abilities.     |
+| **Cue**              | Feedback Base.        | Event activation logic for audiovisual effects.               |
+| **CueAnimation**     | Animation Feedback.   | Specialized for playing montages on actors.                   |
+| **CueAudio**         | Audio Feedback.       | Specialized for playing spatial or global sound.              |
 
 ### 🚀 Runtime Objects (Specs)
 
-| Spec | Purpose | Key Data |
-| :--- | :--- | :--- |
-| **AbilitySpec** | Ability instance. | Level, active state, runtime query methods. |
-| **EffectSpec** | Effect instance. | Remaining duration, stack count, hit position (Variant). |
-| **CueSpec** | Feedback context. | Triggering magnitude, source/target references, hit data. |
-| **TagSpec** | Tag Management. | High-performance container for actor state tags. |
+| Spec            | Purpose           | Key Data                                                  |
+| :-------------- | :---------------- | :-------------------------------------------------------- |
+| **AbilitySpec** | Ability instance. | Level, active state, runtime query methods.               |
+| **EffectSpec**  | Effect instance.  | Remaining duration, stack count, hit position (Variant).  |
+| **CueSpec**     | Feedback context. | Triggering magnitude, source/target references, hit data. |
+| **TagSpec**     | Tag Management.   | High-performance container for actor state tags.          |
 
 ---
 

@@ -29,12 +29,34 @@ jobs:
         run: |
           grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
 
-      - name: Download All Artifacts
+      - name: Download Standard Artifacts
         uses: actions/download-artifact@v4.1.9
         with:
           path: out/
           merge-multiple: true
 
+      - name: Download Plugin and Demo Zips (No Extract)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Use GitHub CLI to download the raw artifact ZIP created by GitHub.
+          # This avoids automatic extraction by download-artifact and prevents double-zipping.
+
+          # Fetch all artifacts for the current run
+          ARTIFACTS=$(gh api repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)
+
+          # Download GDExtension Plugin artifact as a raw ZIP
+          GD_ID=$(echo $ARTIFACTS | jq -r '.artifacts[] | select(.name=="${{ env.PROJECT_ID }}+v${{ inputs.plugin_version }}.gdextension.zip") | .id')
+          if [ ! -z "$GD_ID" ] && [ "$GD_ID" != "null" ]; then
+            gh api repos/${{ github.repository }}/actions/artifacts/$GD_ID/zip > "out/${{ env.PROJECT_ID }}+v${{ inputs.plugin_version }}.gdextension.zip"
+          fi
+
+          # Download Demo artifact as a raw ZIP
+          DEMO_ID=$(echo $ARTIFACTS | jq -r '.artifacts[] | select(.name=="${{ env.PROJECT_ID }}+v${{ inputs.plugin_version }}.demo.zip") | .id')
+          if [ ! -z "$DEMO_ID" ] && [ "$DEMO_ID" != "null" ]; then
+            gh api repos/${{ github.repository }}/actions/artifacts/$DEMO_ID/zip > "out/${{ env.PROJECT_ID }}+v${{ inputs.plugin_version }}.demo.zip"
+          fi
       - name: List Artifacts for Verification
         shell: bash
         run: |

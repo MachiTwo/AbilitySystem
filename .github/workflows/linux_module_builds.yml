@@ -114,8 +114,6 @@ jobs:
       - name: Prepare Artifact
         shell: bash
         run: |
-          cd zyris/bin/
-
           # Clean versions (hyphen to dot)
           PLUGIN_VER=$(echo "${{ inputs.plugin_version }}" | tr '-' '.')
           ZYRIS_VER=$(echo "${{ inputs.zyris_version }}" | tr '-' '.')
@@ -126,24 +124,22 @@ jobs:
             MODULE_PART="dotnet."
           fi
 
-          # Final name construction
-          # Pattern: PROJECT_ID+v0.1.0.zyris-0.3.0.dotnet.target.platform.arch
-          FINAL_NAME="${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.linux.${{ inputs.arch }}.zip"
+          mkdir -p out/artifact
 
           # Use find for robust binary discovery
-          BINARY_PATH=$(find . -maxdepth 1 -name "*linuxbsd*" -not -path '*/.*' | head -n 1)
+          BINARY_PATH=$(find zyris/bin/ -maxdepth 1 -name "*linuxbsd*" -not -path '*/.*' | head -n 1)
           if [ -n "$BINARY_PATH" ]; then
-            zip -j ../../out/$FINAL_NAME "$BINARY_PATH"
+            cp "$BINARY_PATH" out/artifact/
+            echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.linux.${{ inputs.arch }}" >> $GITHUB_ENV
           else
-            echo "::error::Binary not found for zipping"
-            ls -F
+            echo "::error::Binary not found"
+            ls -F zyris/bin/
             exit 1
           fi
-          echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.linux.${{ inputs.arch }}" >> $GITHUB_ENV
-          echo "file_name=$FINAL_NAME" >> $GITHUB_ENV
+          echo "artifact_path=out/artifact/" >> $GITHUB_ENV
 
       - name: Upload Zyris Binary (with Module)
         uses: actions/upload-artifact@v4.6.1
         with:
           name: ${{ env.artifact_name }}
-          path: out/${{ env.file_name }}
+          path: ${{ env.artifact_path }}

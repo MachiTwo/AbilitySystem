@@ -1,0 +1,144 @@
+[gd_resource type="BehaviorTree" format=3 uid="uid://qqmjvbeibatn"]
+
+[ext_resource type="Script" uid="uid://ccr43pgd4488l" path="res://ai/tasks/get_first_in_group.gd" id="1_2883n"]
+[ext_resource type="Script" uid="uid://ct71h72pech3b" path="res://ai/tasks/select_flanking_pos.gd" id="2_cjso2"]
+[ext_resource type="Script" uid="uid://dcjgktglb1slf" path="res://ai/tasks/pursue.gd" id="2_lpckh"]
+[ext_resource type="Script" uid="uid://df82exuqnfdb2" path="res://ai/tasks/arrive_pos.gd" id="3_treio"]
+[ext_resource type="Script" uid="uid://dbo0kq2cwb4qv" path="res://ai/tasks/face_target.gd" id="4_57x51"]
+[ext_resource type="Script" uid="uid://b7v2utjmtge0x" path="res://ai/tasks/in_range.gd" id="5_p5dih"]
+[ext_resource type="Script" uid="uid://bi5e8366xi5s5" path="res://ai/tasks/back_away.gd" id="6_fkv0k"]
+[ext_resource type="Script" path="res://ai/tasks/activate_ability.gd" id="7_act_ab"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_46tbn"]
+var/speed/name = &"speed"
+var/speed/type = 3
+var/speed/value = 400.0
+var/speed/hint = 1
+var/speed/hint_string = "10,1000,10"
+var/fast_speed/name = &"fast_speed"
+var/fast_speed/type = 3
+var/fast_speed/value = 600.0
+var/fast_speed/hint = 1
+var/fast_speed/hint_string = "10,1000,10"
+var/slow_speed/name = &"slow_speed"
+var/slow_speed/type = 3
+var/slow_speed/value = 300.0
+var/slow_speed/hint = 1
+var/slow_speed/hint_string = "10,1000,10"
+
+[sub_resource type="BTAction" id="BTAction_ulbrf"]
+script = ExtResource("1_2883n")
+group = &"player"
+
+[sub_resource type="BTAction" id="BTAction_as_idle"]
+script = ExtResource("7_act_ab")
+ability_tag = &"state.idle"
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_xlud8"]
+min_duration = 2.0
+max_duration = 3.0
+
+[sub_resource type="BTSequence" id="BTSequence_yhjh1"]
+custom_name = "Summoning sickness"
+children = [SubResource("BTAction_ulbrf"), SubResource("BTAction_as_idle"), SubResource("BTRandomWait_xlud8")]
+
+[sub_resource type="BTRunLimit" id="BTRunLimit_tq3e1"]
+children = [SubResource("BTSequence_yhjh1")]
+
+[sub_resource type="BTCondition" id="BTCondition_uk4dg"]
+script = ExtResource("5_p5dih")
+distance_max = 300.0
+
+[sub_resource type="BTAction" id="BTAction_as_walk"]
+script = ExtResource("7_act_ab")
+ability_tag = &"state.walk"
+
+[sub_resource type="BTAction" id="BTAction_jryg6"]
+script = ExtResource("2_lpckh")
+
+[sub_resource type="BTTimeLimit" id="BTTimeLimit_lkphr"]
+children = [SubResource("BTAction_jryg6")]
+time_limit = 1.0
+
+[sub_resource type="BTAction" id="BTAction_kidxn"]
+script = ExtResource("4_57x51")
+
+[sub_resource type="BTWait" id="BTWait_tadkc"]
+duration = 0.2
+
+[sub_resource type="BTAction" id="BTAction_as_attack"]
+script = ExtResource("7_act_ab")
+ability_tag = &"ability.skill.attack"
+wait_until_ended = true
+
+[sub_resource type="BTWait" id="BTWait_cm8jy"]
+duration = 0.5
+
+[sub_resource type="BTSequence" id="BTSequence_ww5v2"]
+custom_name = "Melee attack"
+children = [SubResource("BTCondition_uk4dg"), SubResource("BTAction_as_walk"), SubResource("BTTimeLimit_lkphr"), SubResource("BTAction_kidxn"), SubResource("BTWait_tadkc"), SubResource("BTAction_as_attack"), SubResource("BTWait_cm8jy")]
+
+[sub_resource type="BTCooldown" id="BTCooldown_ksvfy"]
+children = [SubResource("BTSequence_ww5v2")]
+duration = 2.0
+
+[sub_resource type="BTCondition" id="BTCondition_fpufi"]
+script = ExtResource("5_p5dih")
+distance_max = 300.0
+
+[sub_resource type="BTAction" id="BTAction_as_walk_back"]
+script = ExtResource("7_act_ab")
+ability_tag = &"state.walk"
+
+[sub_resource type="BTAction" id="BTAction_4ye2y"]
+script = ExtResource("6_fkv0k")
+speed_var = &"slow_speed"
+
+[sub_resource type="BTTimeLimit" id="BTTimeLimit_cns1i"]
+children = [SubResource("BTAction_4ye2y")]
+time_limit = 1.5
+
+[sub_resource type="BTAlwaysSucceed" id="BTAlwaysSucceed_nw4ep"]
+children = [SubResource("BTTimeLimit_cns1i")]
+
+[sub_resource type="BTAction" id="BTAction_as_idle_disengage"]
+script = ExtResource("7_act_ab")
+ability_tag = &"state.idle"
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_jw0cm"]
+
+[sub_resource type="BTSequence" id="BTSequence_y12eg"]
+custom_name = "Disengage"
+children = [SubResource("BTCondition_fpufi"), SubResource("BTAction_as_walk_back"), SubResource("BTAlwaysSucceed_nw4ep"), SubResource("BTAction_as_idle_disengage"), SubResource("BTRandomWait_jw0cm")]
+
+[sub_resource type="BTAction" id="BTAction_as_walk_flank"]
+script = ExtResource("7_act_ab")
+ability_tag = &"state.walk"
+
+[sub_resource type="BTAction" id="BTAction_g5ayy"]
+script = ExtResource("2_cjso2")
+flank_side = 2
+range_min = 80
+range_max = 120
+position_var = &"flank_pos"
+
+[sub_resource type="BTAction" id="BTAction_tv4lt"]
+script = ExtResource("3_treio")
+target_position_var = &"flank_pos"
+speed_var = &"fast_speed"
+avoid_var = &"target"
+
+[sub_resource type="BTTimeLimit" id="BTTimeLimit_xek5v"]
+children = [SubResource("BTAction_tv4lt")]
+
+[sub_resource type="BTSequence" id="BTSequence_rgwic"]
+custom_name = "Flank from behind"
+children = [SubResource("BTAction_as_walk_flank"), SubResource("BTAction_g5ayy"), SubResource("BTTimeLimit_xek5v")]
+
+[sub_resource type="BTSelector" id="BTSelector_2jnau"]
+children = [SubResource("BTRunLimit_tq3e1"), SubResource("BTCooldown_ksvfy"), SubResource("BTSequence_y12eg"), SubResource("BTSequence_rgwic")]
+
+[resource]
+description = "Refactored to use AbilitySystem abilities."
+blackboard_plan = SubResource("BlackboardPlan_46tbn")
+root_task = SubResource("BTSelector_2jnau")

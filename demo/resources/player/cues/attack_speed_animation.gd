@@ -1,10 +1,10 @@
-extends AbilitySystemCueAnimation
+extends ASCueAnimation
 
 func _init():
 	cue_tag = &"cue.animation.attack"
 	animation_name = "attack_1"
 
-func _on_execute(spec: AbilitySystemCueSpec):
+func _on_execute(spec: ASCueSpec):
 	var attack_speed = spec.source_asc.get_attribute(&"attack_speed")
 	var animation_player = spec.source_asc.get_animation_player()
 	

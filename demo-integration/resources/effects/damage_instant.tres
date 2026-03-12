@@ -1,0 +1,12 @@
+[gd_resource type="ASEffect" format=3]
+
+[resource]
+effect_name = "Agent Damage"
+effect_tag = &"effect.damage"
+target_type = 1
+duration_policy = 0
+activation_blocked_tags = Array[StringName]([&"state.dead", &"state.immune"])
+modifiers = 1
+modifiers/0/attribute = &"attribute.health"
+modifiers/0/operation = 0
+modifiers/0/magnitude = -1.0

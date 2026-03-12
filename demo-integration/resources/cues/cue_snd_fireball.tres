@@ -1,0 +1,6 @@
+[gd_resource type="ASCueAudio" format=3]
+
+[resource]
+cue_name = "Fireball SFX"
+cue_tag = &"cue.snd.fireball"
+event_type = 0 # ON_EXECUTE

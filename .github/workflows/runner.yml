@@ -26,6 +26,7 @@ permissions:
   contents: write
   actions: read
 
+
 jobs:
   check-all:
     name: ✅ Checks & Versioning

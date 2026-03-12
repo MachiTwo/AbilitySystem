@@ -1,0 +1,6 @@
+[gd_resource type="ASCueAudio" format=3]
+
+[resource]
+cue_name = "Walk SFX"
+cue_tag = &"cue.snd.walk"
+event_type = 1 # ON_ACTIVE

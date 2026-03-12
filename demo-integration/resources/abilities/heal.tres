@@ -1,0 +1,15 @@
+[gd_resource type="ASAbility" format=3]
+
+[ext_resource type="ASEffect" path="res://resources/effects/heal_instant.tres" id="1"]
+
+[resource]
+ability_name = "Heal"
+ability_tag = &"ability.skill.heal"
+# REQUIREMENT: Only can heal if in low health!
+activation_required_tags = Array[StringName]([&"state.low_health"])
+activation_blocked_tags = Array[StringName]([&"state.dead", &"state.full_health"])
+effects = Array[ASEffect]([ExtResource("1")])
+ability_duration_policy = 1
+ability_duration = 0.5
+cooldown_duration = 5.0
+cooldown_tags = Array[StringName]([&"cooldown.heal"])

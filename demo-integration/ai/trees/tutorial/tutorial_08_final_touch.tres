@@ -1,0 +1,133 @@
+[gd_resource type="BehaviorTree" format=3 uid="uid://dp0cglcytwcj5"]
+
+[ext_resource type="Script" uid="uid://ccr43pgd4488l" path="res://ai/tasks/get_first_in_group.gd" id="1_o5ahw"]
+[ext_resource type="Script" uid="uid://ct71h72pech3b" path="res://ai/tasks/select_flanking_pos.gd" id="2_er25a"]
+[ext_resource type="Script" uid="uid://df82exuqnfdb2" path="res://ai/tasks/arrive_pos.gd" id="3_ed1xo"]
+[ext_resource type="Script" uid="uid://dbo0kq2cwb4qv" path="res://ai/tasks/face_target.gd" id="4_128ei"]
+[ext_resource type="Script" uid="uid://b7v2utjmtge0x" path="res://ai/tasks/in_range.gd" id="5_er18b"]
+[ext_resource type="Script" uid="uid://bi5e8366xi5s5" path="res://ai/tasks/back_away.gd" id="6_1urfq"]
+[ext_resource type="Script" uid="uid://dcjgktglb1slf" path="res://ai/tasks/pursue.gd" id="7_ekws5"]
+[ext_resource type="Script" path="res://ai/tasks/activate_ability.gd" id="8_act_ab"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_ewfwq"]
+var/speed/name = &"speed"
+var/speed/type = 3
+var/speed/value = 400.0
+var/speed/hint = 1
+var/speed/hint_string = "10,1000,10"
+
+[sub_resource type="BTAction" id="BTAction_2murg"]
+script = ExtResource("1_o5ahw")
+group = &"player"
+
+[sub_resource type="BTRunLimit" id="BTRunLimit_60b8b"]
+children = [SubResource("BTAction_2murg")]
+
+[sub_resource type="BTCondition" id="BTCondition_m15aa"]
+script = ExtResource("5_er18b")
+distance_max = 200.0
+
+[sub_resource type="BTAction" id="BTAction_oc76s"]
+script = ExtResource("4_128ei")
+
+[sub_resource type="BTAction" id="BTAction_as_attack1"]
+script = ExtResource("8_act_ab")
+ability_tag = &"ability.skill.attack"
+wait_until_ended = true
+
+[sub_resource type="BTAction" id="BTAction_as_attack2"]
+script = ExtResource("8_act_ab")
+ability_tag = &"ability.skill.attack"
+wait_until_ended = true
+
+[sub_resource type="BTSequence" id="BTSequence_e0f8v"]
+children = [SubResource("BTCondition_m15aa"), SubResource("BTAction_oc76s"), SubResource("BTAction_as_attack1"), SubResource("BTAction_as_attack2")]
+
+[sub_resource type="BTCooldown" id="BTCooldown_3tvjt"]
+children = [SubResource("BTSequence_e0f8v")]
+duration = 5.0
+
+[sub_resource type="BTCondition" id="BTCondition_x0uu7"]
+script = ExtResource("5_er18b")
+distance_max = 200.0
+
+[sub_resource type="BTAction" id="BTAction_as_walk_back"]
+script = ExtResource("8_act_ab")
+ability_tag = &"state.walk"
+
+[sub_resource type="BTAction" id="BTAction_6q0k4"]
+script = ExtResource("6_1urfq")
+
+[sub_resource type="BTTimeLimit" id="BTTimeLimit_6eii7"]
+children = [SubResource("BTAction_6q0k4")]
+time_limit = 2.0
+
+[sub_resource type="BTAlwaysSucceed" id="BTAlwaysSucceed_ieord"]
+children = [SubResource("BTTimeLimit_6eii7")]
+
+[sub_resource type="BTAction" id="BTAction_as_idle"]
+script = ExtResource("8_act_ab")
+ability_tag = &"state.idle"
+
+[sub_resource type="BTWait" id="BTWait_hh8ys"]
+duration = 3.0
+
+[sub_resource type="BTSequence" id="BTSequence_cgwor"]
+children = [SubResource("BTCondition_x0uu7"), SubResource("BTAction_as_walk_back"), SubResource("BTAlwaysSucceed_ieord"), SubResource("BTAction_as_idle"), SubResource("BTWait_hh8ys")]
+
+[sub_resource type="BTAction" id="BTAction_n0rxm"]
+script = ExtResource("2_er25a")
+range_min = 100
+range_max = 150
+
+[sub_resource type="BTAction" id="BTAction_as_walk_flank"]
+script = ExtResource("8_act_ab")
+ability_tag = &"state.walk"
+
+[sub_resource type="BTAction" id="BTAction_g2up4"]
+script = ExtResource("3_ed1xo")
+
+[sub_resource type="BTAction" id="BTAction_d5lkr"]
+script = ExtResource("4_128ei")
+
+[sub_resource type="BTAction" id="BTAction_as_throw"]
+script = ExtResource("8_act_ab")
+ability_tag = &"ability.skill.projectile"
+wait_until_ended = true
+
+[sub_resource type="BTSequence" id="BTSequence_ws7nq"]
+children = [SubResource("BTAction_n0rxm"), SubResource("BTAction_as_walk_flank"), SubResource("BTAction_g2up4"), SubResource("BTAction_d5lkr"), SubResource("BTAction_as_throw")]
+
+[sub_resource type="BTProbability" id="BTProbability_omklt"]
+children = [SubResource("BTSequence_ws7nq")]
+run_chance = 0.25
+
+[sub_resource type="BTCondition" id="BTCondition_d6aub"]
+script = ExtResource("5_er18b")
+distance_min = 200.0
+distance_max = 10000.0
+
+[sub_resource type="BTAction" id="BTAction_as_walk_pursue"]
+script = ExtResource("8_act_ab")
+ability_tag = &"state.walk"
+
+[sub_resource type="BTAction" id="BTAction_wc11r"]
+script = ExtResource("7_ekws5")
+
+[sub_resource type="BTAction" id="BTAction_as_idle_pursue"]
+script = ExtResource("8_act_ab")
+ability_tag = &"state.idle"
+
+[sub_resource type="BTWait" id="BTWait_1o163"]
+duration = 0.5
+
+[sub_resource type="BTSequence" id="BTSequence_vx4uy"]
+children = [SubResource("BTCondition_d6aub"), SubResource("BTAction_as_walk_pursue"), SubResource("BTAction_wc11r"), SubResource("BTAction_as_idle_pursue"), SubResource("BTWait_1o163")]
+
+[sub_resource type="BTSelector" id="BTSelector_ddhoo"]
+children = [SubResource("BTRunLimit_60b8b"), SubResource("BTCooldown_3tvjt"), SubResource("BTSequence_cgwor"), SubResource("BTProbability_omklt"), SubResource("BTSequence_vx4uy")]
+
+[resource]
+description = "Refactored to use AbilitySystem abilities."
+blackboard_plan = SubResource("BlackboardPlan_ewfwq")
+root_task = SubResource("BTSelector_ddhoo")

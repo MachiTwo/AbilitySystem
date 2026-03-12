@@ -42,10 +42,11 @@
 #endif
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-namespace godot {
-void initialize_ability_system_module(ModuleInitializationLevel p_level);
-void uninitialize_ability_system_module(ModuleInitializationLevel p_level);
-} // namespace godot
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
+void initialize_as_module(ModuleInitializationLevel p_level);
+void uninitialize_as_module(ModuleInitializationLevel p_level);
 #else
 void initialize_ability_system_module(ModuleInitializationLevel p_level);
 void uninitialize_ability_system_module(ModuleInitializationLevel p_level);

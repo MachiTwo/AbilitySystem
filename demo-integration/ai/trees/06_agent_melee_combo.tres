@@ -1,0 +1,125 @@
+[gd_resource type="BehaviorTree" format=3 uid="uid://cpncl1db8j12f"]
+
+[ext_resource type="Script" uid="uid://ccr43pgd4488l" path="res://ai/tasks/get_first_in_group.gd" id="1_sf4l8"]
+[ext_resource type="Script" uid="uid://ct71h72pech3b" path="res://ai/tasks/select_flanking_pos.gd" id="2_5nwkp"]
+[ext_resource type="Script" uid="uid://df82exuqnfdb2" path="res://ai/tasks/arrive_pos.gd" id="3_3tom2"]
+[ext_resource type="Script" uid="uid://dbo0kq2cwb4qv" path="res://ai/tasks/face_target.gd" id="4_hi228"]
+[ext_resource type="Script" uid="uid://b8ljqe213ud7d" path="res://ai/tasks/move_forward.gd" id="5_au5yc"]
+[ext_resource type="Script" path="res://ai/tasks/activate_ability.gd" id="6_act_ab"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_46tbn"]
+var/speed/name = &"speed"
+var/speed/type = 3
+var/speed/value = 400.0
+var/speed/hint = 1
+var/speed/hint_string = "10,1000,10"
+var/charge_speed/name = &"charge_speed"
+var/charge_speed/type = 3
+var/charge_speed/value = 1000.0
+var/charge_speed/hint = 0
+var/charge_speed/hint_string = ""
+
+[sub_resource type="BTAction" id="BTAction_as_idle"]
+script = ExtResource("6_act_ab")
+ability_tag = &"state.idle"
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_xlud8"]
+min_duration = 0.7
+max_duration = 1.5
+
+[sub_resource type="BTAction" id="BTAction_ulbrf"]
+script = ExtResource("1_sf4l8")
+group = &"player"
+
+[sub_resource type="BTSequence" id="BTSequence_yhjh1"]
+custom_name = "Pause before action"
+children = [SubResource("BTAction_as_idle"), SubResource("BTRandomWait_xlud8"), SubResource("BTAction_ulbrf")]
+
+[sub_resource type="BTAction" id="BTAction_85keo"]
+script = ExtResource("2_5nwkp")
+range_min = 80
+range_max = 120
+
+[sub_resource type="BTAction" id="BTAction_as_walk"]
+script = ExtResource("6_act_ab")
+ability_tag = &"state.walk"
+
+[sub_resource type="BTAction" id="BTAction_ygjnc"]
+script = ExtResource("3_3tom2")
+
+[sub_resource type="BTTimeLimit" id="BTTimeLimit_xek5v"]
+children = [SubResource("BTAction_ygjnc")]
+
+[sub_resource type="BTSequence" id="BTSequence_1xfnq"]
+custom_name = "Align with player"
+children = [SubResource("BTAction_85keo"), SubResource("BTAction_as_walk"), SubResource("BTTimeLimit_xek5v")]
+
+[sub_resource type="BTAction" id="BTAction_kidxn"]
+script = ExtResource("4_hi228")
+
+[sub_resource type="BTAction" id="BTAction_as_idle_attack"]
+script = ExtResource("6_act_ab")
+ability_tag = &"state.idle"
+
+[sub_resource type="BTWait" id="BTWait_tadkc"]
+duration = 0.4
+
+[sub_resource type="BTAction" id="BTAction_as_attack1"]
+script = ExtResource("6_act_ab")
+ability_tag = &"ability.skill.attack"
+wait_until_ended = true
+
+[sub_resource type="BTAction" id="BTAction_u22bc"]
+script = ExtResource("5_au5yc")
+speed_var = &"charge_speed"
+
+[sub_resource type="BTParallel" id="BTParallel_ec2e3"]
+children = [SubResource("BTAction_as_attack1"), SubResource("BTAction_u22bc")]
+num_successes_required = 2
+
+[sub_resource type="BTWait" id="BTWait_c0lo0"]
+duration = 0.2
+
+[sub_resource type="BTAction" id="BTAction_as_attack2"]
+script = ExtResource("6_act_ab")
+ability_tag = &"ability.skill.attack"
+wait_until_ended = true
+
+[sub_resource type="BTAction" id="BTAction_yuxl3"]
+script = ExtResource("5_au5yc")
+speed_var = &"charge_speed"
+
+[sub_resource type="BTParallel" id="BTParallel_thojy"]
+children = [SubResource("BTAction_as_attack2"), SubResource("BTAction_yuxl3")]
+num_successes_required = 2
+
+[sub_resource type="BTWait" id="BTWait_y3pmv"]
+duration = 0.2
+
+[sub_resource type="BTAction" id="BTAction_as_attack3"]
+script = ExtResource("6_act_ab")
+ability_tag = &"ability.skill.attack"
+wait_until_ended = true
+
+[sub_resource type="BTAction" id="BTAction_rwp18"]
+script = ExtResource("5_au5yc")
+speed_var = &"charge_speed"
+
+[sub_resource type="BTParallel" id="BTParallel_qmdfb"]
+children = [SubResource("BTAction_as_attack3"), SubResource("BTAction_rwp18")]
+num_successes_required = 2
+
+[sub_resource type="BTWait" id="BTWait_nxyko"]
+duration = 0.5
+
+[sub_resource type="BTSequence" id="BTSequence_ww5v2"]
+custom_name = "Combo Melee attack"
+children = [SubResource("BTAction_kidxn"), SubResource("BTAction_as_idle_attack"), SubResource("BTWait_tadkc"), SubResource("BTParallel_ec2e3"), SubResource("BTWait_c0lo0"), SubResource("BTParallel_thojy"), SubResource("BTWait_y3pmv"), SubResource("BTParallel_qmdfb"), SubResource("BTWait_nxyko")]
+
+[sub_resource type="BTSequence" id="BTSequence_pxl2k"]
+children = [SubResource("BTSequence_yhjh1"), SubResource("BTSequence_1xfnq"), SubResource("BTSequence_ww5v2")]
+
+[resource]
+description = "Refactored to use AbilitySystem abilities."
+blackboard_plan = SubResource("BlackboardPlan_46tbn")
+root_task = SubResource("BTSequence_pxl2k")

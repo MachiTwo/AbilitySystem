@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://diucv4g7rdnuq"]
 
 [ext_resource type="Script" uid="uid://cxaouqn6y88ik" path="res://actors/enemys/orc.gd" id="1_mbhbl"]
-[ext_resource type="AbilitySystemAbilityContainer" path="res://resources/enemy/enemy_ability_container.tres" id="2_durhb"]
+[ext_resource type="ASContainer" path="res://resources/enemy/enemy_container.tres" id="2_durhb"]
 [ext_resource type="SpriteFrames" uid="uid://nsbqrehwx301" path="res://resources/enemy/orc_sprite_frames.tres" id="3_82kyd"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0atb0"]
@@ -13,8 +13,8 @@ size = Vector2(34, 30)
 [node name="orc" type="CharacterBody2D" unique_id=2109801929 groups=["inimigos"]]
 script = ExtResource("1_mbhbl")
 
-[node name="AbilitySystemComponent" type="AbilitySystemComponent" parent="." unique_id=918374157]
-ability_container = ExtResource("2_durhb")
+[node name="ASComponent" type="ASComponent" parent="." unique_id=918374157]
+container = ExtResource("2_durhb")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1385183717]
 position = Vector2(0.5, -1)

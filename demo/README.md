@@ -1,14 +1,14 @@
-# Ability System Plugin - Demo
+# Ability System - Demo
 
 > [!TIP]
 > **Read this in other languages / Leia isto em outros idiomas:**
 > [**Português**](README.pt.md) | [**English**](README.md)
 
-Este é um projeto de demonstração minimalista para o **Ability System Plugin**, uma ferramenta poderosa e modular baseada em C++ (GDExtension) para o gerenciamento de habilidades, atributos e estados em jogos desenvolvidos na Godot Engine 4.
+Este é um projeto de demonstração minimalista para o **Ability System**, uma ferramenta poderosa e modular baseada em C++ (GDExtension) para o gerenciamento de habilidades, atributos e estados em jogos desenvolvidos na Godot Engine 4.
 
 ## 🚀 Visão Geral
 
-O objetivo desta demo é ilustrar como integrar o componente central do sistema (`AbilitySystemComponent`) em atores (Player e Inimigos) em um ambiente 2D. O projeto serve como um ponto de partida para testar a lógica de combate, buffs, debuffs e interações entre entidades.
+O objetivo desta demo é ilustrar como integrar o componente central do sistema (`ASComponent`) em atores (Player e Inimigos) em um ambiente 2D. O projeto serve como um ponto de partida para testar a lógica de combate, buffs, debuffs e interações entre entidades.
 
 ## 📁 Estrutura do Projeto
 
@@ -25,7 +25,7 @@ Abaixo está uma descrição breve da organização dos diretórios:
 
 ## 🧠 Componentes Chave
 
-Cada ator na cena (`player` e `orc`) possui um **`AbilitySystemComponent`** (ASC) anexado.
+Cada ator na cena (`player` e `orc`) possui um **`ASComponent`** (ASC) anexado.
 
 No ASC, é onde toda a "mágica" acontece:
 

@@ -1,0 +1,12 @@
+[gd_resource type="ASEffect" format=3]
+
+[resource]
+effect_name = "Haste"
+effect_tag = &"effect.haste"
+granted_tags = Array[StringName]([&"state.hastened"])
+duration_policy = 1 # DURATION
+duration_magnitude = 8.0
+modifiers = 1
+modifiers/0/attribute = &"attribute.move_speed"
+modifiers/0/operation = 1 # MULTIPLY
+modifiers/0/magnitude = 1.5

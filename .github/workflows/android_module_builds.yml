@@ -106,33 +106,30 @@ jobs:
             MODULE_PART="dotnet."
           fi
 
+          mkdir -p out/artifact
+
           # For Android, we package the libs folder content if it's an export template
           if [ -d "zyris/platform/android/java/lib/libs" ]; then
-            cd zyris/platform/android/java/lib/libs
-            FINAL_NAME="${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.android-lib.${{ inputs.arch }}.zip"
-            zip -r ${{ github.workspace }}/out/$FINAL_NAME .
-            echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.android-lib.${{ inputs.arch }}" >> $GITHUB_ENV
-            echo "file_name=$FINAL_NAME" >> $GITHUB_ENV
+            # Copy contents of libs to the artifact folder
+            cp -R zyris/platform/android/java/lib/libs/. out/artifact/
+            echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.android.${{ inputs.arch }}" >> $GITHUB_ENV
           else
             # For standalone apks/binaries
-            cd ${{ github.workspace }}/zyris/bin/
-            FINAL_NAME="${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.android.${{ inputs.arch }}.zip"
-
             # Use find for robust binary discovery
-            BINARY_PATH=$(find . -maxdepth 1 -name "*android*" -not -path '*/.*' | head -n 1)
+            BINARY_PATH=$(find zyris/bin/ -maxdepth 1 -name "*android*" -not -path '*/.*' | head -n 1)
             if [ -n "$BINARY_PATH" ]; then
-              zip -j ${{ github.workspace }}/out/$FINAL_NAME "$BINARY_PATH"
+              cp "$BINARY_PATH" out/artifact/
               echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.android.${{ inputs.arch }}" >> $GITHUB_ENV
-              echo "file_name=$FINAL_NAME" >> $GITHUB_ENV
             else
-              echo "::error::Binary not found for zipping"
-              ls -F
+              echo "::error::Binary not found"
+              ls -F zyris/bin/
               exit 1
             fi
           fi
+          echo "artifact_path=out/artifact/" >> $GITHUB_ENV
 
       - name: Upload Zyris Binary (with Module)
         uses: actions/upload-artifact@v4.6.1
         with:
           name: ${{ env.artifact_name }}
-          path: ${{ github.workspace }}/out/${{ env.file_name }}
+          path: ${{ env.artifact_path }}

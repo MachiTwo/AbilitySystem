@@ -42,7 +42,9 @@
 #include "core/config/project_settings.h"
 #endif
 
-namespace godot {
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
 
 AbilitySystem *AbilitySystem::singleton = nullptr;
 
@@ -327,5 +329,3 @@ AbilitySystem::~AbilitySystem() {
 	resource_names.clear();
 	singleton = nullptr;
 }
-
-} // namespace godot

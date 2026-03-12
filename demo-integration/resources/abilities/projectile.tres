@@ -1,0 +1,18 @@
+[gd_resource type="ASAbility" format=3]
+
+[ext_resource type="ASCueAnimation" path="res://resources/cues/cue_throw.tres" id="1"]
+
+[resource]
+ability_name = "Throw Ninja Star"
+ability_tag = &"ability.skill.projectile"
+activation_owned_tags = Array[StringName]([&"state.throwing"])
+activation_blocked_tags = Array[StringName]([&"state.dead", &"state.throwing"])
+cues = Array[ASCue]([ExtResource("1")])
+costs = Array[Dictionary]([{
+"amount": 10.0,
+"attribute": &"attribute.stamina"
+}])
+ability_duration_policy = 1
+ability_duration = 0.5
+cooldown_duration = 2.0
+cooldown_tags = Array[StringName]([&"cooldown.projectile"])

@@ -13,19 +13,69 @@ test_type = "unit"
 
 if "tests" in ARGUMENTS:
     test_arg = ARGUMENTS["tests"].lower()
-    if test_arg in ("yes", "1", "true", "on", "unit"):
+    if test_arg in ("yes", "1", "true", "on", "playtest"):
         build_tests = True
-        test_type = "unit"
-    elif test_arg in ("integration", "all"):
+        test_type = "playtest"
+    elif test_arg == "all":
+        build_tests = True
+        test_type = "all"
+    elif test_arg in ("unit", "integration"):
         build_tests = True
         test_type = test_arg
-    del ARGUMENTS["tests"]
+    ARGUMENTS.pop("tests")
+
+# Filter ARGLIST to ensure SCons doesn't see these as part of the command line signatures
+# for tasks that don't consume them.
+import SCons.Script
+
+SCons.Script.ARGLIST = [x for x in SCons.Script.ARGLIST if x[0] != "tests"]
 
 import SCons.Script
 
 SCons.Script.ARGLIST = [x for x in SCons.Script.ARGLIST if x[0] != "tests"]
 
-localEnv = Environment(tools=["default"], PLATFORM="")
+import pickle
+
+libname = "ability_system"
+projectdir = "demo"
+
+# --- Godot-style Environment Setup ---
+localEnv = Environment(tools=["default"])
+
+# Avoid issues when building with different versions of python
+localEnv.SConsignFile(
+    File("#.sconsign{0}.dblite".format(pickle.HIGHEST_PROTOCOL)).abspath
+)
+
+# Use MD5 decider for absolute reliability in incremental builds.
+# It ensures we only recompile if content changed, ignoring timestamps (vital for Git/CI).
+localEnv.Decider("MD5")
+
+# Prepend PATH to ensure system compilers are found consistently
+localEnv.PrependENVPath("PATH", os.getenv("PATH"))
+
+# Auto-detect CPU cores for parallel build if -j is not specified
+if localEnv.GetOption("num_jobs") <= 1:
+    cpu_count = os.cpu_count()
+    if cpu_count and cpu_count > 1:
+        localEnv.SetOption("num_jobs", cpu_count - 1)
+        print(f"Auto-detected {cpu_count} CPU cores. Using {cpu_count - 1} for build.")
+
+# --- SCons Cache ---
+scons_cache_path = os.environ.get("SCONS_CACHE")
+if not scons_cache_path and os.path.exists(".scons_cache"):
+    scons_cache_path = os.path.abspath(".scons_cache")
+
+if scons_cache_path:
+    CacheDir(scons_cache_path)
+    # Enable caching for all targets by default
+    localEnv.NoCache(localEnv.Value(os.environ.get("PATH")))
+    print(f"Using SCons cache at: {scons_cache_path}")
+
+# --- Compilation Database (for IDEs) ---
+if "compiledb" in ARGUMENTS:
+    localEnv.Tool("compilation_db")
+    localEnv.Alias("compiledb", localEnv.CompilationDatabase())
 
 # Build profiles can be used to decrease compile times.
 # You can either specify "disabled_classes", OR
@@ -52,7 +102,7 @@ Run the following command to download godot-cpp:
     git submodule update --init --recursive""")
     sys.exit(1)
 
-env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
+env = SConscript("godot-cpp/SConstruct", {"env": env.Clone(), "customs": customs})
 
 env.Append(CPPPATH=[".", "src", "src/tests"])
 env.Append(CPPDEFINES=["ABILITY_SYSTEM_GDEXTENSION"])

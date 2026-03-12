@@ -1,0 +1,11 @@
+[gd_resource type="ASEffect" format=3]
+
+[resource]
+effect_name = "Agent Heal"
+effect_tag = &"effect.heal"
+target_type = 0 # TARGET_SELF
+duration_policy = 0 # INSTANT
+modifiers = 1
+modifiers/0/attribute = &"attribute.health"
+modifiers/0/operation = 0 # ADD
+modifiers/0/magnitude = 30.0

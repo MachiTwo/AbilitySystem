@@ -1,6 +1,7 @@
-[gd_resource type="AbilitySystemCueAnimation" format=3]
+[gd_resource type="ASCueAnimation" format=3 uid="uid://clpiofajni63j"]
 
 [resource]
-cue_tag = &"cue.animation.attack"
 animation_name = "attack_1"
+cue_name = "attack"
 event_type = 1
+cue_tag = &"ability.skill.attack"

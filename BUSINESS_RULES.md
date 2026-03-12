@@ -34,17 +34,17 @@ Tags não são classes; são **Identificadores Hierárquicos Superpoderosos** ba
 
 Interface entre o Humano e os Resources.
 
-### 3.1 AbilitySystemEditorPlugin
+### 3.1 ASEditorPlugin
 
 - **Papel:** **Bootloader**.
 - **Regra:** Registro de tipos, ícones e inicialização de outros sub-editores. Proibido conter lógica de jogo.
 
-### 3.2 AbilitySystemTagsPanel
+### 3.2 ASTagsPanel
 
 - **Papel:** Interface visual para o **Registro Global**.
 - **Regra:** Manipula exclusivamente o dicionário de tags do `AbilitySystem` Singleton.
 
-### 3.3 AbilitySystemInspectorPlugin (e Property Selectors)
+### 3.3 ASInspectorPlugin (e Property Selectors)
 
 - **Papel:** Contextualização.
 - **Regra:** Deve fornecer seletores inteligentes (dropdowns de tags, busca de atributos) para facilitar a configuração de Resources e Components no Inspetor.
@@ -77,7 +77,7 @@ Localizados em `src/core/`. Onde o estado e a lógica de execução residem.
 
 ## 6. O ORQUESTRADOR: COMPONENT (O HUB)
 
-O `AbilitySystemComponent` (ASC).
+O `ASComponent` (ASC).
 
 - **Papel:** **Gestor de Coleções** e **Roteador de Sinais**.
 - **Regras de Negócio:**

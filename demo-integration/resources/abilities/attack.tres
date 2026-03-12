@@ -1,0 +1,19 @@
+[gd_resource type="ASAbility" script_class="ASAbility" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://resources/abilities/attack_logic.gd" id="1_logic"]
+[ext_resource type="ASEffect" path="res://resources/effects/damage_instant.tres" id="1"]
+[ext_resource type="ASCueAnimation" path="res://resources/cues/cue_attack.tres" id="2"]
+
+[resource]
+script = ExtResource("1_logic")
+ability_name = "Melee Attack"
+ability_tag = &"ability.skill.attack"
+activation_owned_tags = Array[StringName]([&"state.attacking"])
+activation_blocked_tags = Array[StringName]([&"state.dead", &"state.attacking"])
+activation_cancel_tags = Array[StringName]([&"state.walk", &"state.idle"])
+effects = Array[ASEffect]([ExtResource("1")])
+cues = Array[ASCue]([ExtResource("2")])
+ability_duration_policy = 1
+ability_duration = 0.5
+cooldown_duration = 1.0
+cooldown_tags = Array[StringName]([&"cooldown.attack"])

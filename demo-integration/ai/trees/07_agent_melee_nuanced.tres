@@ -1,0 +1,112 @@
+[gd_resource type="BehaviorTree" format=3 uid="uid://c2u6sljqkim0n"]
+
+[ext_resource type="Script" uid="uid://ccr43pgd4488l" path="res://ai/tasks/get_first_in_group.gd" id="1_08fik"]
+[ext_resource type="Script" uid="uid://ct71h72pech3b" path="res://ai/tasks/select_flanking_pos.gd" id="2_te3yo"]
+[ext_resource type="Script" uid="uid://df82exuqnfdb2" path="res://ai/tasks/arrive_pos.gd" id="3_svwk8"]
+[ext_resource type="Script" uid="uid://dbo0kq2cwb4qv" path="res://ai/tasks/face_target.gd" id="4_mvsyw"]
+[ext_resource type="Script" uid="uid://dcjgktglb1slf" path="res://ai/tasks/pursue.gd" id="5_r1ou0"]
+[ext_resource type="Script" path="res://ai/tasks/activate_ability.gd" id="6_as"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_46tbn"]
+var/speed/name = &"speed"
+var/speed/type = 3
+var/speed/value = 400.0
+var/speed/hint = 1
+var/speed/hint_string = "10,1000,10"
+var/flank_speed/name = &"flank_speed"
+var/flank_speed/type = 3
+var/flank_speed/value = 600.0
+var/flank_speed/hint = 1
+var/flank_speed/hint_string = "10,1000,10"
+
+[sub_resource type="BTAction" id="BTAction_as_idle"]
+script = ExtResource("6_as")
+ability_tag = &"state.idle"
+target_var = &""
+wait_until_ended = false
+
+[sub_resource type="BTRandomWait" id="BTRandomWait_xlud8"]
+
+[sub_resource type="BTSequence" id="BTSequence_6id86"]
+custom_name = "Chill"
+children = [SubResource("BTAction_as_idle"), SubResource("BTRandomWait_xlud8")]
+
+[sub_resource type="BTAction" id="BTAction_as_walk"]
+script = ExtResource("6_as")
+ability_tag = &"state.walk"
+target_var = &""
+wait_until_ended = false
+
+[sub_resource type="BTAction" id="BTAction_as_projectile"]
+script = ExtResource("6_as")
+ability_tag = &"ability.skill.projectile"
+target_var = &"target"
+wait_until_ended = true
+
+[sub_resource type="BTAction" id="BTAction_as_attack"]
+script = ExtResource("6_as")
+ability_tag = &"ability.skill.attack"
+target_var = &"target"
+wait_until_ended = true
+
+[sub_resource type="BBVariant" id="BBVariant_a6rge"]
+resource_name = "target"
+saved_value = &"target"
+type = 1
+
+[sub_resource type="BTAction" id="BTAction_18yps"]
+script = ExtResource("1_08fik")
+group = &"player"
+output_var = SubResource("BBVariant_a6rge")
+
+[sub_resource type="BBVariant" id="BBVariant_r8gpe"]
+resource_name = "$target"
+value_source = 1
+variable = &"target"
+type = 1
+
+[sub_resource type="BTAction" id="BTAction_lkvio"]
+script = ExtResource("2_te3yo")
+target_var = SubResource("BBVariant_r8gpe")
+range_min = 80
+range_max = 120
+
+[sub_resource type="BTAction" id="BTAction_v7unf"]
+script = ExtResource("3_svwk8")
+speed_var = &"flank_speed"
+
+[sub_resource type="BTSequence" id="BTSequence_6id87"]
+custom_name = "Flank"
+children = [SubResource("BTAction_lkvio"), SubResource("BTAction_as_walk"), SubResource("BTAction_v7unf")]
+
+[sub_resource type="BBVariant" id="BBVariant_6x0d4"]
+resource_name = "$target"
+value_source = 1
+variable = &"target"
+type = 1
+
+[sub_resource type="BTAction" id="BTAction_u15m2"]
+script = ExtResource("4_mvsyw")
+target_var = SubResource("BBVariant_6x0d4")
+
+[sub_resource type="BTSequence" id="BTSequence_vunv1"]
+custom_name = "Attack"
+children = [SubResource("BTAction_u15m2"), SubResource("BTAction_as_attack")]
+
+[sub_resource type="BTSequence" id="BTSequence_proj"]
+custom_name = "Ranged Attack"
+children = [SubResource("BTAction_u15m2"), SubResource("BTAction_as_projectile")]
+
+[sub_resource type="BTProbabilitySelector" id="BTProbabilitySelector_xyz"]
+children = [SubResource("BTSequence_vunv1"), SubResource("BTSequence_proj")]
+
+[sub_resource type="BTSelector" id="BTSelector_s108q"]
+children = [SubResource("BTSequence_6id87"), SubResource("BTProbabilitySelector_xyz"), SubResource("BTSequence_6id86")]
+
+[sub_resource type="BTSequence" id="BTSequence_pxl2k"]
+children = [SubResource("BTAction_18yps"), SubResource("BTSelector_s108q")]
+
+[resource]
+description = "Refactored to use ASPlugin for everything."
+blackboard_plan = SubResource("BlackboardPlan_46tbn")
+root_task = SubResource("BTSequence_pxl2k")

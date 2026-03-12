@@ -1,0 +1,9 @@
+[gd_resource type="ASEffect" format=3]
+
+[resource]
+effect_name = "Stun"
+effect_tag = &"effect.stun"
+duration_policy = 1
+duration_magnitude = 1.0
+stacking_policy = 1
+granted_tags = Array[StringName]([&"state.stunned"])

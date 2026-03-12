@@ -1,0 +1,10 @@
+[gd_resource type="ASAttributeSet" format=3]
+
+[ext_resource type="ASAttribute" path="res://resources/attributes/health.tres" id="1"]
+[ext_resource type="ASAttribute" path="res://resources/attributes/move_speed.tres" id="4"]
+[ext_resource type="ASAttribute" path="res://resources/attributes/attack_power.tres" id="5"]
+[ext_resource type="ASAttribute" path="res://resources/attributes/mana.tres" id="6"]
+[ext_resource type="ASAttribute" path="res://resources/attributes/stamina.tres" id="7"]
+
+[resource]
+attribute_definitions = Array[ASAttribute]([ExtResource("1"), ExtResource("4"), ExtResource("5"), ExtResource("6"), ExtResource("7")])

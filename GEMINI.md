@@ -1,6 +1,6 @@
 # GEMINI.md - Governança Técnica & Memória do Projeto
 
-> **Status:** ATIVO
+> **Status:** v0.1.0 (Stable) - ATIVO
 > **Par:** Machi (Navigator) & Gemini (Pilot)
 > **Princípio:** Anti Vibe-Coding / Desapego Radical ao Código
 
@@ -53,14 +53,14 @@ Nenhuma lógica de negócio é permitida sem um teste.
 
 ### Stack de Testes
 
-- **Unit Testing:** [doctest] - Inicializado em `tests/`.
-- **Integration Testing:** [Proposto: GUT (Godot Unit Test) para classes GDExtension].
+- **Unit Testing:** [doctest] - Localizado em `src/tests/`.
+- **Integration Testing:** [Godot Headless] - Execução de cenários reais via `utility/tests.py`.
 
 ---
 
 ## 4. REGRAS OPERACIONAIS (AI JAIL)
 
-- **Ambiente:** Ambiente de desenvolvimento isolado.
+- **Ambiente:** Desenvolvimento isolado com compilação Dual (Module/GDExtension).
 - **Permissão de Escrita:** Gemini propõe -> Machi aprova -> Gemini escreve.
 - **Terminal:** Gemini sugere -> Machi executa -> Machi fornece o log de saída.
 - **Limite de Erro:** Se uma tarefa falhar 3 vezes, paramos e simplificamos a abordagem.
@@ -71,47 +71,53 @@ Nenhuma lógica de negócio é permitida sem um teste.
 
 ### Tech Stack
 
-- **Linguagem:** C++, GDScript
-- **Engine:** Godot 4.x
+- **Linguagem:** C++17, GDScript
+- **Engine:** Godot 4.6.x (Compatível com 4.x)
 - **Binding:** GDExtension (godot-cpp)
 - **Build System:** SCons
+- **Naming Policy:** 
+  - Classes encurtadas com prefixo `AS` (ex: `ASComponent`, `ASAbility`).
+  - Singleton mantido como `AbilitySystem` para acesso global inequívoco.
+
+### Comandos de Build
+
+- **Unit Tests:** `python -m SCons target=editor platform=windows tests=unit -j4`
+- **Playtest (Integration):** `python -m SCons target=editor platform=windows tests=playtest -j4`
+- **Full Build:** `python -m SCons target=editor platform=windows tests=all -j4`
 
 ### Diretórios Chave
 
-- `src/`: Código-fonte C++.
-- `gdextension/`: Configuração da extensão e binários.
-- `demo/`: Projeto Godot para testes e exemplos.
-- `addons/ability_system/`: Estrutura real do plugin.
-- `tests/`: Suite de testes unitários baseada em `doctest`.
+- `src/core/`: Lógica fundamental e Specs (Runtime).
+- `src/resources/`: Definições baseadas em Godot Resource.
+- `src/scene/`: Nodes principais (`ASComponent`, `ASDelivery`).
+- `src/tests/`: Suite de testes baseada em `doctest`.
+- `addons/ability_system/`: Binários e estrutura final do plugin.
+
+---
 
 ## 6. ESTRATÉGIA E COBERTURA DE TESTES (TEST PLAN)
 
-Para garantir a estabilidade do módulo/plugin, todas as camadas devem ter cobertura de teste através do `doctest`.
+### 🧪 1. Core Logic (Unit Tests)
 
-### 🧪 1. Core Logic & Utilities (Unit Tests)
-
-- **Tag System (`test_ability_system_tag_spec.h`)**: Hierarquia, verificação rigorosa (todas as tags, algumas tags, tags exatas).
-- **Attribute Set (`test_ability_system_attribute_set.h`)**: Inicialização, set/get de bases, limites de atributos.
-- **Effect Spec (`test_ability_system_effect_spec.h`)**: Cálculo matemático de instâncias, conversões de duração e stack.
-- **Cue Spec (`test_ability_system_cue_spec.h`)**: Construção de payload, pass-through de parâmetros.
+- **Tag System (`test_as_tag_spec.h`)**: Hierarquia e performance.
+- **Attribute Set (`test_as_attribute_set.h`)**: Clamping e modifiers.
+- **ASDelivery (`test_as_delivery.h`)**: Injeção de efeitos sem dependência de `target_node`.
+- **Ability Triggers (`test_as_triggers.h`)**: Ativação automática via `tag_added`/`tag_removed`.
 
 ### 🧩 2. Component Integration (Integration Tests)
 
-- **`AbilitySystemComponent` (`test_ability_system_component.h`)**: Instanciação limpa.
-- **Effect Application**: Duração (`Tick` loop), Efeitos instantâneos, Acúmulo de Stacks (Duration, Intensity, Override).
-- **Ability Execution**: Verificação de `can_activate()`, custos, aplicação de cooldowns.
-- **Events & Tags**: Componente respondendo à injeção e remoção de tags do container.
-
-### 🎭 3. Editor & Resources
-
-- Os testes devem focar primariamente na manipulação runtime (Engine runtime).
-- Classes `EditorProperty` e interface do usuário não exigem `doctest`, mas dependem de validação empírica na Demo.
+- **`ASComponent`**: Ciclo de vida completo de habilidades e efeitos.
+- **LimboAI integration**: Verificação de BTNodes nativos operando no ASC.
+- **Sincronia de Atributos**: Emissão de sinais e reatividade de UI.
 
 ---
 
 ## 7. DECISÕES ATIVAS & DÉBITOS
 
-- [x] Inicializar framework de testes (doctest adicionado) configurado no `SConstruct`.
-- [x] Refatorar arquitetura CORE para suportar Compilação Dual (Module / GDExtension).
-- [ ] Implementar ciclo TDD cobrindo a Estratégia de Testes descrita acima (Objetivo: 100% de cobertura da lógica Core).
-- [ ] Validar a Demo (Player e Orc) utilizando o componente após as implementações robustas de efeitos e custos.
+- [x] Refatorar prefixos para `AS` (v0.1.0 Standard).
+- [x] Implementar `ASDelivery` (Reatividade de Projéteis).
+- [x] Implementar `Ability Triggers` (Automação por Tags).
+- [x] Documentação bilíngue (README, API, Tests, Release Notes).
+- [ ] Otimizar performance do `ASTagSpec` (Uso de Bitmask para tags comuns).
+- [ ] Validar efeitos periódicos complexos (Sub-ticks e magnitudes dinâmicas).
+- [ ] Alcançar 100% de cobertura nos métodos públicos do `ASComponent`.

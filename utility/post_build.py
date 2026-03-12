@@ -18,7 +18,7 @@ def sync_addons():
     for file in [
         "ability_system.gdextension",
         "plugin.cfg",
-        "ability_system_plugin.gd",
+        "as_plugin.gd",
     ]:
         src_file = os.path.join(src_dir, file)
         if os.path.exists(src_file):
@@ -38,16 +38,32 @@ def sync_addons():
         for svg_file in glob.glob(os.path.join(icons_dir, "*.svg")):
             shutil.copy2(svg_file, addons_icons_dir)
 
-    # 4. Copy entire addons folder into demo/
-    # First remove demo/addons if it exists
-    demo_addons_dir = os.path.join(project_root, "demo", "addons")
-    if os.path.exists(demo_addons_dir):
-        shutil.rmtree(demo_addons_dir)
+    # 4. Copy entire addons folder into demo projects
+    # List of demo projects to sync
+    demo_projects = ["demo", "demo-integration"]
 
-    # Copy addons folder into demo/ (preserve original)
-    addons_src = os.path.join(project_root, "addons")
-    addons_dst = os.path.join(project_root, "demo", "addons")
-    shutil.copytree(addons_src, addons_dst)
+    for proj in demo_projects:
+        dst = os.path.join(project_root, proj, "addons")
+        # Ensure destination exists
+        os.makedirs(dst, exist_ok=True)
+
+        addons_src = os.path.join(project_root, "addons")
+        if os.path.exists(addons_src):
+            # Copy all addons from root to demo projects, merging with existing ones
+            for item in os.listdir(addons_src):
+                s = os.path.join(addons_src, item)
+                d = os.path.join(dst, item)
+                if os.path.isdir(s):
+                    # Use dirs_exist_ok=True (Python 3.8+) to merge folders instead of rmtree+copytree
+                    try:
+                        shutil.copytree(s, d, dirs_exist_ok=True)
+                    except Exception as e:
+                        print(f"Warning: Could not sync folder {item} to {proj}: {e}")
+                else:
+                    try:
+                        shutil.copy2(s, d)
+                    except Exception as e:
+                        print(f"Warning: Could not sync file {item} to {proj}: {e}")
 
 
 if __name__ == "__main__":

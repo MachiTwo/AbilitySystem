@@ -59,10 +59,10 @@ Para mitigar os riscos de alucinação e comandos destrutivos, a execução segu
 ### 5.2 PADRÕES DE DESIGN E ARQUITETURA
 
 - **Pattern Definition vs. State (Resource vs. Spec):**
-  - **Resources (`src/resources/`):** Objetos imutáveis (Data Definitions) que definem regras de negócio (ex: `AbilitySystemAbility`, `AbilitySystemEffect`).
-  - **Specs (`src/core/`):** Objetos de estado transiente (Runtime State) que envolvem o Resource com dados de execução (ex: `AbilitySystemAbilitySpec`, `AbilitySystemCueSpec`).
+  - **Resources (`src/resources/`):** Objetos imutáveis (Data Definitions) que definem regras de negócio (ex: `ASAbility`, `ASEffect`).
+  - **Specs (`src/core/`):** Objetos de estado transiente (Runtime State) que envolvem o Resource com dados de execução (ex: `ASAbilitySpec`, `ASCueSpec`).
 - **GDExtension Idioms:**
-  - **Tipagem Forte em Entradas:** Evitar `Ref<RefCounted>` em interfaces públicas. Usar a classe específica (`Ref<AbilitySystemCue>`).
+  - **Tipagem Forte em Entradas:** Evitar `Ref<RefCounted>` em interfaces públicas. Usar a classe específica (`Ref<ASCue>`).
   - **Retorno Explícito:** Getters de `Ref<T>` devem usar o construtor explícito: `return Ref<T>(member_variable);` para garantir clareza e segurança de refcount.
   - **Gestão de Circularidade:** Uso rigoroso de **Forward Declarations** (`class X;`) em headers para quebrar ciclos. Inclusões de headers completos APENAS nos arquivos `.cpp`.
   - **Binding:** Registro mandatório de todos os métodos em `_bind_methods` e uso de `GDVIRTUAL` para callbacks de script.
@@ -71,9 +71,15 @@ Para mitigar os riscos de alucinação e comandos destrutivos, a execução segu
 
 - **Idioma do Código:** Todo o código, comentários, logs e documentação técnica DEVEM ser em **Inglês**. A comunicação entre o par pode ser em Português.
 - **Nomenclatura:**
-  - **Classes:** PascalCase (ex: `AbilitySystemComponent`).
+  - **Classes:** PascalCase com prefixo encurtado (ex: `ASComponent`, `ASAbility`). O Singleton permanece `AbilitySystem`.
   - **Métodos e Variáveis:** snake_case (ex: `activate_ability`, `source_id`).
-  - **Prefixos:** Membros privados e protegidos não possuem prefixo específico além do padrão sugerido pelo clang-format.
+  - **Prefixos:** Membros privados usam prefixo `_` seguindo padrão Godot.
+
+### 5.5 NOVAS FUNCIONALIDADES (v0.1.0)
+
+- **ASDelivery:** Fluxo reativo de injeção de efeitos, eliminando a dependência de `target_node` em funções de ativação.
+- **Ability Triggers:** Automação de habilidades via eventos de Tags (`add_tag`/`remove_tag`).
+- **Integração LimboAI:** BTNodes nativos consumindo a API abreviada.
 
 ### 5.4 ESTRUTURA DE DIRETÓRIOS
 
@@ -90,7 +96,7 @@ Para mitigar os riscos de alucinação e comandos destrutivos, a execução segu
   - `workflows/`: Contém os pipelines principais. Divididos estruturalmente por plataforma e tipo de compilação (ex: `android_module_builds.yml`, `linux_gdextension_builds.yml`).
   - Existem workflows agrupadores (`all_module_builds.yml` e `all_gdextension_builds.yml`) que orquestram as builds por plataforma, garantindo escalabilidade na adição de novos targets.
   - O sistema de Actions garante validações rigorosas (linting com pre-commit) e geração de artefatos separados.
-  
+
 ### 5.5 ESTRATÉGIA DE COMPILAÇÃO DUAL (MODULE VS GDEXTENSION)
 
 Visando escalabilidade e flexibilidade de distribuição, o projeto é arquitetado para ser compilado tanto como um **Godot Module** (embutido no binário da engine) quanto como uma **GDExtension** (plugin dinâmico).
@@ -100,7 +106,13 @@ Visando escalabilidade e flexibilidade de distribuição, o projeto é arquiteta
   - **Exemplo de uso:** Includes específicos (ex: `<godot_cpp/...>` vs `<core/...>`), bindings dinâmicos vs estáticos, e features que só fazem sentido ou funcionam em um dos ecossistemas.
   - Toda funcionalidade central (Core) deve ser desenhada de forma agnóstica. As diferenças estruturais ficam restritas às bordas do sistema (onde a engine Godot é invocada).
 
-### 5.6 DÉBITOS TÉCNICOS CONHECIDOS
+### 5.6 NOVAS FUNCIONALIDADES (v0.1.0)
+
+- **ASDelivery:** Fluxo reativo de injeção de efeitos, eliminando a dependência de `target_node` em funções de ativação.
+- **Ability Triggers:** Automação de habilidades via eventos de Tags (`add_tag`/`remove_tag`).
+- **Integração LimboAI:** BTNodes nativos consumindo a API abreviada.
+
+### 5.7 DÉBITOS TÉCNICOS CONHECIDOS
 
 - Otimização de busca de tags (atualmente baseada em StringName/HashMap).
 - Implementação de Predicados complexos para atributos.

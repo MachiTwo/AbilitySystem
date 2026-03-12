@@ -38,7 +38,9 @@
 #include "modules/ability_system/tests/doctest.h"
 #endif
 
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
+#endif
 
 TEST_CASE("AbilitySystem Tag Matching") {
 	SUBCASE("Exact matches") {

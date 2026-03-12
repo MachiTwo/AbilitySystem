@@ -88,8 +88,6 @@ jobs:
       - name: Prepare Artifact
         shell: bash
         run: |
-          cd zyris/bin/
-
           # Clean versions
           PLUGIN_VER=$(echo "${{ inputs.plugin_version }}" | tr '-' '.')
           ZYRIS_VER=$(echo "${{ inputs.zyris_version }}" | tr '-' '.')
@@ -100,24 +98,23 @@ jobs:
             MODULE_PART="dotnet."
           fi
 
-          # Final name
-          FINAL_NAME="${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.windows.${{ inputs.arch }}.zip"
+          mkdir -p out/artifact
 
           # Use find to gather all relevant binaries (EXEs and DLLs)
           # We include all .exe and .dll files to capture the engine, console wrappers, and any needed libraries (like Mono or D3D12 Agility SDK)
-          BINARIES=$(find . -maxdepth 1 \( -name "*.exe" -o -name "*.dll" \) -not -path '*/.*')
-          if [ -n "$BINARIES" ]; then
-            7z a ../../out/$FINAL_NAME $BINARIES
+          find zyris/bin/ -maxdepth 1 \( -name "*.exe" -o -name "*.dll" \) -not -path '*/.*' -exec cp {} out/artifact/ \;
+
+          if [ "$(ls -A out/artifact)" ]; then
+            echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.windows.${{ inputs.arch }}" >> $GITHUB_ENV
           else
-            echo "::error::No binaries found for zipping"
-            ls -F
+            echo "::error::No binaries found"
+            ls -F zyris/bin/
             exit 1
           fi
-          echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.windows.${{ inputs.arch }}" >> $GITHUB_ENV
-          echo "file_name=$FINAL_NAME" >> $GITHUB_ENV
+          echo "artifact_path=out/artifact/" >> $GITHUB_ENV
 
       - name: Upload Zyris Binary (with Module)
         uses: actions/upload-artifact@v4.6.1
         with:
           name: ${{ env.artifact_name }}
-          path: out/${{ env.file_name }}
+          path: ${{ env.artifact_path }}

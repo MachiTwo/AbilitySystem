@@ -1,4 +1,8 @@
-# Ability System Plugin - Test Documentation
+# Ability System - Test Documentation
+
+> [!TIP]
+> **Read this in other languages / Leia isto em outros idiomas:**
+> [**English**](Tests.md) | [**Português**](Tests.pt.md)
 
 ## 🧪 Methodology: Test-Driven Development (TDD)
 
@@ -20,42 +24,32 @@ The testing system is designed to work in both **GDExtension** (via `doctest`) a
 
 Located in `src/tests/`, these verify atomic behaviors of the system:
 
-- **`AbilitySystemTagSpec`**: Hierarchy matching, exact matching, and registration.
-- **`AbilitySystemAttributeSet`**: Base value clamping and initialization.
-- **`AbilitySystemEffectSpec`**: Mathematical calculations for attribute modifications.
+- **`ASTagSpec`**: Hierarchy matching, exact matching, and registration.
+- **`ASAttributeSet`**: Base value clamping and initialization.
+- **`ASEffectSpec`**: Mathematical calculations for attribute modifications.
+- **`ASDelivery`**: Reactive effect delivery system for targets (ideal for projectiles).
+- **`Ability Triggers`**: Automatic ability activation based on Tag events (Added/Removed).
 
 ### 2. Integration Tests
 
-Simulates real Godot scenarios using the `AbilitySystemComponent`:
+Simulates real Godot scenarios using the `ASComponent`:
 
 - **Effect Application**: Tests duration, stacking logic (Override, Intensity) and removal.
 - **Ability Execution**: Validates activation requirements, costs, and cooldowns.
 - **Signal Integrity**: Ensures components correctly broadcast events when tags or attributes change.
 
-### 3. Project Tests (Top-Down RPG Scenario)
+### 3. Project Tests (Top-Down RPG Scenario & LimboAI)
 
-Located in `src/tests/test_ability_system_integration.h`, this suite simulates a complete Top-Down RPG ecosystem to verify high-level interactions and system-wide "business rules".
+Located in `src/tests/test_as_integration.h`, this suite simulates a complete Top-Down RPG ecosystem to verify high-level interactions and system-wide "business rules".
 
 **Scenario Overview:**
-- **Actors**: Player and Enemy/NPC, both equipped with an `AbilitySystemComponent`.
-- **Attributes**: `Health`, `Mana`, `Stamina`.
-- **States (Tags)**: `State.Talking`, `State.Stunned`, `State.Dead`, `State.Burning`.
 
-**Verified Interaction Flows:**
-
-- **Dialogue vs. Combat**:
-  - Activating `Ability.Talk` grants the `State.Talking` tag.
-  - While talking, combat abilities (e.g., `Ability.Melee`) are blocked via `activation_blocked_tags`, ensuring the player can't attack during a conversation.
-- **Combat & DOT (Damage Over Time)**:
-  - `Ability.Fireball` checks for `Mana` cost and applies `Effect.Burning`.
-  - `Effect.Burning` is a periodic effect that reduces `Health` every second, verifying the system's ability to handle time-based attribute decay.
-- **Crowd Control (CC)**:
-  - Application of `State.Stunned` cancels current abilities and blocks new activations.
-- **Progression & Leveling**:
-  - Abilities verify `Attribute` requirements (e.g., needing 150 Mana to cast a high-level spell) without necessarily consuming the attribute.
-- **Death & Lifecycle**:
-  - When `Health` reaches zero, `State.Dead` is applied.
-  - Verified that all active abilities/effects are purged and further actions are restricted.
+- **Actors**: Player and Enemy/NPC (Charger), both equipped with an `ASComponent`.
+- **AI**: The Enemy uses LimboAI integrated via `BTAction` to trigger abilities on the component.
+- **Verified Interaction Flows:**
+  - **Dialogue vs. Combat**: Blocking social abilities by combat states.
+  - **Crowd Control (CC)**: Stun canceling active abilities.
+  - **Death & Lifecycle**: Transition to `State.Dead` clearing all resources.
 
 ---
 
@@ -66,7 +60,7 @@ Located in `src/tests/test_ability_system_integration.h`, this suite simulates a
 To run the full suite using your local Godot binary:
 
 ```powershell
-python -m SCons tests=yes
+python -m SCons target=editor platform=windows tests=playtest -j4
 ```
 
 This will compile the plugin with test symbols and invoke `utility/tests.py`, which launches Godot headlessly to run the `doctest` suite.

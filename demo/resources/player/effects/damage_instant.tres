@@ -1,8 +1,9 @@
-[gd_resource type="AbilitySystemEffect" format=3]
+[gd_resource type="ASEffect" format=3]
 
 [resource]
 effect_name = "Instant Damage"
 effect_tag = &"effect.damage"
+target_type = 1
 duration_policy = 0
 modifiers = 1
 modifiers/0/attribute = &"Health"

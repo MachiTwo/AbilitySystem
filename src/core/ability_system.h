@@ -44,7 +44,9 @@
 #include "core/variant/typed_array.h"
 #endif
 
-namespace godot {
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
 
 class AbilitySystemCue;
 
@@ -99,6 +101,4 @@ public:
 	~AbilitySystem();
 };
 
-} // namespace godot
-
-VARIANT_ENUM_CAST(godot::AbilitySystem::TagType);
+VARIANT_ENUM_CAST(AbilitySystem::TagType);

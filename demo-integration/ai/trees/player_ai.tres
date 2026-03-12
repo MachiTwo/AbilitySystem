@@ -1,0 +1,65 @@
+[gd_resource type="BehaviorTree" format=3]
+
+[ext_resource type="Script" path="res://ai/tasks/get_first_in_group.gd" id="1"]
+[ext_resource type="Script" path="res://ai/tasks/pursue.gd" id="2"]
+[ext_resource type="Script" path="res://ai/tasks/face_target.gd" id="3"]
+[ext_resource type="Script" path="res://ai/tasks/activate_ability.gd" id="4"]
+[ext_resource type="Script" path="res://ai/tasks/in_range.gd" id="5"]
+
+[sub_resource type="BlackboardPlan" id="BlackboardPlan_player"]
+var/speed/name = &"speed"
+var/speed/type = 3
+var/speed/value = 400.0
+var/speed/hint = 1
+var/speed/hint_string = "10,1000,10"
+var/target/name = &"target"
+var/target/type = 24
+var/target/value = null
+var/target/hint = 0
+var/target/hint_string = "Node2D"
+
+[sub_resource type="BTAction" id="BTAction_get_target"]
+script = ExtResource("1")
+group = &"Agent"
+output_var = &"target"
+
+[sub_resource type="BTAction" id="BTAction_walk"]
+script = ExtResource("4")
+ability_tag = &"state.walk"
+wait_until_ended = false
+
+[sub_resource type="BTAction" id="BTAction_face"]
+script = ExtResource("3")
+target_var = &"target"
+
+[sub_resource type="BTAction" id="BTAction_attack"]
+script = ExtResource("4")
+ability_tag = &"ability.skill.attack"
+wait_until_ended = true
+
+[sub_resource type="BTCondition" id="BTCondition_range"]
+script = ExtResource("5")
+distance = 100.0
+target_var = &"target"
+
+[sub_resource type="BTSequence" id="BTSequence_combat"]
+custom_name = "Attack if in range"
+children = [SubResource("BTCondition_range"), SubResource("BTAction_face"), SubResource("BTAction_attack")]
+
+[sub_resource type="BTAction" id="BTAction_pursue"]
+script = ExtResource("2")
+target_var = &"target"
+
+[sub_resource type="BTSequence" id="BTSequence_pursue"]
+custom_name = "Pursue"
+children = [SubResource("BTAction_walk"), SubResource("BTAction_pursue")]
+
+[sub_resource type="BTSelector" id="BTSelector_actions"]
+children = [SubResource("BTSequence_combat"), SubResource("BTSequence_pursue")]
+
+[sub_resource type="BTSequence" id="BTSequence_root"]
+children = [SubResource("BTAction_get_target"), SubResource("BTSelector_actions")]
+
+[resource]
+blackboard_plan = SubResource("BlackboardPlan_player")
+root_task = SubResource("BTSequence_root")

@@ -1,0 +1,6 @@
+[gd_resource type="ASCueAudio" format=3]
+
+[resource]
+cue_name = "Heal SFX"
+cue_tag = &"cue.snd.heal"
+event_type = 0 # ON_EXECUTE

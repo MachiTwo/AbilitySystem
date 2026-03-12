@@ -1,5 +1,14 @@
-[gd_resource type="AbilitySystemAbility" format=3]
+[gd_resource type="ASAbility" format=3]
+
+[ext_resource type="ASEffect" uid="uid://be5a4s5b6v7r1" path="res://resources/enemy/effects/damage_instant.tres" id="1"]
 
 [resource]
 ability_name = "Enemy Attack"
 ability_tag = &"ability.skill.attack"
+activation_owned_tags = Array[StringName]([&"state.attacking"])
+activation_blocked_tags = Array[StringName]([&"cooldown.attack", &"state.dead", &"state.attacking"])
+effects = Array[ASEffect]([ExtResource("1")])
+ability_duration_policy = 1
+ability_duration = 0.8
+cooldown_duration = 1.5
+cooldown_tags = Array[StringName]([&"cooldown.attack"])
