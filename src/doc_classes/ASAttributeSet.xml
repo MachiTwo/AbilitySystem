@@ -91,9 +91,6 @@
 		<member name="unlocked_abilities" type="ASAbility[]" setter="set_unlocked_abilities" getter="get_unlocked_abilities" default="[]">
 			Abilities permitted for use by the actor.
 		</member>
-		<member name="attribute_drivers" type="Dictionary[]" setter="set_attribute_drivers" getter="get_attribute_drivers" default="[]">
-			List of relationships between attributes. Format: { "source": &amp;"stat.str", "destination": &amp;"stat.atk", "ratio": 2.0 }.
-		</member>
 	</members>
 	<signals>
 		<signal name="attribute_changed">

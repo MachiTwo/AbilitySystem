@@ -1421,27 +1421,6 @@ void ASComponent::_update_attribute_current_values() {
 	for (int k = 0; k < attribute_sets.size(); k++) {
 		attribute_sets[k]->reset_current_values();
 	}
-
-	// Apply attribute drivers (relationships like Strength -> Attack)
-	for (int k = 0; k < attribute_sets.size(); k++) {
-		Ref<ASAttributeSet> set = attribute_sets[k];
-		TypedArray<Dictionary> drivers = set->get_attribute_drivers();
-		for (int d = 0; d < drivers.size(); d++) {
-			Dictionary driver = drivers[d];
-			if (driver.has("source") && driver.has("destination") && driver.has("ratio")) {
-				StringName source = driver["source"];
-				StringName dest = driver["destination"];
-				float ratio = driver["ratio"];
-
-				// We use the current value of the source (which is currently its base value)
-				float source_val = get_attribute_value_by_tag(source);
-				if (set->has_attribute(dest)) {
-					float current_dest = set->get_attribute_current_value(dest);
-					set->set_attribute_current_value(dest, current_dest + (source_val * ratio));
-				}
-			}
-		}
-	}
 	const ASEffect::ModifierOp OP_ORDER[] = { ASEffect::OP_ADD, ASEffect::OP_MULTIPLY, ASEffect::OP_DIVIDE, ASEffect::OP_OVERRIDE };
 	for (int pass = 0; pass < 4; pass++) {
 		ASEffect::ModifierOp current_op = OP_ORDER[pass];
