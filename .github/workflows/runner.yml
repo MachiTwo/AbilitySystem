@@ -62,6 +62,14 @@ jobs:
     with:
       plugin-version: ${{ needs.check-all.outputs.plugin-version }}
 
+  multiplayer-tests:
+    name: 🌐 Multiplayer Tests
+    if: |
+      (github.event_name != 'workflow_dispatch' || inputs.build_gdextension == true) &&
+      !contains(github.event.head_commit.message, '[gdextension skip]')
+    needs: [integration-tests]
+    uses: ./.github/workflows/test_multiplayer.yml
+
   package-plugin:
     name: 📦 Package Plugin
     if: |
