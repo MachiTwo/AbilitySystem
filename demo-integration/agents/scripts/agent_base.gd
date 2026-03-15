@@ -28,7 +28,29 @@ var _moved_this_frame: bool = false
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 @onready var summoning_effect: GPUParticles2D = $FX/Summoned
 
+@export var debug_as: bool = false
+var _last_debug_tags: Array = []
+var _last_debug_anim: String = ""
+
+
+func _debug_as() -> void:
+	if not is_instance_valid(asc): return
+	var current_tags = asc.get_tags()
+	current_tags.sort()
+	var current_anim = ""
+	if is_instance_valid(animation_player):
+		current_anim = animation_player.current_animation
+	
+	if current_tags != _last_debug_tags or current_anim != _last_debug_anim:
+		print("[%s] Tags: %s | Anim: %s" % [name, current_tags, current_anim])
+		_last_debug_tags = current_tags
+		_last_debug_anim = current_anim
+
+
 func _ready() -> void:
+	if OS.get_cmdline_args().has("--playtest-cycle") or OS.get_cmdline_args().has("--debug-ability-system"):
+		debug_as = true
+
 	if not is_instance_valid(asc): return
 	
 	# Link ASC to AnimationPlayer
@@ -48,16 +70,32 @@ func _ready() -> void:
 		if is_instance_valid(fallback_set):
 			asc.add_attribute_set(fallback_set)
 	
+	# ASDelivery initialization for melee/ranged
+	_init_deliveries(self)
+	
 	# Connect ASC signals
 	asc.attribute_changed.connect(_on_attribute_changed)
 	asc.effects_ready_for_others.connect(_on_effects_ready_for_others)
 	asc.ability_activated.connect(_on_ability_activated)
 	asc.ability_ended.connect(_on_ability_ended)
+	asc.tag_changed.connect(func(_tag, _added): _refresh_animation_state.call_deferred())
+	
+	_update_conditional_tags()
+	_refresh_animation_state.call_deferred()
 
 func die() -> void:
 	queue_free()
 
 func _physics_process(_delta: float) -> void:
+	if debug_as:
+		_debug_as()
+		
+	# Update moving tag
+	if velocity.length() > 5.0:
+		if not asc.has_tag(&"state.is_moving"): asc.add_tag(&"state.is_moving")
+	else:
+		if asc.has_tag(&"state.is_moving"): asc.remove_tag(&"state.is_moving")
+		
 	_post_physics_process.call_deferred()
 
 func _post_physics_process() -> void:
@@ -92,30 +130,49 @@ func get_facing() -> float:
 
 # --- AbilitySystem Handlers ---
 
-func _on_calculate_conditional_tag(tag: StringName) -> bool:
+func _update_conditional_tags() -> void:
+	if not is_instance_valid(asc): return
+	
 	var hp = asc.get_attribute_value_by_tag(&"attribute.health")
-	match tag:
-		&"state.low_health":
-			return hp > 0 and hp < 40.0
-		&"state.critical_health":
-			return hp > 0 and hp < 15.0
-		&"state.full_health":
-			return hp >= 100.0
-		&"state.immune":
-			return asc.has_tag(&"state.immune")
-		&"state.is_moving":
-			return velocity.length() > 5.0
-	return false
+	
+	# Low Health
+	if hp > 0 and hp < 40.0:
+		if not asc.has_tag(&"state.low_health"): asc.add_tag(&"state.low_health")
+	else:
+		if asc.has_tag(&"state.low_health"): asc.remove_tag(&"state.low_health")
+		
+	# Critical Health
+	if hp > 0 and hp < 15.0:
+		if not asc.has_tag(&"state.critical_health"): asc.add_tag(&"state.critical_health")
+	else:
+		if asc.has_tag(&"state.critical_health"): asc.remove_tag(&"state.critical_health")
+	
+	# Full Health
+	if hp >= 100.0:
+		if not asc.has_tag(&"state.full_health"): asc.add_tag(&"state.full_health")
+	else:
+		if asc.has_tag(&"state.full_health"): asc.remove_tag(&"state.full_health")
+
+
+func _init_deliveries(p_node: Node) -> void:
+	if p_node is ASDelivery:
+		p_node.set_source_component(asc)
+		if p_node.get_parent() is Hitbox:
+			p_node.level = p_node.get_parent().damage
+	
+	for child in p_node.get_children():
+		_init_deliveries(child)
 
 func _on_attribute_changed(attr: StringName, _old: float, new: float) -> void:
+	_update_conditional_tags()
 	if attr == &"attribute.health":
 		if new <= 0:
-			asc.try_activate_ability_by_tag(&"state.dead")
+			asc.call_deferred(&"try_activate_ability_by_tag", &"state.dead")
 		elif new < _old:
-			asc.try_activate_ability_by_tag(&"state.hurt")
+			asc.call_deferred(&"try_activate_ability_by_tag", &"state.hurt")
 			var effect = load("res://resources/effects/invulnerability_post_hit.tres")
 			if is_instance_valid(effect):
-				asc.apply_effect_by_resource(effect)
+				asc.call_deferred(&"apply_effect_by_resource", effect)
 
 func _on_ability_activated(spec: ASAbilitySpec) -> void:
 	var tag = spec.get_ability().get_ability_tag()
@@ -132,6 +189,31 @@ func _on_ability_ended(spec: ASAbilitySpec, _cancelled: bool) -> void:
 		if is_instance_valid(btplayer) and not _is_dead:
 			btplayer.set_active(true)
 			btplayer.restart()
+	
+	_refresh_animation_state.call_deferred()
+
+
+func _refresh_animation_state() -> void:
+	if not is_instance_valid(animation_player) or not is_instance_valid(asc):
+		return
+		
+	if _is_dead or asc.has_tag(&"state.dead"):
+		if animation_player.has_animation("die") and animation_player.current_animation != "die":
+			animation_player.play("die")
+		return
+
+	if asc.has_tag(&"state.hurt"):
+		return # Let hurt animation finish
+
+	if asc.has_tag(&"state.attacking") or asc.has_tag(&"state.charging"):
+		return # Let current intensive action finish
+
+	if asc.has_tag(&"state.is_moving"):
+		if animation_player.has_animation("walk") and animation_player.current_animation != "walk":
+			animation_player.play("walk")
+	else:
+		if animation_player.has_animation("idle") and animation_player.current_animation != "idle":
+			animation_player.play("idle")
 
 func _on_effects_ready_for_others(_ability_spec: ASAbilitySpec, effects: Array[ASEffect]) -> void:
 	var hitbox = get_node_or_null("Root/Hitbox")
@@ -176,12 +258,16 @@ func throw_ninja_star() -> void:
 	ninja_star.dir = get_facing()
 	get_parent().add_child(ninja_star)
 	ninja_star.global_position = global_position + Vector2.RIGHT * 100.0 * get_facing()
+	if ninja_star.has_method(&"set_source"):
+		ninja_star.set_source(asc)
 
 func spit_fire() -> void:
 	var fireball := Fireball.instantiate()
 	fireball.dir = get_facing()
 	get_parent().add_child(fireball)
 	fireball.global_position = global_position + Vector2.RIGHT * 100.0 * get_facing()
+	if fireball.has_method(&"set_source"):
+		fireball.set_source(asc)
 
 func summon_minion(p_position: Vector2) -> void:
 	var minion = load(MINION_RESOURCE).instantiate()

@@ -100,6 +100,7 @@
 			<param index="0" name="owner" type="ASComponent" />
 			<param index="1" name="spec" type="ASAbilitySpec" default="null" />
 			<description>
+				Checks if the owner satisfies the attribute requirements defined in this ability.
 			</description>
 		</method>
 		<method name="end_ability">
@@ -161,6 +162,9 @@
 		<member name="activation_blocked_tags" type="StringName[]" setter="set_activation_blocked_tags" getter="get_activation_blocked_tags" default="[]">
 			Ability cannot activate if owner has any of these tags.
 		</member>
+		<member name="activation_cancel_tags" type="StringName[]" setter="set_activation_cancel_tags" getter="get_activation_cancel_tags" default="[]">
+			Tags of active abilities that will be canceled when this ability activates.
+		</member>
 		<member name="activation_owned_tags" type="StringName[]" setter="set_activation_owned_tags" getter="get_activation_owned_tags" default="[]">
 			Tags granted to the owner while the ability is active.
 		</member>
@@ -189,8 +193,10 @@
 			List of effects applied by this ability.
 		</member>
 		<member name="requirements" type="Dictionary[]" setter="set_requirements" getter="get_requirements" default="[]">
+			Attribute requirements needed to activate the ability.
 		</member>
 		<member name="triggers" type="Dictionary[]" setter="set_triggers" getter="get_triggers" default="[]">
+			Automatic triggers for this ability (e.g. activate when a tag is added).
 		</member>
 	</members>
 	<constants>

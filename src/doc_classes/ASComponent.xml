@@ -421,13 +421,6 @@
 				Registers a node with an alias for use by cues and effects.
 			</description>
 		</method>
-		<method name="register_task">
-			<return type="void" />
-			<param index="0" name="task" type="ASTask" />
-			<description>
-				Registers an active task to the component.
-			</description>
-		</method>
 		<method name="remove_active_effect">
 			<return type="void" />
 			<param index="0" name="spec" type="ASEffectSpec" />

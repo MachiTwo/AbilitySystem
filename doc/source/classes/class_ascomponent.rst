@@ -158,8 +158,6 @@ Methods
    +------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                 | :ref:`register_node<class_ASComponent_method_register_node>`\ (\ name\: :ref:`StringName<class_StringName>`, node\: :ref:`Node<class_Node>`\ )                                                                                              |
    +------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                                 | :ref:`register_task<class_ASComponent_method_register_task>`\ (\ task\: :ref:`ASTask<class_ASTask>`\ )                                                                                                                                      |
-   +------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                 | :ref:`remove_active_effect<class_ASComponent_method_remove_active_effect>`\ (\ spec\: :ref:`ASEffectSpec<class_ASEffectSpec>`\ )                                                                                                            |
    +------------------------------------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                 | :ref:`remove_effect_by_resource<class_ASComponent_method_remove_effect_by_resource>`\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ )                                                                                                        |
@@ -1110,18 +1108,6 @@ Registers a cue resource for runtime lookup.
 |void| **register_node**\ (\ name\: :ref:`StringName<class_StringName>`, node\: :ref:`Node<class_Node>`\ ) :ref:`🔗<class_ASComponent_method_register_node>`
 
 Registers a node with an alias for use by cues and effects.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASComponent_method_register_task:
-
-.. rst-class:: classref-method
-
-|void| **register_task**\ (\ task\: :ref:`ASTask<class_ASTask>`\ ) :ref:`🔗<class_ASComponent_method_register_task>`
-
-Registers an active task to the component.
 
 .. rst-class:: classref-item-separator
 

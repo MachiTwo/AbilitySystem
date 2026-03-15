@@ -20,6 +20,7 @@ def get_doc_classes():
         "ASCueAudio",
         "ASCueSpec",
         "ASDelivery",
+        "ASEditorPlugin",
         "ASEditorPropertyName",
         "ASEditorPropertySelector",
         "ASEditorPropertyTagSelector",
@@ -29,7 +30,6 @@ def get_doc_classes():
         "ASPackage",
         "ASTagSpec",
         "ASTagsPanel",
-        "ASTask",
     ]
 
 

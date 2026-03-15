@@ -11,7 +11,7 @@ activation_cancel_tags = Array[StringName]([&"state.walk", &"state.idle"])
 cues = Array[ASCue]([ExtResource("1")])
 costs = Array[Dictionary]([{
 "amount": 15.0,
-"attribute": &"Stamina"
+"attribute": &"attribute.stamina"
 }])
 ability_duration_policy = 1
 ability_duration = 1.5

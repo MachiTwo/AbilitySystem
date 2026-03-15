@@ -1,5 +1,6 @@
 [gd_resource type="ASAbility" format=3]
 
+[ext_resource type="ASEffect" path="res://resources/effects/invulnerability_post_hit.tres" id="2"]
 [ext_resource type="ASCueAnimation" path="res://resources/cues/cue_hurt.tres" id="1"]
 
 [resource]
@@ -7,6 +8,8 @@ ability_name = "Hurt"
 ability_tag = &"state.hurt"
 activation_owned_tags = Array[StringName]([&"state.hurt"])
 activation_blocked_tags = Array[StringName]([&"state.dead", &"state.hurt"])
+activation_cancel_tags = Array[StringName]([&"ability.skill.attack", &"state.walk", &"state.idle", &"ability.skill.charge", &"ability.skill.projectile"])
+effects = Array[ASEffect]([ExtResource("2")])
 cues = Array[ASCue]([ExtResource("1")])
 ability_duration_policy = 1
 ability_duration = 0.4

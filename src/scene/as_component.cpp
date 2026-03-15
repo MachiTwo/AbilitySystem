@@ -35,7 +35,6 @@
 #include "src/core/as_cue_spec.h"
 #include "src/core/as_effect_spec.h"
 #include "src/core/as_tag_spec.h"
-#include "src/core/as_task.h"
 #include "src/resources/as_ability.h"
 #include "src/resources/as_attribute.h"
 #include "src/resources/as_attribute_set.h"
@@ -49,7 +48,6 @@
 #include "modules/ability_system/core/as_cue_spec.h"
 #include "modules/ability_system/core/as_effect_spec.h"
 #include "modules/ability_system/core/as_tag_spec.h"
-#include "modules/ability_system/core/as_task.h"
 #include "modules/ability_system/resources/as_ability.h"
 #include "modules/ability_system/resources/as_attribute.h"
 #include "modules/ability_system/resources/as_attribute_set.h"
@@ -184,8 +182,7 @@ void ASComponent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("unregister_cue_resource", "tag"), &ASComponent::unregister_cue_resource);
 	ClassDB::bind_method(D_METHOD("get_cue_resource", "tag"), &ASComponent::get_cue_resource);
 
-	// --- Task & Montage API ---
-	ClassDB::bind_method(D_METHOD("register_task", "task"), &ASComponent::register_task);
+	// --- Montage API ---
 	ClassDB::bind_method(D_METHOD("play_montage", "name", "target"), &ASComponent::play_montage, DEFVAL(Variant()));
 	ClassDB::bind_method(D_METHOD("is_montage_playing", "name", "target"), &ASComponent::is_montage_playing, DEFVAL(Variant()));
 	ClassDB::bind_method(D_METHOD("play_sound", "sound", "target"), &ASComponent::play_sound, DEFVAL(Variant()));
@@ -258,7 +255,6 @@ void ASComponent::_notification(int p_what) {
 			float delta = get_process_delta_time();
 			_process_effects(delta);
 			_process_abilities(delta);
-			_process_tasks(delta);
 			_process_cooldowns(delta);
 		} break;
 	}
@@ -314,7 +310,6 @@ float ASComponent::get_cooldown_remaining(const StringName &p_ability_tag) const
 void ASComponent::tick(float p_delta) {
 	_process_effects(p_delta);
 	_process_abilities(p_delta);
-	_process_tasks(p_delta);
 	_process_cooldowns(p_delta);
 }
 
@@ -389,29 +384,6 @@ void ASComponent::_process_abilities(float p_delta) {
 			emit_signal("ability_ended", spec, false);
 		}
 	}
-}
-
-void ASComponent::_process_tasks(float p_delta) {
-	for (int i = active_tasks.size() - 1; i >= 0; i--) {
-		Ref<ASTask> task = active_tasks[i];
-		if (task->is_finished()) {
-			active_tasks.remove_at(i);
-			continue;
-		}
-		task->tick(p_delta);
-		if (task->is_finished()) {
-			active_tasks.remove_at(i);
-		}
-	}
-}
-
-void ASComponent::register_task(Ref<ASTask> p_task) {
-	ERR_FAIL_COND(p_task.is_null());
-	if (active_tasks.find(p_task) != -1) {
-		return; // Already active
-	}
-	active_tasks.push_back(p_task);
-	p_task->activate();
 }
 
 void ASComponent::_remove_effect_at_index(int p_idx) {
@@ -741,6 +713,12 @@ bool ASComponent::try_activate_ability_by_tag(const StringName &p_tag) {
 					spec->set_owner(this);
 
 					if (ability->can_activate_ability(this, spec)) {
+						// Cancel abilities by tag as requested by the activating ability
+						TypedArray<StringName> cancel_tags = ability->get_activation_cancel_tags();
+						for (int j = 0; j < cancel_tags.size(); j++) {
+							cancel_ability_by_tag(cancel_tags[j]);
+						}
+
 						spec->set_is_active(true);
 						ability->activate_ability(this, spec);
 
@@ -797,6 +775,12 @@ bool ASComponent::try_activate_ability_by_resource(const Ref<ASAbility> &p_abili
 		spec->set_owner(this);
 
 		if (p_ability->can_activate_ability(this, spec)) {
+			// Cancel abilities by tag as requested by the activating ability
+			TypedArray<StringName> cancel_tags = p_ability->get_activation_cancel_tags();
+			for (int j = 0; j < cancel_tags.size(); j++) {
+				cancel_ability_by_tag(cancel_tags[j]);
+			}
+
 			spec->set_is_active(true);
 			p_ability->activate_ability(this, spec);
 
@@ -1622,6 +1606,5 @@ ASComponent::~ASComponent() {
 	cancel_all_abilities();
 	active_abilities.clear();
 	active_effects.clear();
-	active_tasks.clear();
 	unlocked_abilities.clear();
 }

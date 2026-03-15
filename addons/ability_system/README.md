@@ -95,47 +95,31 @@ Create an **AbilityContainer** (e.g., `VillagerArchetype.tres`). This is your "N
 Add the `AbilitySystemComponent` node to your CharacterBody and assign the **AbilityContainer** in the Inspector.
 Register your feedback nodes (AnimationPlayer/Audio) in script so the system can trigger **Cues** automatically.
 
-### 8. Handling Complex Dialogue Logic
-
-Use **Tasks** to handle async timing or waiting for events:
-
-```gdscript
-# Inside a custom Ability script or triggered via ASC
-func _on_activate_ability(owner, spec):
-    # 1. Play a dialogue animation
-    owner.play_montage("greet")
-    
-    # 2. Wait for a delay or an external "DialogueFinished" tag event
-    var task = AbilitySystemTask.wait_delay(owner, 2.0)
-    await task.completed
-    
-    # 3. End ability manually if needed
-    owner.end_ability(spec)
-```
-
-### 9. Combat vs Social Interaction
+### 8. Combat vs Social Interaction
 
 The system handles both seamlessly. Applying a "Frozen" effect will automatically block the "Talk" ability if you add `state.stun` to the ability's blocked tags list.
 
 ```gdscript
+
 func interact_with_npc(npc: AbilitySystemComponent):
- if npc.can_activate_ability_by_tag(&"ability.social.talk"):
-  npc.try_activate_ability_by_tag(&"ability.social.talk")
- else:
-  print("The NPC is too angry or stunned to talk!")
+	if npc.can_activate_ability_by_tag(&"ability.social.talk"):
+		npc.try_activate_ability_by_tag(&"ability.social.talk")
+	else:
+		print("The NPC is too angry or stunned to talk!")
 ```
 
-### 10. Handling State Changes (Signals)
+### 9. Handling State Changes (Signals)
 
 The ASC notifies your game logic when significant changes occur:
 
 ```gdscript
+
 func _ready():
- asc.tag_changed.connect(_on_tag_changed)
+	asc.tag_changed.connect(_on_tag_changed)
 
 func _on_tag_changed(tag: StringName, is_present: bool):
- if tag == &"state.emotional.angry" and is_present:
-  $Sprite.modulate = Color.RED # Visual feedback for emotion change
+	if tag == &"state.emotional.angry" and is_present:
+		$Sprite.modulate = Color.RED # Visual feedback for emotion change
 ```
 
 ---
@@ -158,7 +142,6 @@ func _on_tag_changed(tag: StringName, is_present: bool):
 | **AttributeSet**     | Stat container.       | Manages collections of attributes. Deep-duplicated per actor. |
 | **Attribute**        | Stat definition.      | Individual HP, Mana, XP schema with clamping.                 |
 | **AbilityContainer** | Archetype Blueprint.  | Catalog of allowed abilities, effects, and starting stats.    |
-| **Task**             | Async logic.          | Handles waits, delays, and animation timing in abilities.     |
 | **Cue**              | Feedback Base.        | Event activation logic for audiovisual effects.               |
 | **CueAnimation**     | Animation Feedback.   | Specialized for playing montages on actors.                   |
 | **CueAudio**         | Audio Feedback.       | Specialized for playing spatial or global sound.              |

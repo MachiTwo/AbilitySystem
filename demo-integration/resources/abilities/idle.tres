@@ -7,5 +7,6 @@ ability_name = "Idle"
 ability_tag = &"state.idle"
 activation_owned_tags = Array[StringName]([&"state.idle"])
 activation_blocked_tags = Array[StringName]([&"state.dead", &"state.attacking", &"state.hurt"])
+activation_cancel_tags = Array[StringName]([&"state.walk"])
 cues = Array[ASCue]([ExtResource("1")])
 ability_duration_policy = 2

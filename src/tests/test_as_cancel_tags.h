@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  as_task.h                                                             */
+/*  test_as_cancel_tags.h                                                 */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -31,58 +31,69 @@
 #pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-#include <godot_cpp/classes/ref_counted.hpp>
+#include "src/core/as_ability_spec.h"
+#include "src/resources/as_ability.h"
+#include "src/resources/as_container.h"
+#include "src/scene/as_component.h"
+#include "src/tests/doctest.h"
 #else
-#include "core/object/ref_counted.h"
+#include "modules/ability_system/core/as_ability_spec.h"
+#include "modules/ability_system/resources/as_ability.h"
+#include "modules/ability_system/resources/as_container.h"
+#include "modules/ability_system/scene/as_component.h"
+#include "modules/ability_system/tests/doctest.h"
 #endif
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 #endif
 
-class ASComponent;
+TEST_CASE("[AS] Ability Cancel Tags") {
+	ASComponent *asc = memnew(ASComponent);
 
-/**
- * ASTask
- * Class for asynchronous tasks within abilities (e.g., WaitDelay, PlayMontage).
- */
-class ASTask : public RefCounted {
-	GDCLASS(ASTask, RefCounted);
+	// Setup Abilities
+	Ref<ASAbility> ability_idle = memnew(ASAbility);
+	ability_idle->set_ability_tag("ability.idle");
+	ability_idle->set_duration_policy(ASAbility::POLICY_INFINITE);
 
-public:
-	enum TaskType {
-		TASK_GENERIC,
-		TASK_WAIT_DELAY,
-		TASK_PLAY_MONTAGE,
-		TASK_WAIT_EVENT
-	};
+	Ref<ASAbility> ability_attack = memnew(ASAbility);
+	ability_attack->set_ability_tag("ability.attack");
+	ability_attack->set_duration_policy(ASAbility::POLICY_DURATION);
+	ability_attack->set_ability_duration(1.0f);
 
-protected:
-	static void _bind_methods();
+	// Attack should cancel Idle
+	TypedArray<StringName> cancel_tags;
+	cancel_tags.push_back("ability.idle");
+	ability_attack->set_activation_cancel_tags(cancel_tags);
 
-	ASComponent *get_owner() const;
-	ObjectID owner_id;
-	bool finished = false;
-	TaskType task_type = TASK_GENERIC;
+	// Setup Container
+	Ref<ASContainer> container = memnew(ASContainer);
+	TypedArray<ASAbility> abilities;
+	abilities.push_back(ability_idle);
+	abilities.push_back(ability_attack);
+	container->set_abilities(abilities);
+	asc->set_container(container);
 
-	// Task data
-	float delay_remaining = 0.0f;
-	StringName animation_name;
-	bool started = false;
+	// Unlock abilities
+	asc->unlock_ability_by_tag("ability.idle");
+	asc->unlock_ability_by_tag("ability.attack");
 
-public:
-	static Ref<ASTask> wait_delay(ASComponent *p_owner, float p_delay);
-	static Ref<ASTask> play_montage(ASComponent *p_owner, const StringName &p_anim);
+	SUBCASE("Activation Cancel Tags") {
+		// 1. Activate Idle
+		MESSAGE("Activating Idle...");
+		CHECK(asc->try_activate_ability_by_tag("ability.idle") == true);
+		CHECK(asc->is_ability_active("ability.idle") == true);
+		CHECK(asc->get_active_abilities().size() == 1);
 
-	void activate();
-	void tick(float p_delta);
-	void end_task();
+		// 2. Activate Attack (should cancel Idle)
+		MESSAGE("Activating Attack (should cancel Idle)...");
+		CHECK(asc->try_activate_ability_by_tag("ability.attack") == true);
 
-	bool is_finished() const { return finished; }
-	void set_owner(ASComponent *p_owner);
+		// 3. Verify Idle is cancelled
+		CHECK(asc->is_ability_active("ability.idle") == false);
+		CHECK(asc->is_ability_active("ability.attack") == true);
+		CHECK(asc->get_active_abilities().size() == 1);
+	}
 
-	ASTask();
-	~ASTask();
-};
-
-VARIANT_ENUM_CAST(ASTask::TaskType);
+	memdelete(asc);
+}

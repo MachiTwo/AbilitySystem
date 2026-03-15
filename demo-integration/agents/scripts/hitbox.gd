@@ -34,6 +34,11 @@ func _area_entered(hurtbox: Hurtbox) -> void:
 	
 	# Update direction vector for visual reactions before applying damage
 	hurtbox.last_attack_vector = (hurtbox.global_position - global_position).normalized()
+	
+	# If we have an ASDelivery component, let it handle the logic (via auto_connect)
+	for child in get_children():
+		if child is ASDelivery:
+			return
 
 	# Try to use AbilitySystem
 	var target_asc = hurtbox.owner.get_node_or_null("ASComponent")

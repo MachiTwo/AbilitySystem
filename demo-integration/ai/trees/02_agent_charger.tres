@@ -107,7 +107,7 @@ target_var = SubResource("BBVariant_6x0d4")
 custom_name = "Charge Attack"
 children = [SubResource("BTAction_u15m2"), SubResource("BTParallel_q4p4m"), SubResource("BTAction_as_attack")]
 
-[sub_resource type="BTSelector" id="BTSelector_s108q"]
+[sub_resource type="BTSequence" id="BTSelector_s108q"]
 children = [SubResource("BTSequence_6id86"), SubResource("BTSequence_vunv1"), SubResource("BTSequence_l6m3e")]
 
 [sub_resource type="BTSequence" id="BTSequence_pjuov"]

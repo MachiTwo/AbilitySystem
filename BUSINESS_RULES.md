@@ -59,6 +59,31 @@ Localizados em `src/resources/`. São as **Definições de Dados**.
 - **Regra de Ouro: IMUTABILIDADE.** Um Resource nunca deve mudar seus valores em tempo de execução. Eles são compartilhados entre centenas de instâncias.
 - **O que vive aqui:** Valores base, ícones, nomes, tags de requisito e listas de modificadores brutos.
 
+### 4.1 ASAbility & ASEffect (Ações e Modificadores)
+
+- **ASAbility - Papel:** Definir a lógica de uma ação (Custos, Cooldown, Triggers).
+- **ASAbility - Regra:** Único Resource capaz de gerenciar requisitos de ativação e custos de atributos através de especificação.
+- **ASEffect - Papel:** Modificador de estado (Buffs, Debuffs, Dano).
+- **ASEffect - Regra:** Define políticas de empilhamento (Stacking) e magnitudes de mudança nos atributos.
+
+### 4.2 ASAttribute & ASAttributeSet (O Sistema de Atributos)
+
+- **ASAttribute - Papel:** Define os metadados (limites min/max) de uma única estatística.
+- **ASAttributeSet - Papel:** Agrupa as estatísticas e define o estado inicial de um personagem.
+- **Regra:** O `ASAttributeSet` permite definir habilidades iniciais desbloqueadas para o ator.
+
+### 4.3 ASContainer & ASPackage (Arquétipos e Payloads)
+
+- **ASContainer - Papel:** Arquétipo completo (Dicionário de Identidade do Ator).
+- **ASContainer - Regra:** Atua como o "Template de Fábrica" para inicialização total do `ASComponent`.
+- **ASPackage - Papel:** Agrupador de transporte (Envelope de Dados).
+- **ASPackage - Regra:** Deve ser usado exclusivamente para transmitir coleções de efeitos e cues via `ASDelivery`.
+
+### 4.4 ASCue (Feedbacks Visuais)
+
+- **Papel:** Feedback audiovisual puro (Animação, Som, Partículas).
+- **Regra:** Proibido alterar qualquer dado de gameplay. Deve ser disparado reativamente.
+
 ---
 
 ## 5. OS EXECUTORES: SPECS (O "COMO")
@@ -73,6 +98,20 @@ Localizados em `src/core/`. Onde o estado e a lógica de execução residem.
   - `calculate_...`: Lógica de cálculo que depende de atributos variáveis (ex: dano baseado em força atual).
 - **Responsabilidade:** O Spec deve saber se "terminou" ou não. O Component apenas pergunta a ele.
 
+### 5.1 ASAbilitySpec & ASEffectSpec (Execução)
+
+- **ASAbilitySpec - Papel:** Habilidade em execução ativa ou equipada.
+- **ASAbilitySpec - Regra:** Gerencia o cooldown individual e o estado de ativação.
+- **ASEffectSpec - Papel:** Instância ativa de um modificador.
+- **ASEffectSpec - Regra:** Detém a soberania sobre o tempo restante (`duration`) e pilhas (`stacks`).
+
+### 5.2 ASCueSpec & ASTagSpec (Feedback e Identidade)
+
+- **ASCueSpec - Papel:** Gerenciador do ciclo de vida de um feedback na cena.
+- **ASCueSpec - Regra:** Garante a limpeza (Queue Free) do Node instanciado após o término.
+- **ASTagSpec - Papel:** Contador de referências (Refcount) para Tags.
+- **ASTagSpec - Regra:** Garante que uma Tag só saia do ator quando todos os seus Specs de origem expirarem.
+
 ---
 
 ## 6. O ORQUESTRADOR: COMPONENT (O HUB)
@@ -86,18 +125,41 @@ O `ASComponent` (ASC).
   - Atua como o **Dono dos Atributos** (via `AttributeSet`).
   - É o único que pode adicionar/remover tags do Actor.
 - **Limite:** O ASC não deve saber os detalhes internos de como uma habilidade funciona. Ele apenas diz: `spec->activate()`, `spec->tick(delta)`, `spec->deactivate()`.
+- **Node Registry:** O Componente deve manter um registro de aliases de nós (ex: "Muzzle") para que Cues saibam onde instanciar efeitos visuais sem dependências de caminhos de cena.
 
 ---
 
-## 7. RESUMO DE FRONTEIRAS (MATRIZ DE RESPONSABILIDADE)
+## 7. SISTEMAS DE ENTREGA E REATIVIDADE
 
-| Funcionalidade | Vive no Resource? | Vive no Spec? | Vive no Component? |
-| :--- | :---: | :---: | :---: |
-| **Custo Base** | Sim (Definição) | Não | Não |
-| **Custo Calculado** | Não | Sim (Execução) | Não |
-| **Timer/Duração** | Não | Sim (Estado) | Não (Apenas Tick) |
-| **Valor do Atributo** | Não | Não | Sim (AttributeSet) |
-| **Lista de Tags** | Sim (Requisitos) | Não | Sim (Estado Atual) |
-| **Lógica de Stacking** | Sim (Política) | Sim (Aplicação) | Não |
+### 7.1 ASDelivery (Payload Injections)
+
+- **Papel:** Desacoplar o emissor do alvo em interações espaciais (projéteis, AoEs).
+- **Regra:** Transporta um `ASPackage` e injeta o conteúdo ao colidir com um ASC.
+
+### 7.2 Ability Triggers (Automação Reativa)
+
+- **Papel:** Permitir ativação automática de habilidades baseada em eventos de estado (Tags).
+- **Regra:** Ativação baseada exclusivamente em `ON_TAG_ADDED` ou `ON_TAG_REMOVED`.
+
+---
+
+## 8. MATRIZ DE RESPONSABILIDADE
+
+| Funcionalidade                 | Resource | Spec | Component | Delivery |
+| :----------------------------- | :------: | :--: | :-------: | :------: |
+| **Configuração Base**          |   Sim    | Não  |    Não    |   Não    |
+| **Timer / Estado**             |   Não    | Sim  |    Não    |   Não    |
+| **Armazenamento de Atributos** |   Não    | Não  |    Sim    |   Não    |
+| **Injeção em Alvos Externos**  |   Não    | Não  |    Não    |   Sim    |
+| **Broadcast de Sinais**        |   Não    | Não  |    Sim    |   Não    |
+
+---
+
+## 9. REGRAS DE OURO (CÓDIGO MORTO E SEGURANÇA)
+
+1. **Anti Vibe-Coding:** Mudanças estruturais exigem atualização deste documento e do `GEMINI.md`.
+2. **MD5 Cache:** O build do `godot-cpp` não deve ser invalidado por timestamps.
+3. **Depreciação de target_node:** Funções que pedem `Node*` direto no core são proibidas; use `register_node` ou `ASDelivery`.
+4. **TDD:** Se não há teste, o recurso não existe.
 
 ---

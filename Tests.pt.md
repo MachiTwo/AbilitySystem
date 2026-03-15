@@ -1,76 +1,82 @@
-# Documentação de Testes - Ability System
+# 🧪 Referência de Testes (v0.1.0 Estável)
 
-## 🧪 Metodologia: Test-Driven Development (TDD)
-
-Este projeto segue uma abordagem de **Rigor de Engenharia**. Nenhuma lógica de negócio é implementada sem um caso de teste correspondente que justifique sua existência.
-
-### Ciclo Red-Green-Refactor
-
-1. **RED (Vermelho)**: Defina o requisito através de um teste. O build deve falhar ou o teste não deve passar.
-2. **GREEN (Verde)**: Implemente o código mínimo necessário para satisfazer o teste. Evite sobre-engenharia.
-3. **REFACTOR (Refatorar)**: Otimize o código para performance e legibilidade, garantindo que todos os testes continuem passando.
+> [!TIP]
+> **Read this in other languages / Leia isto em outros idiomas:**
+> [**English**](Tests.md) | [**Português**](Tests.pt.md)
 
 ---
 
-## 🏗️ Arquitetura de Testes
+## 🏗️ Metodologia: Rigor de Engenharia (TDD)
 
-O sistema de testes é projetado para funcionar tanto em **GDExtension** (via `doctest`) quanto em **Módulo Nativo** (via o test runner interno da Godot).
+Este projeto rejeita o "Vibe-Coding". Cada regra de negócio é respaldada por uma suíte de **doctest**. Seguimos o ciclo **Red-Green-Refactor**:
 
-### 1. Lógica Core (Testes Unitários)
-
-Localizados em `src/tests/`, verificam comportamentos atômicos do sistema:
-
-- **`ASTagSpec`**: Correspondência hierárquica, exata e registro.
-- **`ASAttributeSet`**: Clamping de valores base e inicialização.
-- **`ASEffectSpec`**: Cálculos matemáticos para modificações de atributos.
-- **`ASDelivery`**: Sistema de entrega reativa de efeitos para alvos (ideal para projéteis).
-- **`Ability Triggers`**: Ativação automática de habilidades baseada em eventos de Tags (Adição/Remoção).
-
-### 2. Testes de Integração
-
-Simulam cenários reais da Godot usando o `ASComponent`:
-
-- **Aplicação de Efeitos**: Testa duração, lógica de empilhamento (Override, Intensidade) e remoção.
-- **Execução de Habilidades**: Valida requisitos de ativação, custos e cooldowns.
-- **Integridade de Sinais**: Garante que os componentes emitam eventos corretamente quando tags ou atributos mudam.
-
-### 3. Testes de Projeto (Cenário RPG Top-Down & LimboAI)
-
-Localizado em `src/tests/test_as_integration.h`, esta suíte simula um ecossistema completo de um RPG Top-Down para verificar interações de alto nível e "regras de negócio" de todo o sistema.
-
-**Visão Geral do Cenário:**
-
-- **Atores**: Jogador e Inimigo/NPC (Charger), ambos equipados com um `ASComponent`.
-- **IA**: O Inimigo utiliza LimboAI integrado via `BTAction` para disparar habilidades no componente.
-- **Fluxos Verificados**:
-  - **Diálogo vs. Combate**: Bloqueio de habilidades sociais por estados de combate.
-  - **Controle de Grupo (CC)**: Stun cancelando habilidades ativas.
-  - **Morte e Ciclo de Vida**: Transição para `State.Dead` limpando todos os recursos.
+1. **RED**: Escreva um teste que falha definindo o requisito.
+2. **GREEN**: Implemente o código mínimo para passar.
+3. **REFACTOR**: Otimize mantendo o status de aprovação.
 
 ---
 
-## 🚀 Execução
+## 🧩 Visão Geral das Suítes de Teste
 
-### Local (GDExtension)
+Nossos testes são divididos em headers especializados em `src/tests/` para garantir modularidade e alta cobertura.
 
-Para rodar a suíte completa usando seu binário local da Godot:
+### 1. Testes Atômicos do Core (Unitários)
+
+Verificam a lógica individual das classes sem efeitos colaterais.
+
+- **`ASTagSpec`**: Contagem de referências, correspondência hierárquica (`State.Dead.Bleeding` corresponde a `State.Dead`) e correspondência exata.
+- **`ASAttributeSet`**: Inicialização, trava de valores (clamping - ex: Vida não exceder VidaMáxima) e atualizações manuais de valores base.
+- **`ASEffect` / `ASEffectSpec`**: Operações matemáticas (`ADD`, `MULTIPLY`, `OVERRIDE`) e políticas de empilhamento complexas (`INTENSITY`, `DURATION`).
+- **`ASAbility` / `ASAbilitySpec`**: Verificações individuais de ativação, satisfação de custos/requisitos e transições de estado.
+
+### 2. Testes de Sistemas Avançados
+
+- **`ASDelivery`**: Injeção de payload em alvos. Verifica cálculos de atributos relativos à fonte (ex: dano baseado na Força do Atacante).
+- **`ASPackage`**: Valida o empacotamento de múltiplos Efeitos e Cues em um único recurso portátil.
+- **`Ability Triggers`**: Lógica de ativação automática quando tags são adicionadas ou removidas de um componente.
+- **`AS Cues`**: Execução de feedback visual (Animação) e sonoro (AudioStream) em pontos específicos do ciclo de vida.
+
+### 3. Integração & Cenários
+
+Simulam a complexidade real de gameplay dentro do `ASComponent`.
+
+- **`Lógica Avançada`**: Ticks periódicos para **Dano por Tempo (DoT)** e **Cura por Tempo (HoT)**, incluindo políticas de execução no primeiro tick.
+- **`Integração RPG Flow`**: Cenários de alta densidade incluindo:
+  - **Diálogo vs. Combate**: Bloqueio de habilidades baseado em estados sociais.
+  - **Exaustão de Recursos**: Falha em ações quando Mana/Stamina é insuficiente.
+  - **Ações Paralelas**: Execução de múltiplas habilidades (ex: Andar + Pular) simultaneamente.
+  - **Resolução de Morte**: Bloqueio total de ações e limpeza de recursos após a morte do personagem.
+- **`Mega Integração`**: Um teste unitário "End-to-End" completo cobrindo Habilidade -> Efeito -> Cue em uma única sequência.
+
+---
+
+## 🚀 Guia de Execução
+
+### Testes Locais
+
+A suíte roda via modo headless da Godot. Execute via SCons:
 
 ```powershell
-python -m SCons target=editor platform=windows tests=playtest -j4
+# Rodar todos os testes unitários
+python -m SCons target=editor tests=unit -j4
+
+# Rodar cenários de integração
+python -m SCons target=editor tests=playtest -j4
+
+# Rodar tudo
+python -m SCons target=editor tests=all -j4
 ```
 
-Isso compilará o plugin com símbolos de teste e invocará o `utility/tests.py`, que lança a Godot de forma headless para rodar a suíte `doctest`.
+### Ambiente CI/CD
 
-### CI/CD (GitHub Actions)
-
-Testes são executados automaticamente em cada Push ou Pull Request para:
-
-- **Linux (x64 & ARM64)**
-- **Windows (x64)**
-- **macOS (Universal)**
+O GitHub Actions executa a suíte completa em cada PR para Windows, Linux e macOS. Um código de saída diferente de zero em qualquer teste bloqueará o merge.
 
 ---
 
-## 📊 Metas de Cobertura
+## 🛠️ Ferramentas de Teste
 
-Nosso objetivo é **100% de Cobertura da Lógica Core**. Código de UI específico do Editor é excluído dos testes unitários automatizados e depende da validação empírica via o projeto `demo/`.
+- **`test_helpers.h`**: Macros como `CHECK_ATTR_EQ` e `make_standard_asc` para reduzir boilerplate.
+- **`test_signal_watcher.h`**: Utilitário para verificar se os sinais da GDExtension estão sendo emitidos corretamente.
+
+> [!IMPORTANT]
+> Para manter o princípio de **Desapego Radical ao Código**, mudanças de lógica DEVEM ser precedidas por um PR que atualize estes alvos de teste.

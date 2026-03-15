@@ -17,6 +17,13 @@
 				Activates the delivery. If [param duration] is positive, it overrides [member life_span].
 			</description>
 		</method>
+		<method name="can_deliver_to" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="target" type="Node" />
+			<description>
+				Checks if the delivery can reach the specified target (checks groups and validity).
+			</description>
+		</method>
 		<method name="deactivate">
 			<return type="void" />
 			<description>

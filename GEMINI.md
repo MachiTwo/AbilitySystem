@@ -12,6 +12,12 @@
 
 ---
 
+## 0. CONTRATO DE GOVERNANÇA
+
+As regras de design, limites arquiteturais e responsabilidades entre classes estão detalhadas no documento [**BUSINESS_RULES.md**](BUSINESS_RULES.md). Este contrato é a "Lei de Ferro" da implementação e deve ser consultado antes de qualquer mudança estrutural.
+
+---
+
 ## 1. MANIFESTO DE ENGENHARIA
 
 Este projeto segue uma **Engenharia Rigorosa**. Rejeitamos programação baseada em intuição. Cada linha de código deve ser justificada por um teste ou por um requisito arquitetural estritamente definido.

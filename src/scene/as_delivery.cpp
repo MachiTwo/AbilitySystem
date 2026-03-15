@@ -80,6 +80,7 @@ void ASDelivery::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_auto_connect"), &ASDelivery::get_auto_connect);
 
 	ClassDB::bind_method(D_METHOD("deliver", "target"), &ASDelivery::deliver);
+	ClassDB::bind_method(D_METHOD("can_deliver_to", "target"), &ASDelivery::can_deliver_to);
 
 	ClassDB::bind_method(D_METHOD("_on_area_body_entered", "body"), &ASDelivery::_on_area_body_entered);
 	ClassDB::bind_method(D_METHOD("_on_area_area_entered", "area"), &ASDelivery::_on_area_area_entered);
@@ -198,10 +199,41 @@ void ASDelivery::deliver(Node *p_target) {
 
 	ASComponent *target_asc = Object::cast_to<ASComponent>(p_target);
 	if (!target_asc) {
+		// Try children
 		for (int i = 0; i < p_target->get_child_count(); i++) {
 			target_asc = Object::cast_to<ASComponent>(p_target->get_child(i));
 			if (target_asc)
 				break;
+		}
+	}
+
+	if (!target_asc) {
+		// Try parent
+		Node *parent = p_target->get_parent();
+		if (parent) {
+			target_asc = Object::cast_to<ASComponent>(parent);
+			if (!target_asc) {
+				for (int i = 0; i < parent->get_child_count(); i++) {
+					target_asc = Object::cast_to<ASComponent>(parent->get_child(i));
+					if (target_asc)
+						break;
+				}
+			}
+		}
+	}
+
+	if (!target_asc) {
+		// Try owner
+		Node *owner = p_target->get_owner();
+		if (owner) {
+			target_asc = Object::cast_to<ASComponent>(owner);
+			if (!target_asc) {
+				for (int i = 0; i < owner->get_child_count(); i++) {
+					target_asc = Object::cast_to<ASComponent>(owner->get_child(i));
+					if (target_asc)
+						break;
+				}
+			}
 		}
 	}
 

@@ -24,6 +24,10 @@ A premissa fundamental deste protocolo é o **Desapego Radical ao Código**: O h
 - **Especialista em Refatoração:** Deve identificar proativamente padrões duplicados, funções extensas (God Objects) e sugerir a extração para Services, Concerns ou Utils.
 - **Memória Operacional:** Deve ler e validar este arquivo no início de cada interação para garantir que não haja desvio de conduta técnica.
 
+### 2.3 CONTRATO DE GOVERNANÇA (A LEI DE FERRO)
+
+Todas as fronteiras arquiteturais, decisões de design e responsabilidades de classes do projeto estão centralizadas no arquivo [**BUSINESS_RULES.md**](BUSINESS_RULES.md). Este documento é a fonte de verdade absoluta para decisões arquiteturais e deve ser consultado antes de qualquer implementação complexa.
+
 ---
 
 ## 3. PROTOCOLO OPERACIONAL OBRIGATÓRIO (TDD RIGOROSO)

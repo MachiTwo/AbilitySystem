@@ -1,80 +1,82 @@
-# Ability System - Test Documentation
+# 🧪 Testing Reference (v0.1.0 Stable)
 
 > [!TIP]
 > **Read this in other languages / Leia isto em outros idiomas:**
 > [**English**](Tests.md) | [**Português**](Tests.pt.md)
 
-## 🧪 Methodology: Test-Driven Development (TDD)
+---
 
-This project follows a strict **Engineering Rigor** approach. Business logic is never implemented without a corresponding test case that justifies its existence.
+## 🏗️ Methodology: Engineering Rigor (TDD)
 
-### Red-Green-Refactor Cycle
+This project rejects "Vibe-Coding". Every business rule is backed by a **doctest** suite. We follow the **Red-Green-Refactor** cycle:
 
-1. **RED**: Define the requirement through a test. The build must fail or the test must not pass.
-2. **GREEN**: Implement the minimum amount of code required to satisfy the test. Avoid over-engineering.
-3. **REFACTOR**: Optimize the code for performance and readability while ensuring all tests remain passing.
+1. **RED**: Write a failing test defining the requirement.
+2. **GREEN**: Implement minimal code to pass.
+3. **REFACTOR**: Optimize while maintaining pass status.
 
 ---
 
-## 🏗️ Test Architecture
+## 🧩 Test Suites Overview
 
-The testing system is designed to work in both **GDExtension** (via `doctest`) and **Native Module** (via Godot's internal test runner) environments.
+Our tests are divided into specialized headers in `src/tests/` to ensure modularity and high coverage.
 
-### 1. Core Logic (Unit Tests)
+### 1. Atomic Core Tests (Unit)
 
-Located in `src/tests/`, these verify atomic behaviors of the system:
+Verify individual class logic without side effects.
 
-- **`ASTagSpec`**: Hierarchy matching, exact matching, and registration.
-- **`ASAttributeSet`**: Base value clamping and initialization.
-- **`ASEffectSpec`**: Mathematical calculations for attribute modifications.
-- **`ASDelivery`**: Reactive effect delivery system for targets (ideal for projectiles).
-- **`Ability Triggers`**: Automatic ability activation based on Tag events (Added/Removed).
+- **`ASTagSpec`**: Reference counting, hierarchical matching (`State.Dead.Bleeding` matches `State.Dead`), and exact matching.
+- **`ASAttributeSet`**: Initialization, value clamping (e.g., Health not exceeding MaxHealth), and manual base value updates.
+- **`ASEffect` / `ASEffectSpec`**: Mathematical operations (`ADD`, `MULTIPLY`, `OVERRIDE`) and complex stacking policies (`INTENSITY`, `DURATION`).
+- **`ASAbility` / `ASAbilitySpec`**: Individual activation checks, cost/requirement satisfaction, and state transitions.
 
-### 2. Integration Tests
+### 2. Advanced System Tests
 
-Simulates real Godot scenarios using the `ASComponent`:
+- **`ASDelivery`**: Payload injection into targets. Verifies source-relative attribute calculations (e.g., damage based on Attacker's Strength).
+- **`ASPackage`**: Validates the bundling of multiple Effects and Cues into a single portable resource.
+- **`Ability Triggers`**: Automatic activation logic when tags are added or removed from a component.
+- **`AS Cues`**: Execution of visual (Animation) and audio (AudioStream) feedback at specific lifecycle points.
 
-- **Effect Application**: Tests duration, stacking logic (Override, Intensity) and removal.
-- **Ability Execution**: Validates activation requirements, costs, and cooldowns.
-- **Signal Integrity**: Ensures components correctly broadcast events when tags or attributes change.
+### 3. Integration & Scenarios
 
-### 3. Project Tests (Top-Down RPG Scenario & LimboAI)
+Simulate real-world gameplay complexity within the `ASComponent`.
 
-Located in `src/tests/test_as_integration.h`, this suite simulates a complete Top-Down RPG ecosystem to verify high-level interactions and system-wide "business rules".
-
-**Scenario Overview:**
-
-- **Actors**: Player and Enemy/NPC (Charger), both equipped with an `ASComponent`.
-- **AI**: The Enemy uses LimboAI integrated via `BTAction` to trigger abilities on the component.
-- **Verified Interaction Flows:**
-  - **Dialogue vs. Combat**: Blocking social abilities by combat states.
-  - **Crowd Control (CC)**: Stun canceling active abilities.
-  - **Death & Lifecycle**: Transition to `State.Dead` clearing all resources.
+- **`Advanced Logic`**: Periodic ticks for **Damage over Time (DoT)** and **Heal over Time (HoT)**, including first-tick execution policies.
+- **`Integration RPG Flow`**: High-density scenarios including:
+  - **Dialogue vs. Combat**: Blocking abilities based on social states.
+  - **Resource Exhaustion**: Failing actions when Mana/Stamina is insufficient.
+  - **Parallel Actions**: Running multiple abilities (e.g., Walking + Jumping) simultaneously.
+  - **Death Resolution**: Total action block and resource cleanup upon character death.
+- **`Mega Integration`**: A full "End-to-End" unit test covering Ability -> Effect -> Cue in a single sequence.
 
 ---
 
-## 🚀 Execution
+## 🚀 Execution Guide
 
-### Local (GDExtension)
+### Local Testing
 
-To run the full suite using your local Godot binary:
+The suite runs via Godot's headless mode. Execute via SCons:
 
 ```powershell
-python -m SCons target=editor platform=windows tests=playtest -j4
+# Run all unit tests
+python -m SCons target=editor tests=unit -j4
+
+# Run integration scenarios
+python -m SCons target=editor tests=playtest -j4
+
+# Run everything
+python -m SCons target=editor tests=all -j4
 ```
 
-This will compile the plugin with test symbols and invoke `utility/tests.py`, which launches Godot headlessly to run the `doctest` suite.
+### CI/CD Environment
 
-### CI/CD (GitHub Actions)
-
-Tests are automatically executed on every Push or Pull Request for:
-
-- **Linux (x64 & ARM64)**
-- **Windows (x64)**
-- **macOS (Universal)**
+GitHub Actions executes the full suite on every PR for Windows, Linux, and macOS. A non-zero exit code in any test will block the merge.
 
 ---
 
-## 📊 Coverage Goals
+## 🛠️ Testing Tools
 
-We aim for **100% Coverage of Core Logic**. Editor-specific UI code is excluded from automated unit tests and relies on empirical validation via the `demo/` project.
+- **`test_helpers.h`**: Macros like `CHECK_ATTR_EQ` and `make_standard_asc` to reduce boilerplate.
+- **`test_signal_watcher.h`**: Utility to verify that GDExtension signals are being correctly emitted.
+
+> [!IMPORTANT]
+> To maintain the **Desapego Radical ao Código** principle, logic changes MUST be preceded by a PR that updates these test targets.

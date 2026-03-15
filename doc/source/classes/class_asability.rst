@@ -42,6 +42,8 @@ Properties
    +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
    | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_tags<class_ASAbility_property_activation_blocked_tags>`         | ``[]``    |
    +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_cancel_tags<class_ASAbility_property_activation_cancel_tags>`           | ``[]``    |
+   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
    | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_owned_tags<class_ASAbility_property_activation_owned_tags>`             | ``[]``    |
    +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
    | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_tags<class_ASAbility_property_activation_required_tags>`       | ``[]``    |
@@ -295,6 +297,23 @@ Ability cannot activate if owner has any of these tags.
 
 ----
 
+.. _class_ASAbility_property_activation_cancel_tags:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_cancel_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_cancel_tags>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_activation_cancel_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_cancel_tags**\ (\ )
+
+Tags of active abilities that will be canceled when this ability activates.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_ASAbility_property_activation_owned_tags:
 
 .. rst-class:: classref-property
@@ -459,9 +478,7 @@ List of effects applied by this ability.
 - |void| **set_requirements**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]\ )
 - :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **get_requirements**\ (\ )
 
-.. container:: contribute
-
-	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Attribute requirements needed to activate the ability.
 
 .. rst-class:: classref-item-separator
 
@@ -478,9 +495,7 @@ List of effects applied by this ability.
 - |void| **set_triggers**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]\ )
 - :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **get_triggers**\ (\ )
 
-.. container:: contribute
-
-	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Automatic triggers for this ability (e.g. activate when a tag is added).
 
 .. rst-class:: classref-section-separator
 
@@ -633,9 +648,7 @@ Checks if the owner has enough resources to afford the costs.
 
 :ref:`bool<class_bool>` **can_satisfy_requirements**\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const| :ref:`🔗<class_ASAbility_method_can_satisfy_requirements>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Checks if the owner satisfies the attribute requirements defined in this ability.
 
 .. rst-class:: classref-item-separator
 

@@ -36,11 +36,11 @@ const WAVES: Array = [
 func _ready() -> void:
 	await get_tree().process_frame
 	
-	hp_bar.max_value = player.get_asc().get_attribute_value_by_tag(&"attribute.attribute.health")
+	hp_bar.max_value = player.get_asc().get_attribute_value_by_tag(&"attribute.health")
 	hp_bar.value = hp_bar.max_value
 	
 	player.get_asc().attribute_changed.connect(func(attr, _old, new): 
-		if attr == &"attribute.attribute.health":
+		if attr == &"attribute.health":
 			hp_bar.value = new
 	)
 	player.death.connect(_on_player_death)

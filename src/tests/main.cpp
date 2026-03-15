@@ -88,6 +88,7 @@ int as_run_tests(int p_mode) {
 #include "test_as_ability_spec.h"
 #include "test_as_advanced_logic.h"
 #include "test_as_attribute_set.h"
+#include "test_as_cancel_tags.h"
 #include "test_as_component.h"
 #include "test_as_container.h"
 #include "test_as_coverage_gap.h"
@@ -104,5 +105,4 @@ int as_run_tests(int p_mode) {
 #include "test_as_stun_refactor.h"
 #include "test_as_symmetry.h"
 #include "test_as_tag_spec.h"
-#include "test_as_task.h"
 #include "test_as_triggers.h"

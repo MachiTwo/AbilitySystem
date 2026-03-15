@@ -43,7 +43,7 @@ O desenvolvimento deste plugin segue um ciclo rigoroso de **Red-Green-Refactor**
 ### Mega Integração
 
 O teste `test_as_mega_integration.h` valida o "Caminho Feliz" completo:
-`Ativação -> Consumo de Custo -> Execução de Task -> Disparo de Cue -> Aplicação de Efeito`.
+`Ativação -> Consumo de Custo -> Aplicação de Efeito -> Disparo de Cue`.
 
 ---
 

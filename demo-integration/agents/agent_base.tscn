@@ -18,6 +18,7 @@
 [ext_resource type="Texture2D" uid="uid://bdusy0qqtw0th" path="res://assets/smoke.png" id="4_mnb6v"]
 [ext_resource type="Script" uid="uid://dntc3c582m5w8" path="res://agents/scripts/hitbox.gd" id="5_taq6b"]
 [ext_resource type="Script" uid="uid://dq5h6yydckjc1" path="res://agents/scripts/hurtbox.gd" id="6_jnvxm"]
+[ext_resource type="ASPackage" path="res://resources/packages/pkg_melee.tres" id="as_pkg_melee"]
 
 [sub_resource type="ASContainer" id="ASContainer_base"]
 abilities = Array[ASAbility]([ExtResource("as_ability_attack"), ExtResource("as_ability_death"), ExtResource("as_ability_hurt"), ExtResource("as_ability_idle"), ExtResource("as_ability_walk"), ExtResource("as_ability_heal"), ExtResource("as_ability_summon"), ExtResource("as_ability_charge")])
@@ -4413,6 +4414,7 @@ motion_mode = 1
 wall_min_slide_angle = 0.0174533
 safe_margin = 0.001
 script = ExtResource("1_n8vy2")
+debug_as = true
 
 [node name="ASComponent" type="ASComponent" parent="."]
 attribute_set = ExtResource("as_attr_set")
@@ -4478,6 +4480,11 @@ collision_layer = 0
 collision_mask = 4
 script = ExtResource("5_taq6b")
 knockback_strength = 1000.0
+
+[node name="ASDelivery" type="ASDelivery" parent="Root/Hitbox"]
+is_active = true
+package = ExtResource("as_pkg_melee")
+auto_connect = true
 
 [node name="HitboxCollisionShape2D" type="CollisionShape2D" parent="Root/Hitbox" unique_id=957217716]
 shape = SubResource("RectangleShape2D_2k81i")

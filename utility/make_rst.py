@@ -238,6 +238,7 @@ class State:
             "AudioStreamPlayer",
             "AudioStreamPlayer2D",
             "AudioStreamPlayer3D",
+            "EditorPlugin",
             "EditorProperty",
             "EditorInspectorPlugin",
             "VBoxContainer",

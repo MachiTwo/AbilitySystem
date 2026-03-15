@@ -1,0 +1,6 @@
+[gd_resource type="ASPackage" load_steps=2 format=3]
+
+[ext_resource type="ASEffect" path="res://resources/effects/damage_instant.tres" id="1"]
+
+[resource]
+effects = Array[ASEffect]([ExtResource("1")])

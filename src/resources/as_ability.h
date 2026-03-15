@@ -77,6 +77,7 @@ private:
 	TypedArray<StringName> activation_owned_tags;
 	TypedArray<StringName> activation_required_tags;
 	TypedArray<StringName> activation_blocked_tags;
+	TypedArray<StringName> activation_cancel_tags;
 	TypedArray<ASCue> cues;
 
 	// Triggers (Dictionary: {tag: StringName, type: TriggerType})
@@ -129,6 +130,9 @@ public:
 
 	void set_activation_blocked_tags(const TypedArray<StringName> &p_tags);
 	TypedArray<StringName> get_activation_blocked_tags() const;
+
+	void set_activation_cancel_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_cancel_tags() const;
 
 	void set_cues(const TypedArray<ASCue> &p_cues);
 	TypedArray<ASCue> get_cues() const;

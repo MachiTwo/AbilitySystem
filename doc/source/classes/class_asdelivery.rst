@@ -57,15 +57,17 @@ Methods
 .. table::
    :widths: auto
 
-   +-------------------------+------------------------------------------------------------------------------------------------------+
-   | |void|                  | :ref:`activate<class_ASDelivery_method_activate>`\ (\ duration\: :ref:`float<class_float>` = -1.0\ ) |
-   +-------------------------+------------------------------------------------------------------------------------------------------+
-   | |void|                  | :ref:`deactivate<class_ASDelivery_method_deactivate>`\ (\ )                                          |
-   +-------------------------+------------------------------------------------------------------------------------------------------+
-   | |void|                  | :ref:`deliver<class_ASDelivery_method_deliver>`\ (\ target\: :ref:`Node<class_Node>`\ )              |
-   +-------------------------+------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>` | :ref:`is_delivery_valid<class_ASDelivery_method_is_delivery_valid>`\ (\ ) |const|                    |
-   +-------------------------+------------------------------------------------------------------------------------------------------+
+   +-------------------------+---------------------------------------------------------------------------------------------------------------+
+   | |void|                  | :ref:`activate<class_ASDelivery_method_activate>`\ (\ duration\: :ref:`float<class_float>` = -1.0\ )          |
+   +-------------------------+---------------------------------------------------------------------------------------------------------------+
+   | :ref:`bool<class_bool>` | :ref:`can_deliver_to<class_ASDelivery_method_can_deliver_to>`\ (\ target\: :ref:`Node<class_Node>`\ ) |const| |
+   +-------------------------+---------------------------------------------------------------------------------------------------------------+
+   | |void|                  | :ref:`deactivate<class_ASDelivery_method_deactivate>`\ (\ )                                                   |
+   +-------------------------+---------------------------------------------------------------------------------------------------------------+
+   | |void|                  | :ref:`deliver<class_ASDelivery_method_deliver>`\ (\ target\: :ref:`Node<class_Node>`\ )                       |
+   +-------------------------+---------------------------------------------------------------------------------------------------------------+
+   | :ref:`bool<class_bool>` | :ref:`is_delivery_valid<class_ASDelivery_method_is_delivery_valid>`\ (\ ) |const|                             |
+   +-------------------------+---------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -253,6 +255,18 @@ Method Descriptions
 |void| **activate**\ (\ duration\: :ref:`float<class_float>` = -1.0\ ) :ref:`🔗<class_ASDelivery_method_activate>`
 
 Activates the delivery. If ``duration`` is positive, it overrides :ref:`life_span<class_ASDelivery_property_life_span>`.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASDelivery_method_can_deliver_to:
+
+.. rst-class:: classref-method
+
+:ref:`bool<class_bool>` **can_deliver_to**\ (\ target\: :ref:`Node<class_Node>`\ ) |const| :ref:`🔗<class_ASDelivery_method_can_deliver_to>`
+
+Checks if the delivery can reach the specified target (checks groups and validity).
 
 .. rst-class:: classref-item-separator
 

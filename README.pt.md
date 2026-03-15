@@ -95,47 +95,31 @@ Crie um **AbilityContainer** (ex: `ArquetipoAldeao.tres`). Este é o seu "Bluepr
 Adicione o nó `AbilitySystemComponent` ao seu CharacterBody e atribua o **AbilityContainer** no Inspetor.
 Registre seus nós de feedback (AnimationPlayer/Audio) via script para que o sistema possa disparar **Cues** automaticamente.
 
-### 8. Lidando com Lógica de Diálogo Complexa
-
-Use **Tasks** para gerenciar timing assíncrono ou esperar por eventos:
-
-```gdscript
-# Dentro de um script de Ability customizado ou disparado via ASC
-func _on_activate_ability(owner, spec):
- # 1. Toca uma animação de saudação
- owner.play_montage("greet")
-    
- # 2. Espera por um delay ou um evento de tag "DialogoFinalizado"
- var task = AbilitySystemTask.wait_delay(owner, 2.0)
- await task.completed
-    
- # 3. Finaliza a habilidade manualmente se necessário
- owner.end_ability(spec)
-```
-
-### 9. Combate vs Interação Social
+### 8. Combate vs Interação Social
 
 O sistema lida com ambos de forma transparente. Aplicar um efeito "Congelado" irá bloquear automaticamente a habilidade "Conversar" se você adicionar `state.stun` à lista de tags bloqueadas da habilidade.
 
 ```gdscript
+
 func interagir_com_npc(npc: AbilitySystemComponent):
- if npc.can_activate_ability_by_tag(&"ability.social.talk"):
-  npc.try_activate_ability_by_tag(&"ability.social.talk")
- else:
-  print("O NPC está muito furioso ou atordoado para conversar!")
+	if npc.can_activate_ability_by_tag(&"ability.social.talk"):
+		npc.try_activate_ability_by_tag(&"ability.social.talk")
+	else:
+		print("O NPC está muito furioso ou atordoado para conversar!")
 ```
 
-### 10. Reagindo a Mudanças de Estado (Sinais)
+### 9. Reagindo a Mudanças de Estado (Sinais)
 
 O ASC notifica sua lógica de jogo quando mudanças significativas ocorrem:
 
 ```gdscript
+
 func _ready():
- asc.tag_changed.connect(_on_tag_changed)
+	asc.tag_changed.connect(_on_tag_changed)
 
 func _on_tag_changed(tag: StringName, is_present: bool):
- if tag == &"state.emotional.angry" and is_present:
-  $Sprite.modulate = Color.RED # Feedback visual para mudança de emoção
+	if tag == &"state.emotional.angry" and is_present:
+		$Sprite.modulate = Color.RED # Feedback visual para mudança de emoção
 ```
 
 ---
@@ -151,17 +135,16 @@ func _on_tag_changed(tag: StringName, is_present: bool):
 
 ### ⚙️ Recursos
 
-| Resource             | Propósito               | Destaques                                                      |
-| :------------------- | :---------------------- | :------------------------------------------------------------- |
-| **Ability**          | Lógica de uma ação.     | Custos, Cooldowns e Tags de Ativação nativos.                  |
-| **Effect**           | Pacote de alteração.    | Dano instantâneo, buffs temporários ou passivas.               |
-| **AttributeSet**     | Container de stats.     | Gerencia coleções de atributos. Instância única por ator.      |
-| **Attribute**        | Definição de stat.      | Esquema individual de HP, Mana com limites.                    |
-| **AbilityContainer** | Blueprint de Arquétipo. | Catálogo de habilidades e efeitos permitidos.                  |
-| **Task**             | Lógica Assíncrona.      | Lida com esperas, delays e timing de animações em habilidades. |
-| **Cue**              | Base de Feedback.       | Lógica de ativação de eventos audiovisuais.                    |
-| **CueAnimation**     | Feedback de Animação.   | Especializado em tocar montagens nos atores.                   |
-| **CueAudio**         | Feedback de Áudio.      | Especializado em tocar sons espaciais ou globais.              |
+| Resource             | Propósito               | Destaques                                                 |
+| :------------------- | :---------------------- | :-------------------------------------------------------- |
+| **Ability**          | Lógica de uma ação.     | Custos, Cooldowns e Tags de Ativação nativos.             |
+| **Effect**           | Pacote de alteração.    | Dano instantâneo, buffs temporários ou passivas.          |
+| **AttributeSet**     | Container de stats.     | Gerencia coleções de atributos. Instância única por ator. |
+| **Attribute**        | Definição de stat.      | Esquema individual de HP, Mana com limites.               |
+| **AbilityContainer** | Blueprint de Arquétipo. | Catálogo de habilidades e efeitos permitidos.             |
+| **Cue**              | Base de Feedback.       | Lógica de ativação de eventos audiovisuais.               |
+| **CueAnimation**     | Feedback de Animação.   | Especializado em tocar montagens nos atores.              |
+| **CueAudio**         | Feedback de Áudio.      | Especializado em tocar sons espaciais ou globais.         |
 
 ### 🚀 Objetos de Runtime (Specs)
 

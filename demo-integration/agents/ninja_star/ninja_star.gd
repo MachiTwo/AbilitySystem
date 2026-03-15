@@ -23,6 +23,12 @@ var _is_dead: bool = false
 @onready var root: Node2D = $Root
 
 
+func set_source(p_source: ASComponent) -> void:
+	var delivery = get_node_or_null("Hitbox/ASDelivery")
+	if delivery:
+		delivery.set_source_component(p_source)
+
+
 func _ready() -> void:
 	var tween := create_tween().set_loops()
 	tween.tween_property(ninja_star, ^"rotation", TAU * signf(dir), 1.0).as_relative()

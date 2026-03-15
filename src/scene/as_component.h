@@ -74,7 +74,6 @@ class ASAttribute;
 class ASAbility;
 class ASAbilitySpec;
 class ASEffect;
-class ASTask;
 class ASCue;
 class ASCueSpec;
 class ASContainer;
@@ -113,7 +112,6 @@ public:
 	Vector<Ref<ASAbilitySpec>> unlocked_abilities;
 	Vector<Ref<ASAbilitySpec>> active_abilities;
 	Vector<Ref<ASEffectSpec>> active_effects;
-	Vector<Ref<ASTask>> active_tasks;
 	Ref<ASTagSpec> owned_tags;
 	Vector<Ref<ASCue>> registered_cues;
 	Ref<ASContainer> container;
@@ -134,7 +132,6 @@ protected:
 
 	void _process_effects(float p_delta);
 	void _process_abilities(float p_delta);
-	void _process_tasks(float p_delta);
 	void _process_cooldowns(float p_delta);
 	void _remove_effect_at_index(int p_idx);
 
@@ -228,8 +225,7 @@ public:
 	void unregister_cue_resource(const StringName &p_tag);
 	Ref<ASCue> get_cue_resource(const StringName &p_tag) const;
 
-	// --- Task & Montage API ---
-	void register_task(Ref<ASTask> p_task);
+	// --- Montage API ---
 	void play_montage(const StringName &p_name, Node *p_target = nullptr);
 	bool is_montage_playing(const StringName &p_name, Node *p_target = nullptr) const;
 	void play_sound(Ref<AudioStream> p_sound, Node *p_target = nullptr);

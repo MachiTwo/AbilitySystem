@@ -32,7 +32,6 @@
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/as_ability_spec.h"
-#include "src/core/as_task.h"
 #include "src/resources/as_ability.h"
 #include "src/resources/as_cue_animation.h"
 #include "src/resources/as_effect.h"
@@ -42,7 +41,6 @@
 #include "src/tests/test_signal_watcher.h"
 #else
 #include "modules/ability_system/core/as_ability_spec.h"
-#include "modules/ability_system/core/as_task.h"
 #include "modules/ability_system/resources/as_ability.h"
 #include "modules/ability_system/resources/as_cue_animation.h"
 #include "modules/ability_system/resources/as_effect.h"
@@ -56,7 +54,7 @@
 using namespace godot;
 #endif
 
-TEST_CASE("AbilitySystem Mega Integration (Abilities, Attributes, Effects, Cues, Tasks)") {
+TEST_CASE("AbilitySystem Mega Integration (Abilities, Attributes, Effects, Cues)") {
 	ASComponent *asc = make_standard_asc();
 
 	// 1. Setup Effect
@@ -100,20 +98,6 @@ TEST_CASE("AbilitySystem Mega Integration (Abilities, Attributes, Effects, Cues,
 
 		// Effect should have been applied (Health -50)
 		CHECK_ATTR_EQ(asc, "Health", 50.0f);
-
-		// 5. Test Tasks
-		Ref<ASTask> task = ASTask::wait_delay(asc, 0.5f);
-		Ref<ASTestSignalWatcher> task_watcher = memnew(ASTestSignalWatcher);
-		task->connect("completed", Callable(task_watcher.ptr(), "_on_signal_received"));
-
-		task->activate();
-		CHECK(task->is_finished() == false);
-
-		// Manually tick component to process tasks if needed,
-		// though wait_delay usually relies on SceneTree timer or internal clock.
-		// In tests, we might need to simulate time.
-		// For now, check if it's at least active.
-		CHECK(task_watcher->signal_count == 0);
 	}
 
 	memdelete(asc);

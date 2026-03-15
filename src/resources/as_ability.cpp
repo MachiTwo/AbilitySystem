@@ -69,6 +69,9 @@ void ASAbility::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_activation_blocked_tags", "tags"), &ASAbility::set_activation_blocked_tags);
 	ClassDB::bind_method(D_METHOD("get_activation_blocked_tags"), &ASAbility::get_activation_blocked_tags);
 
+	ClassDB::bind_method(D_METHOD("set_activation_cancel_tags", "tags"), &ASAbility::set_activation_cancel_tags);
+	ClassDB::bind_method(D_METHOD("get_activation_cancel_tags"), &ASAbility::get_activation_cancel_tags);
+
 	ClassDB::bind_method(D_METHOD("set_cues", "cues"), &ASAbility::set_cues);
 	ClassDB::bind_method(D_METHOD("get_cues"), &ASAbility::get_cues);
 
@@ -128,6 +131,7 @@ void ASAbility::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_owned_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_owned_tags", "get_activation_owned_tags");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_required_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_required_tags", "get_activation_required_tags");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_blocked_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_blocked_tags", "get_activation_blocked_tags");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_cancel_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_cancel_tags", "get_activation_cancel_tags");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "cues", PROPERTY_HINT_ARRAY_TYPE, "ASCue"), "set_cues", "get_cues");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "effects", PROPERTY_HINT_ARRAY_TYPE, "ASEffect"), "set_effects", "get_effects");
 
@@ -254,6 +258,12 @@ TypedArray<StringName> ASAbility::get_activation_required_tags() const {
 }
 TypedArray<StringName> ASAbility::get_activation_blocked_tags() const {
 	return activation_blocked_tags;
+}
+void ASAbility::set_activation_cancel_tags(const TypedArray<StringName> &p_tags) {
+	activation_cancel_tags = p_tags;
+}
+TypedArray<StringName> ASAbility::get_activation_cancel_tags() const {
+	return activation_cancel_tags;
 }
 TypedArray<ASCue> ASAbility::get_cues() const {
 	return cues;

@@ -10,64 +10,60 @@
 
 ### `AbilitySystem` (Global Singleton)
 
-Central authority for Tag registration and unique resource names.
+The central authority for the Tag system and resource naming registration.
 
-- **Enums:**
-  - `TagType`:
-    - `TAG_TYPE_NAME` (0): Identity tags (Ability, Effect, Cue, Attribute).
-    - `TAG_TYPE_CONDITIONAL` (1): State/Status tags (state.stunned, state.dead).
+- **Constants (TagType):**
+  - `TAG_TYPE_NAME` (0): Identity tags for permanent resources.
+  - `TAG_TYPE_CONDITIONAL` (1): Dynamic state tags (e.g., `state.stunned`).
 
 - **Methods:**
-  - `register_tag(tag, type, owner_id)`: Registers a new tag globally.
-  - `unregister_tag(tag)`: Unregisters a tag.
-  - `is_tag_registered(tag) -> bool`: Checks registration status.
-  - `tag_matches(tag, match_against, exact) -> bool` (static): Hierarchical comparison.
-  - `register_resource_name(name, owner_id) -> bool`: Validates uniqueness.
+  - `register_tag(tag, type=0, owner_id=0)`: Registers a tag globally.
+  - `unregister_tag(tag)`: Removes a tag.
+  - `rename_tag(old, new)`: Renames a tag and all its children.
+  - `remove_tag_branch(tag)`: Recursively removes a tag and its sub-hierarchy.
+  - `tag_matches(tag, match_against, exact=false)` (static): Hierarchical comparison logic.
+  - `get_registered_tags()`: Returns an array of all global tags.
 
 ---
 
 ### `ASComponent` (ASC)
 
-The central logic hub for any actor.
+The logic hub for any actor. Manages attributes, abilities, effects, and tags.
 
-#### Abilities
+#### 🔖 Tags & State
 
-| Method                                      | Return | Description                                              |
-| :------------------------------------------ | :----- | :------------------------------------------------------- |
-| `try_activate_ability_by_tag(tag)`          | `bool` | Attempts to activate via tag. Returns `true` if started. |
-| `try_activate_ability_by_resource(ability)` | `bool` | Attempts to activate via resource.                       |
-| `cancel_ability_by_tag(tag)`                | `void` | Stops active executions of the ability.                  |
-| `unlock_ability_by_tag(tag)`                | `void` | Unlocks an ability from the catalog for use.             |
-| `lock_ability_by_tag(tag)`                  | `void` | Blocks an ability from being used.                       |
-| `add_tag(tag)`                              | `void` | Adds a tag and triggers **Ability Triggers**.            |
-| `remove_tag(tag)`                           | `void` | Removes a tag and triggers **Ability Triggers**.         |
+- `add_tag(tag)`: Adds a tag and triggers re-evaluations.
+- `remove_tag(tag)`: Removes a tag.
+- `has_tag(tag)`: Checks for tag dominance (supports hierarchy).
+- `get_tags()`: Returns all currently active tags.
 
-#### Effects
+#### ⚔️ Abilities
 
-| Method                            | Return | Description                                         |
-| :-------------------------------- | :----- | :-------------------------------------------------- |
-| `apply_effect_spec_to_self(spec)` | `void` | Applies a payload directly to the actor.            |
-| `has_active_effect_by_tag(tag)`   | `bool` | Checks for active modifier presence.                |
-| `remove_effect_by_tag(tag)`       | `void` | Removes the effect and clears associated modifiers. |
+- `try_activate_ability_by_tag(tag)`: Attempts activation via tag.
+- `try_activate_ability_by_resource(ability)`: Attempts activation via resource.
+- `cancel_ability_by_tag(tag)`: Aborts active instances matching the tag.
+- `unlock_ability_by_tag(tag)`: Makes an ability available for the actor.
+- `is_ability_active(tag)`: Checks if an ability is currently running.
+- `get_active_abilities()`: Returns current `ASAbilitySpec` instances.
 
-#### Configuration
+#### 📊 Attributes
 
-| Method                       | Return | Description                                                       |
-| :--------------------------- | :----- | :---------------------------------------------------------------- |
-| `apply_container(container)` | `void` | Initializes the ASC with the blueprint (attributes/abilities).    |
-| `register_node(alias, node)` | `void` | Registers internal nodes for Cue lookup (e.g., "Muzzle", "Head"). |
+- `get_attribute_value_by_tag(tag)`: Gets the current calculated value.
+- `get_attribute_base_value_by_tag(tag)`: Gets the unmodified base value.
+- `set_attribute_base_value_by_tag(tag, value)`: Updates the base value.
+- `has_attribute_by_tag(tag)`: Checks if the attribute exists on this actor.
 
----
+#### ✨ Effects
 
-### `ASDelivery` (New in v0.1.0)
+- `apply_effect_spec_to_self(spec)`: Directly injects an effect payload.
+- `has_active_effect_by_tag(tag)`: Checks if a specific effect is active.
+- `remove_effect_by_tag(tag)`: Removes instances of the effect.
 
-Specialized in transporting effect payloads between components. Ideal for Projectiles and Areas of Effect (AoE).
+#### 🎭 Cues & Notifications
 
-- **Common Usage:** Attach to projectile scripts to handle collision and effect injection.
-- **Methods:**
-  - `deliver(target_asc)`: Injects all registered effects into the target ASC.
-  - `add_effect(effect)`: Adds an effect resource to the delivery payload.
-  - `set_source_component(asc)`: Defines the source author (for source-relative attribute calculations).
+- `register_node(alias, node)`: Registers a node for cue lookups (e.g., "Muzzle").
+- `try_activate_cue_by_tag(tag, data={})`: Triggers visual/audio feedback.
+- `set_animation_player(node)`: Registers the primary animation controller.
 
 ---
 
@@ -75,24 +71,57 @@ Specialized in transporting effect payloads between components. Ideal for Projec
 
 ### `ASAbility`
 
-- **Triggers:** Reactive activation based on Tags.
-  - `TRIGGER_ON_TAG_ADDED`: Activates when tag enters the ASC.
-  - `TRIGGER_ON_TAG_REMOVED`: Activates when tag leaves (e.g., death ability when losing `state.alive`).
-- **Cooldowns & Costs:** Automatically managed by the Core.
+Configuration for actions with costs, cooldowns, and requirements.
+
+- **Duration Policies:** `INSTANT`, `DURATION`, `INFINITE`.
+- **Triggers:** `ON_TAG_ADDED`, `ON_TAG_REMOVED`.
+- **Key Properties:** `costs`, `requirements`, `cooldown_duration`, `activation_owned_tags`.
+
+### `ASEffect`
+
+Blueprints for attribute modifications and tag injections.
+
+- **Modifier Ops:** `ADD`, `MULTIPLY`, `DIVIDE`, `OVERRIDE`.
+- **Stacking:** `NEW_INSTANCE`, `OVERRIDE`, `INTENSITY`, `DURATION`.
+- **Periodic:** Supports `period` for tick-based execution (DoT/HoT).
+
+### `ASContainer`
+
+An archetype database (AttributeSet + Default Abilities + Initial Effects). Use `asc.apply_container(resource)` to initialize an actor.
+
+### `ASPackage`
+
+A portable bundle of Effects and Cues. Ideal for items or multi-step logic.
 
 ---
 
-## 3. Runtime Objects (Specs)
+## 3. Specialized Systems
+
+### `ASDelivery`
+
+Handles payload transportation for bullets, traps, and AoEs.
+
+- `add_effect(effect)` / `add_cue(cue)`: Prepare the payload.
+- `deliver(target_asc)`: Injects the payload into a destination ASC.
+
+---
+
+## 4. Runtime Objects
 
 ### `ASAbilitySpec` / `ASEffectSpec`
 
-Represent active instances. Note that the `target_node` parameter has been removed to prioritize **Node Registration** in the ASC and the **ASDelivery** system.
+Active instances of their respective resources. They hold variable state (remaining duration, level, etc.).
 
 ---
 
-## 4. LimboAI Integration
+## 5. LimboAI Integration
 
-`ASComponent` exposes simplified triggers for `BTAction`. In the Behavior Tree, use tags to manage flow:
+The `ASComponent` is natively compatible with LimboAI via:
 
-- `BTCheckTag`: Verify state.
-- `BTActivateAbility`: Trigger action via tag.
+- **Triggers:** React to tag changes in the Behavior Tree.
+- **BT Nodes:** (Recommended) Use `BTCheckTag` and `BTActivateAbility` for state-driven AI logic.
+
+---
+
+> [!NOTE]
+> For the complete C++ class reference, refer to the in-engine help or the `doc/source/classes` directory.

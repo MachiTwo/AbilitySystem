@@ -57,6 +57,7 @@ Editor-only
     :name: toc-class-ref-editors
 
     class_editorinspectorplugin
+    class_editorplugin
     class_editorproperty
 
 Variant types
@@ -75,6 +76,7 @@ Variant types
     class_array
     class_asabilityspec
     class_ascuespec
+    class_aseditorplugin
     class_aseditorpropertyname
     class_aseditorpropertyselector
     class_aseditorpropertytagselector
@@ -82,7 +84,6 @@ Variant types
     class_asinspectorplugin
     class_astagspanel
     class_astagspec
-    class_astask
     class_audiostream
     class_audiostreamplayer
     class_audiostreamplayer2d
@@ -97,6 +98,7 @@ Variant types
     class_control
     class_dictionary
     class_editorinspectorplugin
+    class_editorplugin
     class_editorproperty
     class_float
     class_hboxcontainer

@@ -44,7 +44,6 @@
 #include "src/core/as_cue_spec.h"
 #include "src/core/as_effect_spec.h"
 #include "src/core/as_tag_spec.h"
-#include "src/core/as_task.h"
 #include "src/resources/as_ability.h"
 #include "src/resources/as_attribute.h"
 #include "src/resources/as_attribute_set.h"
@@ -70,7 +69,6 @@
 #include "modules/ability_system/core/as_cue_spec.h"
 #include "modules/ability_system/core/as_effect_spec.h"
 #include "modules/ability_system/core/as_tag_spec.h"
-#include "modules/ability_system/core/as_task.h"
 #include "modules/ability_system/resources/as_ability.h"
 #include "modules/ability_system/resources/as_attribute.h"
 #include "modules/ability_system/resources/as_attribute_set.h"
@@ -111,7 +109,6 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 #endif
 		GDREGISTER_CLASS(AbilitySystem);
 		GDREGISTER_CLASS(ASTagSpec);
-		GDREGISTER_CLASS(ASTask);
 		GDREGISTER_CLASS(ASAbility);
 		GDREGISTER_CLASS(ASAbilitySpec);
 		GDREGISTER_CLASS(ASContainer);

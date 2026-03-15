@@ -29,7 +29,9 @@ def run_godot_command(godot_bin, project_dir, args, test_type, clean_env, projec
 
     print(f"[ABILITY SYSTEM] Running {test_type} tests...")
 
-    cmd = [godot_bin, "--headless", "--quit", "--path", project_dir] + args
+    cmd = [godot_bin, "--headless", "--path", project_dir] + args
+    if test_type not in ["playtest", "demo"]:
+        cmd.append("--quit")
 
     log_path = os.path.abspath(os.path.join(project_root, f"doctest_{test_type}.log"))
 
@@ -142,9 +144,21 @@ def run_tests():
     plans = []
     if test_type == "all":
         plans.append(("unit", "demo", ["--run-ability-tests-unit"]))
-        plans.append(("playtest", "demo-integration", ["res://scenes/game.tscn"]))
+        plans.append(
+            (
+                "playtest",
+                "demo-integration",
+                ["res://scenes/showcase.tscn", "--playtest-cycle"],
+            )
+        )
     elif test_type == "playtest":
-        plans.append(("playtest", "demo-integration", ["res://scenes/game.tscn"]))
+        plans.append(
+            (
+                "playtest",
+                "demo-integration",
+                ["res://scenes/showcase.tscn", "--playtest-cycle"],
+            )
+        )
     elif test_type == "unit":
         plans.append(("unit", "demo", ["--run-ability-tests-unit"]))
     elif test_type == "integration":
