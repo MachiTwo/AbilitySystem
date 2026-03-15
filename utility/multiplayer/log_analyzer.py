@@ -5,8 +5,11 @@ from datetime import datetime
 
 
 def analyze_mp_logs():
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    log_files = glob.glob(os.path.join(project_root, "doctest_mp_player_*.log"))
+    project_root = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
+    log_dir = os.path.join(project_root, "utility", "multiplayer", "logs")
+    log_files = glob.glob(os.path.join(log_dir, "doctest_mp_player_*.log"))
 
     if not log_files:
         print("[MP LOG ANALYZER] No multiplayer log files found.")

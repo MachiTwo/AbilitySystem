@@ -12,7 +12,9 @@ def run_mp_tests():
     )
     log_dir = os.path.join(project_root, "utility", "multiplayer", "logs")
     os.makedirs(log_dir, exist_ok=True)
-    env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+    env_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "multiplayer.env"
+    )
 
     # Create default .env if not exists
     if not os.path.exists(env_path):
