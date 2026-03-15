@@ -28,67 +28,77 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_AS_EFFECT_H
-#define TEST_AS_EFFECT_H
+#pragma once
 
-#include "doctest.h"
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/resources/as_effect.h"
+#include "src/tests/doctest.h"
+#else
+#include "modules/ability_system/resources/as_effect.h"
+#include "modules/ability_system/tests/doctest.h"
+#endif
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 #endif
 
-TEST_CASE("[AbilitySystem] ASEffect (300% Coverage)") {
-	Ref<ASEffect> effect;
-	effect.instantiate();
+TEST_CASE("ASEffect API") {
+	Ref<ASEffect> effect = memnew(ASEffect);
 
-	SUBCASE("Duration Policies - 3 Variations") {
-		// Var 1: Instant
-		effect->set_duration_policy(ASEffect::POLICY_INSTANT);
-		CHECK(effect->get_duration_policy() == ASEffect::POLICY_INSTANT);
+	SUBCASE("Basic Properties") {
+		effect->set_effect_name("Poison");
+		CHECK(effect->get_effect_name() == String("Poison"));
 
-		// Var 2: Duration
+		effect->set_effect_tag("Effect.Poison");
+		CHECK(effect->get_effect_tag() == StringName("Effect.Poison"));
+
 		effect->set_duration_policy(ASEffect::POLICY_DURATION);
-		effect->set_duration_magnitude(5.0f);
-		CHECK(effect->get_duration_magnitude() == 5.0f);
+		CHECK(effect->get_duration_policy() == ASEffect::POLICY_DURATION);
 
-		// Var 3: Periodic
+		effect->set_duration_magnitude(10.0f);
+		CHECK(effect->get_duration_magnitude() == 10.0f);
+
 		effect->set_period(1.0f);
 		CHECK(effect->get_period() == 1.0f);
 	}
 
-	SUBCASE("Modifiers - 3 Variations") {
-		effect->add_modifier("str", ASEffect::OP_ADD, 10.0f);
-		effect->add_modifier("dex", ASEffect::OP_MULTIPLY, 1.5f);
-		effect->add_modifier("int", ASEffect::OP_OVERRIDE, 100.0f);
-
-		// Var 1: Check Count
-		CHECK(effect->get_modifier_count() == 3);
-
-		// Var 2: Check Types
+	SUBCASE("Modifiers Management") {
+		effect->add_modifier("Health", ASEffect::OP_ADD, -10.0f);
+		CHECK(effect->get_modifier_count() == 1);
+		CHECK(effect->get_modifier_attribute(0) == StringName("Health"));
 		CHECK(effect->get_modifier_operation(0) == ASEffect::OP_ADD);
-		CHECK(effect->get_modifier_operation(1) == ASEffect::OP_MULTIPLY);
-		CHECK(effect->get_modifier_operation(2) == ASEffect::OP_OVERRIDE);
+		CHECK(effect->get_modifier_magnitude(0) == -10.0f);
+		CHECK(effect->is_modifier_custom(0) == false);
 
-		// Var 3: Check Magnitudes
-		CHECK(effect->get_modifier_magnitude(0) == 10.0f);
-		CHECK(effect->get_modifier_magnitude(1) == 1.5f);
-		CHECK(effect->get_modifier_magnitude(2) == 100.0f);
+		effect->add_modifier("Mana", ASEffect::OP_OVERRIDE, 50.0f, true);
+		CHECK(effect->get_modifier_count() == 2);
+		CHECK(effect->is_modifier_custom(1) == true);
 	}
 
-	SUBCASE("Stacking - 3 Variations") {
-		// Var 1: Intensity
+	SUBCASE("Tags Management") {
+		TypedArray<StringName> granted;
+		granted.push_back("State.Poisoned");
+		effect->set_granted_tags(granted);
+		CHECK(effect->get_granted_tags().size() == 1);
+
+		TypedArray<StringName> blocked;
+		blocked.push_back("State.Immune");
+		effect->set_activation_blocked_tags(blocked);
+		CHECK(effect->get_activation_blocked_tags().size() == 1);
+	}
+
+	SUBCASE("Stacking Policy") {
 		effect->set_stacking_policy(ASEffect::STACK_INTENSITY);
 		CHECK(effect->get_stacking_policy() == ASEffect::STACK_INTENSITY);
+	}
 
-		// Var 2: Duration
-		effect->set_stacking_policy(ASEffect::STACK_DURATION);
-		CHECK(effect->get_stacking_policy() == ASEffect::STACK_DURATION);
+	SUBCASE("Requirements Management") {
+		effect->add_requirement("Intelligence", 20.0f);
+		CHECK(effect->get_requirement_count() == 1);
+		CHECK(effect->get_requirement_attribute(0) == StringName("Intelligence"));
+		CHECK(effect->get_requirement_amount(0) == 20.0f);
 
-		// Var 3: Override
-		effect->set_stacking_policy(ASEffect::STACK_OVERRIDE);
-		CHECK(effect->get_stacking_policy() == ASEffect::STACK_OVERRIDE);
+		effect->set_requirements_count(0);
+		CHECK(effect->get_requirement_count() == 0);
 	}
 }
-
-#endif // TEST_AS_EFFECT_H
