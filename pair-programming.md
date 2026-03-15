@@ -129,3 +129,81 @@ Visando escalabilidade e flexibilidade de distribuição, o projeto é arquiteta
 2. **Verbose por padrão:** Gemini deve explicar a escolha técnica antes de cuspir o código.
 3. **Documentação Viva:** Se uma regra de negócio mudou no meio do chat, ela DEVE ser atualizada neste GEMINI.md imediatamente.
 4. **Falha de Comunicação:** Se Gemini errar três vezes a mesma lógica, Machi deve admitir que a especificação está vaga e reescrevê-la.
+
+---
+
+## 7. CONTRATO DE QUALIDADE DE TESTES (LEI DE FERRO)
+
+### 7.1 PADRÃO 300% — TRÊS VARIAÇÕES OBRIGATÓRIAS
+
+> **"Testes são como backups: você só tem um se tiver pelo menos três."**
+
+Cada `SUBCASE` de teste **DEVE** exercitar a mesma API em **3 cenários distintos**, nomeados explicitamente:
+
+```cpp
+SUBCASE("Descrição da API - 3 Variations") {
+    // Var 1: Cenário base / happy path
+    // Var 2: Cenário de borda / negativo
+    // Var 3: Cenário composto / edge case
+}
+```
+
+**As 3 variações devem diferir em:**
+
+- Estado diferente dos dados de entrada (ex: valor diferente do atributo)
+- Política diferente (ex: `POLICY_INSTANT` vs `POLICY_DURATION` vs `POLICY_INFINITE`)
+- Combinação diferente de parâmetros (ex: tag única vs múltiplas tags vs hierarquia)
+
+**É PROIBIDO** escrever um `SUBCASE` com apenas 1 ou 2 `CHECK()`. Um teste com 1 variação não é um teste — é um placeholder.
+
+### 7.2 TEMPLATE OBRIGATÓRIO DE INCLUDES (DUAL BUILD)
+
+Todo arquivo `test_*.h` **DEVE** ser autossuficiente para compilar em ambos os modos: **Module** (Godot Engine embutido) e **GDExtension** (plugin dinâmico).
+
+O template é **não-negociável**:
+
+```cpp
+// --- TEMPLATE OBRIGATÓRIO (copiar exatamente) ---
+
+#ifndef TEST_AS_NOME_H   // ou #pragma once
+#define TEST_AS_NOME_H
+
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+#include "src/path/to/header.h"
+#include "src/tests/doctest.h"
+// ... outros includes src/
+#else
+#include "modules/ability_system/path/to/header.h"
+#include "modules/ability_system/tests/doctest.h"
+// ... outros includes modules/
+#endif
+
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
+
+// TEST_CASE aqui...
+
+#endif // TEST_AS_NOME_H
+```
+
+**NUNCA** escrever `#include "src/..."` fora de um bloco `#ifdef ABILITY_SYSTEM_GDEXTENSION`. Isso quebra a compilação do Module silenciosamente.
+
+### 7.3 CHECKLIST PRÉ-COMMIT DE TESTES
+
+Antes de commitar qualquer arquivo `test_*.h`, Gemini deve verificar:
+
+- [ ] O arquivo tem o guard `#ifndef / #pragma once`?
+- [ ] Os includes seguem o padrão `#ifdef ABILITY_SYSTEM_GDEXTENSION / #else / #endif`?
+- [ ] Cada `SUBCASE` tem exatamente **3 variações** comentadas (`// Var 1:`, `// Var 2:`, `// Var 3:`)?
+- [ ] Nenhum `TEST_CASE` toca API que ainda não existe em `src/` (exceto se explicitamente em fase RED)?
+- [ ] Se a API é nova (fase RED), está documentado em qual arquivo `src/` ela deve ser implementada?
+
+### 7.4 FASES TDD PARA TESTES COM API NOVA
+
+Quando um teste introduz uma **API que ainda não existe**:
+
+1. O arquivo de teste é marcado com comentário `// [RED STATE] — API não implementada em src/`
+2. O `SUBCASE` correspondente é documentado no artefato de auditoria
+3. A implementação em `src/` é feita em sessão separada e dedicada
+4. Só após o GREEN (testes passando) o marcador `[RED STATE]` é removido
