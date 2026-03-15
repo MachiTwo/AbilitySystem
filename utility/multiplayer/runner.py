@@ -7,7 +7,11 @@ from dotenv import load_dotenv
 
 # Run the 10 simulated clients against a placeholder server
 def run_mp_tests():
-    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    project_root = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
+    log_dir = os.path.join(project_root, "utility", "multiplayer", "logs")
+    os.makedirs(log_dir, exist_ok=True)
     env_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
 
     # Create default .env if not exists
@@ -73,7 +77,7 @@ def run_mp_tests():
             "--quit",
         ]
 
-        log_path = os.path.join(project_root, f"doctest_mp_player_{i}.log")
+        log_path = os.path.join(log_dir, f"doctest_mp_player_{i}.log")
         log_file = open(log_path, "w")
 
         proc = subprocess.Popen(
@@ -110,6 +114,13 @@ def run_mp_tests():
         sys.exit(1)
     else:
         print("[ABILITY SYSTEM MP] ALL 10 PLAYERS COMPLETED 300% COVERAGE.")
+        # Cleanup logs only on success to keep pollution low
+        for _, _, log_file in processes:
+            try:
+                if os.path.exists(log_file.name):
+                    os.remove(log_file.name)
+            except Exception:
+                pass
         sys.exit(0)
 
 
