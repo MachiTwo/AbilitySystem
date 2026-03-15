@@ -30,7 +30,7 @@ def run_godot_command(godot_bin, project_dir, args, test_type, clean_env, projec
     print(f"[ABILITY SYSTEM] Running {test_type} tests...")
 
     cmd = [godot_bin, "--headless", "--path", project_dir] + args
-    if test_type not in ["playtest", "demo"]:
+    if test_type != "playtest":
         cmd.append("--quit")
 
     log_path = os.path.abspath(os.path.join(project_root, f"doctest_{test_type}.log"))
@@ -47,8 +47,16 @@ def run_godot_command(godot_bin, project_dir, args, test_type, clean_env, projec
         )
 
         full_output = []
+        import time
+
+        start_time = time.time()
+        timeout_seconds = 600  # 10 minutes total max for any test step
+
         try:
             while True:
+                if time.time() - start_time > timeout_seconds:
+                    raise subprocess.TimeoutExpired(cmd, timeout_seconds)
+
                 line = process.stdout.readline()
                 if not line and process.poll() is not None:
                     break
@@ -60,8 +68,11 @@ def run_godot_command(godot_bin, project_dir, args, test_type, clean_env, projec
 
             process.wait(timeout=30)  # Increased wait to ensure process finishes
         except subprocess.TimeoutExpired:
-            print(f"\n[TIMEOUT] Process hang detected for {test_type}. Killing...")
+            print(
+                f"\n[TIMEOUT] Process hang detected for {test_type} (Max 10m). Killing..."
+            )
             process.kill()
+            process.wait()  # Ensure it's gone
 
         combined_stdout = "".join(full_output)
         test_success = (
