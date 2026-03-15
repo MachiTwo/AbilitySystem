@@ -187,7 +187,7 @@ TEST_CASE("[AS] Rigid Ability Triggers & Integration") {
 		if (local_ability.is_valid()) {
 			TypedArray<StringName> blocked;
 			blocked.push_back(StringName("State.Stunned"));
-			local_ability->set_activation_blocked_tags(blocked);
+			local_ability->set_activation_blocked_any_tags(blocked);
 		}
 
 		// Player is stunned

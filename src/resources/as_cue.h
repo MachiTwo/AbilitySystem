@@ -72,8 +72,10 @@ protected:
 	StringName node_name;
 
 	// Activation requirements
-	TypedArray<StringName> activation_required_tags;
-	TypedArray<StringName> activation_blocked_tags;
+	TypedArray<StringName> activation_required_all_tags;
+	TypedArray<StringName> activation_required_any_tags;
+	TypedArray<StringName> activation_blocked_any_tags;
+	TypedArray<StringName> activation_blocked_all_tags;
 
 public:
 	void set_cue_name(const String &p_name);
@@ -87,12 +89,17 @@ public:
 
 	void set_node_name(const StringName &p_name) { node_name = p_name; }
 	StringName get_node_name() const { return node_name; }
+	void set_activation_required_all_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_required_all_tags() const { return activation_required_all_tags; }
 
-	void set_activation_required_tags(const TypedArray<StringName> &p_tags);
-	TypedArray<StringName> get_activation_required_tags() const { return activation_required_tags; }
+	void set_activation_required_any_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_required_any_tags() const { return activation_required_any_tags; }
 
-	void set_activation_blocked_tags(const TypedArray<StringName> &p_tags);
-	TypedArray<StringName> get_activation_blocked_tags() const { return activation_blocked_tags; }
+	void set_activation_blocked_any_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_blocked_any_tags() const { return activation_blocked_any_tags; }
+
+	void set_activation_blocked_all_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_blocked_all_tags() const { return activation_blocked_all_tags; }
 
 	// Execution logic
 	virtual void execute(Ref<ASCueSpec> p_spec);

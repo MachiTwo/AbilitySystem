@@ -58,6 +58,9 @@ void ASAttributeSet::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("has_attribute", "name"), &ASAttributeSet::has_attribute);
 	ClassDB::bind_method(D_METHOD("get_attribute_list"), &ASAttributeSet::get_attribute_list);
 
+	ClassDB::bind_method(D_METHOD("set_attribute_drivers", "drivers"), &ASAttributeSet::set_attribute_drivers);
+	ClassDB::bind_method(D_METHOD("get_attribute_drivers"), &ASAttributeSet::get_attribute_drivers);
+
 	ClassDB::bind_method(D_METHOD("add_modifier", "name", "value", "type"), &ASAttributeSet::add_modifier, DEFVAL(MODIFIER_ADD));
 	ClassDB::bind_method(D_METHOD("remove_modifier", "name", "value", "type"), &ASAttributeSet::remove_modifier, DEFVAL(MODIFIER_ADD));
 
@@ -66,6 +69,7 @@ void ASAttributeSet::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "attribute_definitions", PROPERTY_HINT_ARRAY_TYPE, "ASAttribute"), "set_attribute_definitions", "get_attribute_definitions");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "unlocked_abilities", PROPERTY_HINT_ARRAY_TYPE, "ASAbility"), "set_unlocked_abilities", "get_unlocked_abilities");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "attribute_drivers", PROPERTY_HINT_ARRAY_TYPE, "Dictionary"), "set_attribute_drivers", "get_attribute_drivers");
 
 	ADD_SIGNAL(MethodInfo("attribute_changed", PropertyInfo(Variant::STRING_NAME, "attribute_name"), PropertyInfo(Variant::FLOAT, "old_value"), PropertyInfo(Variant::FLOAT, "new_value")));
 
@@ -191,6 +195,7 @@ void ASAttributeSet::_on_attribute_value_changed(float p_old_value, float p_new_
 	if (attributes.has(p_name)) {
 		attributes[p_name].base_value = p_new_value;
 		attributes[p_name].current_value += (p_new_value - p_old_value);
+		_apply_drivers_for_source(p_name, p_new_value);
 		emit_signal("attribute_changed", p_name, p_old_value, p_new_value);
 	}
 }
@@ -235,6 +240,45 @@ void ASAttributeSet::_unbind_attribute_signals(Ref<ASAttribute> p_attribute) {
 		}
 		if (p_attribute->is_connected("limits_changed", callable_mp(this, &ASAttributeSet::_on_attribute_limits_changed))) {
 			p_attribute->disconnect("limits_changed", callable_mp(this, &ASAttributeSet::_on_attribute_limits_changed));
+		}
+	}
+}
+
+void ASAttributeSet::set_attribute_drivers(const TypedArray<Dictionary> &p_drivers) {
+	attribute_drivers = p_drivers;
+	// Recalculate all destinations based on current sources
+	for (int i = 0; i < attribute_drivers.size(); i++) {
+		Dictionary d = attribute_drivers[i];
+		StringName src = d.get("source", StringName());
+		if (src != StringName() && attributes.has(src)) {
+			_apply_drivers_for_source(src, attributes[src].base_value);
+		}
+	}
+}
+
+void ASAttributeSet::_apply_drivers_for_source(const StringName &p_source, float p_new_base) {
+	for (int i = 0; i < attribute_drivers.size(); i++) {
+		Dictionary d = attribute_drivers[i];
+		StringName src = d.get("source", StringName());
+		StringName dst = d.get("destination", StringName());
+		float ratio = d.get("ratio", 1.0f);
+		if (src == p_source && attributes.has(dst)) {
+			// Accumulate: start from base, add contribution
+			// Simple approach: set driven portion = source * ratio
+			// We track by recalculating full destination value from all drivers + its own base
+			attributes[dst].current_value = attributes[dst].base_value;
+			for (int j = 0; j < attribute_drivers.size(); j++) {
+				Dictionary d2 = attribute_drivers[j];
+				StringName dst2 = d2.get("destination", StringName());
+				if (dst2 == dst) {
+					StringName src2 = d2.get("source", StringName());
+					float ratio2 = d2.get("ratio", 1.0f);
+					if (attributes.has(src2)) {
+						attributes[dst].current_value += attributes[src2].base_value * ratio2;
+					}
+				}
+			}
+			break; // Destination recalculated — move on
 		}
 	}
 }

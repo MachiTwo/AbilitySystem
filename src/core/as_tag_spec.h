@@ -60,6 +60,7 @@ public:
 	bool add_tag(const StringName &p_tag);
 	bool remove_tag(const StringName &p_tag);
 	void clear();
+	void remove_all_tags() { clear(); }
 	TypedArray<StringName> get_all_tags() const;
 
 	ASTagSpec();

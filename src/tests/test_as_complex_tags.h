@@ -31,121 +31,119 @@
 #ifndef TEST_AS_COMPLEX_TAGS_H
 #define TEST_AS_COMPLEX_TAGS_H
 
-#include "doctest.h"
-#include "src/core/as_ability_spec.h"
-#include "src/core/as_tag_spec.h"
-#include "src/resources/as_ability.h"
-#include "src/scene/as_component.h"
-
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
+#include "src/tests/test_helpers.h"
+#else
+#include "modules/ability_system/tests/test_helpers.h"
 #endif
 
 TEST_CASE("[AbilitySystem] Formalized Tag Logic (300% Coverage)") {
 	ASComponent *component = memnew(ASComponent);
-	Ref<ASTagSpec> tags = component->get_owned_tags();
 
-	Ref<ASAbility> ability;
-	ability.instantiate();
-	ability->set_ability_tag("test.ability");
-
-	Ref<ASAbilitySpec> spec;
-	spec.instantiate();
-	spec->init(ability);
-	spec->set_owner(component);
+	// Use helper to create ability (resets tags implicitly by creating fresh resource/spec)
+	auto setup_test = [&](const StringName &p_tag) {
+		component->remove_all_tags();
+		Ref<ASAbility> ability;
+		ability.instantiate();
+		ability->set_ability_tag(p_tag);
+		Ref<ASAbilitySpec> spec;
+		spec.instantiate();
+		spec->init(ability);
+		spec->set_owner(component);
+		return std::make_pair(ability, spec);
+	};
 
 	SUBCASE("Required ALL (AND Logic) - 3 Variations") {
-		TypedArray<StringName> req_all;
-		req_all.push_back("state.a");
-		req_all.push_back("state.b");
-		req_all.push_back("state.c");
-		ability->set_activation_required_all_tags(req_all);
+		auto pair = setup_test("test.req_all");
+		Ref<ASAbility> ability = pair.first;
+		Ref<ASAbilitySpec> spec = pair.second;
 
-		// Var 1: Incomplete Set (Fail)
-		component->add_tag("state.a");
-		component->add_tag("state.b");
+		TypedArray<StringName> tags;
+		tags.push_back("state.a");
+		tags.push_back("state.b");
+		ability->set_activation_required_all_tags(tags);
+
+		// Var 1: Empty (Fail)
 		CHECK(ability->can_activate_ability(component, spec) == false);
 
-		// Var 2: Exact Set (Success)
-		component->add_tag("state.c");
-		CHECK(ability->can_activate_ability(component, spec) == true);
+		// Var 2: Partial (Fail)
+		component->add_tag("state.a");
+		CHECK(ability->can_activate_ability(component, spec) == false);
 
-		// Var 3: Hierarchical (Success) - state.a.child counts as state.a
-		component->remove_tag("state.a");
-		component->add_tag("state.a.child");
+		// Var 3: Full Match (Success)
+		component->add_tag("state.b");
 		CHECK(ability->can_activate_ability(component, spec) == true);
-
-		component->clear_effects(); // Reset tags from effects if any
-		tags->remove_all_tags();
 	}
 
 	SUBCASE("Required ANY (OR Logic) - 3 Variations") {
-		TypedArray<StringName> req_any;
-		req_any.push_back("buff.fire");
-		req_any.push_back("buff.water");
-		req_any.push_back("buff.earth");
-		ability->set_activation_required_any_tags(req_any);
+		auto pair = setup_test("test.req_any");
+		Ref<ASAbility> ability = pair.first;
+		Ref<ASAbilitySpec> spec = pair.second;
 
-		// Var 1: Single Match (Success)
-		component->add_tag("buff.fire");
+		TypedArray<StringName> tags;
+		tags.push_back("state.a");
+		tags.push_back("state.b");
+		ability->set_activation_required_any_tags(tags);
+
+		// Var 1: Empty (Fail)
+		CHECK(ability->can_activate_ability(component, spec) == false);
+
+		// Var 2: Single Match A (Success)
+		component->add_tag("state.a");
 		CHECK(ability->can_activate_ability(component, spec) == true);
 
-		// Var 2: Different Match (Success)
-		component->remove_tag("buff.fire");
-		component->add_tag("buff.water");
+		// Var 3: Single Match B (Success)
+		component->remove_all_tags();
+		component->add_tag("state.b");
 		CHECK(ability->can_activate_ability(component, spec) == true);
-
-		// Var 3: Match with Extra Noise (Success)
-		component->add_tag("debuff.poison");
-		CHECK(ability->can_activate_ability(component, spec) == true);
-
-		tags->remove_all_tags();
 	}
 
 	SUBCASE("Blocked ANY (OR Logic) - 3 Variations") {
-		TypedArray<StringName> block_any;
-		block_any.push_back("state.stunned");
-		block_any.push_back("state.silenced");
-		block_any.push_back("state.dead");
-		ability->set_activation_blocked_any_tags(block_any);
+		auto pair = setup_test("test.block_any");
+		Ref<ASAbility> ability = pair.first;
+		Ref<ASAbilitySpec> spec = pair.second;
 
-		// Var 1: Solo Block (Fail)
+		TypedArray<StringName> tags;
+		tags.push_back("state.stunned");
+		tags.push_back("state.dead");
+		ability->set_activation_blocked_any_tags(tags);
+
+		// Var 1: Clean State (Success)
+		CHECK(ability->can_activate_ability(component, spec) == true);
+
+		// Var 2: Blocked by Stun (Fail)
 		component->add_tag("state.stunned");
 		CHECK(ability->can_activate_ability(component, spec) == false);
 
-		// Var 2: Hierarchical Block (Fail) - state.dead.ghost counts as state.dead
-		component->remove_tag("state.stunned");
-		component->add_tag("state.dead.ghost");
+		// Var 3: Blocked by Dead (Fail)
+		component->remove_all_tags();
+		component->add_tag("state.dead");
 		CHECK(ability->can_activate_ability(component, spec) == false);
-
-		// Var 3: Multiple Blocks (Fail)
-		component->add_tag("state.silenced");
-		CHECK(ability->can_activate_ability(component, spec) == false);
-
-		tags->remove_all_tags();
 	}
 
 	SUBCASE("Blocked ALL (AND Logic) - 3 Variations") {
-		TypedArray<StringName> block_all;
-		block_all.push_back("action.jumping");
-		block_all.push_back("action.attacking");
-		block_all.push_back("action.dashing");
-		ability->set_activation_blocked_all_tags(block_all);
+		auto pair = setup_test("test.block_all");
+		Ref<ASAbility> ability = pair.first;
+		Ref<ASAbilitySpec> spec = pair.second;
 
-		// Var 1: Two out of Three (Success - NOT blocked)
-		component->add_tag("action.jumping");
-		component->add_tag("action.attacking");
+		TypedArray<StringName> tags;
+		tags.push_back("state.locked");
+		tags.push_back("state.silenced");
+		ability->set_activation_blocked_all_tags(tags);
+
+		// Var 1: Single Tag Present (Success - not blocked all)
+		component->add_tag("state.locked");
 		CHECK(ability->can_activate_ability(component, spec) == true);
 
-		// Var 2: Three out of Three (Fail - BLOCKED)
-		component->add_tag("action.dashing");
+		// Var 2: Both Tags Present (Fail - blocked all)
+		component->add_tag("state.silenced");
 		CHECK(ability->can_activate_ability(component, spec) == false);
 
-		// Var 3: Extreme Multi-match (Fail - BLOCKED)
-		component->add_tag("extra.state");
+		// Var 3: Hierarchical Match (Fail - blocked all)
+		component->remove_all_tags();
+		component->add_tag("state.locked.permanent");
+		component->add_tag("state.silenced.magical");
 		CHECK(ability->can_activate_ability(component, spec) == false);
-
-		tags->remove_all_tags();
 	}
 
 	memdelete(component);

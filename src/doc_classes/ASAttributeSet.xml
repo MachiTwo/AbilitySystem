@@ -39,6 +39,12 @@
 				Returns the definition of the specified attribute.
 			</description>
 		</method>
+		<method name="get_attribute_drivers" qualifiers="const">
+			<return type="Dictionary[]" />
+			<description>
+				Returns the list of attribute drivers.
+			</description>
+		</method>
 		<method name="get_attribute_list" qualifiers="const">
 			<return type="StringName[]" />
 			<description>
@@ -83,6 +89,13 @@
 				Sets the base value for a specific attribute.
 			</description>
 		</method>
+		<method name="set_attribute_drivers">
+			<return type="void" />
+			<param index="0" name="drivers" type="Dictionary[]" />
+			<description>
+				Sets the list of attribute drivers. Each dictionary should contain [code]source[/code] (StringName), [code]destination[/code] (StringName) and [code]ratio[/code] (float).
+			</description>
+		</method>
 	</methods>
 	<members>
 		<member name="attribute_definitions" type="ASAttribute[]" setter="set_attribute_definitions" getter="get_attribute_definitions" default="[]">
@@ -90,6 +103,9 @@
 		</member>
 		<member name="unlocked_abilities" type="ASAbility[]" setter="set_unlocked_abilities" getter="get_unlocked_abilities" default="[]">
 			Abilities permitted for use by the actor.
+		</member>
+		<member name="attribute_drivers" type="Dictionary[]" setter="set_attribute_drivers" getter="get_attribute_drivers" default="[]">
+			List of rules that drive an attribute value based on another (e.g., Strength driving Attack).
 		</member>
 	</members>
 	<signals>

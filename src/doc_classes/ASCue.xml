@@ -45,9 +45,17 @@
 		</method>
 	</methods>
 	<members>
-		<member name="activation_blocked_tags" type="StringName[]" setter="set_activation_blocked_tags" getter="get_activation_blocked_tags" default="[]">
+		<member name="activation_blocked_any_tags" type="StringName[]" setter="set_activation_blocked_any_tags" getter="get_activation_blocked_any_tags" default="[]">
+			Cue cannot execute if owner has [b]any[/b] of these tags (OR logic).
 		</member>
-		<member name="activation_required_tags" type="StringName[]" setter="set_activation_required_tags" getter="get_activation_required_tags" default="[]">
+		<member name="activation_blocked_all_tags" type="StringName[]" setter="set_activation_blocked_all_tags" getter="get_activation_blocked_all_tags" default="[]">
+			Cue cannot execute if owner has [b]all[/b] of these tags simultaneously (AND logic).
+		</member>
+		<member name="activation_required_all_tags" type="StringName[]" setter="set_activation_required_all_tags" getter="get_activation_required_all_tags" default="[]">
+			Owner must have [b]all[/b] of these tags for the cue to execute (AND logic).
+		</member>
+		<member name="activation_required_any_tags" type="StringName[]" setter="set_activation_required_any_tags" getter="get_activation_required_any_tags" default="[]">
+			Owner must have [b]at least one[/b] of these tags for the cue to execute (OR logic).
 		</member>
 		<member name="cue_name" type="String" setter="set_cue_name" getter="get_cue_name" default="&quot;&quot;">
 			Unique name for this cue resource.

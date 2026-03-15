@@ -146,6 +146,7 @@ public:
 	// --- General Initialization & Management ---
 	void apply_container(Ref<ASContainer> p_container, int p_level = 1);
 	void add_attribute_set(Ref<ASAttributeSet> p_set);
+	TypedArray<ASAttributeSet> get_attribute_sets() const;
 
 	// --- Ability Unlocking API (Permanent for the Actor instance) ---
 	void unlock_ability_by_tag(const StringName &p_tag);
@@ -206,6 +207,7 @@ public:
 	// --- Tag Management ---
 	void add_tag(const StringName &p_tag);
 	void remove_tag(const StringName &p_tag);
+	void remove_all_tags();
 	bool has_tag(const StringName &p_tag) const;
 	TypedArray<StringName> get_tags() const;
 	Ref<ASTagSpec> get_owned_tags() const;

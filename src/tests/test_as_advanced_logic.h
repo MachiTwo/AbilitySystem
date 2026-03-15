@@ -104,7 +104,7 @@ TEST_CASE("AbilitySystem Advanced Logic (Periods & Modifiers)") {
 
 		TypedArray<StringName> blocked;
 		blocked.push_back("state.immune");
-		damage->set_activation_blocked_tags(blocked);
+		damage->set_activation_blocked_any_tags(blocked);
 
 		// 1. Apply without tag
 		CHECK(asc->can_activate_effect_by_resource(damage) == true);

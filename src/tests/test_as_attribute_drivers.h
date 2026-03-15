@@ -31,13 +31,10 @@
 #ifndef TEST_AS_ATTRIBUTE_DRIVERS_H
 #define TEST_AS_ATTRIBUTE_DRIVERS_H
 
-#include "doctest.h"
-#include "src/resources/as_attribute.h"
-#include "src/resources/as_attribute_set.h"
-#include "src/scene/as_component.h"
-
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
+#include "src/tests/test_helpers.h"
+#else
+#include "modules/ability_system/tests/test_helpers.h"
 #endif
 
 TEST_CASE("[AbilitySystem] Attribute Drivers (300% Coverage)") {
@@ -45,75 +42,43 @@ TEST_CASE("[AbilitySystem] Attribute Drivers (300% Coverage)") {
 	Ref<ASAttributeSet> set;
 	set.instantiate();
 
-	// Setup 3 Base Attributes
-	Ref<ASAttribute> attr_str;
-	attr_str.instantiate();
-	attr_str->set_attribute_name("stat.str");
-	Ref<ASAttribute> attr_dex;
-	attr_dex.instantiate();
-	attr_dex->set_attribute_name("stat.dex");
-	Ref<ASAttribute> attr_int;
-	attr_int.instantiate();
-	attr_int->set_attribute_name("stat.int");
-
-	// Setup 3 Derived Attributes
-	Ref<ASAttribute> attr_atk;
-	attr_atk.instantiate();
-	attr_atk->set_attribute_name("stat.atk");
-	Ref<ASAttribute> attr_spd;
-	attr_spd.instantiate();
-	attr_spd->set_attribute_name("stat.spd");
-	Ref<ASAttribute> attr_man;
-	attr_man.instantiate();
-	attr_man->set_attribute_name("stat.mana");
-
-	set->add_attribute_definition(attr_str);
-	set->add_attribute_definition(attr_dex);
-	set->add_attribute_definition(attr_int);
-	set->add_attribute_definition(attr_atk);
-	set->add_attribute_definition(attr_spd);
-	set->add_attribute_definition(attr_man);
+	set->add_attribute_definition(create_test_attribute("stat.str", 10.0f));
+	set->add_attribute_definition(create_test_attribute("stat.dex", 10.0f));
+	set->add_attribute_definition(create_test_attribute("stat.int", 10.0f));
+	set->add_attribute_definition(create_test_attribute("stat.atk", 0.0f));
+	set->add_attribute_definition(create_test_attribute("stat.spd", 0.0f));
+	set->add_attribute_definition(create_test_attribute("stat.mana", 0.0f));
 
 	component->add_attribute_set(set);
 
-	SUBCASE("Triple Attribute Relationship") {
+	SUBCASE("Relationship Ratios - 3 Variations") {
 		TypedArray<Dictionary> drivers;
 
 		Dictionary d1;
 		d1["source"] = StringName("stat.str");
 		d1["destination"] = StringName("stat.atk");
 		d1["ratio"] = 2.0f;
-		Dictionary d2;
-		d2["source"] = StringName("stat.dex");
-		d2["destination"] = StringName("stat.spd");
-		d2["ratio"] = 1.5f;
-		Dictionary d3;
-		d3["source"] = StringName("stat.int");
-		d3["destination"] = StringName("stat.mana");
-		d3["ratio"] = 10.0f;
-
 		drivers.push_back(d1);
-		drivers.push_back(d2);
-		drivers.push_back(d3);
-
 		set->set_attribute_drivers(drivers);
 
-		// Test Variation 1: Strength -> Attack
-		component->set_attribute_base_value_by_tag("stat.str", 10.0f);
-		CHECK(component->get_attribute_value_by_tag("stat.atk") == 20.0f);
+		// Var 1: Base Ratio (10 * 2 = 20)
+		CHECK_ATTR_EQ(component, "stat.atk", 20.0f);
 
-		// Test Variation 2: Dexterity -> Speed
-		component->set_attribute_base_value_by_tag("stat.dex", 10.0f);
-		CHECK(component->get_attribute_value_by_tag("stat.spd") == 15.0f);
+		// Var 2: Dynamic Update (20 * 2 = 40)
+		component->set_attribute_base_value_by_tag("stat.str", 20.0f);
+		CHECK_ATTR_EQ(component, "stat.atk", 40.0f);
 
-		// Test Variation 3: Intelligence -> Mana
-		component->set_attribute_base_value_by_tag("stat.int", 5.0f);
-		CHECK(component->get_attribute_value_by_tag("stat.mana") == 50.0f);
+		// Var 3: Inverse/Zero Ratio
+		d1["ratio"] = 0.0f;
+		drivers.clear();
+		drivers.push_back(d1);
+		set->set_attribute_drivers(drivers);
+		CHECK_ATTR_EQ(component, "stat.atk", 0.0f);
 	}
 
-	SUBCASE("Multiple Sources for Single Destination") {
+	SUBCASE("Multiple Sources (Summation) - 3 Variations") {
 		TypedArray<Dictionary> drivers;
-		// ATK is driven by STR (x2) and DEX (x1)
+		// ATK = STR * 2 + DEX * 1
 		Dictionary d1;
 		d1["source"] = StringName("stat.str");
 		d1["destination"] = StringName("stat.atk");
@@ -122,18 +87,29 @@ TEST_CASE("[AbilitySystem] Attribute Drivers (300% Coverage)") {
 		d2["source"] = StringName("stat.dex");
 		d2["destination"] = StringName("stat.atk");
 		d2["ratio"] = 1.0f;
+
 		drivers.push_back(d1);
 		drivers.push_back(d2);
 		set->set_attribute_drivers(drivers);
 
+		// Reset values
 		component->set_attribute_base_value_by_tag("stat.str", 10.0f);
 		component->set_attribute_base_value_by_tag("stat.dex", 5.0f);
 
-		// Result: 10*2 + 5*1 = 25
-		CHECK(component->get_attribute_value_by_tag("stat.atk") == 25.0f);
+		// Var 1: Initial Sum (10*2 + 5*1 = 25)
+		CHECK_ATTR_EQ(component, "stat.atk", 25.0f);
+
+		// Var 2: Incremental Change (STR 10->15 : 15*2 + 5*1 = 35)
+		component->set_attribute_base_value_by_tag("stat.str", 15.0f);
+		CHECK_ATTR_EQ(component, "stat.atk", 35.0f);
+
+		// Var 3: Removing a Driver (Sum should drop)
+		drivers.remove_at(1); // Remove DEX driver
+		set->set_attribute_drivers(drivers); // Recalculate: 15*2 = 30
+		CHECK_ATTR_EQ(component, "stat.atk", 30.0f);
 	}
 
-	SUBCASE("Driver + Modifier Interaction") {
+	SUBCASE("Driver + Modifier Consistency - 3 Variations") {
 		TypedArray<Dictionary> drivers;
 		Dictionary d1;
 		d1["source"] = StringName("stat.str");
@@ -142,16 +118,19 @@ TEST_CASE("[AbilitySystem] Attribute Drivers (300% Coverage)") {
 		drivers.push_back(d1);
 		set->set_attribute_drivers(drivers);
 
-		// 1. Base Driver
 		component->set_attribute_base_value_by_tag("stat.str", 10.0f); // Atk = 20
 
-		// 2. Add Modifier directly to ATK
-		set->add_modifier("stat.atk", 5.0f); // 20 + 5 = 25
-		CHECK(component->get_attribute_value_by_tag("stat.atk") == 25.0f);
+		// Var 1: Driver + Flat Add (20 + 5 = 25)
+		set->add_modifier("stat.atk", 5.0f, ASAttributeSet::MODIFIER_ADD);
+		CHECK_ATTR_EQ(component, "stat.atk", 25.0f);
 
-		// 3. Change STR (Driver should update)
-		component->set_attribute_base_value_by_tag("stat.str", 20.0f); // 20*2 + 5 = 45
-		CHECK(component->get_attribute_value_by_tag("stat.atk") == 45.0f);
+		// Var 2: Driver Update with Modifier (20*2 + 5 = 45)
+		component->set_attribute_base_value_by_tag("stat.str", 20.0f);
+		CHECK_ATTR_EQ(component, "stat.atk", 45.0f);
+
+		// Var 3: Modifier Removal (Back to driven value: 20*2 = 40)
+		set->remove_modifier("stat.atk", 5.0f, ASAttributeSet::MODIFIER_ADD);
+		CHECK_ATTR_EQ(component, "stat.atk", 40.0f);
 	}
 
 	memdelete(component);

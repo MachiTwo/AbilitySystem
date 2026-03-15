@@ -51,19 +51,23 @@ Properties
 .. table::
    :widths: auto
 
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------+---------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_tags<class_ASCue_property_activation_blocked_tags>`   | ``[]``  |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------+---------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_tags<class_ASCue_property_activation_required_tags>` | ``[]``  |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------+---------+
-   | :ref:`String<class_String>`                                      | :ref:`cue_name<class_ASCue_property_cue_name>`                                 | ``""``  |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------+---------+
-   | :ref:`StringName<class_StringName>`                              | :ref:`cue_tag<class_ASCue_property_cue_tag>`                                   | ``&""`` |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------+---------+
-   | :ref:`CueEventType<enum_ASCue_CueEventType>`                     | :ref:`event_type<class_ASCue_property_event_type>`                             | ``0``   |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------+---------+
-   | :ref:`StringName<class_StringName>`                              | :ref:`node_name<class_ASCue_property_node_name>`                               | ``&""`` |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------+---------+
+   +------------------------------------------------------------------+----------------------------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_any_tags<class_ASCue_property_activation_blocked_any_tags>`   | ``[]``  |
+   +------------------------------------------------------------------+----------------------------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_all_tags<class_ASCue_property_activation_blocked_all_tags>`   | ``[]``  |
+   +------------------------------------------------------------------+----------------------------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_all_tags<class_ASCue_property_activation_required_all_tags>` | ``[]``  |
+   +------------------------------------------------------------------+----------------------------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_any_tags<class_ASCue_property_activation_required_any_tags>` | ``[]``  |
+   +------------------------------------------------------------------+----------------------------------------------------------------------------------------+---------+
+   | :ref:`String<class_String>`                                      | :ref:`cue_name<class_ASCue_property_cue_name>`                                         | ``""``  |
+   +------------------------------------------------------------------+----------------------------------------------------------------------------------------+---------+
+   | :ref:`StringName<class_StringName>`                              | :ref:`cue_tag<class_ASCue_property_cue_tag>`                                           | ``&""`` |
+   +------------------------------------------------------------------+----------------------------------------------------------------------------------------+---------+
+   | :ref:`CueEventType<enum_ASCue_CueEventType>`                     | :ref:`event_type<class_ASCue_property_event_type>`                                     | ``0``   |
+   +------------------------------------------------------------------+----------------------------------------------------------------------------------------+---------+
+   | :ref:`StringName<class_StringName>`                              | :ref:`node_name<class_ASCue_property_node_name>`                                       | ``&""`` |
+   +------------------------------------------------------------------+----------------------------------------------------------------------------------------+---------+
 
 .. rst-class:: classref-reftable-group
 
@@ -129,39 +133,69 @@ Triggered when an effect/ability ends.
 Property Descriptions
 ---------------------
 
-.. _class_ASCue_property_activation_blocked_tags:
+.. _class_ASCue_property_activation_blocked_any_tags:
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_tags** = ``[]`` :ref:`🔗<class_ASCue_property_activation_blocked_tags>`
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_any_tags** = ``[]`` :ref:`🔗<class_ASCue_property_activation_blocked_any_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_blocked_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_tags**\ (\ )
+- |void| **set_activation_blocked_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_any_tags**\ (\ )
 
-.. container:: contribute
-
-	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Cue cannot execute if owner has **any** of these tags (OR logic).
 
 .. rst-class:: classref-item-separator
 
 ----
 
-.. _class_ASCue_property_activation_required_tags:
+.. _class_ASCue_property_activation_blocked_all_tags:
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_tags** = ``[]`` :ref:`🔗<class_ASCue_property_activation_required_tags>`
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_all_tags** = ``[]`` :ref:`🔗<class_ASCue_property_activation_blocked_all_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_required_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_tags**\ (\ )
+- |void| **set_activation_blocked_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_all_tags**\ (\ )
 
-.. container:: contribute
+Cue cannot execute if owner has **all** of these tags simultaneously (AND logic).
 
-	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASCue_property_activation_required_all_tags:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_all_tags** = ``[]`` :ref:`🔗<class_ASCue_property_activation_required_all_tags>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_activation_required_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_all_tags**\ (\ )
+
+Owner must have **all** of these tags for the cue to execute (AND logic).
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASCue_property_activation_required_any_tags:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_any_tags** = ``[]`` :ref:`🔗<class_ASCue_property_activation_required_any_tags>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_activation_required_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_any_tags**\ (\ )
+
+Owner must have **at least one** of these tags for the cue to execute (OR logic).
 
 .. rst-class:: classref-item-separator
 

@@ -158,7 +158,7 @@ TEST_CASE("High-Density Ability System Integration") {
 		// Ability requirements: check if ability is blocked
 		TypedArray<StringName> blocked;
 		blocked.push_back(StringName("State.Dead"));
-		jump_ability->set_activation_blocked_tags(blocked);
+		jump_ability->set_activation_blocked_any_tags(blocked);
 
 		asc->set_attribute_base_value_by_tag("Stamina", 100.0f);
 		MESSAGE("Attempting Jump while Dead...");
@@ -185,7 +185,7 @@ TEST_CASE("High-Density Ability System RPG Flow" * doctest::skip(false)) {
 	TypedArray<StringName> melee_blocked;
 	melee_blocked.push_back(tag_state_talking);
 	melee_blocked.push_back(tag_state_dead);
-	melee_ability->set_activation_blocked_tags(melee_blocked);
+	melee_ability->set_activation_blocked_any_tags(melee_blocked);
 
 	Ref<ASEffect> burn_effect = memnew(ASEffect);
 	burn_effect->set_effect_name("Burning");
@@ -291,9 +291,9 @@ TEST_CASE("High-Density Ability System RPG Flow" * doctest::skip(false)) {
 		player_asc->add_tag(tag_state_stunned);
 
 		MESSAGE("Attempting Melee while stunned...");
-		TypedArray<StringName> blocked = melee_ability->get_activation_blocked_tags();
+		TypedArray<StringName> blocked = melee_ability->get_activation_blocked_any_tags();
 		blocked.push_back(tag_state_stunned);
-		melee_ability->set_activation_blocked_tags(blocked);
+		melee_ability->set_activation_blocked_any_tags(blocked);
 
 		bool melee_fail = player_asc->try_activate_ability_by_tag(tag_ability_melee);
 		CHECK(melee_fail == false);

@@ -118,8 +118,10 @@ private:
 	Vector<RequirementData> requirements;
 
 	// Activation requirements
-	TypedArray<StringName> activation_required_tags;
-	TypedArray<StringName> activation_blocked_tags;
+	TypedArray<StringName> activation_required_all_tags;
+	TypedArray<StringName> activation_required_any_tags;
+	TypedArray<StringName> activation_blocked_any_tags;
+	TypedArray<StringName> activation_blocked_all_tags;
 
 	TypedArray<StringName> granted_tags;
 	TypedArray<StringName> blocked_tags;
@@ -184,11 +186,17 @@ public:
 	void set_requirements_count(int p_count);
 	int get_requirements_count() const;
 
-	void set_activation_required_tags(const TypedArray<StringName> &p_tags);
-	TypedArray<StringName> get_activation_required_tags() const { return activation_required_tags; }
+	void set_activation_required_all_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_required_all_tags() const { return activation_required_all_tags; }
 
-	void set_activation_blocked_tags(const TypedArray<StringName> &p_tags);
-	TypedArray<StringName> get_activation_blocked_tags() const { return activation_blocked_tags; }
+	void set_activation_required_any_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_required_any_tags() const { return activation_required_any_tags; }
+
+	void set_activation_blocked_any_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_blocked_any_tags() const { return activation_blocked_any_tags; }
+
+	void set_activation_blocked_all_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_blocked_all_tags() const { return activation_blocked_all_tags; }
 
 	ASEffect();
 	~ASEffect();

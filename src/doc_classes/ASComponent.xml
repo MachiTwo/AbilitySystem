@@ -64,7 +64,7 @@
 			<return type="void" />
 			<param index="0" name="spec" type="ASEffectSpec" />
 			<description>
-				Applies an effect instance to this actor.
+				Applies an already-built effect spec to this actor. Validates all four tag conditions on the effect resource before applying (required_all, required_any, blocked_any, blocked_all). Emits [signal effect_failed] if any tag check fails.
 			</description>
 		</method>
 		<method name="apply_effect_spec_to_target">
@@ -111,6 +111,7 @@
 			<param index="0" name="cue" type="ASCue" />
 			<description>
 				Checks if the specified cue resource can be activated.
+				Verifies all four tag conditions: [member ASCue.activation_required_all_tags] (AND), [member ASCue.activation_required_any_tags] (OR), [member ASCue.activation_blocked_any_tags] (OR), and [member ASCue.activation_blocked_all_tags] (AND).
 			</description>
 		</method>
 		<method name="can_activate_cue_by_tag">
@@ -124,7 +125,8 @@
 			<return type="bool" />
 			<param index="0" name="effect" type="ASEffect" />
 			<description>
-				Checks if the specified effect resource can be applied.
+				Checks if the specified effect resource can be applied to this component.
+				Verifies all four tag conditions: [member ASEffect.activation_required_all_tags] (AND), [member ASEffect.activation_required_any_tags] (OR), [member ASEffect.activation_blocked_any_tags] (OR), and [member ASEffect.activation_blocked_all_tags] (AND). Also verifies attribute requirements.
 			</description>
 		</method>
 		<method name="can_activate_effect_by_tag">
@@ -222,6 +224,12 @@
 			<return type="ASEffectSpec[]" />
 			<description>
 				Returns a list of active effects for debugging.
+			</description>
+		</method>
+		<method name="get_attribute_sets" qualifiers="const">
+			<return type="ASAttributeSet[]" />
+			<description>
+				Returns the list of attribute sets attached to this component.
 			</description>
 		</method>
 		<method name="get_animation_player" qualifiers="const">
@@ -447,6 +455,12 @@
 			<param index="0" name="tag" type="StringName" />
 			<description>
 				Removes a tag.
+			</description>
+		</method>
+		<method name="remove_all_tags">
+			<return type="void" />
+			<description>
+				Removes all tags from the component and triggers associated events and ability triggers.
 			</description>
 		</method>
 		<method name="set_animation_player">

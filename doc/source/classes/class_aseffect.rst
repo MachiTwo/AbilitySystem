@@ -30,9 +30,13 @@ Properties
    :widths: auto
 
    +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_tags<class_ASEffect_property_activation_blocked_tags>`                           | ``[]``    |
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_any_tags<class_ASEffect_property_activation_blocked_any_tags>`                   | ``[]``    |
    +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_tags<class_ASEffect_property_activation_required_tags>`                         | ``[]``    |
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_all_tags<class_ASEffect_property_activation_blocked_all_tags>`                   | ``[]``    |
+   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_all_tags<class_ASEffect_property_activation_required_all_tags>`                 | ``[]``    |
+   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_any_tags<class_ASEffect_property_activation_required_any_tags>`                 | ``[]``    |
    +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
    | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`blocked_tags<class_ASEffect_property_blocked_tags>`                                                 | ``[]``    |
    +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
@@ -251,35 +255,69 @@ Overrides the attribute with the magnitude.
 Property Descriptions
 ---------------------
 
-.. _class_ASEffect_property_activation_blocked_tags:
+.. _class_ASEffect_property_activation_blocked_any_tags:
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_blocked_tags>`
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_any_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_blocked_any_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_blocked_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_tags**\ (\ )
+- |void| **set_activation_blocked_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_any_tags**\ (\ )
 
-Effect cannot be applied if the target has any of these tags.
+Effect cannot be applied if the target has **any** of these tags (OR logic).
 
 .. rst-class:: classref-item-separator
 
 ----
 
-.. _class_ASEffect_property_activation_required_tags:
+.. _class_ASEffect_property_activation_blocked_all_tags:
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_required_tags>`
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_all_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_blocked_all_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_required_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_tags**\ (\ )
+- |void| **set_activation_blocked_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_all_tags**\ (\ )
 
-Effect requires the target to have all of these tags to be applied.
+Effect cannot be applied if the target has **all** of these tags simultaneously (AND logic).
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASEffect_property_activation_required_all_tags:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_all_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_required_all_tags>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_activation_required_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_all_tags**\ (\ )
+
+Effect requires the target to have **all** of these tags to be applied (AND logic).
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASEffect_property_activation_required_any_tags:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_any_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_required_any_tags>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_activation_required_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_any_tags**\ (\ )
+
+Effect requires the target to have **at least one** of these tags to be applied (OR logic).
 
 .. rst-class:: classref-item-separator
 

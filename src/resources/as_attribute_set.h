@@ -78,6 +78,11 @@ protected:
 	// Runtime values (maintained for performance)
 	HashMap<StringName, AttributeValue> attributes;
 
+	// Attribute drivers: [{source, destination, ratio}]
+	TypedArray<Dictionary> attribute_drivers;
+
+	void _apply_drivers_for_source(const StringName &p_source, float p_new_base);
+
 public:
 	// Resource-based API
 	void add_attribute_definition(Ref<ASAttribute> p_attribute);
@@ -89,6 +94,9 @@ public:
 	// Unlocked abilities (permitted for use from the catalog)
 	void set_unlocked_abilities(const TypedArray<ASAbility> &p_abilities) { unlocked_abilities = p_abilities; }
 	TypedArray<ASAbility> get_unlocked_abilities() const { return unlocked_abilities; }
+
+	void set_attribute_drivers(const TypedArray<Dictionary> &p_drivers);
+	TypedArray<Dictionary> get_attribute_drivers() const { return attribute_drivers; }
 
 	// Value API (validated via Resource)
 	void set_attribute_base_value(const StringName &p_name, float p_value);

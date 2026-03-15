@@ -61,13 +61,13 @@ TEST_CASE("ASAbility API") {
 	SUBCASE("Tags Management") {
 		TypedArray<StringName> blocked;
 		blocked.push_back("State.Stunned");
-		ability->set_activation_blocked_tags(blocked);
-		CHECK(ability->get_activation_blocked_tags().size() == 1);
+		ability->set_activation_blocked_any_tags(blocked);
+		CHECK(ability->get_activation_blocked_any_tags().size() == 1);
 
 		TypedArray<StringName> required;
 		required.push_back("State.Grounded");
-		ability->set_activation_required_tags(required);
-		CHECK(ability->get_activation_required_tags().size() == 1);
+		ability->set_activation_required_all_tags(required);
+		CHECK(ability->get_activation_required_all_tags().size() == 1);
 
 		TypedArray<StringName> owned;
 		owned.push_back("State.Dashing");

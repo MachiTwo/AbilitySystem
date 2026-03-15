@@ -77,11 +77,17 @@
 		</method>
 	</methods>
 	<members>
-		<member name="activation_blocked_tags" type="StringName[]" setter="set_activation_blocked_tags" getter="get_activation_blocked_tags" default="[]">
-			Effect cannot be applied if the target has any of these tags.
+		<member name="activation_blocked_any_tags" type="StringName[]" setter="set_activation_blocked_any_tags" getter="get_activation_blocked_any_tags" default="[]">
+			Effect cannot be applied if the target has [b]any[/b] of these tags (OR logic).
 		</member>
-		<member name="activation_required_tags" type="StringName[]" setter="set_activation_required_tags" getter="get_activation_required_tags" default="[]">
-			Effect requires the target to have all of these tags to be applied.
+		<member name="activation_blocked_all_tags" type="StringName[]" setter="set_activation_blocked_all_tags" getter="get_activation_blocked_all_tags" default="[]">
+			Effect cannot be applied if the target has [b]all[/b] of these tags simultaneously (AND logic).
+		</member>
+		<member name="activation_required_all_tags" type="StringName[]" setter="set_activation_required_all_tags" getter="get_activation_required_all_tags" default="[]">
+			Effect requires the target to have [b]all[/b] of these tags to be applied (AND logic).
+		</member>
+		<member name="activation_required_any_tags" type="StringName[]" setter="set_activation_required_any_tags" getter="get_activation_required_any_tags" default="[]">
+			Effect requires the target to have [b]at least one[/b] of these tags to be applied (OR logic).
 		</member>
 		<member name="blocked_tags" type="StringName[]" setter="set_blocked_tags" getter="get_blocked_tags" default="[]">
 			Tags that dictate whether this effect is blocked from applying.

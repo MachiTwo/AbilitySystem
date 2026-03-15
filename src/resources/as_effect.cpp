@@ -76,10 +76,14 @@ void ASEffect::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_requirement_attribute", "index"), &ASEffect::get_requirement_attribute);
 	ClassDB::bind_method(D_METHOD("get_requirement_amount", "index"), &ASEffect::get_requirement_amount);
 
-	ClassDB::bind_method(D_METHOD("set_activation_required_tags", "tags"), &ASEffect::set_activation_required_tags);
-	ClassDB::bind_method(D_METHOD("get_activation_required_tags"), &ASEffect::get_activation_required_tags);
-	ClassDB::bind_method(D_METHOD("set_activation_blocked_tags", "tags"), &ASEffect::set_activation_blocked_tags);
-	ClassDB::bind_method(D_METHOD("get_activation_blocked_tags"), &ASEffect::get_activation_blocked_tags);
+	ClassDB::bind_method(D_METHOD("set_activation_required_all_tags", "tags"), &ASEffect::set_activation_required_all_tags);
+	ClassDB::bind_method(D_METHOD("get_activation_required_all_tags"), &ASEffect::get_activation_required_all_tags);
+	ClassDB::bind_method(D_METHOD("set_activation_required_any_tags", "tags"), &ASEffect::set_activation_required_any_tags);
+	ClassDB::bind_method(D_METHOD("get_activation_required_any_tags"), &ASEffect::get_activation_required_any_tags);
+	ClassDB::bind_method(D_METHOD("set_activation_blocked_any_tags", "tags"), &ASEffect::set_activation_blocked_any_tags);
+	ClassDB::bind_method(D_METHOD("get_activation_blocked_any_tags"), &ASEffect::get_activation_blocked_any_tags);
+	ClassDB::bind_method(D_METHOD("set_activation_blocked_all_tags", "tags"), &ASEffect::set_activation_blocked_all_tags);
+	ClassDB::bind_method(D_METHOD("get_activation_blocked_all_tags"), &ASEffect::get_activation_blocked_all_tags);
 
 	ClassDB::bind_method(D_METHOD("set_granted_tags", "tags"), &ASEffect::set_granted_tags);
 	ClassDB::bind_method(D_METHOD("get_granted_tags"), &ASEffect::get_granted_tags);
@@ -101,8 +105,10 @@ void ASEffect::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::BOOL, "execute_periodic_tick_on_application"), "set_execute_periodic_tick_on_application", "get_execute_periodic_tick_on_application");
 
 	ADD_GROUP("Activation", "activation_");
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_required_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_required_tags", "get_activation_required_tags");
-	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_blocked_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_blocked_tags", "get_activation_blocked_tags");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_required_all_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_required_all_tags", "get_activation_required_all_tags");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_required_any_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_required_any_tags", "get_activation_required_any_tags");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_blocked_any_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_blocked_any_tags", "get_activation_blocked_any_tags");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_blocked_all_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_blocked_all_tags", "get_activation_blocked_all_tags");
 
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "granted_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_granted_tags", "get_granted_tags");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "blocked_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_blocked_tags", "get_blocked_tags");
@@ -307,8 +313,8 @@ void ASEffect::set_effect_name(const String &p_name) {
 	effect_name = p_name;
 }
 
-void ASEffect::set_activation_required_tags(const TypedArray<StringName> &p_tags) {
-	activation_required_tags = p_tags;
+void ASEffect::set_activation_required_all_tags(const TypedArray<StringName> &p_tags) {
+	activation_required_all_tags = p_tags;
 	if (AbilitySystem::get_singleton()) {
 		for (int i = 0; i < p_tags.size(); i++) {
 			AbilitySystem::get_singleton()->register_tag(p_tags[i], AbilitySystem::TAG_TYPE_CONDITIONAL);
@@ -316,8 +322,26 @@ void ASEffect::set_activation_required_tags(const TypedArray<StringName> &p_tags
 	}
 }
 
-void ASEffect::set_activation_blocked_tags(const TypedArray<StringName> &p_tags) {
-	activation_blocked_tags = p_tags;
+void ASEffect::set_activation_required_any_tags(const TypedArray<StringName> &p_tags) {
+	activation_required_any_tags = p_tags;
+	if (AbilitySystem::get_singleton()) {
+		for (int i = 0; i < p_tags.size(); i++) {
+			AbilitySystem::get_singleton()->register_tag(p_tags[i], AbilitySystem::TAG_TYPE_CONDITIONAL);
+		}
+	}
+}
+
+void ASEffect::set_activation_blocked_any_tags(const TypedArray<StringName> &p_tags) {
+	activation_blocked_any_tags = p_tags;
+	if (AbilitySystem::get_singleton()) {
+		for (int i = 0; i < p_tags.size(); i++) {
+			AbilitySystem::get_singleton()->register_tag(p_tags[i], AbilitySystem::TAG_TYPE_CONDITIONAL);
+		}
+	}
+}
+
+void ASEffect::set_activation_blocked_all_tags(const TypedArray<StringName> &p_tags) {
+	activation_blocked_all_tags = p_tags;
 	if (AbilitySystem::get_singleton()) {
 		for (int i = 0; i < p_tags.size(); i++) {
 			AbilitySystem::get_singleton()->register_tag(p_tags[i], AbilitySystem::TAG_TYPE_CONDITIONAL);

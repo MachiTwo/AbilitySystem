@@ -159,8 +159,11 @@
 		<member name="ability_use_custom_duration" type="bool" setter="set_use_custom_duration" getter="get_use_custom_duration" default="false">
 			If true, triggers [method ASComponent._on_calculate_custom_magnitude] with index -1 for duration.
 		</member>
-		<member name="activation_blocked_tags" type="StringName[]" setter="set_activation_blocked_tags" getter="get_activation_blocked_tags" default="[]">
-			Ability cannot activate if owner has any of these tags.
+		<member name="activation_blocked_any_tags" type="StringName[]" setter="set_activation_blocked_any_tags" getter="get_activation_blocked_any_tags" default="[]">
+			Ability cannot activate if owner has [b]any[/b] of these tags (OR logic).
+		</member>
+		<member name="activation_blocked_all_tags" type="StringName[]" setter="set_activation_blocked_all_tags" getter="get_activation_blocked_all_tags" default="[]">
+			Ability cannot activate if owner has [b]all[/b] of these tags simultaneously (AND logic).
 		</member>
 		<member name="activation_cancel_tags" type="StringName[]" setter="set_activation_cancel_tags" getter="get_activation_cancel_tags" default="[]">
 			Tags of active abilities that will be canceled when this ability activates.
@@ -168,8 +171,11 @@
 		<member name="activation_owned_tags" type="StringName[]" setter="set_activation_owned_tags" getter="get_activation_owned_tags" default="[]">
 			Tags granted to the owner while the ability is active.
 		</member>
-		<member name="activation_required_tags" type="StringName[]" setter="set_activation_required_tags" getter="get_activation_required_tags" default="[]">
-			Owner must have all of these tags to activate.
+		<member name="activation_required_all_tags" type="StringName[]" setter="set_activation_required_all_tags" getter="get_activation_required_all_tags" default="[]">
+			Owner must have [b]all[/b] of these tags to activate (AND logic).
+		</member>
+		<member name="activation_required_any_tags" type="StringName[]" setter="set_activation_required_any_tags" getter="get_activation_required_any_tags" default="[]">
+			Owner must have [b]at least one[/b] of these tags to activate (OR logic).
 		</member>
 		<member name="cooldown_duration" type="float" setter="set_cooldown_duration" getter="get_cooldown_duration" default="0.0">
 			Base duration of cooldown.

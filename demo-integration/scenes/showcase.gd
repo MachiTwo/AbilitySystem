@@ -38,7 +38,7 @@ var _agents_tested: int = 0
 func _ready() -> void:
 	if OS.get_cmdline_args().has("--playtest-cycle") or OS.has_feature("playtest"):
 		auto_cycle = true
-	
+
 	print("[SHOWCASE] Initializing. Auto cycle: ", auto_cycle)
 	code_popup.hide()
 
@@ -47,7 +47,7 @@ func _ready() -> void:
 	next.pressed.connect(func(): _on_agent_selection_id_pressed(selected_tree_index + 1))
 
 	_initialize()
-	
+
 	if auto_cycle:
 		_cycle_timer = 15.0 # Ensure the first agent gets its time
 		print("[PLAYTEST] Starting auto-cycle test.")
@@ -57,21 +57,27 @@ func _physics_process(delta: float) -> void:
 	if auto_cycle:
 		if agent_files.is_empty():
 			return
-			
+
 		_cycle_timer -= delta
 		if _cycle_timer <= 0:
 			_agents_tested += 1
+			print("")
 			print("[PLAYTEST] Progress: %d/%d agents finished." % [_agents_tested, agent_files.size()])
-			
+			print("")
+			print("[PLAYTEST] Progress: %d/%d agents finished." % [_agents_tested, agent_files.size()])
+			print("")
+			print("[PLAYTEST] Progress: %d/%d agents finished." % [_agents_tested, agent_files.size()])
+			print("")
+
 			if _agents_tested >= agent_files.size():
 				print("[SHOWCASE PLAYTEST] SUCCESS: All agents tested. Quitting.")
 				get_tree().quit(0)
 				return
-			
+
 			var next_id = _agents_tested # Cycle through in order
 			_cycle_timer = 15.0
 			_on_agent_selection_id_pressed(next_id)
-		
+
 		# Update UI with countdown
 		scene_title.text = "Showcase (Playtest: %d/%d) [%ds]" % [_agents_tested + 1, agent_files.size(), int(_cycle_timer)]
 

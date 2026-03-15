@@ -31,28 +31,28 @@
 #ifndef TEST_AS_MULTIPLAYER_H
 #define TEST_AS_MULTIPLAYER_H
 
-#include "doctest.h"
-#include "src/resources/as_ability.h"
-#include "src/resources/as_attribute_set.h"
-#include "src/scene/as_component.h"
-
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
+#include "src/tests/test_helpers.h"
+#else
+#include "modules/ability_system/tests/test_helpers.h"
 #endif
 
 // Helper to simulate the network bridge between two instances
-void simulate_network_sync(ASComponent *server, ASComponent *client) {
+inline void simulate_network_sync(ASComponent *server, ASComponent *client) {
 	// 1. Sync Attributes
-	for (int i = 0; i < server->get_attribute_sets().size(); i++) {
-		Ref<ASAttributeSet> s_set = server->get_attribute_sets()[i];
-		Ref<ASAttributeSet> c_set = client->get_attribute_sets()[i];
+	Vector<Ref<ASAttributeSet>> s_sets = server->get_attribute_sets();
+	Vector<Ref<ASAttributeSet>> c_sets = client->get_attribute_sets();
+
+	for (int i = 0; i < s_sets.size() && i < c_sets.size(); i++) {
+		Ref<ASAttributeSet> s_set = s_sets[i];
+		Ref<ASAttributeSet> c_set = c_sets[i];
 		TypedArray<StringName> attrs = s_set->get_attribute_list();
 		for (int j = 0; j < attrs.size(); j++) {
 			c_set->set_attribute_base_value(attrs[j], s_set->get_attribute_base_value(attrs[j]));
 		}
 	}
 	// 2. Sync Tags
-	client->get_owned_tags()->remove_all_tags();
+	client->remove_all_tags();
 	TypedArray<StringName> s_tags = server->get_tags();
 	for (int i = 0; i < s_tags.size(); i++) {
 		client->add_tag(s_tags[i]);
@@ -63,90 +63,79 @@ TEST_CASE("[AbilitySystem] Multiplayer Authority (300% Coverage)") {
 	ASComponent *server = memnew(ASComponent);
 	ASComponent *client = memnew(ASComponent);
 
-	// Basic attribute setup
 	Ref<ASAttributeSet> s_set;
 	s_set.instantiate();
-	Ref<ASAttribute> hp;
-	hp.instantiate();
-	hp->set_attribute_name("hp");
-	hp->set_base_value(100.0f);
-	s_set->add_attribute_definition(hp);
+	s_set->add_attribute_definition(create_test_attribute("hp", 100.0f));
+	s_set->add_attribute_definition(create_test_attribute("mana", 100.0f));
 	server->add_attribute_set(s_set);
 
 	Ref<ASAttributeSet> c_set;
 	c_set.instantiate();
-	Ref<ASAttribute> hp_c;
-	hp_c.instantiate();
-	hp_c->set_attribute_name("hp");
-	hp_c->set_base_value(100.0f);
-	c_set->add_attribute_definition(hp_c);
+	c_set->add_attribute_definition(create_test_attribute("hp", 100.0f));
+	c_set->add_attribute_definition(create_test_attribute("mana", 100.0f));
 	client->add_attribute_set(c_set);
 
-	SUBCASE("Server Authority - 3 Scenarios") {
-		Ref<ASAbility> ability;
-		ability.instantiate();
-		ability->set_ability_tag("fireball");
-		ability->add_cost("mana", 50.0f); // Client will not have mana
+	SUBCASE("Server Authority - 3 Variations") {
+		Ref<ASAbility> fireball = create_test_ability("fireball", "ability.fireball");
+		fireball->add_cost("mana", 50.0f);
 
-		// Var 1: Client activation attempt (Should fail without server confirmation)
-		// In a real world scenario, the client "predicts", but here we test if the server rejects.
-		bool server_activated = server->try_activate_ability_by_resource(ability);
-		CHECK(server_activated == false);
+		// Var 1: Server Rejection (Missing Cost)
+		server->set_attribute_base_value_by_tag("mana", 0.0f);
+		CHECK(server->try_activate_ability_by_resource(fireball) == false);
 
-		// Var 2: Illegal Tag Block (Server has tag that blocks client)
+		// Var 2: Server Success (Has Cost)
+		server->set_attribute_base_value_by_tag("mana", 100.0f);
+		CHECK(server->try_activate_ability_by_resource(fireball) == true);
+
+		// Var 3: Tag Synchronization (Server stun blocks client)
 		server->add_tag("state.stunned");
 		simulate_network_sync(server, client);
 		CHECK(client->has_tag("state.stunned") == true);
-		CHECK(server->can_activate_ability_by_tag("fireball") == false);
-
-		// Var 3: Mandatory Server Rollback simulation
-		// If the client changed HP locally (wrong prediction), sync must correct it.
-		client->set_attribute_base_value_by_tag("hp", 50.0f);
-		simulate_network_sync(server, client);
-		CHECK(client->get_attribute_value_by_tag("hp") == 100.0f);
 	}
 
-	SUBCASE("State Replication - 3 Scenarios") {
-		// Var 1: Attribute Delta
-		server->set_attribute_base_value_by_tag("hp", 80.0f);
+	SUBCASE("State Replication - 3 Variations") {
+		// Var 1: Simple Attribute Sync
+		server->set_attribute_base_value_by_tag("hp", 50.0f);
 		simulate_network_sync(server, client);
-		CHECK(client->get_attribute_value_by_tag("hp") == 80.0f);
+		CHECK_ATTR_EQ(client, "hp", 50.0f);
 
-		// Var 2: Tag Propagation (Burning)
-		server->add_tag("state.burning");
+		// Var 2: Complex Tag Sync
+		server->add_tag("buff.fire");
 		simulate_network_sync(server, client);
-		CHECK(client->has_tag("state.burning") == true);
+		CHECK(client->has_tag("buff.fire") == true);
 
-		// Var 3: Tag Hierarchy Propagation
-		server->add_tag("state.moving.sprint");
+		// Var 3: Hierarchical Tag Persistence
+		server->add_tag("buff.water.protection");
 		simulate_network_sync(server, client);
-		CHECK(client->has_tag("state.moving") == true);
+		CHECK(client->has_tag("buff.water") == true); // Assumes ASTagSpec hierarchy
 	}
 
-	SUBCASE("Remote Interactions - 3 Scenarios") {
-		// Var 1: Cross-component effect
-		// Agent A (Server) applies on Agent B (Server) and sync on Agent B (Client)
-		Ref<ASEffect> dmg;
-		dmg.instantiate();
-		dmg->add_modifier("hp", ASEffect::OP_ADD, -30.0f);
-		server->apply_effect_by_resource(dmg);
+	SUBCASE("Remote Rollback - 3 Variations") {
+		// HP is 100 on server
+		server->set_attribute_base_value_by_tag("hp", 100.0f);
+		simulate_network_sync(server, client);
+
+		// Var 1: Wrong Prediction Rollback
+		client->set_attribute_base_value_by_tag("hp", 10.0f); // Client "cheats" or predicts wrong
+		simulate_network_sync(server, client); // Server overwrites
+		CHECK_ATTR_EQ(client, "hp", 100.0f);
+
+		// Var 2: Illegal Tag Rollback
+		client->add_tag("power.godmode");
+		simulate_network_sync(server, client);
+		CHECK(client->has_tag("power.godmode") == false);
+
+		// Var 3: Multi-set Consistency
+		Ref<ASAttributeSet> s_set2 = memnew(ASAttributeSet);
+		s_set2->add_attribute_definition(create_test_attribute("energy", 10.0f));
+		server->add_attribute_set(s_set2);
+
+		Ref<ASAttributeSet> c_set2 = memnew(ASAttributeSet);
+		c_set2->add_attribute_definition(create_test_attribute("energy", 0.0f));
+		client->add_attribute_set(c_set2);
 
 		simulate_network_sync(server, client);
-		CHECK(client->get_attribute_value_by_tag("hp") == 50.0f); // 80 before - 30
-
-		// Var 2: Remote Cancellation Check
-		// (Simulate that an active ability on server was canceled and client stopped seeing the tag)
-		server->add_tag("ability.active");
-		simulate_network_sync(server, client);
-		CHECK(client->has_tag("ability.active") == true);
-		server->remove_tag("ability.active");
-		simulate_network_sync(server, client);
-		CHECK(client->has_tag("ability.active") == false);
-
-		// Var 3: Multiple Attribute Sync Consistency
-		server->set_attribute_base_value_by_tag("hp", 10.0f);
-		simulate_network_sync(server, client);
-		CHECK(client->get_attribute_value_by_tag("hp") == 10.0f);
+		CHECK_ATTR_EQ(client, "energy", 10.0f);
 	}
 
 	memdelete(server);

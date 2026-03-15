@@ -34,6 +34,8 @@ Properties
    +--------------------------------------------------------------------+-----------------------------------------------------------------------------------+--------+
    | :ref:`Array<class_Array>`\[:ref:`ASAbility<class_ASAbility>`\]     | :ref:`unlocked_abilities<class_ASAttributeSet_property_unlocked_abilities>`       | ``[]`` |
    +--------------------------------------------------------------------+-----------------------------------------------------------------------------------+--------+
+   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]   | :ref:`attribute_drivers<class_ASAttributeSet_property_attribute_drivers>`         | ``[]`` |
+   +--------------------------------------------------------------------+-----------------------------------------------------------------------------------+--------+
 
 .. rst-class:: classref-reftable-group
 
@@ -52,6 +54,8 @@ Methods
    +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`ASAttribute<class_ASAttribute>`                            | :ref:`get_attribute_definition<class_ASAttributeSet_method_get_attribute_definition>`\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const|                                                                            |
    +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] | :ref:`get_attribute_drivers<class_ASAttributeSet_method_get_attribute_drivers>`\ (\ ) |const|                                                                                                                              |
+   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`get_attribute_list<class_ASAttributeSet_method_get_attribute_list>`\ (\ ) |const|                                                                                                                                    |
    +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`float<class_float>`                                        | :ref:`get_attribute_value<class_ASAttributeSet_method_get_attribute_value>`\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const|                                                                                      |
@@ -63,6 +67,8 @@ Methods
    | |void|                                                           | :ref:`remove_modifier<class_ASAttributeSet_method_remove_modifier>`\ (\ name\: :ref:`StringName<class_StringName>`, value\: :ref:`float<class_float>`, type\: :ref:`ModifierType<enum_ASAttributeSet_ModifierType>` = 0\ ) |
    +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                           | :ref:`set_attribute_base_value<class_ASAttributeSet_method_set_attribute_base_value>`\ (\ name\: :ref:`StringName<class_StringName>`, value\: :ref:`float<class_float>`\ )                                                 |
+   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                           | :ref:`set_attribute_drivers<class_ASAttributeSet_method_set_attribute_drivers>`\ (\ drivers\: :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]\ )                                                          |
    +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
@@ -152,6 +158,23 @@ Definitions for each attribute (limits, base).
 
 Abilities permitted for use by the actor.
 
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAttributeSet_property_attribute_drivers:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **attribute_drivers** = ``[]`` :ref:`🔗<class_ASAttributeSet_property_attribute_drivers>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_attribute_drivers**\ (\ drivers\: :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **get_attribute_drivers**\ (\ ) |const|
+
+List of rules that drive an attribute value based on another (e.g., Strength driving Attack).
+
 .. rst-class:: classref-section-separator
 
 ----
@@ -204,6 +227,18 @@ Returns the base value of the specified attribute.
 :ref:`ASAttribute<class_ASAttribute>` **get_attribute_definition**\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const| :ref:`🔗<class_ASAttributeSet_method_get_attribute_definition>`
 
 Returns the definition of the specified attribute.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAttributeSet_method_get_attribute_drivers:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **get_attribute_drivers**\ (\ ) |const| :ref:`🔗<class_ASAttributeSet_method_get_attribute_drivers>`
+
+Returns the list of attribute drivers.
 
 .. rst-class:: classref-item-separator
 
@@ -276,6 +311,18 @@ Removes a previously applied modifier from an attribute.
 |void| **set_attribute_base_value**\ (\ name\: :ref:`StringName<class_StringName>`, value\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASAttributeSet_method_set_attribute_base_value>`
 
 Sets the base value for a specific attribute.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAttributeSet_method_set_attribute_drivers:
+
+.. rst-class:: classref-method
+
+|void| **set_attribute_drivers**\ (\ drivers\: :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]\ ) :ref:`🔗<class_ASAttributeSet_method_set_attribute_drivers>`
+
+Sets the list of attribute drivers. Each dictionary should contain ``source`` (StringName), ``destination`` (StringName) and ``ratio`` (float).
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

@@ -29,43 +29,47 @@ Properties
 .. table::
    :widths: auto
 
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`float<class_float>`                                        | :ref:`ability_duration<class_ASAbility_property_ability_duration>`                       | ``0.0``   |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`DurationPolicy<enum_ASAbility_DurationPolicy>`             | :ref:`ability_duration_policy<class_ASAbility_property_ability_duration_policy>`         | ``0``     |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`String<class_String>`                                      | :ref:`ability_name<class_ASAbility_property_ability_name>`                               | ``""``    |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`StringName<class_StringName>`                              | :ref:`ability_tag<class_ASAbility_property_ability_tag>`                                 | ``&""``   |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`bool<class_bool>`                                          | :ref:`ability_use_custom_duration<class_ASAbility_property_ability_use_custom_duration>` | ``false`` |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_tags<class_ASAbility_property_activation_blocked_tags>`         | ``[]``    |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_cancel_tags<class_ASAbility_property_activation_cancel_tags>`           | ``[]``    |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_owned_tags<class_ASAbility_property_activation_owned_tags>`             | ``[]``    |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_tags<class_ASAbility_property_activation_required_tags>`       | ``[]``    |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`float<class_float>`                                        | :ref:`cooldown_duration<class_ASAbility_property_cooldown_duration>`                     | ``0.0``   |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`cooldown_tags<class_ASAbility_property_cooldown_tags>`                             | ``[]``    |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`bool<class_bool>`                                          | :ref:`cooldown_use_custom<class_ASAbility_property_cooldown_use_custom>`                 | ``false`` |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] | :ref:`costs<class_ASAbility_property_costs>`                                             | ``[]``    |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`bool<class_bool>`                                          | :ref:`costs_use_custom<class_ASAbility_property_costs_use_custom>`                       | ``false`` |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\]           | :ref:`cues<class_ASAbility_property_cues>`                                               | ``[]``    |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\]     | :ref:`effects<class_ASAbility_property_effects>`                                         | ``[]``    |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] | :ref:`requirements<class_ASAbility_property_requirements>`                               | ``[]``    |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] | :ref:`triggers<class_ASAbility_property_triggers>`                                       | ``[]``    |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------+-----------+
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`float<class_float>`                                        | :ref:`ability_duration<class_ASAbility_property_ability_duration>`                         | ``0.0``   |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`DurationPolicy<enum_ASAbility_DurationPolicy>`             | :ref:`ability_duration_policy<class_ASAbility_property_ability_duration_policy>`           | ``0``     |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`String<class_String>`                                      | :ref:`ability_name<class_ASAbility_property_ability_name>`                                 | ``""``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`StringName<class_StringName>`                              | :ref:`ability_tag<class_ASAbility_property_ability_tag>`                                   | ``&""``   |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`bool<class_bool>`                                          | :ref:`ability_use_custom_duration<class_ASAbility_property_ability_use_custom_duration>`   | ``false`` |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_any_tags<class_ASAbility_property_activation_blocked_any_tags>`   | ``[]``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_all_tags<class_ASAbility_property_activation_blocked_all_tags>`   | ``[]``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_cancel_tags<class_ASAbility_property_activation_cancel_tags>`             | ``[]``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_owned_tags<class_ASAbility_property_activation_owned_tags>`               | ``[]``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_all_tags<class_ASAbility_property_activation_required_all_tags>` | ``[]``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_any_tags<class_ASAbility_property_activation_required_any_tags>` | ``[]``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`float<class_float>`                                        | :ref:`cooldown_duration<class_ASAbility_property_cooldown_duration>`                       | ``0.0``   |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`cooldown_tags<class_ASAbility_property_cooldown_tags>`                               | ``[]``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`bool<class_bool>`                                          | :ref:`cooldown_use_custom<class_ASAbility_property_cooldown_use_custom>`                   | ``false`` |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] | :ref:`costs<class_ASAbility_property_costs>`                                               | ``[]``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`bool<class_bool>`                                          | :ref:`costs_use_custom<class_ASAbility_property_costs_use_custom>`                         | ``false`` |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\]           | :ref:`cues<class_ASAbility_property_cues>`                                                 | ``[]``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\]     | :ref:`effects<class_ASAbility_property_effects>`                                           | ``[]``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] | :ref:`requirements<class_ASAbility_property_requirements>`                                 | ``[]``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] | :ref:`triggers<class_ASAbility_property_triggers>`                                         | ``[]``    |
+   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
 
 .. rst-class:: classref-reftable-group
 
@@ -280,18 +284,35 @@ If true, triggers :ref:`ASComponent._on_calculate_custom_magnitude()<class_ASCom
 
 ----
 
-.. _class_ASAbility_property_activation_blocked_tags:
+.. _class_ASAbility_property_activation_blocked_any_tags:
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_blocked_tags>`
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_any_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_blocked_any_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_blocked_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_tags**\ (\ )
+- |void| **set_activation_blocked_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_any_tags**\ (\ )
 
-Ability cannot activate if owner has any of these tags.
+Ability cannot activate if owner has **any** of these tags (OR logic).
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAbility_property_activation_blocked_all_tags:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_all_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_blocked_all_tags>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_activation_blocked_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_all_tags**\ (\ )
+
+Ability cannot activate if owner has **all** of these tags simultaneously (AND logic).
 
 .. rst-class:: classref-item-separator
 
@@ -331,18 +352,35 @@ Tags granted to the owner while the ability is active.
 
 ----
 
-.. _class_ASAbility_property_activation_required_tags:
+.. _class_ASAbility_property_activation_required_all_tags:
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_required_tags>`
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_all_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_required_all_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_required_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_tags**\ (\ )
+- |void| **set_activation_required_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_all_tags**\ (\ )
 
-Owner must have all of these tags to activate.
+Owner must have **all** of these tags to activate (AND logic).
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAbility_property_activation_required_any_tags:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_any_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_required_any_tags>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_activation_required_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_any_tags**\ (\ )
+
+Owner must have **at least one** of these tags to activate (OR logic).
 
 .. rst-class:: classref-item-separator
 

@@ -164,9 +164,11 @@ void ASComponent::_bind_methods() {
 	// --- Tag Management ---
 	ClassDB::bind_method(D_METHOD("add_tag", "tag"), &ASComponent::add_tag);
 	ClassDB::bind_method(D_METHOD("remove_tag", "tag"), &ASComponent::remove_tag);
+	ClassDB::bind_method(D_METHOD("remove_all_tags"), &ASComponent::remove_all_tags);
 	ClassDB::bind_method(D_METHOD("has_tag", "tag"), &ASComponent::has_tag);
 	ClassDB::bind_method(D_METHOD("get_tags"), &ASComponent::get_tags);
 	ClassDB::bind_method(D_METHOD("get_owned_tags"), &ASComponent::get_owned_tags);
+	ClassDB::bind_method(D_METHOD("get_attribute_sets"), &ASComponent::get_attribute_sets);
 
 	// --- Cue Activation API (By Tag) ---
 	ClassDB::bind_method(D_METHOD("can_activate_cue_by_tag", "tag"), &ASComponent::can_activate_cue_by_tag);
@@ -816,13 +818,25 @@ void ASComponent::cancel_ability_by_resource(const Ref<ASAbility> &p_ability) {
 bool ASComponent::can_activate_effect_by_resource(const Ref<ASEffect> &p_effect) {
 	ERR_FAIL_COND_V(p_effect.is_null(), false);
 
-	if (!owned_tags->has_all_tags(p_effect->get_activation_required_tags())) {
+	if (!owned_tags->has_all_tags(p_effect->get_activation_required_all_tags())) {
 		emit_signal("effect_failed", p_effect->get_effect_tag(), "Required tags missing");
 		return false;
 	}
 
-	if (owned_tags->has_any_tags(p_effect->get_activation_blocked_tags())) {
+	if (!p_effect->get_activation_required_any_tags().is_empty() &&
+			!owned_tags->has_any_tags(p_effect->get_activation_required_any_tags())) {
+		emit_signal("effect_failed", p_effect->get_effect_tag(), "Required any tags missing");
+		return false;
+	}
+
+	if (owned_tags->has_any_tags(p_effect->get_activation_blocked_any_tags())) {
 		emit_signal("effect_failed", p_effect->get_effect_tag(), "Blocked by tags");
+		return false;
+	}
+
+	if (!p_effect->get_activation_blocked_all_tags().is_empty() &&
+			owned_tags->has_all_tags(p_effect->get_activation_blocked_all_tags())) {
+		emit_signal("effect_failed", p_effect->get_effect_tag(), "Blocked by all tags");
 		return false;
 	}
 
@@ -1020,13 +1034,25 @@ void ASComponent::apply_effect_spec_to_self(Ref<ASEffectSpec> p_spec) {
 	p_spec->set_target_component(this);
 
 	// --- Target Validation ---
-	if (!owned_tags->has_all_tags(effect->get_activation_required_tags())) {
+	if (!owned_tags->has_all_tags(effect->get_activation_required_all_tags())) {
 		emit_signal("effect_failed", effect->get_effect_tag(), "Target missing required tags");
 		return;
 	}
 
-	if (owned_tags->has_any_tags(effect->get_activation_blocked_tags())) {
+	if (!effect->get_activation_required_any_tags().is_empty() &&
+			!owned_tags->has_any_tags(effect->get_activation_required_any_tags())) {
+		emit_signal("effect_failed", effect->get_effect_tag(), "Target missing required any tags");
+		return;
+	}
+
+	if (owned_tags->has_any_tags(effect->get_activation_blocked_any_tags())) {
 		emit_signal("effect_failed", effect->get_effect_tag(), "Target has blocking tags");
+		return;
+	}
+
+	if (!effect->get_activation_blocked_all_tags().is_empty() &&
+			owned_tags->has_all_tags(effect->get_activation_blocked_all_tags())) {
+		emit_signal("effect_failed", effect->get_effect_tag(), "Target blocked by all tags");
 		return;
 	}
 	// -------------------------
@@ -1171,14 +1197,28 @@ finish_cues: {
 
 bool ASComponent::can_activate_cue_by_resource(const Ref<ASCue> &p_cue) {
 	ERR_FAIL_COND_V(p_cue.is_null(), false);
-	if (!owned_tags->has_all_tags(p_cue->get_activation_required_tags())) {
+	if (!owned_tags->has_all_tags(p_cue->get_activation_required_all_tags())) {
 		emit_signal("cue_failed", p_cue->get_cue_tag(), "Required tags missing");
 		return false;
 	}
-	if (owned_tags->has_any_tags(p_cue->get_activation_blocked_tags())) {
+
+	if (!p_cue->get_activation_required_any_tags().is_empty() &&
+			!owned_tags->has_any_tags(p_cue->get_activation_required_any_tags())) {
+		emit_signal("cue_failed", p_cue->get_cue_tag(), "Required any tags missing");
+		return false;
+	}
+
+	if (owned_tags->has_any_tags(p_cue->get_activation_blocked_any_tags())) {
 		emit_signal("cue_failed", p_cue->get_cue_tag(), "Blocked by tags");
 		return false;
 	}
+
+	if (!p_cue->get_activation_blocked_all_tags().is_empty() &&
+			owned_tags->has_all_tags(p_cue->get_activation_blocked_all_tags())) {
+		emit_signal("cue_failed", p_cue->get_cue_tag(), "Blocked by all tags");
+		return false;
+	}
+
 	return true;
 }
 
@@ -1283,6 +1323,15 @@ void ASComponent::remove_tag(const StringName &p_tag) {
 	if (owned_tags->remove_tag(p_tag)) {
 		emit_signal("tag_changed", p_tag, false);
 		_handle_ability_triggers(p_tag, ASAbility::TRIGGER_ON_TAG_REMOVED);
+	}
+}
+
+void ASComponent::remove_all_tags() {
+	TypedArray<StringName> tags = get_tags();
+	owned_tags->clear();
+	for (int i = 0; i < tags.size(); i++) {
+		emit_signal("tag_changed", tags[i], false);
+		_handle_ability_triggers(tags[i], ASAbility::TRIGGER_ON_TAG_REMOVED);
 	}
 }
 
@@ -1411,6 +1460,14 @@ void ASComponent::add_attribute_set(Ref<ASAttributeSet> p_set) {
 	if (!local_set->is_connected("attribute_changed", callable_mp(this, &ASComponent::_on_attribute_set_attribute_changed))) {
 		local_set->connect("attribute_changed", callable_mp(this, &ASComponent::_on_attribute_set_attribute_changed));
 	}
+}
+
+TypedArray<ASAttributeSet> ASComponent::get_attribute_sets() const {
+	TypedArray<ASAttributeSet> res;
+	for (int i = 0; i < attribute_sets.size(); i++) {
+		res.push_back(attribute_sets[i]);
+	}
+	return res;
 }
 
 void ASComponent::_on_attribute_set_attribute_changed(const StringName &p_name, float p_old_val, float p_new_val) {
