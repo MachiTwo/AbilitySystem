@@ -34,8 +34,10 @@ The logic hub for any actor. Manages attributes, abilities, effects, and tags.
 
 - `add_tag(tag)`: Adds a tag and triggers re-evaluations.
 - `remove_tag(tag)`: Removes a tag.
+- `remove_all_tags()`: Clears all owned tags and triggers removal events.
 - `has_tag(tag)`: Checks for tag dominance (supports hierarchy).
 - `get_tags()`: Returns all currently active tags.
+- `get_attribute_sets()`: Returns all attached attribute sets.
 
 #### ⚔️ Abilities
 
@@ -75,6 +77,11 @@ Configuration for actions with costs, cooldowns, and requirements.
 
 - **Duration Policies:** `INSTANT`, `DURATION`, `INFINITE`.
 - **Triggers:** `ON_TAG_ADDED`, `ON_TAG_REMOVED`.
+- **Tag Logic (Activation):**
+  - `required_all`: Owner must have **every** tag.
+  - `required_any`: Owner must have **at least one** tag.
+  - `blocked_any`: Activate fails if owner has **any** of these.
+  - `blocked_all`: Activate fails only if owner has **all** of these.
 - **Key Properties:** `costs`, `requirements`, `cooldown_duration`, `activation_owned_tags`.
 
 ### `ASEffect`
@@ -88,6 +95,13 @@ Blueprints for attribute modifications and tag injections.
 ### `ASContainer`
 
 An archetype database (AttributeSet + Default Abilities + Initial Effects). Use `asc.apply_container(resource)` to initialize an actor.
+
+### `ASAttributeSet`
+
+Container for numerical attributes and derivation logic.
+
+- **Attribute Drivers:** Allows one attribute to drive another (e.g., `stat.str` -> `stat.atk`) via a ratio. Automatically recalculates on base value changes.
+- **Modifiers:** Can receive temporary or permanent `ADD`, `MULTIPLY`, or `OVERRIDE` modifications from Effects.
 
 ### `ASPackage`
 

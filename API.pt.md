@@ -34,8 +34,10 @@ O centro lógico de qualquer ator. Gerencia atributos, habilidades, efeitos e ta
 
 - `add_tag(tag)`: Adiciona uma tag e dispara reavaliações.
 - `remove_tag(tag)`: Remove uma tag.
+- `remove_all_tags()`: Limpa todas as tags do ator e dispara eventos de remoção.
 - `has_tag(tag)`: Verifica a presença de uma tag (suporta hierarquia).
 - `get_tags()`: Retorna todas as tags atualmente ativas.
+- `get_attribute_sets()`: Retorna todos os conjuntos de atributos anexados.
 
 #### ⚔️ Habilidades
 
@@ -75,6 +77,11 @@ Configuração para ações com custos, cooldowns e requisitos.
 
 - **Políticas de Duração:** `INSTANT`, `DURATION`, `INFINITE`.
 - **Gatilhos (Triggers):** `ON_TAG_ADDED`, `ON_TAG_REMOVED`.
+- **Lógica de Tags (Ativação):**
+  - `required_all`: O dono deve ter **todas** as tags.
+  - `required_any`: O dono deve ter **pelo menos uma** das tags.
+  - `blocked_any`: A ativação falha se o dono tiver **qualquer** uma destas.
+  - `blocked_all`: A ativação falha apenas se o dono tiver **todas** estas ao mesmo tempo.
 - **Propriedades Chave:** `costs`, `requirements`, `cooldown_duration`, `activation_owned_tags`.
 
 ### `ASEffect`
@@ -88,6 +95,13 @@ Blueprints para modificações de atributos e injeção de tags.
 ### `ASContainer`
 
 Um banco de dados de arquétipo (AttributeSet + Habilidades Padrão + Efeitos Iniciais). Use `asc.apply_container(resource)` para inicializar um ator.
+
+### `ASAttributeSet`
+
+Contêiner para atributos numéricos e lógica de derivação.
+
+- **Attribute Drivers:** Permite que um atributo direcione outro (ex: `stat.str` -> `stat.atk`) através de uma proporção. Recalcula automaticamente em mudanças de valor base.
+- **Modificadores:** Pode receber modificações temporárias ou permanentes de `ADD`, `MULTIPLY` ou `OVERRIDE` vindas de Efeitos.
 
 ### `ASPackage`
 

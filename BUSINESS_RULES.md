@@ -12,6 +12,11 @@ Tags não são classes; são **Identificadores Hierárquicos Superpoderosos** ba
 
 - **Papel:** Representar estados, ações ou categorias (ex: `State.Dead`, `Ability.Fireball`).
 - **Regra:** Devem ser tratadas como imutáveis e globais. A comparação deve suportar hierarquia (checar `State` encontra `State.Dead`).
+- **Lógica Lógica de Ativação:** O sistema suporta 4 estados lógicos em Blueprints (Ability/Effect/Cue):
+  - `Required All` (AND): Sucesso se tiver todos.
+  - `Required Any` (OR): Sucesso se tiver pelo menos um.
+  - `Blocked Any` (OR): Falha se tiver qualquer um.
+  - `Blocked All` (AND): Falha apenas se tiver todos simulatenamente.
 
 ### 1.2 Tag Type & Tag Group
 
@@ -69,8 +74,9 @@ Localizados em `src/resources/`. São as **Definições de Dados**.
 ### 4.2 ASAttribute & ASAttributeSet (O Sistema de Atributos)
 
 - **ASAttribute - Papel:** Define os metadados (limites min/max) de uma única estatística.
-- **ASAttributeSet - Papel:** Agrupa as estatísticas e define o estado inicial de um personagem.
-- **Regra:** O `ASAttributeSet` permite definir habilidades iniciais desbloqueadas para o ator.
+- **ASAttributeSet - Papel:** Agrupa as estatísticas e define o estado inicial de um personagem. Detém a lógica de modificação de atributos.
+- **ASAttributeSet - Regra (Attribute Drivers):** Permite derivar o valor base de um atributo a partir de outro (ex: 2 * Força = 1 Ataque). O recalculo é automático em mudanças de valor base.
+- **ASAttributeSet - Regra (Prioridade):** Modificadores (Flat Add, Multiplier) são aplicados *após* o cálculo dos Drivers.
 
 ### 4.3 ASContainer & ASPackage (Arquétipos e Payloads)
 
