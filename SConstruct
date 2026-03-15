@@ -25,19 +25,20 @@ if "tests" in ARGUMENTS:
     ARGUMENTS.pop("tests")
 
 run_mptest = False
-if "mptest" in ARGUMENTS:
-    mp_arg = ARGUMENTS["mptest"].lower()
+if "mptest" in ARGUMENTS or "mptests" in ARGUMENTS:
+    mp_key = "mptest" if "mptest" in ARGUMENTS else "mptests"
+    mp_arg = ARGUMENTS[mp_key].lower()
     if mp_arg in ("yes", "1", "true", "on"):
         run_mptest = True
         build_tests = True
-    ARGUMENTS.pop("mptest")
+    ARGUMENTS.pop(mp_key)
 
 # Filter ARGLIST to ensure SCons doesn't see these as part of the command line signatures
 # for tasks that don't consume them.
 import SCons.Script
 
 SCons.Script.ARGLIST = [
-    x for x in SCons.Script.ARGLIST if x[0] not in ("tests", "mptest")
+    x for x in SCons.Script.ARGLIST if x[0] not in ("tests", "mptest", "mptests")
 ]
 
 import pickle
@@ -59,6 +60,11 @@ localEnv.Decider("MD5")
 
 # Prepend PATH to ensure system compilers are found consistently
 localEnv.PrependENVPath("PATH", os.getenv("PATH"))
+
+# Propagate Python environment variables for test runners
+for var in ["PYTHONPATH", "GODOT_BIN", "SCONS_CACHE", "PYTHONUSERBASE"]:
+    if var in os.environ:
+        localEnv["ENV"][var] = os.environ[var]
 
 # Auto-detect CPU cores for parallel build if -j is not specified
 if localEnv.GetOption("num_jobs") <= 1:
