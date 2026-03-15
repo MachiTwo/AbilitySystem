@@ -24,21 +24,15 @@ if "tests" in ARGUMENTS:
         test_type = test_arg
     ARGUMENTS.pop("tests")
 
-run_mptest = False
-if "mptest" in ARGUMENTS:
-    mp_arg = ARGUMENTS["mptest"].lower()
-    if mp_arg in ("yes", "1", "true", "on"):
-        run_mptest = True
-        build_tests = True
-    ARGUMENTS.pop("mptest")
-
 # Filter ARGLIST to ensure SCons doesn't see these as part of the command line signatures
 # for tasks that don't consume them.
 import SCons.Script
 
-SCons.Script.ARGLIST = [
-    x for x in SCons.Script.ARGLIST if x[0] not in ("tests", "mptest")
-]
+SCons.Script.ARGLIST = [x for x in SCons.Script.ARGLIST if x[0] != "tests"]
+
+import SCons.Script
+
+SCons.Script.ARGLIST = [x for x in SCons.Script.ARGLIST if x[0] != "tests"]
 
 import pickle
 
@@ -170,18 +164,11 @@ if build_tests:
     if is_ci:
         test_run = env.Alias("run_tests_dummy", library)
     else:
-        if run_mptest:
-            test_run = env.Command(
-                "run_tests_dummy",
-                library,
-                f"{sys.executable} utility/multiplayer/runner.py",
-            )
-        else:
-            test_run = env.Command(
-                "run_tests_dummy",
-                library,
-                f"{sys.executable} utility/tests.py {test_type}",
-            )
+        test_run = env.Command(
+            "run_tests_dummy",
+            library,
+            f"{sys.executable} utility/tests.py {test_type}",
+        )
     env.AlwaysBuild(test_run)
     if post_build_action:
         env.Depends(test_run, post_build_action)
