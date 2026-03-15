@@ -1,0 +1,43 @@
+name: 🌐 Test Multiplayer
+on:
+  workflow_call:
+
+jobs:
+  test-mp:
+    name: 🌐 Test Multiplayer (10 Simulated Clients)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Import dependency versions
+        shell: bash
+        run: grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Restore Build Cache
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-linux-x86_64-single-editor
+          fail-on-cache-miss: true
+
+      - name: Build Test Env
+        shell: bash
+        run: |
+          mkdir -p demo/addons
+          cp -r tmp-builds/out/addons/${{ env.MODULE_NAME }} demo/addons/ 2>/dev/null || true
+
+      - name: Setup Godot
+        shell: bash
+        run: |
+          GODOT_VERSION="${{ env.GODOT_VERSION_FOR_EXPORT }}"
+          URL="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          BIN_NAME="Godot_v${GODOT_VERSION}_linux.x86_64"
+          wget --tries=5 --waitretry=5 "$URL" -O godot.zip
+          unzip godot.zip
+          chmod +x "$BIN_NAME"
+          echo "GODOT_BIN=$(pwd)/$BIN_NAME" >> $GITHUB_ENV
+
+      - name: Run Multiplayer Simulation
+        shell: bash
+        run: python utility/multiplayer/runner.py
