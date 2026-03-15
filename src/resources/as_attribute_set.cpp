@@ -52,6 +52,9 @@ void ASAttributeSet::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_unlocked_abilities", "abilities"), &ASAttributeSet::set_unlocked_abilities);
 	ClassDB::bind_method(D_METHOD("get_unlocked_abilities"), &ASAttributeSet::get_unlocked_abilities);
 
+	ClassDB::bind_method(D_METHOD("set_attribute_drivers", "drivers"), &ASAttributeSet::set_attribute_drivers);
+	ClassDB::bind_method(D_METHOD("get_attribute_drivers"), &ASAttributeSet::get_attribute_drivers);
+
 	ClassDB::bind_method(D_METHOD("get_attribute_value", "name"), &ASAttributeSet::get_attribute_value);
 	ClassDB::bind_method(D_METHOD("get_attribute_base_value", "name"), &ASAttributeSet::get_attribute_base_value);
 	ClassDB::bind_method(D_METHOD("set_attribute_base_value", "name", "value"), &ASAttributeSet::set_attribute_base_value);
@@ -66,6 +69,7 @@ void ASAttributeSet::_bind_methods() {
 
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "attribute_definitions", PROPERTY_HINT_ARRAY_TYPE, "ASAttribute"), "set_attribute_definitions", "get_attribute_definitions");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "unlocked_abilities", PROPERTY_HINT_ARRAY_TYPE, "ASAbility"), "set_unlocked_abilities", "get_unlocked_abilities");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "attribute_drivers", PROPERTY_HINT_ARRAY_TYPE, "Dictionary"), "set_attribute_drivers", "get_attribute_drivers");
 
 	ADD_SIGNAL(MethodInfo("attribute_changed", PropertyInfo(Variant::STRING_NAME, "attribute_name"), PropertyInfo(Variant::FLOAT, "old_value"), PropertyInfo(Variant::FLOAT, "new_value")));
 

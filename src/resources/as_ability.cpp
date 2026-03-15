@@ -66,8 +66,14 @@ void ASAbility::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_activation_required_tags", "tags"), &ASAbility::set_activation_required_tags);
 	ClassDB::bind_method(D_METHOD("get_activation_required_tags"), &ASAbility::get_activation_required_tags);
 
+	ClassDB::bind_method(D_METHOD("set_activation_required_any_tags", "tags"), &ASAbility::set_activation_required_any_tags);
+	ClassDB::bind_method(D_METHOD("get_activation_required_any_tags"), &ASAbility::get_activation_required_any_tags);
+
 	ClassDB::bind_method(D_METHOD("set_activation_blocked_tags", "tags"), &ASAbility::set_activation_blocked_tags);
 	ClassDB::bind_method(D_METHOD("get_activation_blocked_tags"), &ASAbility::get_activation_blocked_tags);
+
+	ClassDB::bind_method(D_METHOD("set_activation_blocked_all_tags", "tags"), &ASAbility::set_activation_blocked_all_tags);
+	ClassDB::bind_method(D_METHOD("get_activation_blocked_all_tags"), &ASAbility::get_activation_blocked_all_tags);
 
 	ClassDB::bind_method(D_METHOD("set_activation_cancel_tags", "tags"), &ASAbility::set_activation_cancel_tags);
 	ClassDB::bind_method(D_METHOD("get_activation_cancel_tags"), &ASAbility::get_activation_cancel_tags);
@@ -130,7 +136,9 @@ void ASAbility::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "ability_tag"), "set_ability_tag", "get_ability_tag");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_owned_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_owned_tags", "get_activation_owned_tags");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_required_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_required_tags", "get_activation_required_tags");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_required_any_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_required_any_tags", "get_activation_required_any_tags");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_blocked_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_blocked_tags", "get_activation_blocked_tags");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_blocked_all_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_blocked_all_tags", "get_activation_blocked_all_tags");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "activation_cancel_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_activation_cancel_tags", "get_activation_cancel_tags");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "cues", PROPERTY_HINT_ARRAY_TYPE, "ASCue"), "set_cues", "get_cues");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "effects", PROPERTY_HINT_ARRAY_TYPE, "ASEffect"), "set_effects", "get_effects");
@@ -168,12 +176,26 @@ bool ASAbility::can_activate_ability(ASComponent *p_owner, Ref<ASAbilitySpec> p_
 		return false;
 	}
 
+	if (!activation_required_any_tags.is_empty() && !p_owner->get_owned_tags()->has_any_tags(activation_required_any_tags)) {
+		return false;
+	}
+
 	if (p_owner->get_owned_tags()->has_any_tags(activation_blocked_tags)) {
+		return false;
+	}
+
+	if (!activation_blocked_all_tags.is_empty() && p_owner->get_owned_tags()->has_all_tags(activation_blocked_all_tags)) {
 		return false;
 	}
 
 	if (ability_tag != StringName() && p_owner->is_on_cooldown(ability_tag)) {
 		return false;
+	}
+
+	for (int i = 0; i < cooldown_tags.size(); i++) {
+		if (p_owner->has_tag(cooldown_tags[i])) {
+			return false;
+		}
 	}
 
 	if (!can_satisfy_requirements(p_owner, p_spec)) {
@@ -256,8 +278,14 @@ TypedArray<StringName> ASAbility::get_activation_owned_tags() const {
 TypedArray<StringName> ASAbility::get_activation_required_tags() const {
 	return activation_required_tags;
 }
+TypedArray<StringName> ASAbility::get_activation_required_any_tags() const {
+	return activation_required_any_tags;
+}
 TypedArray<StringName> ASAbility::get_activation_blocked_tags() const {
 	return activation_blocked_tags;
+}
+TypedArray<StringName> ASAbility::get_activation_blocked_all_tags() const {
+	return activation_blocked_all_tags;
 }
 void ASAbility::set_activation_cancel_tags(const TypedArray<StringName> &p_tags) {
 	activation_cancel_tags = p_tags;
@@ -378,8 +406,26 @@ void ASAbility::set_activation_required_tags(const TypedArray<StringName> &p_tag
 	}
 }
 
+void ASAbility::set_activation_required_any_tags(const TypedArray<StringName> &p_tags) {
+	activation_required_any_tags = p_tags;
+	if (AbilitySystem::get_singleton()) {
+		for (int i = 0; i < p_tags.size(); i++) {
+			AbilitySystem::get_singleton()->register_tag(p_tags[i], AbilitySystem::TAG_TYPE_CONDITIONAL);
+		}
+	}
+}
+
 void ASAbility::set_activation_blocked_tags(const TypedArray<StringName> &p_tags) {
 	activation_blocked_tags = p_tags;
+	if (AbilitySystem::get_singleton()) {
+		for (int i = 0; i < p_tags.size(); i++) {
+			AbilitySystem::get_singleton()->register_tag(p_tags[i], AbilitySystem::TAG_TYPE_CONDITIONAL);
+		}
+	}
+}
+
+void ASAbility::set_activation_blocked_all_tags(const TypedArray<StringName> &p_tags) {
+	activation_blocked_all_tags = p_tags;
 	if (AbilitySystem::get_singleton()) {
 		for (int i = 0; i < p_tags.size(); i++) {
 			AbilitySystem::get_singleton()->register_tag(p_tags[i], AbilitySystem::TAG_TYPE_CONDITIONAL);

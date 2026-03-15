@@ -34,6 +34,8 @@ Properties
    +--------------------------------------------------------------------+-----------------------------------------------------------------------------------+--------+
    | :ref:`Array<class_Array>`\[:ref:`ASAbility<class_ASAbility>`\]     | :ref:`unlocked_abilities<class_ASAttributeSet_property_unlocked_abilities>`       | ``[]`` |
    +--------------------------------------------------------------------+-----------------------------------------------------------------------------------+--------+
+   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]   | :ref:`attribute_drivers<class_ASAttributeSet_property_attribute_drivers>`         | ``[]`` |
+   +--------------------------------------------------------------------+-----------------------------------------------------------------------------------+--------+
 
 .. rst-class:: classref-reftable-group
 
@@ -151,6 +153,23 @@ Definitions for each attribute (limits, base).
 - :ref:`Array<class_Array>`\[:ref:`ASAbility<class_ASAbility>`\] **get_unlocked_abilities**\ (\ )
 
 Abilities permitted for use by the actor.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAttributeSet_property_attribute_drivers:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **attribute_drivers** = ``[]`` :ref:`🔗<class_ASAttributeSet_property_attribute_drivers>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_attribute_drivers**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **get_attribute_drivers**\ (\ )
+
+List of relationships between attributes. Format: { "source": &"stat.str", "destination": &"stat.atk", "ratio": 2.0 }.
 
 .. rst-class:: classref-section-separator
 

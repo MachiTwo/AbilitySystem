@@ -76,7 +76,9 @@ private:
 	StringName ability_tag;
 	TypedArray<StringName> activation_owned_tags;
 	TypedArray<StringName> activation_required_tags;
+	TypedArray<StringName> activation_required_any_tags;
 	TypedArray<StringName> activation_blocked_tags;
+	TypedArray<StringName> activation_blocked_all_tags;
 	TypedArray<StringName> activation_cancel_tags;
 	TypedArray<ASCue> cues;
 
@@ -128,8 +130,14 @@ public:
 	void set_activation_required_tags(const TypedArray<StringName> &p_tags);
 	TypedArray<StringName> get_activation_required_tags() const;
 
+	void set_activation_required_any_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_required_any_tags() const;
+
 	void set_activation_blocked_tags(const TypedArray<StringName> &p_tags);
 	TypedArray<StringName> get_activation_blocked_tags() const;
+
+	void set_activation_blocked_all_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_blocked_all_tags() const;
 
 	void set_activation_cancel_tags(const TypedArray<StringName> &p_tags);
 	TypedArray<StringName> get_activation_cancel_tags() const;

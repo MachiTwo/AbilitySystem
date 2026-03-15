@@ -162,6 +162,9 @@
 		<member name="activation_blocked_tags" type="StringName[]" setter="set_activation_blocked_tags" getter="get_activation_blocked_tags" default="[]">
 			Ability cannot activate if owner has any of these tags.
 		</member>
+		<member name="activation_blocked_all_tags" type="StringName[]" setter="set_activation_blocked_all_tags" getter="get_activation_blocked_all_tags" default="[]">
+			Ability is blocked ONLY if owner has ALL of these tags.
+		</member>
 		<member name="activation_cancel_tags" type="StringName[]" setter="set_activation_cancel_tags" getter="get_activation_cancel_tags" default="[]">
 			Tags of active abilities that will be canceled when this ability activates.
 		</member>
@@ -170,6 +173,9 @@
 		</member>
 		<member name="activation_required_tags" type="StringName[]" setter="set_activation_required_tags" getter="get_activation_required_tags" default="[]">
 			Owner must have all of these tags to activate.
+		</member>
+		<member name="activation_required_any_tags" type="StringName[]" setter="set_activation_required_any_tags" getter="get_activation_required_any_tags" default="[]">
+			Owner must have at least ONE of these tags to activate.
 		</member>
 		<member name="cooldown_duration" type="float" setter="set_cooldown_duration" getter="get_cooldown_duration" default="0.0">
 			Base duration of cooldown.
