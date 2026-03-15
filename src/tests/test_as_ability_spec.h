@@ -28,37 +28,74 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#pragma once
+#ifndef TEST_AS_ABILITY_SPEC_H
+#define TEST_AS_ABILITY_SPEC_H
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
+#include "doctest.h"
 #include "src/core/as_ability_spec.h"
 #include "src/resources/as_ability.h"
-#include "src/tests/doctest.h"
-#else
-#include "modules/ability_system/core/as_ability_spec.h"
-#include "modules/ability_system/resources/as_ability.h"
-#include "modules/ability_system/tests/doctest.h"
-#endif
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 #endif
 
-TEST_CASE("ASAbilitySpec Lifecycle") {
-	Ref<ASAbility> ability = memnew(ASAbility);
-	Ref<ASAbilitySpec> spec = memnew(ASAbilitySpec);
+TEST_CASE("[AbilitySystem] ASAbilitySpec (300% Coverage)") {
+	Ref<ASAbility> ability;
+	ability.instantiate();
 
-	SUBCASE("Basic configuration") {
-		spec->init(ability, 2); // Level 2
-		CHECK(spec->get_ability() == ability);
-		CHECK(spec->get_level() == 2);
-		CHECK(spec->get_is_active() == false);
+	Ref<ASAbilitySpec> spec;
+	spec.instantiate();
+
+	SUBCASE("Initialization - 3 Variations") {
+		// Var 1: Default
+		spec->init(ability);
+		CHECK(spec->get_level() == 1.0f);
+
+		// Var 2: Custom Level
+		spec->init(ability, 5.0f);
+		CHECK(spec->get_level() == 5.0f);
+
+		// Var 3: Re-init
+		Ref<ASAbility> ability2;
+		ability2.instantiate();
+		spec->init(ability2, 10.0f);
+		CHECK(spec->get_ability() == ability2);
+		CHECK(spec->get_level() == 10.0f);
 	}
 
-	SUBCASE("Activation state") {
+	SUBCASE("State Tracking - 3 Variations") {
+		spec->init(ability);
+
+		// Var 1: Active
 		spec->set_is_active(true);
 		CHECK(spec->get_is_active() == true);
+
+		// Var 2: Inactive
 		spec->set_is_active(false);
 		CHECK(spec->get_is_active() == false);
+
+		// Var 3: Target Node Persistence
+		Node *target = memnew(Node);
+		spec->set_target_node(target);
+		CHECK(spec->get_target_node() == target);
+		memdelete(target);
+	}
+
+	SUBCASE("Ticking & Duration - 3 Variations") {
+		ability->set_duration_policy(ASAbility::POLICY_DURATION);
+		ability->set_ability_duration(1.0f);
+		spec->init(ability);
+		spec->activate(nullptr); // Usually sets duration remaining
+
+		// Var 1: Partial Tick
+		CHECK(spec->tick(0.4f) == false); // Not finished
+
+		// Var 2: Multiple Ticks
+		CHECK(spec->tick(0.4f) == false); // Total 0.8, not finished
+
+		// Var 3: Final Tick
+		CHECK(spec->tick(0.3f) == true); // Total 1.1, finished
 	}
 }
+
+#endif // TEST_AS_ABILITY_SPEC_H

@@ -68,3 +68,6 @@ CMakeUserPresets.json
 /demo/addons
 /demo-integration/addons
 /.cache
+/build
+/src/tests/multiplayer
+/utility/multiplayer

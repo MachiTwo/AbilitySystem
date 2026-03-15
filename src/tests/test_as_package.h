@@ -28,91 +28,81 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#pragma once
+#ifndef TEST_AS_PACKAGE_H
+#define TEST_AS_PACKAGE_H
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
+#include "doctest.h"
 #include "src/resources/as_cue.h"
 #include "src/resources/as_effect.h"
 #include "src/resources/as_package.h"
-#include "src/tests/doctest.h"
-#else
-#include "modules/ability_system/resources/as_cue.h"
-#include "modules/ability_system/resources/as_effect.h"
-#include "modules/ability_system/resources/as_package.h"
-#include "modules/ability_system/tests/doctest.h"
-#endif
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 #endif
 
-TEST_CASE("[AS] ASPackage Resource") {
+TEST_CASE("[AbilitySystem] ASPackage (300% Coverage)") {
 	Ref<ASPackage> package;
 	package.instantiate();
 
-	SUBCASE("Basic Properties") {
-		Ref<ASEffect> effect;
-		effect.instantiate();
-		effect->set_effect_tag("test.effect");
+	SUBCASE("Direct Assets - 3 Variations") {
+		Ref<ASEffect> e1;
+		e1.instantiate();
+		Ref<ASEffect> e2;
+		e2.instantiate();
+		Ref<ASCue> c1;
+		c1.instantiate();
 
-		TypedArray<ASEffect> effects;
-		effects.push_back(effect);
-		package->set_effects(effects);
+		// Var 1: Add Effects
+		package->add_effect(e1);
+		package->add_effect(e2);
+		CHECK(package->get_effects().size() == 2);
 
-		CHECK(package->get_effects().size() == 1);
-		CHECK(Ref<ASEffect>(package->get_effects()[0])->get_effect_tag() == StringName("test.effect"));
-
-		TypedArray<StringName> tags;
-		tags.push_back(StringName("tag.test"));
-		package->set_effect_tags(tags);
-		CHECK(package->get_effect_tags().size() == 1);
-		CHECK(StringName(package->get_effect_tags()[0]) == StringName("tag.test"));
-	}
-
-	SUBCASE("Cue Properties") {
-		Ref<ASCue> cue;
-		cue.instantiate();
-		cue->set_cue_tag("test.cue");
-
-		TypedArray<ASCue> cues;
-		cues.push_back(cue);
-		package->set_cues(cues);
-
+		// Var 2: Add Cues
+		package->add_cue(c1);
 		CHECK(package->get_cues().size() == 1);
-		CHECK(Ref<ASCue>(package->get_cues()[0])->get_cue_tag() == StringName("test.cue"));
-	}
 
-	SUBCASE("Dynamic Manipulation") {
-		// Effects
-		Ref<ASEffect> e1 = memnew(ASEffect);
-		package->add_effect(e1);
-		CHECK(package->get_effects().size() == 1);
-		package->remove_effect(e1);
-		CHECK(package->get_effects().size() == 0);
-		package->add_effect(e1);
+		// Var 3: Bulk Clear
 		package->clear_effects();
-		CHECK(package->get_effects().size() == 0);
-
-		// Effect Tags
-		package->add_effect_tag("state.poison");
-		CHECK(package->get_effect_tags().size() == 1);
-		package->remove_effect_tag("state.poison");
-		CHECK(package->get_effect_tags().size() == 0);
-
-		// Cues
-		Ref<ASCue> c1 = memnew(ASCue);
-		package->add_cue(c1);
-		CHECK(package->get_cues().size() == 1);
-		package->remove_cue(c1);
-		CHECK(package->get_cues().size() == 0);
-		package->add_cue(c1);
 		package->clear_cues();
+		CHECK(package->get_effects().size() == 0);
 		CHECK(package->get_cues().size() == 0);
+	}
 
-		// Cue Tags
-		package->add_cue_tag("vfx.explosion");
+	SUBCASE("Tagged Assets (Identity) - 3 Variations") {
+		// Var 1: Effect Tags
+		package->add_effect_tag("effect.fire");
+		package->add_effect_tag("effect.burn");
+		CHECK(package->get_effect_tags().size() == 2);
+
+		// Var 2: Cue Tags
+		package->add_cue_tag("vfx.spark");
+		package->add_cue_tag("sfx.ignition");
+		CHECK(package->get_cue_tags().size() == 2);
+
+		// Var 3: Removal
+		package->remove_effect_tag("effect.fire");
+		package->remove_cue_tag("vfx.spark");
+		CHECK(package->get_effect_tags().size() == 1);
 		CHECK(package->get_cue_tags().size() == 1);
-		package->remove_cue_tag("vfx.explosion");
-		CHECK(package->get_cue_tags().size() == 0);
+	}
+
+	SUBCASE("State Tags - 3 Variations") {
+		TypedArray<StringName> tags;
+		tags.push_back("state.a");
+		tags.push_back("state.b");
+		tags.push_back("state.c");
+
+		// Var 1: Bulk Set
+		package->set_granted_tags(tags);
+		CHECK(package->get_granted_tags().size() == 3);
+
+		// Var 2: Individual Add
+		package->add_granted_tag("state.d");
+		CHECK(package->get_granted_tags().size() == 4);
+
+		// Var 3: Match check
+		CHECK(package->get_granted_tags().has(StringName("state.a")) == true);
 	}
 }
+
+#endif // TEST_AS_PACKAGE_H

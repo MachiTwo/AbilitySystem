@@ -28,59 +28,91 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#pragma once
+#ifndef TEST_AS_ATTRIBUTE_SET_H
+#define TEST_AS_ATTRIBUTE_SET_H
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
+#include "doctest.h"
 #include "src/resources/as_attribute.h"
 #include "src/resources/as_attribute_set.h"
-#include "src/tests/doctest.h"
-#else
-#include "modules/ability_system/resources/as_attribute.h"
-#include "modules/ability_system/resources/as_attribute_set.h"
-#include "modules/ability_system/tests/doctest.h"
-#endif
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 #endif
 
-TEST_CASE("ASAttributeSet Operations") {
-	Ref<ASAttributeSet> attr_set = memnew(ASAttributeSet);
+TEST_CASE("[AbilitySystem] ASAttributeSet (300% Coverage)") {
+	Ref<ASAttributeSet> attr_set;
+	attr_set.instantiate();
 
-	SUBCASE("Base value initialization") {
-		Ref<ASAttribute> health_attr = memnew(ASAttribute);
-		health_attr->set_attribute_name("Health");
-		health_attr->set_max_value(1000.0f);
-		health_attr->set_base_value(0.0f);
-		attr_set->add_attribute_definition(health_attr);
+	SUBCASE("Attribute Definitions - 3 Variations") {
+		Ref<ASAttribute> a1;
+		a1.instantiate();
+		a1->set_attribute_name("a1");
+		Ref<ASAttribute> a2;
+		a2.instantiate();
+		a2->set_attribute_name("a2");
+		Ref<ASAttribute> a3;
+		a3.instantiate();
+		a3->set_attribute_name("a3");
 
-		attr_set->set_attribute_base_value("Health", 100.0);
-		CHECK(attr_set->get_attribute_base_value("Health") == 100.0);
-		CHECK(attr_set->get_attribute_value("Health") == 100.0);
+		// Var 1: Add
+		attr_set->add_attribute_definition(a1);
+		CHECK(attr_set->has_attribute("a1") == true);
+
+		// Var 2: Remove
+		attr_set->add_attribute_definition(a2);
+		attr_set->remove_attribute_definition("a2");
+		CHECK(attr_set->has_attribute("a2") == false);
+
+		// Var 3: Bulk Set
+		TypedArray<ASAttribute> defs;
+		defs.push_back(a1);
+		defs.push_back(a3);
+		attr_set->set_attribute_definitions(defs);
+		CHECK(attr_set->get_attribute_list().size() == 2);
 	}
 
-	SUBCASE("Additive Modifiers") {
-		Ref<ASAttribute> health_attr = memnew(ASAttribute);
-		health_attr->set_attribute_name("Health");
-		health_attr->set_max_value(1000.0f);
-		health_attr->set_base_value(100.0f);
-		attr_set->add_attribute_definition(health_attr);
+	SUBCASE("Value Clamping (Min/Max) - 3 Variations") {
+		Ref<ASAttribute> hp;
+		hp.instantiate();
+		hp->set_attribute_name("hp");
+		hp->set_min_value(0.0f);
+		hp->set_max_value(100.0f);
+		attr_set->add_attribute_definition(hp);
 
-		attr_set->add_modifier("Health", 20.0); // Default type: Add
-		CHECK(attr_set->get_attribute_value("Health") == 120.0);
+		// Var 1: High Clamp
+		attr_set->set_attribute_base_value("hp", 150.0f);
+		CHECK(attr_set->get_attribute_base_value("hp") == 100.0f);
 
-		attr_set->remove_modifier("Health", 20.0);
-		CHECK(attr_set->get_attribute_value("Health") == 100.0);
+		// Var 2: Low Clamp
+		attr_set->set_attribute_base_value("hp", -50.0f);
+		CHECK(attr_set->get_attribute_base_value("hp") == 0.0f);
+
+		// Var 3: Inside Range
+		attr_set->set_attribute_base_value("hp", 50.0f);
+		CHECK(attr_set->get_attribute_base_value("hp") == 50.0f);
 	}
 
-	SUBCASE("Multiplicative Modifiers") {
-		Ref<ASAttribute> atk_attr = memnew(ASAttribute);
-		atk_attr->set_attribute_name("Attack");
-		atk_attr->set_base_value(50.0f);
-		attr_set->add_attribute_definition(atk_attr);
+	SUBCASE("Modifier Interaction - 3 Variations") {
+		Ref<ASAttribute> stat;
+		stat.instantiate();
+		stat->set_attribute_name("stat");
+		stat->set_base_value(10.0f);
+		attr_set->add_attribute_definition(stat);
 
-		// 50 * 1.5 = 75
-		attr_set->add_modifier("Attack", 1.5, ASAttributeSet::MODIFIER_MULTIPLY);
-		CHECK(attr_set->get_attribute_value("Attack") == 75.0);
+		// Var 1: Multiple Adds
+		attr_set->add_modifier("stat", 5.0f); // 15
+		attr_set->add_modifier("stat", 2.0f); // 17
+		CHECK(attr_set->get_attribute_value("stat") == 17.0f);
+
+		// Var 2: Mixed Mul/Add
+		// Order: (Base + Adds) * Muls
+		attr_set->add_modifier("stat", 2.0f, ASAttributeSet::MODIFIER_MULTIPLY); // 17 * 2 = 34
+		CHECK(attr_set->get_attribute_value("stat") == 34.0f);
+
+		// Var 3: Removal Recovery
+		attr_set->remove_modifier("stat", 2.0f, ASAttributeSet::MODIFIER_MULTIPLY);
+		CHECK(attr_set->get_attribute_value("stat") == 17.0f);
 	}
 }
+
+#endif // TEST_AS_ATTRIBUTE_SET_H

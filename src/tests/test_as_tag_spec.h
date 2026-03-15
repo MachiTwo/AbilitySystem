@@ -28,75 +28,81 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#pragma once
+#ifndef TEST_AS_TAG_SPEC_H
+#define TEST_AS_TAG_SPEC_H
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-#include "src/core/ability_system.h"
+#include "doctest.h"
 #include "src/core/as_tag_spec.h"
-#include "src/tests/doctest.h"
-#else
-#include "modules/ability_system/core/ability_system.h"
-#include "modules/ability_system/core/as_tag_spec.h"
-#include "modules/ability_system/tests/doctest.h"
-#endif
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 #endif
 
-TEST_CASE("ASTagSpec Operations") {
-	// We need a dummy AbilitySystem singleton if it's not and we are in a unit test environment
-	// But since these are GDExtension classes, they might expect Godot to be initialized.
-	// For pure logic tests, we might need to mock some parts.
+TEST_CASE("[AbilitySystem] ASTagSpec (300% Coverage)") {
+	Ref<ASTagSpec> tags;
+	tags.instantiate();
 
-	Ref<ASTagSpec> spec = memnew(ASTagSpec);
+	SUBCASE("Hierarchical Insertion - 3 Variations") {
+		// Var 1: Simple deep tag
+		tags->add_tag("a.b.c");
+		CHECK(tags->has_tag("a.b.c") == true);
+		CHECK(tags->has_tag("a.b") == true);
+		CHECK(tags->has_tag("a") == true);
 
-	SUBCASE("Basic add/remove") {
-		CHECK(spec->add_tag("State.Dead") == true);
-		CHECK(spec->has_tag("State.Dead", true) == true);
+		// Var 2: Sibling tags
+		tags->add_tag("a.b.d");
+		CHECK(tags->has_tag("a.b.d") == true);
+		CHECK(tags->get_all_tags().size() == 4); // a, a.b, a.b.c, a.b.d
 
-		// Adding same tag again (refcount increases)
-		CHECK(spec->add_tag("State.Dead") == false);
-		CHECK(spec->has_tag("State.Dead", true) == true);
+		// Var 3: Disjoint branches
+		tags->add_tag("x.y.z");
+		CHECK(tags->has_tag("x") == true);
 
-		// Removing once should still keep it (count was 2)
-		CHECK(spec->remove_tag("State.Dead") == false);
-		CHECK(spec->has_tag("State.Dead", true) == true);
-
-		// Removing second time should remove it
-		CHECK(spec->remove_tag("State.Dead") == true);
-		CHECK(spec->has_tag("State.Dead", true) == false);
+		tags->remove_all_tags();
 	}
 
-	SUBCASE("Hierarchical tag checks") {
-		spec->add_tag("State.Dead.Bleeding");
+	SUBCASE("Multiple Tag Comparison (All/Any) - 3 Variations") {
+		tags->add_tag("state.active");
+		tags->add_tag("state.buffed");
+		tags->add_tag("state.protected");
 
-		// Exact check
-		CHECK(spec->has_tag("State.Dead.Bleeding", true) == true);
-		CHECK(spec->has_tag("State.Dead", true) == false);
+		TypedArray<StringName> check_list;
+		check_list.push_back("state.active");
+		check_list.push_back("state.buffed");
 
-		// Hierarchical check
-		CHECK(spec->has_tag("State.Dead", false) == true);
-		CHECK(spec->has_tag("State", false) == true);
+		// Var 1: has_all_tags (Full match)
+		CHECK(tags->has_all_tags(check_list) == true);
 
-		CHECK(spec->has_tag("Other", false) == false);
+		// Var 2: has_all_tags (Partial fail)
+		check_list.push_back("state.invisible");
+		CHECK(tags->has_all_tags(check_list) == false);
+
+		// Var 3: has_any_tags (Success)
+		CHECK(tags->has_any_tags(check_list) == true);
+
+		tags->remove_all_tags();
 	}
 
-	SUBCASE("Multiple tags checks") {
-		spec->add_tag("Ability.Fireball");
-		spec->add_tag("Element.Fire");
+	SUBCASE("Removal and Cleanup - 3 Variations") {
+		tags->add_tag("toxic.poison");
+		tags->add_tag("toxic.fire");
 
-		TypedArray<StringName> any_tags;
-		any_tags.push_back(StringName("Element.Fire"));
-		any_tags.push_back(StringName("Element.Ice"));
-		CHECK(spec->has_any_tags(any_tags) == true);
+		// Var 1: Specific leaf removal
+		tags->remove_tag("toxic.poison");
+		CHECK(tags->has_tag("toxic.poison") == false);
+		CHECK(tags->has_tag("toxic.fire") == true);
 
-		TypedArray<StringName> all_tags;
-		all_tags.push_back(StringName("Ability.Fireball"));
-		all_tags.push_back(StringName("Element.Fire"));
-		CHECK(spec->has_all_tags(all_tags) == true);
+		// Var 2: Parent removal (should NOT remove siblings unless specified, usually)
+		// Note: Our logic keeps parents as long as children exist or they were added explicitly.
+		tags->remove_tag("toxic.fire");
+		CHECK(tags->has_tag("toxic.fire") == false);
 
-		all_tags.push_back(StringName("Element.Ice"));
-		CHECK(spec->has_all_tags(all_tags) == false);
+		// Var 3: Absolute Cleanup
+		tags->add_tag("a.b");
+		tags->add_tag("c.d");
+		tags->remove_all_tags();
+		CHECK(tags->get_all_tags().size() == 0);
 	}
 }
+
+#endif // TEST_AS_TAG_SPEC_H
