@@ -1,0 +1,250 @@
+name: 📦 Package Plugin
+
+on:
+  workflow_call:
+    inputs:
+      tag_name:
+        required: true
+        type: string
+      plugin_version:
+        required: true
+        type: string
+      is_release:
+        required: true
+        type: boolean
+
+jobs:
+  package:
+    name: 📦 Package Plugin
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      # Note: We define explicit restoration for each matrix combination.
+      # This is the "Rigorosa" way to ensure full plugin packaging.
+
+      - name: Restore Windows x86_64 Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-windows-x86_64-single-editor
+      - name: Restore Windows x86_64 Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-windows-x86_64-single-template_release
+      - name: Restore Windows x86_32 Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-windows-x86_32-single-editor
+      - name: Restore Windows x86_32 Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-windows-x86_32-single-template_release
+
+      - name: Restore Linux x86_64 Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-linux-x86_64-single-editor
+      - name: Restore Linux x86_64 Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-linux-x86_64-single-template_release
+      - name: Restore Linux x86_32 Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-linux-x86_32-single-editor
+      - name: Restore Linux x86_32 Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-linux-x86_32-single-template_release
+      - name: Restore Linux arm64 Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-linux-arm64-single-editor
+      - name: Restore Linux arm64 Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-linux-arm64-single-template_release
+      - name: Restore Linux arm32 Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-linux-arm32-single-editor
+      - name: Restore Linux arm32 Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-linux-arm32-single-template_release
+
+      - name: Restore macOS Universal Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-macos-universal-single-editor
+      - name: Restore macOS Universal Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-macos-universal-single-template_release
+
+      - name: Restore Android arm64 Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-android-arm64-single-editor
+      - name: Restore Android arm64 Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-android-arm64-single-template_release
+      - name: Restore Android arm32 Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-android-arm32-single-editor
+      - name: Restore Android arm32 Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-android-arm32-single-template_release
+      - name: Restore Android x86_64 Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-android-x86_64-single-editor
+      - name: Restore Android x86_64 Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-android-x86_64-single-template_release
+      - name: Restore Android x86_32 Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-android-x86_32-single-editor
+      - name: Restore Android x86_32 Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-android-x86_32-single-template_release
+
+      - name: Restore iOS arm64 Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-ios-arm64-single-editor
+      - name: Restore iOS arm64 Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-ios-arm64-single-template_release
+      - name: Restore iOS Universal Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-ios-universal-single-editor
+      - name: Restore iOS Universal Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-ios-universal-single-template_release
+
+      - name: Restore Web wasm32 Editor
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-web-wasm32-single-editor
+      - name: Restore Web wasm32 Release
+        uses: actions/cache/restore@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-web-wasm32-single-template_release
+
+      - name: Setup Godot for Icon Generation
+        run: |
+          GODOT_VERSION="${{ env.GODOT_VERSION_FOR_EXPORT }}"
+          echo "GODOT_VER_CLEAN=$(echo $GODOT_VERSION | cut -d '-' -f 1)" >> $GITHUB_ENV
+          wget --tries=5 --waitretry=5 "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip" -O godot.zip
+          unzip godot.zip
+          mv Godot_v${GODOT_VERSION}_linux.x86_64 godot.x86_64
+          chmod +x godot.x86_64
+
+      - name: Prepare Final Structure
+        shell: bash
+        run: |
+          mkdir -p out/addons/${{ env.MODULE_NAME }}/bin
+          mkdir -p out/addons/${{ env.MODULE_NAME }}/icons
+          cp gdextension/* out/addons/${{ env.MODULE_NAME }}/ 2>/dev/null || true
+          cp README.md README.pt.md release_note.md release_note.pt.md out/addons/${{ env.MODULE_NAME }}/ 2>/dev/null || true
+          cp src/icons/*.svg out/addons/${{ env.MODULE_NAME }}/icons/ 2>/dev/null || true
+
+          # Copy structure from repo
+          cp -r addons/${{ env.MODULE_NAME }}/* out/addons/${{ env.MODULE_NAME }}/ 2>/dev/null || true
+
+          # Explicitly copy all compiled binaries from all platforms
+          if [ -d tmp-builds/out/addons/${{ env.MODULE_NAME }}/bin ]; then
+            cp -r tmp-builds/out/addons/${{ env.MODULE_NAME }}/bin/* out/addons/${{ env.MODULE_NAME }}/bin/
+          fi
+
+          touch out/project.godot
+          ./godot.x86_64 --headless --editor --path out/ --quit || true
+          rm out/project.godot
+          rm -rf out/.godot/
+          # Fix icon imports for editor
+          if [ -d out/addons/${{ env.MODULE_NAME }}/icons/ ]; then
+            find out/addons/${{ env.MODULE_NAME }}/icons/ -maxdepth 1 -name "*.import" -exec sed -i 's|editor/scale_with_editor_scale=false|editor/scale_with_editor_scale=true|' {} +
+            find out/addons/${{ env.MODULE_NAME }}/icons/ -maxdepth 1 -name "*.import" -exec sed -i 's|editor/convert_colors_with_editor_theme=false|editor/convert_colors_with_editor_theme=true|' {} +
+          fi
+
+      - name: Sync Addons for Commit
+        run: |
+          # Copy the fully prepared addons back into the repo structure
+          cp -r out/addons/* addons/
+
+      - name: Auto-Commit Plugin Addons
+        if: github.event_name != 'pull_request' && !startsWith(github.ref, 'refs/tags/')
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: ${{ github.ref_name }}
+          commit_message: "build: update compiled plugin binaries [skip ci]"
+          file_pattern: "addons/"
+
+      - name: Upload Final Plugin Artifact
+        uses: actions/upload-artifact@v4.6.1
+        with:
+          name: ${{ env.PROJECT_ID }}+v${{ inputs.plugin_version }}.gdextension.zip
+          path: out/addons/
+
+      - name: Prepare Demo for Upload
+        run: |
+          # Create a clean demo directory including the plugin
+          mkdir -p tmp-demo/demo
+          cp -r demo/* tmp-demo/demo/
+          mkdir -p tmp-demo/demo/addons
+          cp -r out/addons/${{ env.MODULE_NAME }} tmp-demo/demo/addons/
+
+      - name: Upload Final Demo Artifact
+        uses: actions/upload-artifact@v4.6.1
+        with:
+          name: ${{ env.PROJECT_ID }}+v${{ inputs.plugin_version }}.demo.zip
+          path: tmp-demo/demo/

@@ -1,0 +1,50 @@
+name: "Init version vars"
+description: "Initialize version environment variables"
+
+outputs:
+  plugin-version:
+    description: "The version string extracted from src/version.py"
+    value: ${{ steps.export.outputs.plugin-version }}
+  name-prefix:
+    description: "The name prefix for artifacts"
+    value: ${{ steps.export.outputs.name-prefix }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Import dependency versions
+      shell: bash
+      run: |
+        if [[ -f deps.env ]]; then
+          SRC=deps.env
+        else
+          echo "ERROR: No deps.env file found" >&2
+          exit 1
+        fi
+
+        echo "Importing dependency manifest from $SRC"
+        grep -v '^#' "$SRC" | grep -v '^$' >> "$GITHUB_ENV"
+
+    - name: Set PLUGIN_VERSION
+      id: calc
+      shell: bash
+      run: |
+        # Extract version from src/version.py using Python via module import to avoid __file__ errors
+        VERSION=$(python3 -c "import sys, os; sys.path.insert(0, os.path.abspath('src')); import version; print(f'{version.major}.{version.minor}.{version.patch}' + (f'-{version.status}' if version.status and version.status != 'stable' else ''))")
+        echo "PLUGIN_VERSION=$VERSION" >> "$GITHUB_ENV"
+        echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+    - name: Set NAME_PREFIX
+      id: prefix
+      shell: bash
+      run: |
+        PREFIX="${PROJECT_ID}+${PLUGIN_VERSION}.gdextension-${GODOT_CPP_API_VERSION}"
+        echo "NAME_PREFIX=$PREFIX" >> "$GITHUB_ENV"
+        echo "prefix=$PREFIX" >> "$GITHUB_OUTPUT"
+
+    - name: Export to GITHUB_OUTPUT
+      id: export
+      shell: bash
+      run: |
+        echo "plugin-version=${PLUGIN_VERSION}" >> "$GITHUB_OUTPUT"
+        echo "name-prefix=${NAME_PREFIX}" >> "$GITHUB_OUTPUT"

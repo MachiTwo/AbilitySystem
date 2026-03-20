@@ -1,0 +1,135 @@
+name: 🤖 Android Module
+
+on:
+  workflow_call:
+    inputs:
+      target:
+        required: true
+        type: string
+      arch:
+        required: true
+        type: string
+      module:
+        required: true
+        type: string
+      zyris_version:
+        required: true
+        type: string
+      plugin_version:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: 🏗️ Module Build (Android, ${{ inputs.target }}, ${{ inputs.arch }}, ${{ inputs.module }})
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Ability System
+        uses: actions/checkout@v4.2.2
+        with:
+          submodules: true
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Checkout ZyrisEngine (no-ability-system)
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ env.ZYRIS_REPO }}
+          ref: ${{ env.ZYRIS_BRANCH }}
+          path: zyris
+
+      - name: Move Ability System to modules
+        shell: bash
+        run: mv src zyris/modules/${{ env.MODULE_NAME }}
+
+      - name: Set up toolchains
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential scons pkg-config libx11-dev libxcursor-dev \
+            libxi-dev libxinerama-dev libxrandr-dev libgl1-mesa-dev libglu1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev libfontconfig1-dev \
+            libvulkan-dev mesa-vulkan-drivers
+
+      - name: Setup Java
+        uses: actions/setup-java@v4.7.0
+        with:
+          distribution: "temurin"
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup NDK
+        uses: nttld/setup-ndk@v1.5.0
+        with:
+          ndk-version: ${{ env.NDK_VERSION }}
+          add-to-path: true
+
+      - name: Setup Python and SCons
+        uses: ./.github/actions/zyris-deps
+
+      - name: Restore .scons_cache
+        uses: ./.github/actions/zyris-cache-restore
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: android_${{ inputs.arch }}_${{ inputs.target }}_${{ inputs.module }}_engine-${{ env.ZYRIS_VER }}
+
+      - name: Build Zyris (Android Target)
+        working-directory: zyris
+        shell: bash
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
+        run: |
+          MONO_ARG=""
+          if [ "${{ inputs.module }}" = "mono" ]; then
+            MONO_ARG="module_mono_enabled=yes"
+          fi
+
+          scons platform=android target=${{ inputs.target }} arch=${{ inputs.arch }} precision=single -j2 ANDROID_HOME=$ANDROID_HOME ANDROID_NDK_ROOT=$ANDROID_NDK_ROOT $MONO_ARG
+
+      - name: Save .scons_cache
+        uses: ./.github/actions/zyris-cache-save
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: android_${{ inputs.arch }}_${{ inputs.target }}_${{ inputs.module }}_engine-${{ env.ZYRIS_VER }}
+
+      - name: Prepare Artifact
+        shell: bash
+        run: |
+          # Clean versions
+          PLUGIN_VER=$(echo "${{ inputs.plugin_version }}" | tr '-' '.')
+          ZYRIS_VER=$(echo "${{ inputs.zyris_version }}" | tr '-' '.')
+
+          # Module part
+          MODULE_PART=""
+          if [ "${{ inputs.module }}" = "mono" ]; then
+            MODULE_PART="dotnet."
+          fi
+
+          mkdir -p out/artifact
+
+          # For Android, we package the libs folder content if it's an export template
+          if [ -d "zyris/platform/android/java/lib/libs" ]; then
+            # Copy contents of libs to the artifact folder
+            cp -R zyris/platform/android/java/lib/libs/. out/artifact/
+            echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.android.${{ inputs.arch }}" >> $GITHUB_ENV
+          else
+            # For standalone apks/binaries
+            # Use find for robust binary discovery
+            BINARY_PATH=$(find zyris/bin/ -maxdepth 1 -name "*android*" -not -path '*/.*' | head -n 1)
+            if [ -n "$BINARY_PATH" ]; then
+              cp "$BINARY_PATH" out/artifact/
+              echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.android.${{ inputs.arch }}" >> $GITHUB_ENV
+            else
+              echo "::error::Binary not found"
+              ls -F zyris/bin/
+              exit 1
+            fi
+          fi
+          echo "artifact_path=out/artifact/" >> $GITHUB_ENV
+
+      - name: Upload Zyris Binary (with Module)
+        uses: actions/upload-artifact@v4.6.1
+        with:
+          name: ${{ env.artifact_name }}
+          path: ${{ env.artifact_path }}

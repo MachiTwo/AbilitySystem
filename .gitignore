@@ -1,0 +1,114 @@
+# Godot auto generated files
+*.gen.*
+.godot/
+*/Godot/
+
+# Ignore library files but not the gdextension file
+addons/ability_system/bin/*
+!addons/ability_system/bin/.gitkeep
+addons/limboai/*
+!addons/limboai/.gitkeep
+!addons/ability_system/*.gdextension
+!addons/limboai/*.gdextension
+!**.gdextension
+
+demo/addons/ability_system/bin/*
+!demo/addons/ability_system/bin/.gitkeep
+demo/limboai/*
+!demo/limboai/.gitkeep
+!demo/addons/ability_system/*.gdextension
+!demo/addons/limboai/*.gdextension
+
+!addons/ability_system/bin/libability_system.macos.editor.dylib
+!addons/ability_system/bin/libability_system.macos.template_release.dylib
+
+!addons/ability_system/bin/ability_system.windows.editor.x86_32.dll
+!addons/ability_system/bin/ability_system.windows.template_release.x86_32.dll
+!addons/ability_system/bin/ability_system.windows.editor.x86_64.dll
+!addons/ability_system/bin/ability_system.windows.template_release.x86_64.dll
+
+!addons/ability_system/bin/libability_system.linux.editor.x86_64.so
+!addons/ability_system/bin/libability_system.linux.template_release.x86_64.so
+!addons/ability_system/bin/libability_system.linux.editor.x86_32.so
+!addons/ability_system/bin/libability_system.linux.template_release.x86_32.so
+!addons/ability_system/bin/libability_system.linux.editor.arm64.so
+!addons/ability_system/bin/libability_system.linux.template_release.arm64.so
+!addons/ability_system/bin/libability_system.linux.editor.arm32.so
+!addons/ability_system/bin/libability_system.linux.template_release.arm32.so
+
+!addons/ability_system/bin/libability_system.android.editor.arm64.so
+!addons/ability_system/bin/libability_system.android.template_release.arm64.so
+!addons/ability_system/bin/libability_system.android.editor.arm32.so
+!addons/ability_system/bin/libability_system.android.template_release.arm32.so
+!addons/ability_system/bin/libability_system.android.editor.x86_64.so
+!addons/ability_system/bin/libability_system.android.template_release.x86_64.so
+!addons/ability_system/bin/libability_system.android.editor.x86_32.so
+!addons/ability_system/bin/libability_system.android.template_release.x86_32.so
+
+!addons/ability_system/bin/libability_system.ios.editor.arm64.dylib
+!addons/ability_system/bin/libability_system.ios.template_release.arm64.dylib
+
+!addons/ability_system/bin/libability_system.web.editor.wasm32.wasm
+!addons/ability_system/bin/libability_system.web.template_release.wasm32.wasm
+
+.sconsign*.dblite
+
+# Ignore custom.py
+custom.py
+
+# Ignore generated compile_commands.json
+compile_commands.json
+
+# Ignore files generated for documentation
+/src/gen
+
+# Binaries
+*.o
+*.os
+*.obj
+*.bc
+*.pyc
+*.dblite
+*.pdb
+*.config
+*.creator
+*.creator.user
+*.files
+*.includes
+*.idb
+
+# Other stuff
+*.log
+.cache
+
+# VSCode
+.vscode/*
+!.vscode/extensions.json
+.DS_Store
+
+# Jetbrains
+.idea/
+
+# Cmake
+cmake-build*
+CMakeUserPresets.json
+*.import
+*.uid
+*.exp
+*.lib
+/reverse-engineering
+/bin
+*.exe
+*.ilk
+
+/godot-cpp
+*.txt
+!requirements.txt
+
+#demo
+
+/demo/addons
+/.cache
+/build
+/tests-godot
+/tmp-integration-dl

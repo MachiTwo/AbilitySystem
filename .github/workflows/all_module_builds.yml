@@ -1,0 +1,160 @@
+name: 📦 All Module Builds
+
+on:
+  workflow_call:
+    inputs:
+      plugin-version:
+        required: true
+        type: string
+
+jobs:
+  setup:
+    name: 🔍 Setup Zyris Engine
+    runs-on: ubuntu-latest
+    outputs:
+      zyris_version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Checkout Ability System
+        uses: actions/checkout@v4.2.2
+        with:
+          path: plugin
+          submodules: true
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' plugin/deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Checkout ZyrisEngine (no-ability-system)
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ env.ZYRIS_REPO }}
+          ref: ${{ env.ZYRIS_BRANCH }}
+          path: zyris
+
+      - name: Prepare Source for Pre-commit
+        shell: bash
+        run: mv plugin/src zyris/modules/${{ env.MODULE_NAME }}
+
+      - name: Zyris Pre-commit (Strict)
+        working-directory: zyris
+        shell: bash
+        run: |
+          pip install pre-commit
+          FILES=$(find modules/${{ env.MODULE_NAME }} -type f)
+          pre-commit run --config .pre-commit-config.yaml --files $FILES
+
+      - id: version
+        name: Extract Zyris Version
+        working-directory: zyris
+        shell: bash
+        run: |
+          MAJOR=$(grep "major =" version.py | cut -d "=" -f 2 | tr -d " ")
+          MINOR=$(grep "minor =" version.py | cut -d "=" -f 2 | tr -d " ")
+          PATCH=$(grep "patch =" version.py | cut -d "=" -f 2 | tr -d " ")
+          STATUS=$(grep "status =" version.py | cut -d "=" -f 2 | tr -d ' "' | tr -d "'")
+          VERSION="$MAJOR.$MINOR.$PATCH"
+          if [ -n "$STATUS" ]; then
+            VERSION="$VERSION-$STATUS"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Zyris Version Detected: $VERSION"
+
+  linux:
+    name: 🐧 Linux
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [editor, template_release, template_debug]
+        arch: [x86_64]
+        module: [standard, mono]
+    uses: ./.github/workflows/linux_module_builds.yml
+    with:
+      target: ${{ matrix.target }}
+      arch: ${{ matrix.arch }}
+      module: ${{ matrix.module }}
+      zyris_version: ${{ needs.setup.outputs.zyris_version }}
+      plugin_version: ${{ inputs.plugin-version }}
+
+  windows:
+    name: 🏁 Windows
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [editor, template_release, template_debug]
+        arch: [x86_64]
+        module: [standard, mono]
+    uses: ./.github/workflows/windows_module_builds.yml
+    with:
+      target: ${{ matrix.target }}
+      arch: ${{ matrix.arch }}
+      module: ${{ matrix.module }}
+      zyris_version: ${{ needs.setup.outputs.zyris_version }}
+      plugin_version: ${{ inputs.plugin-version }}
+
+  macos:
+    name: 🍎 macOS
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [editor, template_release, template_debug]
+        module: [standard, mono]
+    uses: ./.github/workflows/macos_module_builds.yml
+    with:
+      target: ${{ matrix.target }}
+      module: ${{ matrix.module }}
+      zyris_version: ${{ needs.setup.outputs.zyris_version }}
+      plugin_version: ${{ inputs.plugin-version }}
+
+  android:
+    name: 🤖 Android
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [editor, template_release, template_debug]
+        arch: [arm64]
+        module: [standard, mono]
+        exclude:
+          - target: editor
+            module: mono
+    uses: ./.github/workflows/android_module_builds.yml
+    with:
+      target: ${{ matrix.target }}
+      arch: ${{ matrix.arch }}
+      module: ${{ matrix.module }}
+      zyris_version: ${{ needs.setup.outputs.zyris_version }}
+      plugin_version: ${{ inputs.plugin-version }}
+
+  ios:
+    name: 🍏 iOS
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [template_release, template_debug]
+        arch: [arm64]
+    uses: ./.github/workflows/ios_module_builds.yml
+    with:
+      target: ${{ matrix.target }}
+      arch: ${{ matrix.arch }}
+      zyris_version: ${{ needs.setup.outputs.zyris_version }}
+      plugin_version: ${{ inputs.plugin-version }}
+
+  web:
+    name: 🌐 Web
+    needs: setup
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [editor, template_release, template_debug]
+        arch: [wasm32]
+    uses: ./.github/workflows/web_module_builds.yml
+    with:
+      target: ${{ matrix.target }}
+      arch: ${{ matrix.arch }}
+      zyris_version: ${{ needs.setup.outputs.zyris_version }}
+      plugin_version: ${{ inputs.plugin-version }}

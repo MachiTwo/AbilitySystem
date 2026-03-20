@@ -1,0 +1,145 @@
+name: 🐧 Linux Module
+
+on:
+  workflow_call:
+    inputs:
+      target:
+        required: true
+        type: string
+      arch:
+        required: true
+        type: string
+      module:
+        required: true
+        type: string
+      zyris_version:
+        required: true
+        type: string
+      plugin_version:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: 🏗️ Module Build (Linux, ${{ inputs.target }}, ${{ inputs.arch }}, ${{ inputs.module }})
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Ability System
+        uses: actions/checkout@v4.2.2
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          submodules: true
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Checkout ZyrisEngine (no-ability-system)
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ env.ZYRIS_REPO }}
+          ref: ${{ env.ZYRIS_BRANCH }}
+          path: zyris
+
+      - name: Move Ability System to modules
+        shell: bash
+        run: mv src zyris/modules/${{ env.MODULE_NAME }}
+
+      - name: Set up Linux toolchain
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential scons pkg-config libx11-dev libxcursor-dev \
+            libxi-dev libxinerama-dev libxrandr-dev libgl1-mesa-dev libglu1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev libfontconfig1-dev \
+            libvulkan-dev mesa-vulkan-drivers
+
+      - name: Setup Python and SCons
+        uses: ./.github/actions/zyris-deps
+
+      - name: Restore .scons_cache
+        uses: ./.github/actions/zyris-cache-restore
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: linux_${{ inputs.arch }}_${{ inputs.target }}_${{ inputs.module }}_engine-${{ env.ZYRIS_VER }}
+
+      - name: Build Zyris (Linux Target)
+        working-directory: zyris
+        shell: bash
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
+        run: |
+          MONO_ARG=""
+          if [ "${{ inputs.module }}" = "mono" ]; then
+            MONO_ARG="module_mono_enabled=yes"
+          fi
+
+          if [ "${{ inputs.target }}" = "editor" ]; then
+            scons platform=linuxbsd target=editor dev_build=yes tests=yes -j2 arch=${{ inputs.arch }} $MONO_ARG
+          else
+            scons platform=linuxbsd target=${{ inputs.target }} precision=single -j2 arch=${{ inputs.arch }} $MONO_ARG
+          fi
+
+      - name: Update Doc Classes
+        id: doctool
+        if: inputs.target == 'editor' && inputs.module == 'standard'
+        uses: ./.github/actions/update-doc-classes
+        continue-on-error: true
+
+      - name: Sync Modified Documentation
+        if: inputs.target == 'editor' && inputs.module == 'standard' && steps.doctool.outputs.docs_modified == 'true'
+        shell: bash
+        run: |
+          mv zyris/modules/${{ env.MODULE_NAME }} src
+
+      - name: Pull Latest Branch Status
+        if: inputs.target == 'editor' && inputs.module == 'standard' && github.event_name != 'pull_request' && !startsWith(github.ref, 'refs/tags/') && steps.doctool.outputs.docs_modified == 'true'
+        shell: bash
+        run: git pull --rebase origin ${{ github.ref_name }} --autostash
+
+      - name: Auto-Commit Documentation Updates
+        if: inputs.target == 'editor' && inputs.module == 'standard' && github.event_name != 'pull_request' && !startsWith(github.ref, 'refs/tags/') && steps.doctool.outputs.docs_modified == 'true'
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          branch: ${{ github.ref_name }}
+          commit_message: "docs: synchronize XML class reference"
+          file_pattern: "src/doc_classes/*.xml doc/source/classes/*.rst"
+
+      - name: Save .scons_cache
+        uses: ./.github/actions/zyris-cache-save
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: linux_${{ inputs.arch }}_${{ inputs.target }}_${{ inputs.module }}_engine-${{ env.ZYRIS_VER }}
+
+      - name: Prepare Artifact
+        shell: bash
+        run: |
+          # Clean versions (hyphen to dot)
+          PLUGIN_VER=$(echo "${{ inputs.plugin_version }}" | tr '-' '.')
+          ZYRIS_VER=$(echo "${{ inputs.zyris_version }}" | tr '-' '.')
+
+          # Module part
+          MODULE_PART=""
+          if [ "${{ inputs.module }}" = "mono" ]; then
+            MODULE_PART="dotnet."
+          fi
+
+          mkdir -p out/artifact
+
+          # Use find for robust binary discovery
+          BINARY_PATH=$(find zyris/bin/ -maxdepth 1 -name "*linuxbsd*" -not -path '*/.*' | head -n 1)
+          if [ -n "$BINARY_PATH" ]; then
+            cp "$BINARY_PATH" out/artifact/
+            echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.linux.${{ inputs.arch }}" >> $GITHUB_ENV
+          else
+            echo "::error::Binary not found"
+            ls -F zyris/bin/
+            exit 1
+          fi
+          echo "artifact_path=out/artifact/" >> $GITHUB_ENV
+
+      - name: Upload Zyris Binary (with Module)
+        uses: actions/upload-artifact@v4.6.1
+        with:
+          name: ${{ env.artifact_name }}
+          path: ${{ env.artifact_path }}

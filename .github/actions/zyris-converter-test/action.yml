@@ -1,0 +1,20 @@
+name: Test Zyris project converter
+description: Test the Zyris project converter.
+
+inputs:
+  bin:
+    description: The path to the Zyris executable
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Test 3-to-4 conversion
+      shell: sh
+      run: |
+        mkdir converter_test
+        cd converter_test
+        touch project.godot
+        ../${{ inputs.bin }} --headless --validate-conversion-3to4
+        cd ..
+        rm converter_test -rf

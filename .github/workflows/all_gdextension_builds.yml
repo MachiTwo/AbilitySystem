@@ -1,0 +1,75 @@
+name: 🧩 All GDExtension Builds
+
+on:
+  workflow_call:
+    inputs:
+      plugin-version:
+        required: true
+        type: string
+
+jobs:
+  setup:
+    name: 🔍 Setup Godot CPP
+    runs-on: ubuntu-latest
+    outputs:
+      godot_cpp_version: ${{ steps.vars.outputs.godot_cpp_version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - id: vars
+        name: Export Version
+        shell: bash
+        run: |
+          # Read from deps.env and export as output
+          GC_VER=$(grep "GODOT_CPP_API_VERSION=" deps.env | cut -d "=" -f 2 | tr -d " ")
+          echo "godot_cpp_version=$GC_VER" >> $GITHUB_OUTPUT
+          echo "Detected godot-cpp version: $GC_VER"
+
+  linux:
+    name: 🐧 Linux
+    needs: setup
+    uses: ./.github/workflows/linux_gdextension_builds.yml
+    with:
+      plugin-version: ${{ inputs.plugin-version }}
+      godot-cpp-version: ${{ needs.setup.outputs.godot_cpp_version }}
+
+  windows:
+    name: 🏁 Windows
+    needs: setup
+    uses: ./.github/workflows/windows_gdextension_builds.yml
+    with:
+      plugin-version: ${{ inputs.plugin-version }}
+      godot-cpp-version: ${{ needs.setup.outputs.godot_cpp_version }}
+
+  macos:
+    name: 🍎 macOS
+    needs: setup
+    uses: ./.github/workflows/macos_gdextension_builds.yml
+    with:
+      plugin-version: ${{ inputs.plugin-version }}
+      godot-cpp-version: ${{ needs.setup.outputs.godot_cpp_version }}
+
+  android:
+    name: 🤖 Android
+    needs: setup
+    uses: ./.github/workflows/android_gdextension_builds.yml
+    with:
+      plugin-version: ${{ inputs.plugin-version }}
+      godot-cpp-version: ${{ needs.setup.outputs.godot_cpp_version }}
+
+  ios:
+    name: 🍏 iOS
+    needs: setup
+    uses: ./.github/workflows/ios_gdextension_builds.yml
+    with:
+      plugin-version: ${{ inputs.plugin-version }}
+      godot-cpp-version: ${{ needs.setup.outputs.godot_cpp_version }}
+
+  web:
+    name: 🌐 Web
+    needs: setup
+    uses: ./.github/workflows/web_gdextension_builds.yml
+    with:
+      plugin-version: ${{ inputs.plugin-version }}
+      godot-cpp-version: ${{ needs.setup.outputs.godot_cpp_version }}
