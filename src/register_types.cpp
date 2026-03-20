@@ -30,6 +30,14 @@
 
 #include "register_types.h"
 
+#ifdef ABILITY_SYSTEM_UNIT_TESTS
+#include "src/tests/unit/test_signal_watcher.h"
+#endif
+
+#ifdef ABILITY_SYSTEM_INTEGRATION_TESTS
+#include "src/tests/integration/test_signal_watcher.h"
+#endif
+
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/os.hpp>
@@ -86,6 +94,14 @@
 #endif
 #endif
 
+#ifdef ABILITY_SYSTEM_UNIT_TESTS
+extern int as_run_unit_tests(int p_test_mode);
+#endif
+
+#ifdef ABILITY_SYSTEM_INTEGRATION_TESTS
+extern int as_run_integration_tests(int p_test_mode);
+#endif
+
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 static AbilitySystem *as_singleton = nullptr;
@@ -97,12 +113,21 @@ static AbilitySystem *as_singleton = nullptr;
 void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 #endif
 	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
+#ifdef ABILITY_SYSTEM_UNIT_TESTS
+		GDREGISTER_CLASS(ASTestSignalWatcher);
+#endif
+
+#ifdef ABILITY_SYSTEM_INTEGRATION_TESTS
+		GDREGISTER_CLASS(ASTestSignalWatcher);
+#endif
+
 		GDREGISTER_CLASS(AbilitySystem);
 		GDREGISTER_CLASS(ASTagSpec);
 		GDREGISTER_CLASS(ASAbility);
 		GDREGISTER_CLASS(ASAbilitySpec);
 		GDREGISTER_CLASS(ASContainer);
 		GDREGISTER_CLASS(ASStateSnapshot);
+		// snapshot state is populated in runtime.
 		GDREGISTER_CLASS(ASAttribute);
 		GDREGISTER_CLASS(ASAttributeSet);
 		GDREGISTER_CLASS(ASEffect);
@@ -121,6 +146,33 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 #else
 		Engine::get_singleton()->add_singleton(Engine::Singleton("AbilitySystem", as_singleton));
 #endif
+
+		// Test Execution Logic
+		bool ran_tests = false;
+		int test_result = 0;
+		PackedStringArray args = OS::get_singleton()->get_cmdline_args();
+
+#ifdef ABILITY_SYSTEM_UNIT_TESTS
+		if (args.find("--run-ability-tests-unit") != -1) {
+			test_result = as_run_unit_tests(1);
+			ran_tests = true;
+		}
+#endif
+
+#ifdef ABILITY_SYSTEM_INTEGRATION_TESTS
+		if (args.find("--run-ability-tests-integration") != -1) {
+			test_result = as_run_integration_tests(2);
+			ran_tests = true;
+		}
+#endif
+
+		if (ran_tests) {
+			if (test_result != 0) {
+				UtilityFunctions::print("[ABILITY SYSTEM] [FAILED] TESTS FAILED!");
+			} else {
+				UtilityFunctions::print("[ABILITY SYSTEM] [SUCCESS] TESTS PASSED!");
+			}
+		}
 	}
 
 #ifdef TOOLS_ENABLED
