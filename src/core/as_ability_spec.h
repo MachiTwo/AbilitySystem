@@ -62,6 +62,8 @@ class ASAbilitySpec : public RefCounted {
 protected:
 	static void _bind_methods();
 
+	friend class ASComponent;
+
 private:
 	Ref<ASAbility> ability;
 	bool is_active = false;
@@ -71,6 +73,11 @@ private:
 
 	float total_duration = 0.0f;
 	float duration_remaining = 0.0f;
+
+	// Hierarchical tracking
+	ObjectID parent_id;
+	Vector<Ref<ASAbilitySpec>> sub_specs;
+	int current_phase_index = -1;
 
 public:
 	void init(Ref<ASAbility> p_ability, int p_level = 1);
@@ -90,6 +97,16 @@ public:
 
 	void set_duration_remaining(float p_duration) { duration_remaining = p_duration; }
 	float get_duration_remaining() const { return duration_remaining; }
+
+	void set_parent_id(ObjectID p_id) { parent_id = p_id; }
+	ObjectID get_parent_id() const { return parent_id; }
+
+	void add_sub_spec(Ref<ASAbilitySpec> p_spec) { sub_specs.push_back(p_spec); }
+	void remove_sub_spec(Ref<ASAbilitySpec> p_spec);
+	Vector<Ref<ASAbilitySpec>> get_sub_specs() const { return sub_specs; }
+
+	void set_current_phase_index(int p_index) { current_phase_index = p_index; }
+	int get_current_phase_index() const { return current_phase_index; }
 
 	void activate(Object *p_target_node = nullptr);
 	void deactivate();

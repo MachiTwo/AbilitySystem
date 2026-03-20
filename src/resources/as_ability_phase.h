@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  as_ability.h                                                          */
+/*  as_ability_phase.h                                                    */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -53,10 +53,9 @@ using namespace godot;
 class ASComponent;
 class ASAbilitySpec;
 class ASCue;
-class ASAbilityPhase;
 
-class ASAbility : public Resource {
-	GDCLASS(ASAbility, Resource);
+class ASAbilityPhase : public ASAbility {
+	GDCLASS(ASAbilityPhase, ASAbility);
 
 	friend class ASAbilitySpec;
 
@@ -73,7 +72,7 @@ public:
 		TRIGGER_ON_EVENT, // Triggered when a matching ASEvent is dispatched on this component
 	};
 
-protected:
+private:
 	String ability_name;
 	StringName ability_tag;
 	TypedArray<StringName> activation_owned_tags;
@@ -108,11 +107,6 @@ protected:
 	float cooldown_duration = 0.0;
 	TypedArray<StringName> cooldown_tags;
 	bool use_custom_cooldown = false;
-
-	// Hierarchical and Phases
-	TypedArray<ASAbility> sub_abilities;
-	TypedArray<StringName> sub_abilities_auto_activate;
-	TypedArray<ASAbilityPhase> phases;
 
 protected:
 	static void _bind_methods();
@@ -188,18 +182,10 @@ public:
 	void set_use_custom_costs(bool p_use);
 	bool get_use_custom_costs() const;
 
+	// Trigger methods
 	void set_triggers(const TypedArray<Dictionary> &p_triggers);
 	TypedArray<Dictionary> get_triggers() const;
 	void add_trigger(const StringName &p_tag, TriggerType p_type);
-
-	void set_sub_abilities(const TypedArray<ASAbility> &p_abilities) { sub_abilities = p_abilities; }
-	TypedArray<ASAbility> get_sub_abilities() const { return sub_abilities; }
-
-	void set_sub_abilities_auto_activate(const TypedArray<StringName> &p_tags) { sub_abilities_auto_activate = p_tags; }
-	TypedArray<StringName> get_sub_abilities_auto_activate() const { return sub_abilities_auto_activate; }
-
-	void set_phases(const TypedArray<ASAbilityPhase> &p_phases) { phases = p_phases; }
-	TypedArray<ASAbilityPhase> get_phases() const { return phases; }
 
 	// Requirement methods
 	void set_requirements(const TypedArray<Dictionary> &p_requirements);

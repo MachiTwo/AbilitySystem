@@ -91,6 +91,10 @@ void ASEffect::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_blocked_tags"), &ASEffect::get_blocked_tags);
 	ClassDB::bind_method(D_METHOD("set_removed_tags", "tags"), &ASEffect::set_removed_tags);
 	ClassDB::bind_method(D_METHOD("get_removed_tags"), &ASEffect::get_removed_tags);
+	ClassDB::bind_method(D_METHOD("set_events_on_apply", "events"), &ASEffect::set_events_on_apply);
+	ClassDB::bind_method(D_METHOD("get_events_on_apply"), &ASEffect::get_events_on_apply);
+	ClassDB::bind_method(D_METHOD("set_events_on_remove", "events"), &ASEffect::set_events_on_remove);
+	ClassDB::bind_method(D_METHOD("get_events_on_remove"), &ASEffect::get_events_on_remove);
 	ClassDB::bind_method(D_METHOD("set_cues", "cues"), &ASEffect::set_cues);
 	ClassDB::bind_method(D_METHOD("get_cues"), &ASEffect::get_cues);
 
@@ -113,8 +117,11 @@ void ASEffect::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "granted_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_granted_tags", "get_granted_tags");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "blocked_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_blocked_tags", "get_blocked_tags");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "removed_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_removed_tags", "get_removed_tags");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "events_on_apply", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_events_on_apply", "get_events_on_apply");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "events_on_remove", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_events_on_remove", "get_events_on_remove");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "cues", PROPERTY_HINT_RESOURCE_TYPE, "ASCue"), "set_cues", "get_cues");
 
+	ADD_GROUP("Requirements", "");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "modifiers", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_ARRAY, "Modifiers,modifiers/"), "set_modifiers_count", "get_modifiers_count");
 	ADD_PROPERTY(PropertyInfo(Variant::INT, "requirements", PROPERTY_HINT_NONE, "", PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_ARRAY, "Requirements,requirements/"), "set_requirements_count", "get_requirements_count");
 
@@ -389,6 +396,19 @@ void ASEffect::set_removed_tags(const TypedArray<StringName> &p_tags) {
 			AbilitySystem::get_singleton()->register_tag(p_tags[i], AbilitySystem::TAG_TYPE_CONDITIONAL);
 		}
 	}
+}
+
+void ASEffect::set_events_on_apply(const TypedArray<StringName> &p_events) {
+	events_on_apply = p_events;
+	if (AbilitySystem::get_singleton()) {
+		for (int i = 0; i < p_events.size(); i++) {
+			AbilitySystem::get_singleton()->register_tag(p_events[i], AbilitySystem::TAG_TYPE_EVENT);
+		}
+	}
+}
+
+TypedArray<StringName> ASEffect::get_events_on_apply() const {
+	return events_on_apply;
 }
 
 void ASEffect::set_cues(const TypedArray<ASCue> &p_cues) {

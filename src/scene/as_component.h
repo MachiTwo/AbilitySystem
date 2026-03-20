@@ -33,6 +33,8 @@
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/as_effect_spec.h"
 #include "src/resources/as_ability.h"
+#include "src/resources/as_event.h"
+#include "src/resources/as_state_snapshot.h"
 #include <godot_cpp/classes/audio_stream.hpp>
 #include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/core/gdvirtual.gen.inc>
@@ -46,6 +48,8 @@
 #include "core/templates/vector.h"
 #include "modules/ability_system/core/as_effect_spec.h"
 #include "modules/ability_system/resources/as_ability.h"
+#include "modules/ability_system/resources/as_event.h"
+#include "modules/ability_system/resources/as_state_snapshot.h"
 #include "scene/main/node.h"
 #include "servers/audio/audio_stream.h"
 #endif
@@ -55,12 +59,6 @@
 
 class CharacterBody2D;
 class CharacterBody3D;
-class AnimationPlayer;
-class AnimatedSprite2D;
-class AnimatedSprite3D;
-class AudioStreamPlayer;
-class AudioStreamPlayer2D;
-class AudioStreamPlayer3D;
 #endif
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
@@ -79,20 +77,37 @@ class ASCueSpec;
 class ASContainer;
 class ASPackage;
 class ASStateSnapshot;
+class ASComponent;
 
 // In GDExtension mode, all Godot classes live inside namespace godot.
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 namespace godot {
 class CharacterBody2D;
 class CharacterBody3D;
-class AnimationPlayer;
-class AnimatedSprite2D;
-class AnimatedSprite3D;
-class AudioStreamPlayer;
-class AudioStreamPlayer2D;
-class AudioStreamPlayer3D;
 } // namespace godot
 #endif
+
+/**
+ * ASEventData
+ * Data payload for transient events at runtime.
+ */
+struct ASEventData {
+	StringName event_tag;
+	Node *instigator = nullptr;
+	Node *target = nullptr;
+	float magnitude = 0.0f;
+	Dictionary custom_payload;
+	double timestamp = 0.0;
+};
+
+/**
+ * ASEventHistoricalEntry
+ * Entry for the historical buffer of events.
+ */
+struct ASEventHistoricalEntry {
+	ASEventData data;
+	uint64_t tick = 0;
+};
 
 /**
  * ASComponent (ASC)
@@ -102,6 +117,10 @@ class ASComponent : public Node {
 	GDCLASS(ASComponent, Node);
 
 public:
+	// Events Historical
+	Vector<ASEventHistoricalEntry> _event_history;
+	uint32_t _event_history_max_size = 64;
+
 	CharacterBody2D *character_body_2d = nullptr;
 	CharacterBody3D *character_body_3d = nullptr;
 	HashMap<StringName, Node *> registered_nodes;
@@ -193,12 +212,12 @@ public:
 
 	// --- Ability Activation API (Transient execution) ---
 	bool can_activate_ability_by_tag(const StringName &p_tag);
-	bool try_activate_ability_by_tag(const StringName &p_tag);
+	bool try_activate_ability_by_tag(const StringName &p_tag, Object *p_target_node = nullptr);
 	void cancel_ability_by_tag(const StringName &p_tag);
 	bool is_ability_active(const StringName &p_tag) const;
 
 	bool can_activate_ability_by_resource(const Ref<ASAbility> &p_ability);
-	bool try_activate_ability_by_resource(const Ref<ASAbility> &p_ability);
+	bool try_activate_ability_by_resource(const Ref<ASAbility> &p_ability, Object *p_target_node = nullptr, ObjectID p_parent_id = ObjectID());
 	void cancel_ability_by_resource(const Ref<ASAbility> &p_ability);
 
 	void cancel_all_abilities();
@@ -262,6 +281,11 @@ public:
 	void register_cue_resource(Ref<ASCue> p_cue);
 	void unregister_cue_resource(const StringName &p_tag);
 	Ref<ASCue> get_cue_resource(const StringName &p_tag) const;
+
+	// --- AS Events API ---
+	void dispatch_event(const StringName &p_tag, Node *p_instigator = nullptr, float p_magnitude = 0.0f, const Dictionary &p_custom_payload = Dictionary());
+	bool has_event_occurred(const StringName &p_tag, float p_lookback_sec = 1.0f) const;
+	void clear_event_history();
 
 	// --- Montage API ---
 	void play_montage(const StringName &p_name, Node *p_target = nullptr);

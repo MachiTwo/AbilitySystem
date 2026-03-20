@@ -59,6 +59,9 @@ void ASContainer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_cues", "cues"), &ASContainer::set_cues);
 	ClassDB::bind_method(D_METHOD("get_cues"), &ASContainer::get_cues);
 
+	ClassDB::bind_method(D_METHOD("set_events", "events"), &ASContainer::set_events);
+	ClassDB::bind_method(D_METHOD("get_events"), &ASContainer::get_events);
+
 	ClassDB::bind_method(D_METHOD("has_ability", "ability"), &ASContainer::has_ability);
 	ClassDB::bind_method(D_METHOD("has_effect", "effect"), &ASContainer::has_effect);
 	ClassDB::bind_method(D_METHOD("has_cue", "tag"), &ASContainer::has_cue);
@@ -72,6 +75,7 @@ void ASContainer::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::OBJECT, "attribute_set", PROPERTY_HINT_RESOURCE_TYPE, "ASAttributeSet"), "set_attribute_set", "get_attribute_set");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "effects", PROPERTY_HINT_ARRAY_TYPE, "ASEffect"), "set_effects", "get_effects");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "cues", PROPERTY_HINT_ARRAY_TYPE, "ASCue"), "set_cues", "get_cues");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "events", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_events", "get_events");
 }
 
 bool ASContainer::has_ability(const Ref<ASAbility> &p_ability) const {
@@ -179,6 +183,15 @@ void ASContainer::add_effect(const Ref<ASEffect> &p_effect) {
 void ASContainer::add_cue(const Ref<ASCue> &p_cue) {
 	if (p_cue.is_valid()) {
 		cues.push_back(p_cue);
+	}
+}
+
+void ASContainer::set_events(const TypedArray<StringName> &p_events) {
+	events = p_events;
+	if (AbilitySystem::get_singleton()) {
+		for (int i = 0; i < p_events.size(); i++) {
+			AbilitySystem::get_singleton()->register_tag(p_events[i], AbilitySystem::TAG_TYPE_EVENT);
+		}
 	}
 }
 

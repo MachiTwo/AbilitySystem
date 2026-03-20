@@ -73,6 +73,9 @@ private:
 	// Cue resources for visual/audio feedback.
 	TypedArray<ASCue> cues;
 
+	// Event tags this archetype is subscribed to.
+	TypedArray<StringName> events;
+
 protected:
 	static void _bind_methods();
 
@@ -92,6 +95,10 @@ public:
 	// Cues
 	void set_cues(const TypedArray<ASCue> &p_cues) { cues = p_cues; }
 	TypedArray<ASCue> get_cues() const { return cues; }
+
+	// Events (Subscription)
+	void set_events(const TypedArray<StringName> &p_events) { events = p_events; }
+	TypedArray<StringName> get_events() const { return events; }
 
 	// Dynamic modification
 	void add_ability(const Ref<ASAbility> &p_ability);

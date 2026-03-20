@@ -60,6 +60,7 @@ private:
 	TypedArray<StringName> effect_tags;
 	TypedArray<ASCue> cues;
 	TypedArray<StringName> cue_tags;
+	TypedArray<StringName> events_on_deliver;
 
 protected:
 	static void _bind_methods();
@@ -86,6 +87,9 @@ public:
 	TypedArray<StringName> get_cue_tags() const { return cue_tags; }
 	void add_cue_tag(const StringName &p_tag);
 	void remove_cue_tag(const StringName &p_tag);
+
+	void set_events_on_deliver(const TypedArray<StringName> &p_events) { events_on_deliver = p_events; }
+	TypedArray<StringName> get_events_on_deliver() const { return events_on_deliver; }
 
 	ASPackage();
 	~ASPackage();

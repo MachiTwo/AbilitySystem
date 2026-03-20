@@ -127,6 +127,8 @@ private:
 	TypedArray<StringName> blocked_tags;
 	TypedArray<StringName> removed_tags;
 	TypedArray<ASCue> cues;
+	TypedArray<StringName> events_on_apply;
+	TypedArray<StringName> events_on_remove;
 
 public:
 	void set_effect_name(const String &p_name);
@@ -179,6 +181,12 @@ public:
 
 	void set_cues(const TypedArray<ASCue> &p_cues);
 	TypedArray<ASCue> get_cues() const { return cues; }
+
+	void set_events_on_apply(const TypedArray<StringName> &p_events);
+	TypedArray<StringName> get_events_on_apply() const { return events_on_apply; }
+
+	void set_events_on_remove(const TypedArray<StringName> &p_events);
+	TypedArray<StringName> get_events_on_remove() const { return events_on_remove; }
 
 	void set_modifiers_count(int p_count);
 	int get_modifiers_count() const;

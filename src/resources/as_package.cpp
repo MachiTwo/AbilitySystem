@@ -30,7 +30,9 @@
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/resources/as_package.h"
+#include "src/core/ability_system.h"
 #else
+#include "modules/ability_system/core/ability_system.h"
 #include "modules/ability_system/resources/as_package.h"
 #endif
 
@@ -61,6 +63,9 @@ void ASPackage::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("add_cue_tag", "tag"), &ASPackage::add_cue_tag);
 	ClassDB::bind_method(D_METHOD("remove_cue_tag", "tag"), &ASPackage::remove_cue_tag);
 
+	ClassDB::bind_method(D_METHOD("set_events_on_deliver", "events"), &ASPackage::set_events_on_deliver);
+	ClassDB::bind_method(D_METHOD("get_events_on_deliver"), &ASPackage::get_events_on_deliver);
+
 	ADD_GROUP("Effects", "effects_");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "effects_resources", PROPERTY_HINT_ARRAY_TYPE, "ASEffect"), "set_effects", "get_effects");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "effects_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_effect_tags", "get_effect_tags");
@@ -68,6 +73,9 @@ void ASPackage::_bind_methods() {
 	ADD_GROUP("Cues", "cues_");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "cues_resources", PROPERTY_HINT_ARRAY_TYPE, "ASCue"), "set_cues", "get_cues");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "cues_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_cue_tags", "get_cue_tags");
+
+	ADD_GROUP("Events", "events_");
+	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "events_on_deliver", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_events_on_deliver", "get_events_on_deliver");
 }
 
 void ASPackage::add_effect(const Ref<ASEffect> &p_effect) {
@@ -119,6 +127,15 @@ void ASPackage::remove_cue_tag(const StringName &p_tag) {
 	int idx = cue_tags.find(p_tag);
 	if (idx != -1) {
 		cue_tags.remove_at(idx);
+	}
+}
+
+void ASPackage::set_events_on_deliver(const TypedArray<StringName> &p_events) {
+	events_on_deliver = p_events;
+	if (AbilitySystem::get_singleton()) {
+		for (int i = 0; i < p_events.size(); i++) {
+			AbilitySystem::get_singleton()->register_tag(p_events[i], AbilitySystem::TAG_TYPE_EVENT);
+		}
 	}
 }
 

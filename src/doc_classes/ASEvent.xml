@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<class name="ASEvent" inherits="Resource" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
+	<brief_description>
+		Data-driven payload for transient events.
+	</brief_description>
+	<description>
+		[ASEvent] is a transient object used to broadcast signals between components. Unlike Tags, events carry data (instigator, magnitude, payload) and are intended for short-lived occurrences that triggers reactions (e.g., an Ability with [constant ASAbility.TRIGGER_ON_EVENT]).
+	</description>
+	<tutorials>
+	</tutorials>
+	<members>
+		<member name="custom_payload" type="Dictionary" setter="set_custom_payload" getter="get_custom_payload" default="{}">
+			Optional dictionary containing custom data for the event.
+		</member>
+		<member name="event_tag" type="StringName" setter="set_event_tag" getter="get_event_tag" default="&amp;&quot;&quot;">
+			The Tag that identifies the type of event. Should be of type [constant AbilitySystem.TAG_TYPE_EVENT].
+		</member>
+		<member name="instigator" type="Node" setter="set_instigator" getter="get_instigator" default="null">
+			The Node that caused this event to occur.
+		</member>
+		<member name="magnitude" type="float" setter="set_magnitude" getter="get_magnitude" default="0.0">
+			A numerical value associated with the event (e.g., damage amount, impact force).
+		</member>
+		<member name="timestamp" type="float" setter="set_timestamp" getter="get_timestamp" default="0.0">
+			The engine time (in seconds) when this event was dispatched.
+		</member>
+	</members>
+</class>

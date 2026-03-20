@@ -26,31 +26,169 @@ Nenhuma lógica de negócio existe sem um teste que a justifique.
 
 ---
 
-## 2. IDENTIFICADORES: AS TAGS (DNA DO SISTEMA)
+## 2. A MATRIZ DE IDENTIDADE: TAGS (O "ESTADO")
 
-Tags não são classes; são **Identificadores Hierárquicos Superpoderosos** baseados em `StringName`.
+Tags não são classes; são **Identificadores Hierárquicos Superpoderosos** baseados em `StringName`. Representam a verdade absoluta sobre o estado presente de um Ator.
 
-### 2.1 Tag (Identificador)
+### 2.1 Regras de Ouro das Tags (O que eu SOU)
 
-- **Papel:** Representar estados, ações ou categorias (ex: `State.Dead`, `Ability.Fireball`).
+- **Papel:** Representar estados contínuos, características e bloqueios (ex: `State.Dead`, `Status.Stunned`).
+- **Natureza:** Persistentes. Requerem adição formal (`add_tag`) e remoção formal (`remove_tag`). Consomem tempo de CPU no cálculo de RefCounts no `ASTagSpec`.
+- **Pergunta que responde:** _"Neste exato microssegundo, este ator está sob a condição X?"_
+- **Proibição Absoluta (Anti-Padrão):** NUNCA usar tags para representar ocorrências instantâneas (ex: NÃO usar `State.JustGotHit`). Se a condição dura apenas 1 frame ou serve para alertar outros sistemas, DEVE ser um Evento, nunca uma Tag.
 
-- **Regra:** Devem ser tratadas como imutáveis e globais. A comparação deve suportar hierarquia (checar `State` encontra `State.Dead`).
+### 2.2 Os 3 Tipos Canônicos de Tag (Tag Types)
 
-- **Lógica de Ativação:** O sistema suporta 4 estados lógicos em Blueprints (Ability/Effect/Cue):
-  - `Required All` (AND): Sucesso se tiver todos.
-  - `Required Any` (OR): Sucesso se tiver pelo menos um.
-  - `Blocked Any` (OR): Falha se tiver qualquer um.
-  - `Blocked All` (AND): Falha apenas se tiver todos simulatenamente.
+O `Tag Type` define o **papel semântico** que uma tag tem no sistema. É o campo que determina como o Singleton e o Editor tratam aquele identificador.
 
-### 2.2 Tag Type & Tag Group
+| Tipo          | Prefixo Convencional | Papel                                                                                                                 | Exemplo                                     |
+| ------------- | -------------------- | --------------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `NAME`        | `Char.` / `Team.`    | Identidade e categorização estática do ator                                                                           | `Char.Warrior`, `Team.Blue`                 |
+| `CONDITIONAL` | `State.` / `Status.` | Estado persistente de gameplay que pode ser adicionado/removido do ator                                               | `State.Stunned`, `Status.Poisoned`          |
+| `EVENT`       | `Event.`             | Identificadores de ocorrências. Registrados para autocomplete e sem typos, mas **o payload jamais sobe ao Singleton** | `Event.Weapon.Hit`, `Event.Damage.Critical` |
 
-- **Tag Type:** Define a natureza técnica da tag (ex: `NAME`, `CONDITIONAL`). Determina como o sistema lida com ela no backend.
+### 2.2.1 Tag Groups (Organização Visual)
 
-- **Tag Group:** Organização lógica exclusiva para o Editor. Agrupa tags relacionadas para facilitar a busca e manipulação visual.
+**Tag Groups não são entidades de código.** São uma convenção editorial que emerge automaticamente da hierarquia de pontos (`.`) no identificador da tag.
+
+- O `ASTagsPanel` renderiza as tags como uma **árvore**, usando cada segmento separado por `.` como nó pai.
+- `State.Stunned`, `State.Dead` e `State.Frozen` aparecem automaticamente agrupados sob o nó visual `State`.
+- Não existe um objeto `TagGroup` em C++ — o "grupo" é apenas o prefixo compartilhado.
+- **Convenção obrigatória:** O prefixo raiz de uma tag DEVE refletir seu `Tag Type` (ex: tags `Event.*` são sempre `TAG_TYPE_EVENT`; nunca misturar).
+
+### 2.3 Avaliação Lógica (Predicados)
+
+O sistema suporta 4 estados lógicos em Blueprints (Ability, Effect, Cue) na hora de avaliar os requisitos e bloqueios de um alvo:
+
+- `Required All` (AND): Sucesso se possuir TODAS.
+- `Required Any` (OR): Sucesso se possuir PELO MENOS UMA.
+- `Blocked Any` (OR): Falha se possuir QUALQUER UMA.
+- `Blocked All` (AND): Falha se possuir TODAS SIMULTANEAMENTE.
+
+> [!NOTE]
+> Predicados funcionam exclusivamente sobre tags `CONDITIONAL`. Tags do tipo `NAME` e `EVENT` não entram em listas de requisito/bloqueio de blueprints. O Editor enforce isso automaticamente via `ASInspectorPlugin`.
 
 ---
 
-## 3. O SINGLETON: ABILITY SYSTEM (INTERFACE DE PROJETO)
+## 3. O SISTEMA NERVOSO: EVENTS E HISTÓRICO (A "AÇÃO")
+
+Diferente das Tags, os **AS Events** são mensageiros instantâneos (sinais transitórios) que fluem pelo sistema informando acontecimentos cruciais. Eles impedem o espaguete de código e eliminam a prática destrutiva de adicionar/remover tags no mesmo tick.
+
+### 3.1 Regras de Ouro dos Events (O que ACONTECEU)
+
+- **Papel:** Representar ocorrências pontuais e informativas (ex: `Event.Weapon.Hit`, `Event.Ability.Failed`, `Event.Damage.Critical`).
+- **Natureza:** Voláteis/Fugazes. São disparados (`dispatch_event`) e processados pelo barramento de eventos instantaneamente.
+- **Pergunta que responde:** _"O que acabou de acontecer, onde, e quão forte foi?"_
+
+### 3.2 O Payload do Evento (`ASEvent`)
+
+Um evento jamais é apenas um nome. O poder reside no seu Payload (`ASEvent`), transmitindo contexto completo:
+
+- `event_tag`: O identificador exato da ocorrência (ex: `Event.Interrupt`).
+- `instigator`: O Node que causou (ofensor).
+- `target`: O Node afetado (vítima).
+- `magnitude`: Intensidade base do evento (Poder do impacto).
+- `custom_payload`: Dicionário GDScript/Variant para transporte de arrays e metadados customizados.
+- `timestamp`: Registrado nativamente em milissegundos precisos.
+
+### 3.3 A Memória de Curto Prazo (Events Historical)
+
+Eventos morrem em 1 tick, mas sua _"memória"_ persiste de forma levíssima:
+
+- O `ASComponent` mantém um `_event_history` (buffer circular C++ super otimizado de até 64 entradas).
+- **Como utilizar na prática:** Componentes reativos (como _Parry_ ou _Counter-Attack_) não precisam estar no estado eterno de "parrying". Podem checar o passado recente: `has_event_occurred(&"Event.Damage.Block", 0.4)`. Se o bloqueio aconteceu no último 0.4s, autorize a habilidade de contra-ataque.
+- **Regra:** Nunca usar este cache para persistir história (missões, quests). Use exclusivamente para frames de reatividade temporal.
+
+### 3.4 O Padrão de Registro Dividido (Split Registry)
+
+Os identificadores de Evento (ex: `Event.Weapon.Hit`) **são registrados no Singleton** como qualquer outra tag — para funcionar no autocompletar do editor, no `ASTagsPanel` e evitar erros de digitação dos designers. A diferença está no tipo: eles são cadastrados como `Tag Type = EVENT`.
+
+O que **nunca** sobe ao Singleton é a **instância de dados** — o struct `ASEvent` com `instigator`, `magnitude`, e `custom_payload`. Essa separação configura o padrão de **Registro Dividido**:
+
+- **Singleton (Registro):** Conhece o _nome_ `Event.Weapon.Hit`. Garante que existe, que tem o tipo certo e aparece no autocomplete.
+- **ASComponent (Ocorrência):** Conhece o _acontecimento_. Sabe quem bateu, em quem, com qual força e em qual tick. O Singleton não precisa — nem deve — saber disso.
+
+> [!IMPORTANT]
+> **Regra de Ouro:** Nunca chame `dispatch_event` com um `event_tag` que não esteja registrado no Singleton com `Tag Type = EVENT`. Isso seria equivalente a usar um `StringName` digitado à mão sem validação — o campo exato de erros que o sistema foi projetado para eliminar.
+
+### 3.5 Como Emitir um Evento (API e Contrato de Uso)
+
+**Events são sempre imperativos — nunca automáticos.** O sistema não observa passivamente efeitos ou habilidades e emite events por conta própria. Quem emite é o código (GDScript, C++ ou `ASDelivery`).
+
+#### API de Emissão
+
+```gdscript
+# Assinatura: dispatch_event(event_tag, instigator, magnitude, custom_payload)
+var asc: ASComponent = target.get_node("ASComponent")
+asc.dispatch_event(&"Event.Weapon.Hit", self, 35.0, {})
+```
+
+#### Quem pode emitir:
+
+| Origem                        | Quando usar                                                            |
+| ----------------------------- | ---------------------------------------------------------------------- |
+| **GDScript / C++ direto**     | Colisões físicas, inputs do jogador, lógica customizada                |
+| **ASDelivery**                | Emite automaticamente o event do `ASPackage.tag` ao colidir com um ASC |
+| **ASAbility (via GDVirtual)** | `_on_activate_ability` pode chamar `dispatch_event` no momento certo   |
+
+#### Events e Resources — a Distinção Fundamental
+
+- **Emissão imperativa (código):** Sempre que você precisar de controle total (colisão física, input, lógica condicional), chame `dispatch_event` diretamente.
+- **Emissão declarativa (Resource):** Um Resource pode **declarar intenção** de quais events devem ser disparados em momentos canônicos do seu ciclo de vida. O executor (`ASComponent`, `ASDelivery`) lê essa lista e chama `dispatch_event` na hora certa.
+- **Reação:** Um `ASAbility` Resource **PODE reagir** a eventos registrando um `TRIGGER_ON_EVENT` na lista de `triggers`.
+- **Resumo:** O Resource é o **declarante/reator**. O executor é sempre o **emissor**.
+
+### 3.6 O Padrão de Declaração de Eventos (Event Declaration Pattern)
+
+Para tornar o sistema data-driven sem quebrar nenhuma regra arquitetural, os Resources **declaram** quais events são relevantes para o ator e em quais momentos devem ser emitidos. O executor (`ASComponent`, `ASDelivery`) ainda é o único a chamar `dispatch_event` — mas lê a intenção do Resource.
+
+> [!NOTE]
+> O Resource **nunca** chama `dispatch_event` diretamente. Ele apenas declara listas de `StringName` com tags `EVENT`. O executor itera essas listas e despacha.
+
+#### Tabela 1 — Inscrição: Quem escuta quais eventos?
+
+Esta é a responsabilidade do `ASContainer`. Sem declarar os eventos aqui, o `ASComponent` não saberá quais event tags roteará para os seus `TRIGGER_ON_EVENT`. É o registro de "este ator é sensível a estes eventos".
+
+| Resource      | Propriedade                 | Papel                                                                                                                                                                      |
+| ------------- | --------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ASContainer` | `events: Array[StringName]` | Declara quais tags `EVENT` o ator está inscrito. Quando o ASComponent é inicializado por este Container, passa a rotear esses eventos para triggers e o historical buffer. |
+
+> [!IMPORTANT]
+> Se `Event.Weapon.Hit` não estiver no `ASContainer` do arqueiro, uma habilidade `Counter-Shot` com `TRIGGER_ON_EVENT = Event.Weapon.Hit` **jamais será ativada**, mesmo que alguém chame `dispatch_event(&"Event.Weapon.Hit", ...)` no componente. O Container é o manifesto de sensibilidade do ator.
+
+#### Tabela 2 — Emissão: Quando cada Resource dispara um evento?
+
+Estes são os momentos canônicos onde o executor lê a lista declarada no Resource e emite os eventos automaticamente.
+
+| Resource    | Propriedade                             | Momento do Disparo                        | Executor      |
+| ----------- | --------------------------------------- | ----------------------------------------- | ------------- |
+| `ASPackage` | `events_on_deliver: Array[StringName]`  | Quando `ASDelivery` entrega ao ASC        | `ASDelivery`  |
+| `ASAbility` | `events_on_activate: Array[StringName]` | Quando a habilidade é ativada com sucesso | `ASComponent` |
+| `ASAbility` | `events_on_end: Array[StringName]`      | Quando a habilidade termina/expira        | `ASComponent` |
+| `ASEffect`  | `events_on_apply: Array[StringName]`    | Quando o efeito é aplicado ao ator        | `ASComponent` |
+
+#### Exemplo: Fluxo completo 100% data-driven
+
+```
+# 1. ASContainer do "Arqueiro" declara que ele escuta:
+ASContainer.events = [&"Event.Weapon.Arrow.Hit", &"Event.Damage.Taken"]
+
+# 2. ASPackage da "Flecha" declara que ela emite ao colidir:
+ASPackage.events_on_deliver = [&"Event.Weapon.Arrow.Hit"]
+
+# 3. ASAbility "Counter-Shot" reage ao evento:
+ASAbility.triggers = [{tag: &"Event.Weapon.Arrow.Hit", type: TRIGGER_ON_EVENT}]
+```
+
+Resultado: Arqueiro é acertado por uma flecha → `ASDelivery` entrega o package → emite `Event.Weapon.Arrow.Hit` → `Counter-Shot` ativa automaticamente. **Nenhuma linha de código no projeto.**
+
+#### Regra de Validação
+
+O editor (via `ASInspectorPlugin`) deve garantir que todas as propriedades `events` e `events_on_*` só aceitem tags do tipo `TAG_TYPE_EVENT` no dropdown.
+
+---
+
+## 4. O SINGLETON: ABILITY SYSTEM (INTERFACE DE PROJETO)
 
 - **Papel:** É a **API de Configuração Global** e a ponte com o `ProjectSettings`.
 
@@ -62,23 +200,23 @@ Tags não são classes; são **Identificadores Hierárquicos Superpoderosos** ba
 
 ---
 
-## 4. CAMADA DE FERRAMENTAS: EDITORES
+## 5. CAMADA DE FERRAMENTAS: EDITORES
 
 Interface entre o Humano e os Resources.
 
-### 4.1 ASEditorPlugin
+### 5.1 ASEditorPlugin
 
 - **Papel:** **Bootloader**.
 
 - **Regra:** Registro de tipos, ícones e inicialização de outros sub-editores. Proibido conter lógica de jogo.
 
-### 4.2 ASTagsPanel
+### 5.2 ASTagsPanel
 
 - **Papel:** Interface visual para o **Registro Global**.
 
 - **Regra:** Manipula exclusivamente o dicionário de tags do `AbilitySystem` Singleton.
 
-### 4.3 ASInspectorPlugin (e Property Selectors)
+### 5.3 ASInspectorPlugin (e Property Selectors)
 
 - **Papel:** Contextualização.
 
@@ -86,7 +224,7 @@ Interface entre o Humano e os Resources.
 
 ---
 
-## 5. OS BLUEPRINTS: RESOURCES (O "O QUE")
+## 6. OS BLUEPRINTS: RESOURCES (O "O QUE")
 
 Localizados em `src/resources/`. São as **Definições de Dados**.
 
@@ -108,17 +246,17 @@ Localizados em `src/resources/`. São as **Definições de Dados**.
 
 - **O que vive aqui:** Valores base, ícones, nomes, tags de requisito e listas de modificadores brutos.
 
-### 5.1 ASAbility & ASEffect (Ações e Modificadores)
+### 6.1 ASAbility & ASEffect (Ações e Modificadores)
 
 - **ASAbility - Papel:** Definir a lógica de uma ação (Custos, Cooldown, Triggers).
 
-- **ASAbility - Regra:** Único Resource capaz de gerenciar requisitos de ativação e custos de atributos através de especificação.
+- **ASAbility - Regra:** Único Resource capaz de gerenciar requisitos de ativação e custos de atributos através de especificação. Suporta **Ability Phases** para execuções complexas.
 
 - **ASEffect - Papel:** Modificador de estado (Buffs, Debuffs, Dano).
 
 - **ASEffect - Regra:** Define políticas de empilhamento (Stacking) e magnitudes de mudança nos atributos.
 
-### 5.2 ASAttribute & ASAttributeSet (O Sistema de Atributos)
+### 6.2 ASAttribute & ASAttributeSet (O Sistema de Atributos)
 
 - **ASAttribute - Papel:** Define os metadados (limites min/max) de uma única estatística.
 
@@ -128,7 +266,7 @@ Localizados em `src/resources/`. São as **Definições de Dados**.
 
 - **ASAttributeSet - Regra (Prioridade):** Modificadores (Flat Add, Multiplier) são aplicados _após_ o cálculo dos Drivers.
 
-### 5.3 ASContainer & ASPackage (Arquétipos e Payloads)
+### 6.3 ASContainer & ASPackage (Arquétipos e Payloads)
 
 - **ASContainer - Papel:** Arquétipo completo (Dicionário de Identidade do Ator).
 
@@ -138,11 +276,22 @@ Localizados em `src/resources/`. São as **Definições de Dados**.
 
 - **ASPackage - Regra:** Deve ser usado exclusivamente para transmitir coleções de efeitos e cues via `ASDelivery`.
 
-### 5.4 ASCue (Feedbacks Visuais)
+### 6.4 ASCue (Feedbacks Visuais)
 
 - **Papel:** Feedback audiovisual puro (Animação, Som, Partículas).
 
 - **Regra:** Proibido alterar qualquer dado de gameplay. Deve ser disparado reativamente.
+
+### 6.5 ASAbilityPhase (O Ciclo de Vida Complexo)
+
+A funcionalidade mais poderosa para designers em termos de "Máquinas de Estado" embutidas (Hierarchical Abilities).
+
+- **Papel:** Fragmentar a execução engessada de uma habilidade em estágios granulares e altamente configuráveis (ex: `Windup`, `Execution`, `Recovery`).
+- **Natureza:** Se uma habilidade padrão age como uma "pistola" (inicia, aplica e termina num click), uma habilidade com Fases atua como um "ritual" com várias etapas no tempo.
+- **Regras Críticas:**
+  - **Temporário & Específico:** Cada Fase pode aplicar e remover seus próprios `ASEffects` transitórios que duram apenas enquanto aquela fase estiver ativa.
+  - **Duração ou Evento:** Uma Fase avança para a próxima de duas formas: (a) Expirou o tempo de duração da fase; (b) Ocorreu o _Transition Trigger Event_ (a habilidade estava aguardando o Node de Animação enviar um Evento `.Hit` para avançar).
+  - **Avisos Autônomos:** A transição entre Fases sempre dispara um AS Event automático da própria framework para permitir fluidez e resposta de UI.
 
 ---
 
@@ -181,6 +330,11 @@ Localizados em `src/core/`. Onde o estado e a lógica de execução residem.
 
 - **ASTagSpec - Regra:** Garante que uma Tag só saia do ator quando todos os seus Specs de origem expirarem.
 
+### 6.3 ASAbilitySpec (Gestão de Fases)
+
+- **Papel:** Gerencia o índice da fase atual e a progressão temporal entre os estágios definidos no `ASAbility`.
+- **Regra:** Deve ser capaz de avançar para a próxima fase via tempo ou via recebimento de um `ASEvent` específico.
+
 ---
 
 ## 7. O ORQUESTRADOR: COMPONENT (O HUB)
@@ -203,6 +357,12 @@ O `ASComponent` (ASC).
 
 - **Node Registry:** O Componente deve manter um registro de aliases de nós (ex: "Muzzle") para que Cues saibam onde instanciar efeitos visuais sem dependências de caminhos de cena.
 
+- **ASEventsHistorical (Memória de Eventos):**
+  - **Papel:** O ASC mantém um buffer circular de eventos recentes para permitir lógica condicional baseada no passado imediato.
+  - **Regra de Ouro:** Não deve ser usado para persistência de longo prazo. É um "cache de reatividade".
+  - **Consultas (Queries):** Permite perguntar: "Ocorreu o evento X nos últimos Y ticks?".
+  - **Sincronia:** Assim como o `ASStateCache`, o histórico de eventos deve ser sensível ao `tick` temporal para garantir consistência em situações de Rollback.
+
 ---
 
 ## 8. SISTEMAS DE ENTREGA E REATIVIDADE
@@ -215,9 +375,9 @@ O `ASComponent` (ASC).
 
 ### 8.2 Ability Triggers (Automação Reativa)
 
-- **Papel:** Permitir ativação automática de habilidades baseada em eventos de estado (Tags).
+- **Papel:** Permitir ativação automática de habilidades baseada em eventos de estado (Tags) ou eventos transitórios (AS Events).
 
-- **Regra:** Ativação baseada exclusivamente em `ON_TAG_ADDED` ou `ON_TAG_REMOVED`.
+- **Regra:** Ativação baseada exclusivamente em `ON_TAG_ADDED`, `ON_TAG_REMOVED` ou `ON_EVENT_RECEIVED`.
 
 ---
 
@@ -256,9 +416,42 @@ O Ability System é projetado para multiplayer autoritativo com suporte a Predi�
 
 ---
 
-## 10. RIGOR TÉCNICO E QUALIDADE DE TESTES
+## 10. O PROTOCOLO DE REATIVIDADE E FLUXOS (A MATRIZ TRICROMÁTICA)
 
-### 10.1 Padrão 300% (Lei de Ferro)
+Para evitar que a arquitetura decline e se torne um emaranhado caótico onde todos os sistemas interferem uns nos outros, estabelecemos o _Protocolo de Reatividade_. Esta é a doutrina de como os 3 Pilares operam em uníssono orquestrado.
+
+### 10.1 A Ordem Natural
+
+1. **INPUT/AÇÃO:** Uma interação, término temporizador ou impacto físico emite um **AS Event** (`Event.Damage`).
+2. **ESCUTA/PROCESSAMENTO:** Uma Entidade escuta via Triggers (`ON_EVENT`).
+3. **MUTAÇÃO:** A habilidade reativa acerta os requisitos, invoca e aplica o mutador (`ASEffect`).
+4. **ESTADO (Fim do Ciclo):** O Effect mutou os atributos ou adicionou permanentemente a **AS Tag** (`State.Stunned`).
+
+> [!CAUTION]
+> **Erros Fatais punidos com refatoração profunda:**
+>
+> - Esperar que uma habilidade inicie baseada em "perda de tag". (Isso é sintoma de acoplamento de estado; dispare um Evento avisando o fim).
+> - Se uma Habilidade falhar num requisito de Tag ou Custo, NUNCA gerencie estado (aplicar tags temporárias). Emita o gatilho `Event.Ability.Failed` relatando por qual motivo (Dicionário Payload), para loggers ou UI reagirem.
+
+### 10.2 Triggers na Era Híbrida
+
+A ativação de Habilidades através do _Ability Triggers_ no Spec passou por revisão de hierarquia. Pode-se construir automação pura através deles:
+
+- `TRIGGER_ON_EVENT`: É o padrão ouro para responsidade de combate (Reagir instantaneamente no impacto).
+- `TRIGGER_ON_TAG_ADDED` / `REMOVED`: É o padrão para automação de ambiente (Ligar aura de lentidão quando entrar na água).
+
+### 10.3 O Pacto do ASDelivery
+
+O componente `ASDelivery` (ex: um míssil ou aura rastreado) carrega o envelope mortífero `ASPackage`.
+
+- **Regra e Obrigação:** Todo ASDelivery, ao concluir rota e aplicar pacote a um ASC alvo, DEVE obrigatoriamente emitir o disparo de Evento invocando `target_asc->dispatch_event(package_tag)`.
+- Isso assegura que "tomar uma fireball na cara" automaticamente preencha a memória temporal do ASC alvo (`ASEventHistorical`), habilitando bloqueios ou triggers reativos purificados.
+
+---
+
+## 11. RIGOR TÉCNICO E QUALIDADE DE TESTES
+
+### 11.1 Padrão 300% (Lei de Ferro)
 
 Cada funcionalidade deve ser provada por pelo menos **3 variações** no mesmo teste:
 
@@ -266,7 +459,7 @@ Cada funcionalidade deve ser provada por pelo menos **3 variações** no mesmo t
 2. **Negative:** Entrada inválida ou falha esperada.
 3. **Edge Case:** Combinações complexas (multi-tags, limites de borda).
 
-### 10.2 Suítes de Teste
+### 11.2 Suítes de Teste
 
 - **Core (Unit):** Atômicos, sem efeitos colaterais.
 
@@ -276,7 +469,7 @@ Cada funcionalidade deve ser provada por pelo menos **3 variações** no mesmo t
 
 ---
 
-## 11. PADRÕES DE NOMENCLATURA DA API (ESPECÍFICOS DO AS)
+## 12. PADRÕES DE NOMENCLATURA DA API (ESPECÍFICOS DO AS)
 
 Para manter a consistência, toda a API pública deve seguir estes padrões próprios do Ability System:
 
@@ -365,7 +558,7 @@ Para garantir segurança e legibilidade no código-fonte GDExtension:
 
 ---
 
-## 12. DESIGN PATTERNS (C++/GDEXTENSION)
+## 13. DESIGN PATTERNS (C++/GDEXTENSION)
 
 O sistema utiliza padrões clássicos adaptados para a arquitetura de alta performance da Godot Engine.
 
@@ -397,7 +590,7 @@ O sistema utiliza padrões clássicos adaptados para a arquitetura de alta perfo
 
 ---
 
-## 13. TEST PATTERNS (RIGOR E DETERMINISMO)
+## 14. TEST PATTERNS (RIGOR E DETERMINISMO)
 
 A confiabilidade do sistema é garantida por padrões de teste industriais.
 

@@ -64,6 +64,7 @@ public:
 	enum TagType {
 		TAG_TYPE_NAME,
 		TAG_TYPE_CONDITIONAL,
+		TAG_TYPE_EVENT,
 	};
 
 private:
