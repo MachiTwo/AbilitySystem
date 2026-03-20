@@ -1,0 +1,53 @@
+name: 🧪 All Tests
+
+on:
+  workflow_call:
+    inputs:
+      plugin-version:
+        required: true
+        type: string
+
+jobs:
+  infrastructure:
+    name: 🧱 Infrastructure
+    uses: ./.github/workflows/test_infrastructure.yml
+
+  unit:
+    name: 🧪 Unit
+    needs: [infrastructure]
+    if: |
+      always() &&
+      needs.infrastructure.result == 'success'
+    uses: ./.github/workflows/test_unit.yml
+    with:
+      godot-bin-name: ${{ needs.infrastructure.outputs.godot-bin-name }}
+
+  unit-integration:
+    name: 🧪 C++ Integration
+    needs: [infrastructure]
+    if: |
+      always() &&
+      needs.infrastructure.result == 'success'
+    uses: ./.github/workflows/test_unit_integration.yml
+    with:
+      godot-bin-name: ${{ needs.infrastructure.outputs.godot-bin-name }}
+
+  singleplayer:
+    name: 🎮 Singleplayer
+    needs: [infrastructure]
+    if: |
+      always() &&
+      needs.infrastructure.result == 'success'
+    uses: ./.github/workflows/test_singleplayer.yml
+    with:
+      godot-bin-name: ${{ needs.infrastructure.outputs.godot-bin-name }}
+
+  multiplayer:
+    name: 🌐 Multiplayer
+    needs: [infrastructure]
+    if: |
+      always() &&
+      needs.infrastructure.result == 'success'
+    uses: ./.github/workflows/test_multiplayer.yml
+    with:
+      godot-bin-name: ${{ needs.infrastructure.outputs.godot-bin-name }}

@@ -1,0 +1,84 @@
+name: 🍎 macOS GDExtension
+
+on:
+  workflow_call:
+    inputs:
+      plugin-version:
+        required: true
+        type: string
+      godot-cpp-version:
+        required: true
+        type: string
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: 🧩 GDExtension (${{ matrix.target }}, universal)
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [editor, template_release]
+        float-precision: [single]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Fetch godot-cpp
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: godotengine/godot-cpp
+          ref: ${{ inputs.godot-cpp-version }}
+          path: godot-cpp
+          submodules: recursive
+
+      - name: Setup godot-cpp
+        uses: ./godot-cpp/.github/actions/setup-godot-cpp
+        with:
+          platform: macos
+
+      - name: Restore .scons_cache
+        uses: ./.github/actions/zyris-cache-restore
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: gdext_macos_universal_${{ matrix.target }}_engine-${{ env.GODOT_VERSION }}
+
+      - name: Build GDExtension (MacOS Target)
+        shell: bash
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
+        run: |
+          # Enable tests for editor builds
+          EXTRA_ARGS=""
+          if [[ "${{ matrix.target }}" == "editor" ]]; then
+            EXTRA_ARGS="tests=yes"
+          fi
+          scons target=${{ matrix.target }} platform=macos arch=universal precision=${{ matrix.float-precision }} $EXTRA_ARGS
+
+      - name: Save .scons_cache
+        uses: ./.github/actions/zyris-cache-save
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: gdext_macos_universal_${{ matrix.target }}_engine-${{ env.GODOT_VERSION }}
+
+      - name: Prepare Plugin Structure
+        shell: bash
+        run: |
+          mkdir -p tmp-builds/out/addons/${{ env.MODULE_NAME }}/bin
+          mkdir -p tmp-builds/out/addons/${{ env.MODULE_NAME }}/icons
+          cp gdextension/* tmp-builds/out/addons/${{ env.MODULE_NAME }}/ 2>/dev/null || true
+          cp README.md README.pt.md release_note.md release_note.pt.md tmp-builds/out/addons/${{ env.MODULE_NAME }}/ 2>/dev/null || true
+          cp src/icons/*.svg tmp-builds/out/addons/${{ env.MODULE_NAME }}/icons/ 2>/dev/null || true
+          find addons/${{ env.MODULE_NAME }}/bin/ -maxdepth 1 -name "*.dylib" -exec cp {} tmp-builds/out/addons/${{ env.MODULE_NAME }}/bin/ \;
+
+      - name: Cache Build for Packaging
+        uses: actions/cache/save@v4.2.2
+        with:
+          path: tmp-builds/out/
+          key: tmp-bin-${{ github.run_id }}-macos-universal-${{ matrix.float-precision }}-${{ matrix.target }}

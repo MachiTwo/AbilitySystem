@@ -1,0 +1,120 @@
+default_language_version:
+  python: python3
+
+exclude: |
+  (?x)^(
+    .*godot-cpp/.*|
+    .*reverse-engineering/.*|
+    .*demo/.*|
+    .*demo-integration/.*|
+    .*src/tests/doctest.h|
+    .*doc/source/classes/.*
+  )$
+
+repos:
+  - repo: local
+    hooks:
+
+      - id: validate-xml
+        name: validate-xml
+        language: python
+        entry: python utility/validate_xml.py
+        files: ^(src/doc_classes)/.*\.xml$
+        additional_dependencies: [xmlschema]
+
+      - id: copyright-headers
+        name: copyright-headers
+        language: python
+        entry: python utility/copyright_headers.py
+        files: \.(c|h|cpp|hpp|cc|hh|cxx|hxx|m|mm|inc|java)$
+
+      - id: file-format
+        name: file-format
+        language: python
+        entry: python utility/file_format.py
+        types_or: [text]
+        exclude: (?x)^(.*\.md*)$
+
+  - repo: https://github.com/pre-commit/mirrors-prettier
+    rev: v4.0.0-alpha.8
+    hooks:
+      - id: prettier
+        types: [markdown]
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+        exclude: (SConstruct|.*\.py|.*\.sh)$
+
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    rev: v21.1.7
+    hooks:
+      - id: clang-format
+        files: \.(c|h|cpp|hpp|cc|hh|cxx|hxx|m|mm|inc|java)$
+        types_or: [text]
+      - id: clang-format
+        name: clang-format-glsl
+        files: \.glsl$
+        types_or: [text]
+        args: [-style=file:misc/utility/clang_format_glsl.yml]
+
+  - repo: https://github.com/pocc/pre-commit-hooks
+    rev: v1.3.5
+    hooks:
+      - id: clang-tidy
+        files: \.(c|h|cpp|hpp|cc|hh|cxx|hxx|m|mm|inc|java|glsl)$
+        args: [--fix, --quiet, --use-color]
+        types_or: [text]
+        additional_dependencies: [clang-tidy==21.1.6]
+        require_serial: true
+        stages: [manual]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.0
+    hooks:
+      - id: ruff-check
+        args: [--color=always]
+        files: \.py$
+        types_or: [text]
+      - id: ruff-format
+        args: [--color=always]
+        files: (\.py|SConstruct)$
+        types_or: [text]
+
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.14.1
+    hooks:
+      - id: mypy
+        files: \.py$
+        types_or: [text]
+
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: text-unicode-replacement-char
+        exclude: (?x)^(.*\.md*)$
+
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        additional_dependencies: [tomli]
+        exclude: (?x)^(.*\.md*|tests/doctest\.h)$
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.34.1
+    hooks:
+      - id: check-jsonschema
+        files: ^core/extension/gdextension_interface\.json$
+        args: ["--schemafile", "core/extension/gdextension_interface.schema.json"]
+
+  - repo: local
+    hooks:
+      - id: make-rst
+        name: make-rst
+        language: python
+        entry: python utility/make_rst.py --output doc/source/classes src/doc_classes
+        files: ^(src/doc_classes)/.*\.xml$
+        pass_filenames: false

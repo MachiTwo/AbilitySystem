@@ -1,0 +1,120 @@
+name: 🏁 Windows Module
+
+on:
+  workflow_call:
+    inputs:
+      target:
+        required: true
+        type: string
+      arch:
+        required: true
+        type: string
+      module:
+        required: true
+        type: string
+      zyris_version:
+        required: true
+        type: string
+      plugin_version:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: 🏗️ Module Build (Windows, ${{ inputs.target }}, ${{ inputs.arch }}, ${{ inputs.module }})
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Ability System
+        uses: actions/checkout@v4.2.2
+        with:
+          submodules: true
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Checkout ZyrisEngine (no-ability-system)
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ env.ZYRIS_REPO }}
+          ref: ${{ env.ZYRIS_BRANCH }}
+          path: zyris
+
+      - name: Move Ability System to modules
+        shell: bash
+        run: mv src zyris/modules/${{ env.MODULE_NAME }}
+
+      - name: Set up Windows toolchain
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Setup Python and SCons
+        uses: ./.github/actions/zyris-deps
+
+      - name: Install D3D12 SDK
+        working-directory: zyris
+        shell: bash
+        run: python misc/scripts/install_d3d12_sdk_windows.py
+
+      - name: Restore .scons_cache
+        uses: ./.github/actions/zyris-cache-restore
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: windows_${{ inputs.arch }}_${{ inputs.target }}_${{ inputs.module }}_engine-${{ env.ZYRIS_VER }}
+
+      - name: Build Zyris (Windows Target)
+        working-directory: zyris
+        shell: bash
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
+        run: |
+          MONO_ARG=""
+          if [ "${{ inputs.module }}" = "mono" ]; then
+            MONO_ARG="module_mono_enabled=yes"
+          fi
+
+          if [ "${{ inputs.target }}" = "editor" ]; then
+            scons platform=windows target=editor dev_build=yes tests=yes -j2 arch=${{ inputs.arch }} d3d12=yes $MONO_ARG
+          else
+            scons platform=windows target=${{ inputs.target }} precision=single -j2 arch=${{ inputs.arch }} d3d12=yes $MONO_ARG
+          fi
+
+      - name: Save .scons_cache
+        uses: ./.github/actions/zyris-cache-save
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: windows_${{ inputs.arch }}_${{ inputs.target }}_${{ inputs.module }}_engine-${{ env.ZYRIS_VER }}
+
+      - name: Prepare Artifact
+        shell: bash
+        run: |
+          # Clean versions
+          PLUGIN_VER=$(echo "${{ inputs.plugin_version }}" | tr '-' '.')
+          ZYRIS_VER=$(echo "${{ inputs.zyris_version }}" | tr '-' '.')
+
+          # Module part
+          MODULE_PART=""
+          if [ "${{ inputs.module }}" = "mono" ]; then
+            MODULE_PART="dotnet."
+          fi
+
+          mkdir -p out/artifact
+
+          # Use find to gather all relevant binaries (EXEs and DLLs)
+          # We include all .exe and .dll files to capture the engine, console wrappers, and any needed libraries (like Mono or D3D12 Agility SDK)
+          find zyris/bin/ -maxdepth 1 \( -name "*.exe" -o -name "*.dll" \) -not -path '*/.*' -exec cp {} out/artifact/ \;
+
+          if [ "$(ls -A out/artifact)" ]; then
+            echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.windows.${{ inputs.arch }}" >> $GITHUB_ENV
+          else
+            echo "::error::No binaries found"
+            ls -F zyris/bin/
+            exit 1
+          fi
+          echo "artifact_path=out/artifact/" >> $GITHUB_ENV
+
+      - name: Upload Zyris Binary (with Module)
+        uses: actions/upload-artifact@v4.6.1
+        with:
+          name: ${{ env.artifact_name }}
+          path: ${{ env.artifact_path }}

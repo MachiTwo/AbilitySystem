@@ -1,0 +1,172 @@
+name: 🍎 macOS Module
+
+on:
+  workflow_call:
+    inputs:
+      target:
+        required: true
+        type: string
+      module:
+        required: true
+        type: string
+      zyris_version:
+        required: true
+        type: string
+      plugin_version:
+        required: true
+        type: string
+
+jobs:
+  build:
+    name: 🏗️ Module Build (macOS, ${{ inputs.target }}, universal, ${{ inputs.module }})
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Ability System
+        uses: actions/checkout@v4.2.2
+        with:
+          submodules: true
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Checkout ZyrisEngine (no-ability-system)
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ env.ZYRIS_REPO }}
+          ref: ${{ env.ZYRIS_BRANCH }}
+          path: zyris
+
+      - name: Move Ability System to modules
+        shell: bash
+        run: mv src zyris/modules/${{ env.MODULE_NAME }}
+
+      - name: Setup Python and SCons
+        uses: ./.github/actions/zyris-deps
+
+      - name: Restore .scons_cache
+        uses: ./.github/actions/zyris-cache-restore
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: macos_universal_${{ inputs.target }}_${{ inputs.module }}_engine-${{ env.ZYRIS_VER }}
+
+      - name: Setup Vulkan SDK
+        id: vulkan-sdk
+        working-directory: zyris
+        shell: bash
+        run: |
+          if sh misc/scripts/install_vulkan_sdk_macos.sh; then
+            echo "VULKAN_ENABLED=yes" >> "$GITHUB_OUTPUT"
+          else
+            echo "::warning::macOS: Vulkan SDK installation failed, building without Vulkan support."
+            echo "VULKAN_ENABLED=no" >> "$GITHUB_OUTPUT"
+          fi
+        continue-on-error: true
+
+      - name: Build Zyris with Module (x86_64)
+        working-directory: zyris
+        shell: bash
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
+        run: |
+          VULKAN_ARG="vulkan=${{ steps.vulkan-sdk.outputs.VULKAN_ENABLED }}"
+          MONO_ARG=""
+          if [ "${{ inputs.module }}" = "mono" ]; then
+            MONO_ARG="module_mono_enabled=yes"
+          fi
+
+          if [ "${{ inputs.target }}" = "editor" ]; then
+            scons platform=macos target=editor dev_build=yes tests=yes -j2 arch=x86_64 $VULKAN_ARG $MONO_ARG
+          else
+            scons platform=macos target=${{ inputs.target }} precision=single -j2 arch=x86_64 $VULKAN_ARG $MONO_ARG
+          fi
+
+      - name: Build Zyris with Module (arm64)
+        working-directory: zyris
+        shell: bash
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
+        run: |
+          VULKAN_ARG="vulkan=${{ steps.vulkan-sdk.outputs.VULKAN_ENABLED }}"
+          MONO_ARG=""
+          if [ "${{ inputs.module }}" = "mono" ]; then
+            MONO_ARG="module_mono_enabled=yes"
+          fi
+
+          if [ "${{ inputs.target }}" = "editor" ]; then
+            scons platform=macos target=editor dev_build=yes tests=yes -j2 arch=arm64 $VULKAN_ARG $MONO_ARG
+          else
+            scons platform=macos target=${{ inputs.target }} precision=single -j2 arch=arm64 $VULKAN_ARG $MONO_ARG
+          fi
+
+      - name: Create Universal Binary (lipo)
+        working-directory: zyris
+        shell: bash
+        run: |
+          # Find the two arch-specific binaries and combine them
+          # Patterns: godot.macos.<target>.<arch>[.mono]
+          # We check both the root and bin/
+          X86=$(find . -maxdepth 2 -name "godot.macos.*x86_64*" -not -path '*/.*' | head -n 1)
+          ARM=$(find . -maxdepth 2 -name "godot.macos.*arm64*" -not -path '*/.*' | head -n 1)
+
+          echo "Discovered x86_64: $X86"
+          echo "Discovered arm64: $ARM"
+
+          if [ -n "$X86" ] && [ -n "$ARM" ]; then
+            # Construct universal name by replacing arch
+            OUT=$(echo "$X86" | sed 's/x86_64/universal/')
+            echo "Creating universal binary at: $OUT"
+
+            lipo -create "$X86" "$ARM" -output "$OUT"
+            rm "$X86" "$ARM"
+            strip "$OUT"
+            chmod +x "$OUT"
+            echo "Universal binary created successfully."
+          else
+            echo "::error::Could not find both arch binaries for lipo"
+            echo "--- Root Directory ---"
+            ls -F
+            echo "--- bin/ Directory ---"
+            ls -F bin/ 2>/dev/null || echo "bin/ not found"
+            exit 1
+          fi
+
+      - name: Save .scons_cache
+        uses: ./.github/actions/zyris-cache-save
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: macos_universal_${{ inputs.target }}_${{ inputs.module }}_engine-${{ env.ZYRIS_VER }}
+
+      - name: Prepare Artifact
+        shell: bash
+        run: |
+          # Clean versions
+          PLUGIN_VER=$(echo "${{ inputs.plugin_version }}" | tr '-' '.')
+          ZYRIS_VER=$(echo "${{ inputs.zyris_version }}" | tr '-' '.')
+
+          # Module part
+          MODULE_PART=""
+          if [ "${{ inputs.module }}" = "mono" ]; then
+            MODULE_PART="dotnet."
+          fi
+
+          mkdir -p out/artifact
+
+          # Search for the universal binary
+          BINARY_PATH=$(find zyris/bin/ -maxdepth 2 -name "*universal*" -not -path '*/.*' | head -n 1)
+          if [ -n "$BINARY_PATH" ]; then
+            cp "$BINARY_PATH" out/artifact/
+            echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.macos.universal" >> $GITHUB_ENV
+          else
+             echo "::error::Universal binary not found"
+             ls -R zyris/bin/
+             exit 1
+          fi
+          echo "artifact_path=out/artifact/" >> $GITHUB_ENV
+
+      - name: Upload Zyris Binary (with Module)
+        uses: actions/upload-artifact@v4.6.1
+        with:
+          name: ${{ env.artifact_name }}
+          path: ${{ env.artifact_path }}

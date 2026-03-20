@@ -1,0 +1,80 @@
+name: 🔗 CI/CD Runner
+on:
+  push:
+    branches: ["master", "tests"]
+    tags: ["v*"]
+  pull_request:
+    branches: ["master", "tests"]
+  merge_group:
+    branches: ["master", "tests"]
+  workflow_dispatch:
+    inputs:
+      build_modules:
+        description: "Build Engine Modules"
+        type: boolean
+        default: true
+      build_gdextension:
+        description: "Build GDExtension"
+        type: boolean
+        default: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  actions: read
+
+
+jobs:
+  check-all:
+    name: ✅ Checks & Versioning
+    uses: ./.github/workflows/check_all.yml
+
+  module-builds:
+    name: 🏗️ Module Builds
+    if: |
+      (github.event_name != 'workflow_dispatch' || inputs.build_modules == true) &&
+      !contains(github.event.head_commit.message, '[module skip]')
+    needs: [check-all]
+    uses: ./.github/workflows/all_module_builds.yml
+    with:
+      plugin-version: ${{ needs.check-all.outputs.plugin-version }}
+
+  gdextension-builds:
+    name: 🧩 GDExtension Builds
+    if: |
+      (github.event_name != 'workflow_dispatch' || inputs.build_gdextension == true) &&
+      !contains(github.event.head_commit.message, '[gdextension skip]')
+    needs: [check-all]
+    uses: ./.github/workflows/all_gdextension_builds.yml
+    with:
+      plugin-version: ${{ needs.check-all.outputs.plugin-version }}
+
+  package-plugin:
+    name: 📦 Package Plugin
+    if: |
+      always() &&
+      needs.check-all.result == 'success' &&
+      needs.gdextension-builds.result == 'success'
+    needs: [check-all, gdextension-builds]
+    uses: ./.github/workflows/package_plugin.yml
+    with:
+      tag_name: ${{ github.ref_name }}
+      plugin_version: ${{ needs.check-all.outputs.plugin-version }}
+      is_release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+
+  post-release:
+    name: 🚀 Post Release (Final Delivery)
+    if: |
+      always() &&
+      needs.check-all.result == 'success' &&
+      needs.package-plugin.result == 'success' &&
+      needs.module-builds.result == 'success'
+    needs: [check-all, module-builds, package-plugin]
+    uses: ./.github/workflows/post_release.yml
+    with:
+      tag_name: ${{ github.ref_name }}
+      plugin_version: ${{ needs.check-all.outputs.plugin-version }}
+      is_release: ${{ startsWith(github.ref, 'refs/tags/v') }}
