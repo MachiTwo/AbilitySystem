@@ -18,7 +18,7 @@ O **Ability System** (AS) é um framework poderoso para criação de combate, ha
 
 ## 📦 Instalação
 
-1. Baixe o `ability-system-plugin.zip` mais recente em nossas [Releases](https://github.com/MachiTwo/AbilitySystemPlugin/releases/download/0.1.0-dev/ability-system-plugin.zip).
+1. Baixe o `ability-system-plugin.zip` mais recente em nossas [Releases](https://github.com/MachiTwo/AbilitySystem/releases/download/v0.1.0/ability-system+v0.1.0-dev.gdextension.zip).
 2. Extraia e copie a pasta `addons/ability_system` para o diretório `addons/` do seu projeto.
 3. Reinicie a Godot e vá em **Projeto > Configurações do Projeto > Plugins** para ativar o plugin "Ability System". Isso ativará o Editor de Tags e as funcionalidades customizadas do Inspetor.
 

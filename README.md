@@ -18,7 +18,7 @@
 
 ## 📦 Installation
 
-1. Download the latest `ability-system-plugin.zip` from [Releases](https://github.com/MachiTwo/AbilitySystemPlugin/releases/download/0.1.0-dev/ability-system-plugin.zip).
+1. Download the latest `ability-system-plugin.zip` from [Releases](https://github.com/MachiTwo/AbilitySystem/releases/download/v0.1.0/ability-system+v0.1.0-dev.gdextension.zip).
 2. Extract and copy the `addons/ability_system` folder to your project's `addons/` directory.
 3. Restart Godot and go to **Project > Project Settings > Plugins** to enable the "Ability System" plugin. This activates the Tag Editor and custom Inspector features.
 

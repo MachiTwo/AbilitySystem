@@ -1,422 +1,426 @@
 # BUSINESS RULES: ABILITY SYSTEM - GOVERNANCE CONTRACT
 
-Este documento estabelece as fronteiras arquiteturais e regras de negócio obrigatórias. Qualquer implementação que viole estes limites deve ser refatorada imediatamente.
+> [!TIP]
+> **Read this in other languages / Leia isto em outros idiomas:**
+> [**English**](BUSINESS_RULES.md) | [**Português**](BUSINESS_RULES.pt.md)
+
+This document establishes the mandatory architectural boundaries and business rules for the Ability System. Any implementation violating these constraints must be immediately refactored.
 
 ---
 
-## 1. FILOSOFIA E ENGENHARIA RIGOROSA
+## 1. PHILOSOPHY AND RIGOROUS ENGINEERING
 
-O projeto rejeita o **"Vibe-Coding"** (programação por intuição ou sorte). Cada linha de lógica de negócio é tratada como um compromisso de engenharia industrial.
+This project explicitly rejects **"Vibe-Coding"** (programming by intuition, luck, or blind acceptance of AI suggestions). Every line of business logic is treated as an industrial engineering commitment.
 
-### 1.1 Pair Programming e Governança
+### 1.1 Pair Programming and Governance
 
-- **Desapego Radical ao Código:** Se o código falha, a falha é na comunicação ou na arquitetura. A correção é feita via diálogo e ajuste da documentação, nunca por remendos manuais.
+- **Radical Code Decoupling:** If the code fails, the failure lies in the communication or the architecture. Corrections are made through dialogue and documentation adjustments, never via manual "patches" that break the pair's mental model.
 
-- **SSOT (Single Source of Truth):** Este arquivo é a Lei de Ferro. Antes de qualquer mudança complexa, a regra deve estar documentada aqui.
+- **SSOT (Single Source of Truth):** This file is the Iron Law. Before any complex change, the rule must be documented here.
 
-- **Idioma:** Código e documentação técnica em **Inglês**. Diálogo e tom de pair programming em **Português**.
+- **Language:** Code, technical documentation, and logs MUST be in **English**. Informal communication between the pair may be in Portuguese.
 
-### 1.2 Protocolo TDD (Red-Green-Refactor)
+### 1.2 TDD Protocol (Red-Green-Refactor)
 
-Nenhuma lógica de negócio existe sem um teste que a justifique.
+No business logic exists without a justifying test.
 
-1. **RED:** Escrever o teste que falha, definindo o contrato.
-2. **GREEN:** Implementar o código mínimo para passar.
-3. **REFACTOR:** Otimizar mantendo o status de aprovação.
+1. **RED:** Write the failing test, defining the contract.
+2. **GREEN:** Implement the minimum code required to pass.
+3. **REFACTOR:** Optimize while maintaining the passing status.
 
 ---
 
-## 2. IDENTIFICADORES: AS TAGS (DNA DO SISTEMA)
+## 2. IDENTIFIERS: TAGS (THE SYSTEM'S DNA)
 
-Tags não são classes; são **Identificadores Hierárquicos Superpoderosos** baseados em `StringName`.
+Tags are not classes; they are **Powerful Hierarchical Identifiers** based on `StringName`.
 
-### 2.1 Tag (Identificador)
+### 2.1 Tag (Identifier)
 
-- **Papel:** Representar estados, ações ou categorias (ex: `State.Dead`, `Ability.Fireball`).
+- **Role:** Represent states, actions, or categories (e.g., `State.Dead`, `Ability.Fireball`).
 
-- **Regra:** Devem ser tratadas como imutáveis e globais. A comparação deve suportar hierarquia (checar `State` encontra `State.Dead`).
+- **Rule:** Tags must be treated as immutable and global. Comparison must support hierarchy (checking for `State` should match `State.Dead`).
 
-- **Lógica de Ativação:** O sistema suporta 4 estados lógicos em Blueprints (Ability/Effect/Cue):
-  - `Required All` (AND): Sucesso se tiver todos.
-  - `Required Any` (OR): Sucesso se tiver pelo menos um.
-  - `Blocked Any` (OR): Falha se tiver qualquer um.
-  - `Blocked All` (AND): Falha apenas se tiver todos simulatenamente.
+- **Activation Logic:** The system supports 4 logical states in Blueprints (Ability/Effect/Cue):
+  - `Required All` (AND): Success if all tags are present.
+  - `Required Any` (OR): Success if at least one tag is present.
+  - `Blocked Any` (OR): Failure if any tag is present.
+  - `Blocked All` (AND): Failure only if all tags are present simultaneously.
 
 ### 2.2 Tag Type & Tag Group
 
-- **Tag Type:** Define a natureza técnica da tag (ex: `NAME`, `CONDITIONAL`). Determina como o sistema lida com ela no backend.
+- **Tag Type:** Defines the technical nature of the tag (e.g., `NAME`, `CONDITIONAL`). This determines how the backend processes it.
 
-- **Tag Group:** Organização lógica exclusiva para o Editor. Agrupa tags relacionadas para facilitar a busca e manipulação visual.
-
----
-
-## 3. O SINGLETON: ABILITY SYSTEM (INTERFACE DE PROJETO)
-
-- **Papel:** É a **API de Configuração Global** e a ponte com o `ProjectSettings`.
-
-- **Regras de Negócio:**
-  - É o único responsável por salvar e carregar a lista global de tags nas configurações do projeto (`project.godot`).
-  - Atua como um **Registro Central de Nomes** para garantir que recursos duplicados não entrem em conflito.
-
-- **Limite:** Não deve armazenar estado de nenhum Actor. Se uma informação pertence a uma instância de personagem, ela **não** deve estar aqui.
+- **Tag Group:** Exclusive logical organization for the Editor. Groups related tags for easier searching and visual manipulation.
 
 ---
 
-## 4. CAMADA DE FERRAMENTAS: EDITORES
+## 3. THE SINGLETON: ABILITY SYSTEM (PROJECT INTERFACE)
 
-Interface entre o Humano e os Resources.
+- **Role:** The **Global Configuration API** and the bridge to `ProjectSettings`.
+
+- **Business Rules:**
+  - Solely responsible for saving and loading the global tag list in the project configuration (`project.godot`).
+  - Acts as a **Central Name Registry** to ensure duplicate resources do not conflict.
+
+- **Boundary:** It must not store the state of any Actor. If information belongs to a specific character instance, it **must not** reside here.
+
+---
+
+## 4. TOOLING LAYER: EDITORS
+
+The interface between the Human and the Resources.
 
 ### 4.1 ASEditorPlugin
 
-- **Papel:** **Bootloader**.
+- **Role:** **Bootloader**.
 
-- **Regra:** Registro de tipos, ícones e inicialização de outros sub-editores. Proibido conter lógica de jogo.
+- **Rule:** Handles registration of types, icons, and initialization of other sub-editors. Forbidden from containing gameplay logic.
 
 ### 4.2 ASTagsPanel
 
-- **Papel:** Interface visual para o **Registro Global**.
+- **Role:** Visual interface for the **Global Registry**.
 
-- **Regra:** Manipula exclusivamente o dicionário de tags do `AbilitySystem` Singleton.
+- **Rule:** Exclusively manipulates the tag dictionary within the `AbilitySystem` Singleton.
 
-### 4.3 ASInspectorPlugin (e Property Selectors)
+### 4.3 ASInspectorPlugin (and Property Selectors)
 
-- **Papel:** Contextualização.
+- **Role:** Contextualization.
 
-- **Regra:** Deve fornecer seletores inteligentes (dropdowns de tags, busca de atributos) para facilitar a configuração de Resources e Components no Inspetor.
+- **Rule:** Must provide "smart selectors" (tag dropdowns, attribute search) to facilitate the configuration of Resources and Components in the Inspector.
 
 ---
 
-## 5. OS BLUEPRINTS: RESOURCES (O "O QUE")
+## 5. THE BLUEPRINTS: RESOURCES (THE "WHAT")
 
-Localizados em `src/resources/`. São as **Definições de Dados**.
+Located in `src/resources/`. These are the **Data Definitions**.
 
-- **Resources (Blueprints):** São objetos estáticos (`.tres`) que definem o "DNA" de uma habilidade ou efeito. **Regra:** Não devem ser modificados em runtime (exceto `ASStateSnapshot`). Eles são compartilhados entre centenas de instâncias.
+- **Resources (Blueprints):** Static objects (`.tres`) defining the "DNA" of an ability or effect. **Rule:** Must not be modified at runtime (except `ASStateSnapshot`). They are shared across hundreds of instances.
 
-- **Specs (Runtime Instances):** São instâncias leves criadas a partir de Resources que mantêm o estado dinâmico (cooldowns, stacks, duração).
+- **Specs (Runtime Instances):** Lightweight instances created from Resources that maintain dynamic state (cooldowns, stacks, duration).
 
-- **Exceção Snapshot:** O `ASStateSnapshot` é grafado como `Resource` mas é populado em runtime. Ele rompe a regra de imutabilidade para permitir persistência nativa (Save/Load) e cache de rede via sistema de arquivos/recursos da Godot.
+- **Snapshot Exception:** `ASStateSnapshot` is typed as a `Resource` but populated at runtime. It breaks the immutability rule to allow native persistence (Save/Load) and network caching via Godot's filesystem.
 
-### Restrições de Uso e Performance
+### Usage and Performance Restrictions
 
 > [!WARNING]
-> **O `ASStateSnapshot` é um recurso pesado.** Devido à natureza da captura completa de estado, ele consome CPU e memória significativos se usado em larga escala.
+> **`ASStateSnapshot` is a heavy resource.** Due to the nature of full-state capture, it consumes significant CPU and memory if used at scale.
 
-1. **Uso Exclusivo para Players:** O uso de Snapshots deve ser restrito a entidades controladas por jogadores (Playable Characters), onde o determinismo e o rollback são críticos para o multiplayer online.
-2. **NPCs e Inimigos:** Entidades não-jogáveis **NÃO** devem usar `ASStateSnapshot`. Para persistência de NPCs, utilize mecanismos mais leves como o `SaveServer` da Zyris Engine ou sistemas personalizados de dicionários em Godot.
-3. **Regra de Ouro:** Se é jogável, use `ASStateSnapshot`. Se não for, descarte-o.
-4. **Independência de Referência:** O snapshot armazena valores primitivos e nomes de tags, não ponteiros para objetos, garantindo que possa ser serializado com segurança.
+1. **Exclusive for Players:** Snapshot usage must be restricted to player-controlled entities (Playable Characters), where determinism and rollback are critical for multiplayer.
+2. **NPCs and Enemies:** Non-playable entities **MUST NOT** use `ASStateSnapshot`. For NPC persistence, use lighter mechanisms like Zyris Engine's `SaveServer` or custom dictionary systems.
+3. **Golden Rule:** If it's playable, use `ASStateSnapshot`. If not, discard it.
+4. **Reference Independence:** Snapshots store primitive values and tag names, not object pointers, ensuring safe serialization.
 
-- **O que vive aqui:** Valores base, ícones, nomes, tags de requisito e listas de modificadores brutos.
+- **Contents:** Base values, icons, names, requirement tags, and raw modifier lists.
 
-### 5.1 ASAbility & ASEffect (Ações e Modificadores)
+### 5.1 ASAbility & ASEffect (Actions and Modifiers)
 
-- **ASAbility - Papel:** Definir a lógica de uma ação (Custos, Cooldown, Triggers).
+- **ASAbility - Role:** Defines the logic of an action (Costs, Cooldown, Triggers).
 
-- **ASAbility - Regra:** Único Resource capaz de gerenciar requisitos de ativação e custos de atributos através de especificação.
+- **ASAbility - Rule:** The only Resource capable of managing activation requirements and attribute costs through specification.
 
-- **ASEffect - Papel:** Modificador de estado (Buffs, Debuffs, Dano).
+- **ASEffect - Role:** State modifier (Buffs, Debuffs, Damage).
 
-- **ASEffect - Regra:** Define políticas de empilhamento (Stacking) e magnitudes de mudança nos atributos.
+- **ASEffect - Rule:** Defines stacking policies and magnitude changes for attributes.
 
-### 5.2 ASAttribute & ASAttributeSet (O Sistema de Atributos)
+### 5.2 ASAttribute & ASAttributeSet (The Attribute System)
 
-- **ASAttribute - Papel:** Define os metadados (limites min/max) de uma única estatística.
+- **ASAttribute - Role:** Defines metadata (min/max limits) for a single statistic.
 
-- **ASAttributeSet - Papel:** Agrupa as estatísticas e define o estado inicial de um personagem. Detém a lógica de modificação de atributos.
+- **ASAttributeSet - Role:** Groups statistics and defines a character's initial state. Owns the logic for attribute modification.
 
-- **ASAttributeSet - Regra (Attribute Drivers):** Permite derivar o valor base de um atributo a partir de outro (ex: 2 \* Força = 1 Ataque). O recalculo é automático em mudanças de valor base.
+- **ASAttributeSet - Rule (Attribute Drivers):** Allows deriving a base attribute's value from another (e.g., 2 \* Strength = 1 Attack). Recalculation is automatic upon base value changes.
 
-- **ASAttributeSet - Regra (Prioridade):** Modificadores (Flat Add, Multiplier) são aplicados _após_ o cálculo dos Drivers.
+- **ASAttributeSet - Rule (Priority):** Modifiers (Flat Add, Multiplier) are applied _after_ Driver calculations.
 
-### 5.3 ASContainer & ASPackage (Arquétipos e Payloads)
+### 5.3 ASContainer & ASPackage (Archetypes and Payloads)
 
-- **ASContainer - Papel:** Arquétipo completo (Dicionário de Identidade do Ator).
+- **ASContainer - Role:** Full archetype (The Actor's Identity Dictionary).
 
-- **ASContainer - Regra:** Atua como o "Template de Fábrica" para inicialização total do `ASComponent`.
+- **ASContainer - Rule:** Acts as the "Factory Template" for total `ASComponent` initialization.
 
-- **ASPackage - Papel:** Agrupador de transporte (Envelope de Dados).
+- **ASPackage - Role:** Transport gatherer (Data Envelope).
 
-- **ASPackage - Regra:** Deve ser usado exclusivamente para transmitir coleções de efeitos e cues via `ASDelivery`.
+- **ASPackage - Rule:** Used exclusively to transmit collections of effects and cues via `ASDelivery`.
 
-### 5.4 ASCue (Feedbacks Visuais)
+### 5.4 ASCue (Visual Feedback)
 
-- **Papel:** Feedback audiovisual puro (Animação, Som, Partículas).
+- **Role:** Pure audiovisual feedback (Animation, Sound, Particles).
 
-- **Regra:** Proibido alterar qualquer dado de gameplay. Deve ser disparado reativamente.
-
----
-
-## 6. OS EXECUTORES: SPECS (O "COMO")
-
-Localizados em `src/core/`. Onde o estado e a lógica de execução residem.
-
-- **Papel:** Representar a **Instância Ativa**. É o dono do **"Agora"**.
-
-- **Regra de Ouro: SOBERANIA DE ESTADO.**
-
-- **O que deve viver aqui (e não no Component):**
-  - `duration_remaining`: O timer individual de cada instância.
-  - `stack_count`: Quantas vezes este efeito específico está acumulado.
-  - `calculate_...`: Lógica de cálculo que depende de atributos variáveis (ex: dano baseado em força atual).
-
-- **Responsabilidade:** O Spec deve saber se "terminou" ou não. O Component apenas pergunta a ele.
-
-### 6.1 ASAbilitySpec & ASEffectSpec (Execução)
-
-- **ASAbilitySpec - Papel:** Habilidade em execução ativa ou equipada.
-
-- **ASAbilitySpec - Regra:** Gerencia o cooldown individual e o estado de ativação.
-
-- **ASEffectSpec - Papel:** Instância ativa de um modificador.
-
-- **ASEffectSpec - Regra:** Detém a soberania sobre o tempo restante (`duration`) e pilhas (`stacks`).
-
-### 6.2 ASCueSpec & ASTagSpec (Feedback e Identidade)
-
-- **ASCueSpec - Papel:** Gerenciador do ciclo de vida de um feedback na cena.
-
-- **ASCueSpec - Regra:** Garante a limpeza (Queue Free) do Node instanciado após o término.
-
-- **ASTagSpec - Papel:** Contador de referências (Refcount) para Tags.
-
-- **ASTagSpec - Regra:** Garante que uma Tag só saia do ator quando todos os seus Specs de origem expirarem.
+- **Rule:** Forbidden from altering any gameplay data. Must be triggered reactively.
 
 ---
 
-## 7. O ORQUESTRADOR: COMPONENT (O HUB)
+## 6. THE EXECUTORS: SPECS (THE "HOW")
 
-O `ASComponent` (ASC).
+Located in `src/core/`. Where runtime state and execution logic reside.
 
-- **Papel:** **Gestor de Coleções** e **Roteador de Sinais**.
+- **Role:** Represents the **Active Instance**. Owner of the **"Now"**.
 
-- **Regras de Negócio:**
-  - Não deve gerenciar timers individuais de efeitos (isso é do Spec).
-  - Responsável por manter a lista de `active_specs` e `unlocked_specs`.
-  - Atua como o **Dono dos Atributos** (via `AttributeSet`).
-  - É o único que pode adicionar/remover tags do Actor.
+- **Golden Rule: STATE SOVEREIGNTY.**
 
-- **Garantir Determinismo:** O ASC deve ser capaz de retroceder e avançar seu estado (Rollback/Prediction) via `ASStateSnapshot`.
+- **Contents (Logic that lives here, not in the Component):**
+  - `duration_remaining`: Individual timer for each instance.
+  - `stack_count`: Current count of a specific active effect.
+  - `calculate_...`: Calculation logic dependent on variable attributes (e.g., damage scaled by current strength).
 
-- **Cache de Estado:** Manter um buffer interno de snapshots para sincronização de rede.
+- **Responsibility:** The Spec must know if it has "finished." The Component merely queries it.
 
-- **Limite:** O ASC não deve saber os detalhes internos de como uma habilidade funciona. Ele apenas diz: `spec->_activate()`, `spec->tick(delta)`, `spec->_deactivate()`.
+### 6.1 ASAbilitySpec & ASEffectSpec (Execution)
 
-- **Node Registry:** O Componente deve manter um registro de aliases de nós (ex: "Muzzle") para que Cues saibam onde instanciar efeitos visuais sem dependências de caminhos de cena.
+- **ASAbilitySpec - Role:** An ability currently in execution or equipped.
+
+- **ASAbilitySpec - Rule:** Manages individual cooldowns and activation state.
+
+- **ASEffectSpec - Role:** Active instance of a modifier.
+
+- **ASEffectSpec - Rule:** Holds sovereignty over remaining `duration` and `stacks`.
+
+### 6.2 ASCueSpec & ASTagSpec (Feedback and Identity)
+
+- **ASCueSpec - Role:** Manages the lifecycle of scene-based feedback.
+
+- **ASCueSpec - Rule:** Ensures cleanup (`queue_free`) of the instantiated Node after completion.
+
+- **ASTagSpec - Role:** Reference counter (Refcount) for Tags.
+
+- **ASTagSpec - Rule:** Ensures a Tag only leaves the actor when all its originating Specs expire.
 
 ---
 
-## 8. SISTEMAS DE ENTREGA E REATIVIDADE
+## 7. THE ORCHESTRATOR: COMPONENT (THE HUB)
+
+The `ASComponent` (ASC).
+
+- **Role:** **Collection Manager** and **Signal Router**.
+
+- **Business Rules:**
+  - Must not manage individual effect timers (this is the Spec's job).
+  - Responsible for maintaining the `active_specs` and `unlocked_specs` lists.
+  - Acts as the **Attribute Owner** (via `AttributeSet`).
+  - Sole entity authorized to add/remove tags from the Actor.
+
+- **Ensuring Determinism:** The ASC must be capable of rewinding and advancing its state (Rollback/Prediction) via `ASStateSnapshot`.
+
+- **State Caching:** Maintains an internal snapshot buffer for network synchronization.
+
+- **Boundary:** The ASC must not know internal details of how an ability works. It only commands: `spec->_activate()`, `spec->tick(delta)`, `spec->_deactivate()`.
+
+- **Node Registry:** The Component must maintain an alias registry (e.g., "Muzzle") so Cues know where to instance visual effects without hardcoded scene paths.
+
+---
+
+## 8. DELIVERY AND REACTIVITY SYSTEMS
 
 ### 8.1 ASDelivery (Payload Injections)
 
-- **Papel:** Desacoplar o emissor do alvo em interações espaciais (projéteis, AoEs).
+- **Role:** Decouples the emitter from the target in spatial interactions (Projectiles, AoEs).
 
-- **Regra:** Transporta um `ASPackage` e injeta o conteúdo ao colidir com um ASC.
+- **Rule:** Transports an `ASPackage` and injects the content upon colliding with an ASC.
 
-### 8.2 Ability Triggers (Automação Reativa)
+### 8.2 Ability Triggers (Reactive Automation)
 
-- **Papel:** Permitir ativação automática de habilidades baseada em eventos de estado (Tags).
+- **Role:** Allows automatic ability activation based on state events (Tags).
 
-- **Regra:** Ativação baseada exclusivamente em `ON_TAG_ADDED` ou `ON_TAG_REMOVED`.
-
----
-
-## 9. REPLICAÇÃO E PERSISTÊNCIA (DETERMINISMO)
-
-O Ability System é projetado para multiplayer autoritativo com suporte a Predição e Rollback. O estado de um Ator em um determinado momento (Tick) é gerido por dois mecanismos sincronizados:
-
-- **Fonte de Verdade (Physics Only):** O `tick` é o único identificador temporal válido. O `ASComponent` opera **exclusivamente** via `physics_process`. O uso de `_process` (Idle/Frame) é terminantemente proibido para lógica de gameplay para garantir determinismo entre instâncias e suporte a Rollback.
-
-### 9.1 ASStateSnapshot (O Recurso Pesado)
-
-- **Papel:** Persistência de longo prazo (Save/Load) e sincronização externa de "Diferencial de Estado".
-
-- **Natureza:** É um **Godot Resource** (`.tres`). Alocado na Heap, suporta serialização nativa.
-
-- **Regra de Uso:** Reservado exclusivamente para **Players** (Playable Characters) ou estados que precisam sobreviver a reinicializações de cena.
-
-- **SSOT:** É o único recurso autorizado a ser mutável em runtime para fins de captura de estado completo.
-
-### 9.2 ASStateCache (A Estrutura Leve)
-
-- **Papel:** Memória de curto prazo para Predição, Reconciliação e NPCs.
-
-- **Natureza:** **Struct C++ pura**. Alocada em stack/inline dentro de um buffer circular (`Vector`).
-
-- **Regra de Uso:** Deve ser usado para manter o histórico recente de ticks (ex: últimos 64-128 ticks) para cálculos de rede.
-
-- **Vantagem:** Zero overhead de alocação de Resource. Ideal para sincronização rápida de entidades não-jogáveis (NPCs/Inimigos).
-
-### 9.3 Fluxo de Ativação em Rede e Determinismo
-
-1. **Request:** O cliente solicita a ativação chamando `request_activate_ability(tag)`.
-2. **Predict:** O cliente executa localmente a ação para latência zero e gera uma entrada no `cache_buffer` via `capture_snapshot()`. Se for um Player, o `ASStateSnapshot` também é atualizado.
-3. **Confirm/Correct:** O servidor valida o request e responde. Se houver divergência, o servidor envia o estado autoritativo. O cliente então realiza o **Rollback** buscando o tick correspondente no `cache_buffer` para restaurar atributos e tags instantaneamente.
-4. **Determinismo:** Lógicas de gameplay (Magnitude de dano, custos) devem ser puras e basear-se exclusivamente nos dados contidos no ASC e seus Specs para garantir que o mesmo input gere o mesmo output em todas as instâncias.
+- **Rule:** Activation based exclusively on `ON_TAG_ADDED` or `ON_TAG_REMOVED`.
 
 ---
 
-## 10. RIGOR TÉCNICO E QUALIDADE DE TESTES
+## 9. REPLICATION AND PERSISTENCE (DETERMINISMO)
 
-### 10.1 Padrão 300% (Lei de Ferro)
+The Ability System is designed for authoritative multiplayer with Prediction and Rollback support. An Actor's state at any given moment (Tick) is managed by two synchronized mechanisms:
 
-Cada funcionalidade deve ser provada por pelo menos **3 variações** no mesmo teste:
+- **Source of Truth (Physics Only):** The `tick` is the only valid temporal identifier. `ASComponent` operates **exclusivamente** via `physics_process`. Use of `_process` (Idle/Frame) is strictly forbidden for gameplay logic to ensure determinism and Rollback compatibility.
 
-1. **Happy Path:** Cenário base ideal.
-2. **Negative:** Entrada inválida ou falha esperada.
-3. **Edge Case:** Combinações complexas (multi-tags, limites de borda).
+### 9.1 ASStateSnapshot (The Heavy Resource)
 
-### 10.2 Suítes de Teste
+- **Role:** Long-term persistence (Save/Load) and external "State Differential" synchronization.
 
-- **Core (Unit):** Atômicos, sem efeitos colaterais.
+- **Nature:** A **Godot Resource** (`.tres`). Heap-allocated, supports native serialization.
 
-- **Advanced (Integration):** DoT/HoT periódico, fluxos de RPG complexos.
+- **Usage Rule:** Reserved for **Players** (Playable Characters) or states that must survive scene reinitialization.
 
-- **Multiplayer (Simulation):** Executado via `utility/multiplayer/runner.py` com latência injetada.
+- **SSOT:** The only resource authorized to be mutable at runtime for full-state capture.
+
+### 9.2 ASStateCache (The Lightweight Structure)
+
+- **Role:** Short-term memory for Prediction, Reconciliation, and NPCs.
+
+- **Nature:** **Pure C++ struct**. Allocated on the stack or inline within a circular buffer (`Vector`).
+
+- **Usage Rule:** Used to maintain recent tick history (e.g., last 64-128 ticks) for network calculations.
+
+- **Advantage:** Zero Resource allocation overhead. Ideal for rapid synchronization of non-playable entities (NPCs/Enemies).
+
+### 9.3 Network Activation and Determinism Flow
+
+1. **Request:** The client requests activation by calling `request_activate_ability(tag)`.
+2. **Predict:** The client locally executes the action (zero latency) and generates an entry in the `cache_buffer` via `capture_snapshot()`. For Players, the `ASStateSnapshot` is also updated.
+3. **Confirm/Correct:** The server validates the request and responds. If a divergence occurs, the server sends the authoritative state. The client then performs a **Rollback**, locating the corresponding tick in the `cache_buffer` to instantly restore attributes and tags.
+4. **Determinism:** Gameplay logic (Damage magnitude, costs) must be pure and rely exclusively on data contained within the ASC and its Specs to ensure the same input generates identical output across all instances.
 
 ---
 
-## 11. PADRÕES DE NOMENCLATURA DA API (ESPECÍFICOS DO AS)
+## 10. TECHNICAL RIGOR AND TEST QUALITY
 
-Para manter a consistência, toda a API pública deve seguir estes padrões próprios do Ability System:
+### 10.1 The 300% Standard (Iron Law)
 
-### 11.1 Prefixos de Métodos
+Each feature must be proven by at least **3 variations** in the same test:
 
-Os métodos são categorizados pela sua intenção e camada de acesso:
+1. **Happy Path:** Ideal base scenario.
+2. **Negative:** Invalid input or expected failure.
+3. **Edge Case:** Complex combinations (multi-tags, boundary limits).
 
-- **🎮 Camada de Gameplay (Uso para Lógica de Jogo)**
-  - `try_activate_...`: **Execução Segura.** Tenta disparar uma lógica que depende de requisitos prévios. Integra a verificação e a ação. **Uso obrigatório para habilidades e efeitos.**
-  - `can_...`: **Pré-autorização.** Avalia se uma ação pode ser executada sem iniciá-la.
-  - `is_...`: **Consulta de Status.** Verifica condições booleanas de estado ou identidade (ex: `is_ability_active`).
-  - `has_...`: **Consulta de Posse.** Verifica se o objeto detém uma chave específica (ex: `has_tag`).
-  - `get_...`: **Extração de Informação.** Obtém valores, referências ou metadados de leitura.
-  - `cancel_...`: **Interrupção.** Encerra voluntariamente um fluxo em execução.
-  - `request_...`: **Intenção em Rede.** Solicita a execução de uma ação via RPC (Multiplayer).
+### 10.2 Test Suites
 
-- **🏗️ Camada de Infraestrutura/Interna (Uso Restrito ou de Configuração)**
-  - `apply_...`: **Aplicação Forçada.** Injeta um payload ou container ignorando regras de ativação. Usado em inicialização ou por sistemas de entrega (`ASDelivery`).
-  - `add_...` / `remove_...`: **Mutação de Baixo Nível.** Altera coleções internas. Não deve ser usado como atalho para ativar lógica de jogo (ex: use `try_activate` em vez de tentar "adicionar" um efeito manualmente).
-  - `unlock_...` / `lock_...`: **Gestão de Inventário.** Altera a disponibilidade de habilidades no catálogo do ator.
-  - `register_...` / `unregister_...`: **Vínculo de Sistema.** Conecta o componente a nós externos ou gerencia o Singleton global.
-  - `rename_...`: **Refatoração Interna.** Altera identificadores de Tags e propaga a mudança.
-  - `set_...`: **Mutação Direta.** Define valores brutos (Base Values).
-  - `clear_...`: **Reset Total.** Limpa estados ou coleções de forma absoluta.
-  - `capture_...`: **Persistência.** Congela o estado atual em um snapshot.
+- **Core (Unit):** Atomic, side-effect free tests.
+
+- **Advanced (Integration):** Periodic DoT/HoT, complex RPG flows.
+
+- **Multiplayer (Simulation):** Executed via `utility/multiplayer/runner.py` with injected latency.
+
+---
+
+## 11. API NAMING CONVENTIONS (AS-SPECIFIC)
+
+To maintain consistency, the public API must strictly follow these Ability System-specific patterns:
+
+### 11.1 Method Prefixes
+
+Methods are categorized by intent and access layer:
+
+- **🎮 Gameplay Layer (Game Logic Usage)**
+  - `try_activate_...`: **Safe Execution.** Attempts to trigger logic that depends on prerequisites. Integrates validation and action. **Mandatory for abilities and effects.**
+  - `can_...`: **Pre-authorization.** Evaluates if an action can be executed without starting it.
+  - `is_...`: **Status Query.** Checks boolean conditions for state or identity (e.g., `is_ability_active`).
+  - `has_...`: **Ownership Query.** Verifies if the object holds a specific key (e.g., `has_tag`).
+  - `get_...`: **Information Extraction.** Retrieves values, references, or read-only metadata.
+  - `cancel_...`: **Interruption.** Voluntarily terminates an active flow.
+  - `request_...`: **Network Intent.** Requests action execution via RPC (Multiplayer).
+
+- **🏗️ Infrastructure/Internal Layer (Restricted or Configuration Usage)**
+  - `apply_...`: **Forced Application.** Injects a payload or container, bypassing activation rules. Used during initialization or by delivery systems (`ASDelivery`).
+  - `add_...` / `remove_...`: **Low-level Mutation.** Modifies internal collections. Must not be used as a shortcut for activating game logic (e.g., use `try_activate` instead of trying to manually "add" an effect).
+  - `unlock_...` / `lock_...`: **Inventory Management.** Changes ability availability in the actor's catalog.
+  - `register_...` / `unregister_...`: **System Binding.** Connects the component to external nodes or manages the global Singleton.
+  - `rename_...`: **Internal Refactoring.** Changes Tag identifiers and propagates the change.
+  - `set_...`: **Direct Mutation.** Defines raw values (Base Values).
+  - `clear_...`: **Total Reset.** Absolutely clears states or collections.
+  - `capture_...`: **Persistence.** Freezes current state into a snapshot.
 
 > [!IMPORTANT]
-> **Não existe `activate` direto na API pública.** O uso de `try_...` é o único caminho seguro para gameplay. Métodos de infraestrutura (`apply_`, `add_`) existem para sistemas de baixo nível e não devem ser usados para contornar verificações de custos e cooldowns.
+> **Direct `activate` does not exist in the public API.** Using `try_...` is the only safe path for gameplay. Infrastructure methods (`apply_`, `add_`) exist for low-level systems and must not bypass cost and cooldown checks.
 
-### 11.2 Sufixos de Origem e Contexto
+### 11.2 Origin and Context Suffixes
 
-Sufixos são obrigatórios para resolver ambiguidades de entrada, destino ou comportamento:
+Suffixes are mandatory to resolve ambiguities in input, target, or behavior:
 
-- **Origem (Input):**
-  - `..._by_tag`: Operação baseada na identidade global da tag (ex: `has_tag`, `try_activate_ability_by_tag`).
-  - `..._by_resource`: Operação baseada na instância do arquivo de recurso (ex: `try_activate_ability_by_resource`).
+- **Origin (Input):**
+  - `..._by_tag`: Operation based on the global tag identity (e.g., `has_tag`, `try_activate_ability_by_tag`).
+  - `..._by_resource`: Operation based on the resource file instance (e.g., `try_activate_ability_by_resource`).
 
-- **Destino (Target):**
-  - `..._to_self`: A ação é aplicada exclusivamente ao componente que a chamou.
-  - `..._to_target`: A ação exige um componente alvo explícito como argumento.
+- **Target:**
+  - `..._to_self`: Action applies exclusively to the calling component.
+  - `..._to_target`: Action requires an explicit target component as an argument.
 
-- **Comportamento (Behavior):**
-  - `..._debug`: Retorna dados verbosos ou não otimizados para ferramentas de diagnóstico.
-  - `..._preview`: Realiza cálculos teóricos (E se...?) sem aplicar efeitos colaterais ou consumir recursos.
-  - `..._all`: Operação em massa que afeta toda a coleção relevante (ex: `cancel_all_abilities`).
+- **Behavior:**
+  - `..._debug`: Returns verbose or non-optimized data for diagnostic tools.
+  - `..._preview`: Performs theoretical calculations ("What if?") without side effects or resource consumption.
+  - `..._all`: Mass operation affecting the entire relevant collection (e.g., `cancel_all_abilities`).
 
-### 11.3 Argumentos e Tipagem
+### 11.3 Arguments and Typing
 
-A nomenclatura de argumentos deve ser autoexplicativa e seguir a hierarquia de tipos do projeto:
+Argument naming must be self-explanatory and follow the project's type hierarchy:
 
-**Nomenclatura Descritiva:** Proibido o uso de variáveis de um único caractere (ex: `t`, `a`). Use o nome completo do conceito (`tag`, `ability`, `effect`, `attribute`, `level`, `value`, `target_node`, `data`).
+- **Descriptive Naming:** Single-character variables (e.g., `t`, `a`) are forbidden. Use full conceptual names (`tag`, `ability`, `effect`, `attribute`, `level`, `value`, `target_node`, `data`).
 
-- **Tipagem de Performance:**
-  - `StringName`: Para todos os identificadores de tags e nomes de atributos (chave de dicionário).
-  - `float`: Para todas as magnitudes, níveis e durações (mesmo que sejam valores inteiros na lógica, o motor de atributos opera em ponto flutuante).
-  - `Dictionary`: Para payloads de dados variáveis (ex: no sistema de Cues).
+- **Performance Typing:**
+  - `StringName`: Used for all tag identifiers and attribute names (dictionary keys).
+  - `float`: Used for all magnitudes, levels, and durations (even if logically integers, the attribute engine operates in floating point).
+  - `Dictionary`: Used for variable data payloads (e.g., in the Cue system).
 
-- **Ordem Canônica:** Quando múltiplos argumentos são necessários, siga a ordem de importância:
-  1. **Identificador:** `tag` ou `resource`.
-  2. **Magnitude:** `level` ou `value`.
-  3. **Alvo/Contexto:** `target_node` ou `data`.
+- **Ordem Canônica:** When multiple arguments are required, follow importance:
+  1. **Identifier:** `tag` or `resource`.
+  2. **Magnitude:** `level` or `value`.
+  3. **Target/Context:** `target_node` or `data`.
 
-- **Valores Default:** Argumentos opcionais devem possuir valores neutros documentados (ex: `level = 1.0`, `target_node = null`).
+- **Default Values:** Optional arguments must have documented neutral values (e.g., `level = 1.0`, `target_node = null`).
 
-### 11.4 Sinais (Signals)
+### 11.4 Signals
 
-Sinais devem comunicar eventos que **já ocorreram**, seguindo o padrão de voz passiva:
+Signals communicate events that have **already occurred**, following the passive voice pattern:
 
-- **Formato:** `snake_case` no tempo passado.
+- **Format:** `snake_case` in past tense.
 
-- **Exemplos Corretos:** `ability_activated`, `effect_removed`, `attribute_changed`, `tag_event_received`.
+- **Correct Examples:** `ability_activated`, `effect_removed`, `attribute_changed`, `tag_event_received`.
 
-- **Exemplos Incorretos:** `on_ability_activate` (prefixo desnecessário), `activate_ability` (confunde com método).
+- **Incorrect Examples:** `on_ability_activate` (unnecessary prefix), `activate_ability` (confuses with method).
 
-### 11.5 Membros Internos e Propriedades (C++)
+### 11.5 Internal Members and Properties (C++)
 
-Para garantir segurança e legibilidade no código-fonte GDExtension:
+To ensure safety and readability in GDExtension source code:
 
-- **Variáveis Privadas/Protegidas:** Devem obrigatoriamente começar com `_` (underscore). Ex: `_attribute_set`, `_is_active`.
+- **Private/Protected Variables:** Must start with `_` (underscore). E.g., `_attribute_set`, `_is_active`.
 
-- **Getters/Setters Reativos:** Sempre que uma mudança de variável exigir uma reavaliação (ex: mudar a tag exige recontar o ASTagSpec), deve-se usar um setter formal em vez de acesso direto.
+- **Reactive Getters/Setters:** Whenever a variable change requires re-evaluation (e.g., changing a tag requires recounting `ASTagSpec`), a formal setter must be used instead of direct access.
 
-- **Propriedades Públicas:** Devem espelhar os nomes brutos (sem `_`) para serem expostas corretamente ao Inspetor do Godot.
+- **Public Properties:** Must mirror raw names (without `_`) to be correctly exposed to the Godot Inspector.
 
-- **Dual Build:** Todo código de teste deve suportar a compilação via `#ifdef ABILITY_SYSTEM_GDEXTENSION`.
+- **Dual Build:** All test code must support compilation via `#ifdef ABILITY_SYSTEM_GDEXTENSION`.
 
 ---
 
 ## 12. DESIGN PATTERNS (C++/GDEXTENSION)
 
-O sistema utiliza padrões clássicos adaptados para a arquitetura de alta performance da Godot Engine.
+The system utilizes classic patterns adapted for Godot Engine's high-performance architecture.
 
 ### 12.1 Spec Pattern (Resource vs. Instance)
 
-- **O Problema:** Resources Godot são compartilhados. Modificar um afetaria todos os inimigos do mesmo tipo.
+- **The Problem:** Godot Resources are shared. Modifying one would affect all enemies of that type.
 
-- **A Solução:** Separação total entre **Resource** (Dados Imutáveis/DNA) e **Spec** (Estado de Runtime/Instância).
+- **The Solution:** Total separation between **Resource** (Immutable Data/DNA) and **Spec** (Runtime State/Instance).
 
-- **Regra:** Toda lógica que exige alteração de valor (timers, stacks) deve residir no Spec. O Resource é apenas um Provedor de Dados.
+- **Rule:** All logic requiring value changes (timers, stacks) must reside in the Spec. The Resource is solely a Data Provider.
 
-### 12.2 Flyweight Pattern (Memória Otimizada)
+### 12.2 Flyweight Pattern (Memory Optimization)
 
-- **Conceito:** Milhares de atores compartilham as mesmas referências de `ASAbility` e `ASEffect`.
+- **Concept:** Thousands of actors share the same `ASAbility` and `ASEffect` references.
 
-- **Implementação:** O `ASComponent` armazena apenas ponteiros (RefCounters) para os Resources. Os dados pesados (ícones, curvas de dano) nunca são duplicados na memória.
+- **Implementation:** `ASComponent` stores only pointers (RefCounters) to Resources. Heavy data (icons, damage curves) is never duplicated in memory.
 
 ### 12.3 Command Pattern (Abilities)
 
-- **Conceito:** Cada habilidade é um comando auto-contido que sabe como iniciar, executar e cancelar.
+- **Concept:** Each ability is a self-contained command knowing how to start, execute, and cancel.
 
-- **Requisito:** Encapsulamento total. O componente não deve conhecer a lógica interna da habilidade; ele apenas despacha o comando.
+- **Requirement:** Total encapsulation. The component must not know the internal logic of the ability; it merely dispatches the command.
 
 ### 12.4 Data-Driven Design
 
-- **Regra:** O comportamento deve ser definido em arquivos `.tres` no Editor, não em código rígido (Hardcoded).
+- **Rule:** Behavior must be defined in `.tres` files within the Editor, not in hardcoded logic.
 
-- **Vantagem:** Permite que designers alterem o balanceamento sem recompilar o plugin.
+- **Advantage:** Allows designers to adjust balance without recompiling the plugin.
 
 ---
 
-## 13. TEST PATTERNS (RIGOR E DETERMINISMO)
+## 13. TEST PATTERNS (RIGOR AND DETERMINISM)
 
-A confiabilidade do sistema é garantida por padrões de teste industriais.
+System reliability is ensured through industrial test patterns.
 
 ### 13.1 Deterministic Physics Ticking
 
-- **Regra:** Testes de tempo (Cooldowns/Duração) devem ser validados via `physics_process` em passos fixos (Ticks).
+- **Rule:** Time-based tests (Cooldowns/Duration) must be validated via fixed-step `physics_process` (Ticks).
 
-- **Mocking do Tempo:** Em testes unitários, simulamos a passagem do tempo chamando `tick(delta)` manualmente para garantir que 1.0s seja exatamente 1.0s, independente do lag do hardware.
+- **Time Mocking:** In unit tests, we simulate time progression by manually calling `tick(delta)` to ensure 1.0s is exactly 1.0s, regardless of hardware lag.
 
 ### 13.2 Isolation & Mocking
 
-- **Mock Assets:** Para testar habilidades complexas, criamos Resources temporários em memória via código no `TEST_CASE`.
+- **Mock Assets:** To test complex abilities, we create temporary in-memory Resources via code within the `TEST_CASE`.
 
-- **Dummy Actors:** O uso de nodes simples com `ASComponent` é preferível a carregar cenas complexas (`.tscn`) para testes unitários, garantindo velocidade de execução.
+- **Dummy Actors:** Using simple nodes with an `ASComponent` is preferred over loading complex scenes (`.tscn`) for unit tests, ensuring execution speed.
 
 ### 13.3 State Injection
 
-- **Padrão:** Em vez de esperar 10 segundos para testar o fim de um efeito, o teste deve injetar um Spec com `duration_remaining = 0.1` e validar o próximo tick.
+- **Pattern:** Instead of waiting 10 seconds to test an effect's end, the test should inject a Spec with `duration_remaining = 0.1` and validate the subsequent tick.
 
 ### 13.4 Signal Auditing
 
-- **Padrão:** Todo teste de ativação deve auditar se o sinal correspondente (ex: `ability_activated`) foi emitido com os argumentos corretos, garantindo que o feedback visual (Cues) também funcione.
+- **Pattern:** Every activation test must audit whether the corresponding signal (e.g., `ability_activated`) was emitted with the correct arguments, ensuring visual feedback (Cues) also triggers correctly.

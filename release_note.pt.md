@@ -14,7 +14,7 @@ Temos o orgulho de anunciar o lançamento do **Ability System Framework**, uma s
 
 - **`ASContainer` (Template de Classes)**: Elimina a configuração manual. Ele age como um arquétipo para inicializar o componente inteiramente a partir de um `.tres`, facilitando a vida para estruturar um "Mago" ou "Guerreiro" baseando-se em inventários pré-selecionados de habilidades e atributos nativos.
 
-- **`ASDelivery` & `ASPackage`**: Injetores de física pura! Uma `Area2D` ou `Area3D` agora propaga um pacote (`ASPackage`) contendo dezenas de magias em um golpe ao colidir de forma natural com o alvo, separando a matemática de dano do rastreio do alvo.
+- **`ASDelivery` & `ASPackage`**: Injetores de lógica pura! O `ASDelivery` é um `Node` agnóstico (não dependente de 2D ou 3D) que transporta um `ASPackage`. Ele pode ser anexado a qualquer entidade ou projétil para injetar coleções de efeitos e cues em um alvo, desacoplando a lógica de gameplay da infraestrutura de colisão física.
 
 ## 2. Recursos Reutilizáveis (Blueprints Imutáveis)
 

@@ -1,113 +1,117 @@
 # BUSINESS RULES: LIMBOAI - GOVERNANCE CONTRACT
 
-Este documento estabelece as fronteiras arquiteturais e regras de negócio obrigatórias para o uso e integração do plugin **LimboAI** (Behavior Trees e Hierarchical State Machines) com o projeto. Qualquer implementação que viole estes limites deve ser refatorada imediatamente.
+This document establishes the mandatory architectural boundaries and business rules for the integration and use of the **LimboAI** plugin (Behavior Trees and Hierarchical State Machines) within the project. Any implementation that violates these boundaries must be refactored immediately.
 
 ---
 
-## 1. FILOSOFIA E ENGENHARIA RIGOROSA
+## 1. PHILOSOPHY AND RIGOROUS ENGINEERING
 
-O projeto rejeita o **"Vibe-Coding"** (programação por intuição ou sorte). Cada linha de lógica de comportamento em AI deve ser intencional e testável.
+The project rejects **"Vibe-Coding"** (programming by intuition, luck, or blind AI suggestion). Every line of AI behavior logic must be intentional, deterministic, and testable.
 
-### 1.1 Pair Programming e Governança
+### 1.1 Pair Programming and Governance
 
-- **Desapego Radical ao Código:** A árvore de comportamento ou máquina de estados que falha indica uma arquitetura de IA mal definida. A correção acontece via reavaliação de contexto, nunca via "remendos" de task para pular etapas.
-- **SSOT (Single Source of Truth):** Este arquivo é a Lei de Ferro do comportamento inteligente. Novas guidelines sobre IAs e BTs devem ser inseridas aqui.
-- **Idioma:** Código e documentação técnica das Tasks em **Inglês**.
-
----
-
-## 2. A MENTE DO AGENTE: BLACKBOARD
-
-O Blackboard é o mecanismo de Memória do Agente. É fundamental para compartilhar contexto entre Tasks desconexas sem forçar forte acoplamento (Strong Coupling).
-
-### 2.1 Blackboard & BlackboardPlan (Dados e Escopo)
-
-- **Papel:** Armazenar e compartilhar dados globais e locais da IA durante o ciclo mental (`tick`).
-- **Regra (Tipagem Estrita):** Sempre que possível, defina `BlackboardPlan` para delimitar e tipar as opções disponíveis para o agente, exportando as variáveis adequadas para o editor.
-- **Regra (Semântica de Variáveis):** Variáveis definidas no Blackboard devem ser tratadas como "Fatos" percebidos pelo agente.
-- **Regra (Escopo Múltiplo):** Aproveitar escopos/scopes de Blackboard para compartilhar "dados de facção" ou ambiente global entre diferentes agentes sem ter que usar Singletons pesados, criando a ilusão de _Hive Mind_ (Mentes Conectadas).
+- **Radical Detachment from Code:** A behavior tree or state machine that fails indicates a poorly defined AI architecture. Correction occurs via context re-evaluation and documentation adjustment, never through "patching" tasks to skip logical steps.
+- **SSOT (Single Source of Truth):** This file is the Iron Law of intelligent behavior. All new guidelines regarding AI and BTs must be documented here.
+- **Language Policy:** Technical code, Task documentation, and comments MUST be in **English**.
 
 ---
 
-## 3. O EXECUTOR: BTPLAYER (O ORQUESTRADOR DE BT)
+## 2. THE AGENT'S MIND: BLACKBOARD
 
-O `BTPlayer` é o Node raiz que amarra o `BehaviorTree` ao mundo físico (Node da cena).
+The Blackboard is the Agent's Memory mechanism. It is fundamental for sharing context between disconnected Tasks without forcing Strong Coupling.
 
-- **Papel:** É o cérebro rodando a execução temporal (Tick).
-- **Regra de Atualização:**
-  - O `update_mode` deve alinhar-se com o Ability System para simular controle direto. `UpdateMode::PHYSICS` garante sincronia de rede e Rollbacks adequados.
-  - Para casos multplayer determinísticos ou predições severas, é preferível `MANUAL` de modo a controlar granularmente quando o "Tick" mental da IA acontece dentro do physics handler nativo.
-- **Soberania do BehaviorTree:** O `BTPlayer` apenas processa as decisões estáticas de um Resource `.tres` (`BehaviorTree`).
+### 2.1 Blackboard & BlackboardPlan (Data and Scope)
 
----
-
-## 4. ÁRVORES DE COMPORTAMENTO (BEHAVIOR TREES)
-
-O LimboAI modela as decisões através de hierarquia de ações com status rigorosos.
-
-### 4.1 O Ciclo de `Status`
-
-Tasks devem retornar estritamente os estados de promessa:
-
-- `FRESH`: Em inicialização.
-- `RUNNING`: Pendente, requer continuação no próximo frame. Promove `Blocking`.
-- `SUCCESS`: Ação finalizada conforme design.
-- `FAILURE`: Condição não alcançada ou ação interrompida/inválida.
-
-### 4.2 Categorias de BT Tasks (Estruturação)
-
-1. **BTComposite (Roteadores):** `Selector`, `Sequence`, etc. **Regra:** Nunca executam lógicas de jogo reais, apenas manipulam o direcionamento da árvore.
-2. **BTDecorator (Modificadores):** Inversores, Limitadores de tempo. **Regra:** Operam apenas nos retornos ou pré-condições de um _único_ nó filho.
-3. **BTCondition (Observadores):** Questionam Fatos. **Regra:** São nós puros, rápidos, em "O(1)". Nunca modifique o estado do jogo aqui. Devem retornar `SUCCESS` ou `FAILURE` instantaneamente. Muitas vezes lerão do `Blackboard`.
-4. **BTAction (Ação Ativa - Folha):** Onde o trabalho sujo reside. Interage com `ASComponent`, dispara animações, move personagens. **Regra:** Suas ações podem ser instantâneas ou `RUNNING`. Elas alteram o ambiente.
+- **Role:** Storing and sharing global and local AI data during the mental cycle (`tick`).
+- **Rule (Strict Typing):** Whenever possible, define a `BlackboardPlan` to delimit and type the options available to the agent, exporting the appropriate variables to the editor.
+- **Rule (Variable Semantics):** Variables defined in the Blackboard must be treated as "Facts" perceived by the agent from the world.
+- **Rule (Multi-Scope):** Leverage Blackboard scopes to share "faction data" or global environment info between different agents without using heavy Singletons, creating the illusion of a *Hive Mind* (Connected Minds).
 
 ---
 
-## 5. MÁQUINAS DE ESTADOS: LIMBOHSM E LIMBOSTATE
+## 3. THE EXECUTOR: BTPLAYER (BT ORCHESTRATOR)
 
-Quando a lógica exige transições orientadas a evento de forma persistente em vez de avaliações em árvore (tick-by-tick base), usamos Hierarchical State Machines (HSM).
+The `BTPlayer` is the root Node that binds the `BehaviorTree` resource to the physical world (Scene Node).
 
-- **LimboHSM:** É o contêiner de estados ativos e gerente de transições (Dispatching).
-- **LimboState (Estados):** Pode abrigar `enter`, `exit`, `update`. **Regra:** Use primariamente para mecânicas fechadas do agente (como estar "Stunned", ou gerenciar Animações primárias contíguas).
-- **Hibridismo (`BTState`):** Quando a macro-logica precisa de rigidez (HSM) mas a micro-decisão pede fluidez (BT). **Regra:** Envolva Behavior Trees dentro de Estados para a melhor flexibilidade.
+- **Role:** It is the brain running the temporal execution (Tick).
+- **Update Rules:**
+  - The `update_mode` must align with the Ability System to simulate direct control. `UpdateMode::PHYSICS` ensures network synchronization and proper Rollbacks.
+  - For deterministic multiplayer cases, `MANUAL` is preferred to granularly control when the AI's mental "Tick" happens within the native physics handler.
+- **Sovereignty of the BehaviorTree:** The `BTPlayer` only processes the static decisions of a `.tres` Resource (`BehaviorTree`).
 
 ---
 
-## 6. INTEGRAÇÃO LIMBOAI + ABILITY SYSTEM
+## 4. BEHAVIOR TREES (BT)
 
-Para evitar "God Objects" em Actions e garantir o uso correto da máquina de Abilities e Tags, estabelecem-se as seguintes pontes arquiteturais:
+LimboAI models decisions through a hierarchy of actions with strict status codes.
 
-### 6.1 Condições via Tags (BTCondition)
+### 4.1 The `Status` Cycle
 
-IAs devem reagir a contexto aplicando e lendo `Tags`, nunca perguntando a variáveis booleanas arbitrárias do personagem.
+Tasks must strictly return the following promise states:
 
-- Utilize tarefas do tipo BTObservador que acessem o `ASComponent` e certifiquem-se do status de: `has_tag(...)`.
-- _Exemplo:_ Uma IA deve recuar caso ela possua `Debuff.Fear`.
+- `FRESH`: Initializing.
+- `RUNNING`: Pending, requires continuation in the next frame. Promotes `Blocking`.
+- `SUCCESS`: Action finalized according to design.
+- `FAILURE`: Condition not met or action interrupted/invalid.
 
-### 6.2 Lançamento de Habilidades (BTAction)
+### 4.2 BT Task Categories (Structuring)
 
-O BTAction **não deve** reproduzir dano direto ou projéteis, a menos que ele seja em si o efeito do tiro. Ele deve acessar o ASC e comandar:
+1. **BTComposite (Routers):** `Selector`, `Sequence`, etc. **Rule:** They must never execute real game logic; they only manipulate tree flow.
+2. **BTDecorator (Modifiers):** Inverters, Time Limiters. **Rule:** They operate only on the returns or pre-conditions of a *single* child node.
+3. **BTCondition (Observers):** Querying Facts. **Rule:** Pure, fast nodes with "O(1)" complexity. Never modify game state here. Must return `SUCCESS` or `FAILURE` instantly. They primarily read from the `Blackboard`.
+4. **BTAction (Active Action - Leaf):** Where the "dirty work" resides. Interacts with `ASComponent`, triggers animations, moves characters. **Rule:** Actions can be instantaneous or `RUNNING`. They are the only nodes authorized to modify the environment.
+
+---
+
+## 5. STATE MACHINES: LIMBOHSM and LIMBOSTATE
+
+When logic requires event-driven persistent transitions instead of tick-by-tick evaluations, use Hierarchical State Machines (HSM).
+
+- **LimboHSM:** The container for active states and the transition manager (Dispatching).
+- **LimboState (States):** Can house `enter`, `exit`, and `update` logic. **Rule:** Use primarily for closed agent mechanics (e.g., being "Stunned" or managing contiguous primary Animations).
+- **Hybridism (`BTState`):** When macro-logic needs rigidity (HSM) but micro-decisions require fluidity (BT). **Rule:** Wrap Behavior Trees inside States for maximum flexibility.
+
+---
+
+## 6. LIMBOAI + ABILITY SYSTEM INTEGRATION
+
+To avoid "God Objects" in Actions and ensure correct usage of the Abilities and Tags machine, the following architectural bridges are established:
+
+### 6.1 Conditions via Tags (BTCondition)
+
+AIs must react to context by applying and reading `Tags`, never by querying arbitrary boolean variables on the character.
+
+- Use Observer tasks that access the `ASComponent` and verify status via: `has_tag(...)`.
+- *Example:* An AI should retreat if it possesses the `Debuff.Fear` tag.
+
+### 6.2 Casting Abilities (BTAction)
+
+The BTAction **must not** produce direct damage or projectiles unless it is itself the "trigger" logic. It must access the ASC and command:
 
 - `try_activate_ability_by_tag(...)`.
-  A task fica em `RUNNING` enquanto a habilidade não reportar por _signal_ sua conclusão (isso promove ações que esperam pela animação via Ability System).
+  The task remains in `RUNNING` as long as the ability does not report its completion via signal (this promotes actions that wait for animations via the Ability System).
 
-### 6.3 O Agente Subordinado
+### 6.3 The Subordinate Agent
 
-A IA é apenas um "Controller" remoto que simula um jogador local operando as alavancas do `ASComponent`. O LimboAI dita _quando agir_, e o Ability System dicta o _se é possível_ e os _efeitos_.
-
----
-
-## 7. CRITÉRIOS DE DESENVOLVIMENTO (TASKS CUSTOMIZADAS)
-
-Criar novas Tasks em C++ ou GDScript exige obediência de código:
-
-1. **Uso de Godot Virtuals:** O sobrescrito deve ocorrer nas virtuals `_enter`, `_tick`, `_exit`, e `_setup`.
-2. **Propriedades Exportadas:** Quando usar atributos variáveis nas tasks preze pela possibilidade de apontar variaves de Blackboard (`BlackboardPlan`) usando as macros/sufijos que atam com as variáveis nativas de editor (`_var`).
-3. **Idempotência no tick:** Se a lógica em `update(delta)` retornar `RUNNING`, asseverar que ela não inicializará eventos duplicados a cada frame a menos que a intenção seja um tick de continuidade.
-4. **Isolamento de Erro:** Retornar `FAILURE` no log não é um erro fatal na Godot, é controle de fluxo da árvore. Abrace o `FAILURE` como via normal de controle (Ex: Target Not Found).
+The AI is merely a remote "Controller" simulating a local player operating the levers of the `ASComponent`. LimboAI dictates *when to act*, and the Ability System dictates *if it is possible* and the resulting *effects*.
 
 ---
 
-## 8. DEPURADOR VISUAL (VISUAL DEBUGGER)
+## 7. DEVELOPMENT CRITERIA (CUSTOM TASKS)
 
-- Obrigação manter a execução da árvore em conformidade tal que a ferramenta gráfica de Debugger nativa do LimboAI seja rastreável para a detecção de _bottlenecks_ nas escolhas da IA. Crie BTTasks com `get_custom_name()` claros se a lógica requer instâncias dinâmicas pesadas.
+Creating new Tasks in C++ or GDScript requires strict code obedience:
+
+1. **Use of Godot Virtuals:** Overriding must occur in the virtuals `_enter`, `_tick`, `_exit`, and `_setup`.
+2. **Exported Properties:** When using variable attributes in tasks, prioritize Blackboard variables (`BlackboardPlan`) using macros/suffixes that bind with native editor variables (`_var`).
+3. **Idempotency in Tick:** If logic in `update(delta)` returns `RUNNING`, ensure it does not initialize duplicate events every frame unless the intention is a continuity tick.
+4. **Error Isolation:** Returning `FAILURE` in the log is not a fatal Godot error; it is tree flow control. Embrace `FAILURE` as a normal control path (e.g., Target Not Found).
+
+---
+
+## 8. VISUAL DEBUGGER
+
+- It is mandatory to maintain tree execution in compliance so that the native LimboAI Visual Debugger tool remains traceable for detecting bottlenecks in AI choices. Create BTTasks with clear `get_custom_name()` results if the logic involving heavy dynamic instances.
+
+---
+
+Developed with ❤️ by **MachiTwo**
