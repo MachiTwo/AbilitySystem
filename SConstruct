@@ -51,11 +51,25 @@ customs = ["custom.py"]
 customs = [os.path.abspath(path) for path in customs]
 
 opts = Variables(customs, ARGUMENTS)
+opts.Add(
+    EnumVariable(
+        "tests",
+        "Tests to run",
+        "none",
+        allowed_values=("none", "unit", "integration"),
+    )
+)
 opts.Update(localEnv)
 
 Help(opts.GenerateHelpText(localEnv))
 
 env = localEnv.Clone()
+
+if env["tests"] == "unit":
+    env.Append(CPPDEFINES=["ABILITY_SYSTEM_UNIT_TESTS"])
+
+if env["tests"] == "integration":
+    env.Append(CPPDEFINES=["ABILITY_SYSTEM_INTEGRATION_TESTS"])
 
 if not (os.path.isdir("godot-cpp") and os.listdir("godot-cpp")):
     print(

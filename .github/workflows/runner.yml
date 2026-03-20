@@ -52,13 +52,22 @@ jobs:
     with:
       plugin-version: ${{ needs.check-all.outputs.plugin-version }}
 
+  all-tests:
+    name: 🧪 All Tests
+    if: "!contains(github.event.head_commit.message, '[tests skip]')"
+    needs: [check-all]
+    uses: ./.github/workflows/all_tests.yml
+    with:
+      plugin-version: ${{ needs.check-all.outputs.plugin-version }}
+
   package-plugin:
     name: 📦 Package Plugin
     if: |
       always() &&
       needs.check-all.result == 'success' &&
-      needs.gdextension-builds.result == 'success'
-    needs: [check-all, gdextension-builds]
+      needs.gdextension-builds.result == 'success' &&
+      (needs.all-tests.result == 'success' || needs.all-tests.result == 'skipped')
+    needs: [check-all, gdextension-builds, all-tests]
     uses: ./.github/workflows/package_plugin.yml
     with:
       tag_name: ${{ github.ref_name }}

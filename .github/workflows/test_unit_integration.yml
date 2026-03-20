@@ -1,0 +1,42 @@
+name: 🧪 Unit Integration Tests
+
+on:
+  workflow_call:
+    inputs:
+      godot-bin-name:
+        required: true
+        type: string
+
+jobs:
+  run-unit-integration:
+    name: 🧪 Run C++ Integration Tests
+    if: |
+      !contains(github.event.head_commit.message, '[tests skip]') &&
+      !contains(github.event.head_commit.message, '[unit skip]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Restore Test Binaries from Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: dist/
+          key: ${{ github.sha }}-test-binaries
+          fail-on-cache-miss: true
+
+      - name: Deploy Binaries
+        run: |
+          cp -r dist/standard/* .
+          cp -r dist/godot/* .
+
+      - name: Setup Environment
+        run: |
+          BIN_NAME="${{ inputs.godot-bin-name }}"
+          chmod +x "$BIN_NAME"
+          echo "GODOT_BIN=$(pwd)/$BIN_NAME" >> $GITHUB_ENV
+
+      - name: Run C++ Integration Tests
+        run: |
+          # Este teste roda a integração nativa entre AS e LimboAI
+          python utility/tests.py unit-integration
