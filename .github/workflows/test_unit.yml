@@ -18,6 +18,37 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
+      - name: Setup SCons
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y scons build-essential
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+          GC_VER=$(grep "GODOT_CPP_API_VERSION=" deps.env | cut -d "=" -f 2 | tr -d " ")
+          echo "GODOT_CPP_VERSION=$GC_VER" >> "$GITHUB_ENV"
+
+      - name: Fetch godot-cpp
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: godotengine/godot-cpp
+          ref: ${{ env.GODOT_CPP_VERSION }}
+          path: godot-cpp
+          submodules: recursive
+
+      - name: Setup godot-cpp
+        uses: ./godot-cpp/.github/actions/setup-godot-cpp
+        with:
+          platform: linux
+
+      - name: Restore SCons Cache
+        uses: ./.github/actions/zyris-cache-restore
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: infra-linux-${{ env.GODOT_VERSION }}
+
       - name: Restore Test Binaries from Cache
         uses: actions/cache/restore@v4
         with:
@@ -25,10 +56,16 @@ jobs:
           key: ${{ github.sha }}-test-binaries
           fail-on-cache-miss: true
 
-      - name: Deploy Binaries
+      - name: Deploy Godot Binary
         run: |
-          cp -r dist/standard/* .
           cp -r dist/godot/* .
+
+      - name: Build with Unit Tests
+        shell: bash
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
+        run: |
+          scons target=editor platform=linux tests=unit -j$(nproc)
 
       - name: Setup Environment
         run: |

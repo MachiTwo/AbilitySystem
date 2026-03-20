@@ -51,31 +51,18 @@ jobs:
           scons-cache: ${{ github.workspace }}/.scons_cache
           cache-name: infra-linux-${{ env.GODOT_VERSION }}
 
-      - name: Build Standard Plugin (Unit/Integration)
+      - name: Build Standard Plugin
         shell: bash
         env:
           SCONS_CACHE: ${{ github.workspace }}/.scons_cache
         run: |
-          scons target=editor platform=linux tests=unit -j$(nproc)
+          scons target=editor platform=linux -j$(nproc)
 
-      - name: Prepare Standard Artifact
+      - name: Prepare Artifacts
         shell: bash
         run: |
           mkdir -p dist/standard
           cp -r addons dist/standard/
-
-      - name: Build Multiplayer Plugin
-        shell: bash
-        env:
-          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
-        run: |
-          scons target=editor platform=linux mptest=yes -j$(nproc)
-
-      - name: Prepare Multiplayer Artifact
-        shell: bash
-        run: |
-          mkdir -p dist/multiplayer
-          cp -r addons dist/multiplayer/
 
       - name: Save SCons Cache
         uses: ./.github/actions/zyris-cache-save
