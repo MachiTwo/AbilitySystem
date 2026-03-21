@@ -44,12 +44,7 @@
 #include "core/variant/typed_array.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
-
-class AbilitySystemCue;
-
+namespace godot {
 /**
  * AbilitySystem
  * The central singleton for the Ability System module.
@@ -101,5 +96,6 @@ public:
 	AbilitySystem();
 	~AbilitySystem();
 };
+} // namespace godot
 
-VARIANT_ENUM_CAST(AbilitySystem::TagType);
+VARIANT_ENUM_CAST(godot::AbilitySystem::TagType);

@@ -31,6 +31,7 @@
 #pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
+#include "src/resources/as_cue.h"
 #include "src/resources/as_effect.h"
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/core/gdvirtual.gen.inc>
@@ -43,21 +44,16 @@
 #include "core/object/object.h"
 #include "core/variant/typed_array.h"
 #include "core/variant/variant.h"
+#include "modules/ability_system/resources/as_cue.h"
 #include "modules/ability_system/resources/as_effect.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
-
+namespace godot {
 class ASComponent;
 class ASAbilitySpec;
-class ASCue;
-class ASAbilityPhase;
 
 class ASAbility : public Resource {
 	GDCLASS(ASAbility, Resource);
-
 	friend class ASAbilitySpec;
 
 public:
@@ -72,6 +68,11 @@ public:
 		TRIGGER_ON_TAG_REMOVED,
 		TRIGGER_ON_EVENT, // Triggered when a matching ASEvent is dispatched on this component
 	};
+
+	// GDScript virtuals
+	GDVIRTUAL2(_on_activate_ability, godot::Object *, godot::Ref<godot::RefCounted>);
+	GDVIRTUAL2RC(bool, _on_can_activate_ability, godot::Object *, godot::Ref<godot::RefCounted>);
+	GDVIRTUAL2(_on_end_ability, godot::Object *, godot::Ref<godot::RefCounted>);
 
 protected:
 	String ability_name;
@@ -112,20 +113,12 @@ protected:
 	// Hierarchical and Phases
 	TypedArray<ASAbility> sub_abilities;
 	TypedArray<StringName> sub_abilities_auto_activate;
-	TypedArray<ASAbilityPhase> phases;
+	TypedArray<ASAbility> phases;
 
 protected:
 	static void _bind_methods();
 
-	// GDScript virtuals
-	GDVIRTUAL2(_on_activate_ability, Object *, Ref<RefCounted>);
-	GDVIRTUAL2RC(bool, _on_can_activate_ability, Object *, Ref<RefCounted>);
-	GDVIRTUAL2(_on_end_ability, Object *, Ref<RefCounted>);
-
-public:
-	bool can_activate_ability(ASComponent *p_owner, Ref<ASAbilitySpec> p_spec = nullptr) const;
-	void activate_ability(ASComponent *p_owner, Ref<ASAbilitySpec> p_spec = nullptr, Object *p_target_node = nullptr);
-	void end_ability(ASComponent *p_owner, Ref<ASAbilitySpec> p_spec = nullptr);
+	// GDScript virtuals shifted to public above.
 
 	void set_ability_name(const String &p_name);
 	String get_ability_name() const;
@@ -152,13 +145,13 @@ public:
 	TypedArray<StringName> get_activation_cancel_tags() const;
 
 	void set_cues(const TypedArray<ASCue> &p_cues);
-	TypedArray<ASCue> get_cues() const { return cues; }
+	TypedArray<ASCue> get_cues() const;
 
 	void set_events_on_activate(const TypedArray<StringName> &p_events);
-	TypedArray<StringName> get_events_on_activate() const { return events_on_activate; }
+	TypedArray<StringName> get_events_on_activate() const;
 
 	void set_events_on_end(const TypedArray<StringName> &p_events);
-	TypedArray<StringName> get_events_on_end() const { return events_on_end; }
+	TypedArray<StringName> get_events_on_end() const;
 
 	void set_effects(const TypedArray<ASEffect> &p_effects);
 	TypedArray<ASEffect> get_effects() const;
@@ -198,8 +191,8 @@ public:
 	void set_sub_abilities_auto_activate(const TypedArray<StringName> &p_tags) { sub_abilities_auto_activate = p_tags; }
 	TypedArray<StringName> get_sub_abilities_auto_activate() const { return sub_abilities_auto_activate; }
 
-	void set_phases(const TypedArray<ASAbilityPhase> &p_phases) { phases = p_phases; }
-	TypedArray<ASAbilityPhase> get_phases() const { return phases; }
+	void set_phases(const TypedArray<ASAbility> &p_phases);
+	TypedArray<ASAbility> get_phases() const;
 
 	// Requirement methods
 	void set_requirements(const TypedArray<Dictionary> &p_requirements);
@@ -217,9 +210,14 @@ public:
 	bool can_afford_costs(ASComponent *p_owner, Ref<ASAbilitySpec> p_spec = nullptr) const;
 	void apply_costs(ASComponent *p_owner, Ref<ASAbilitySpec> p_spec = nullptr) const;
 
+	virtual bool can_activate_ability(ASComponent *p_owner, const Ref<ASAbilitySpec> &p_spec) const;
+	virtual void activate_ability(ASComponent *p_owner, const Ref<ASAbilitySpec> &p_spec, Object *p_target_node = nullptr);
+	virtual void end_ability(ASComponent *p_owner, const Ref<ASAbilitySpec> &p_spec);
+
 	ASAbility();
 	~ASAbility();
 };
+} // namespace godot
 
-VARIANT_ENUM_CAST(ASAbility::DurationPolicy);
-VARIANT_ENUM_CAST(ASAbility::TriggerType);
+VARIANT_ENUM_CAST(godot::ASAbility::DurationPolicy);
+VARIANT_ENUM_CAST(godot::ASAbility::TriggerType);

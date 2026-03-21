@@ -46,10 +46,7 @@
 #include "scene/gui/tree.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
-
+namespace godot {
 class ASTagsPanel : public VBoxContainer {
 	GDCLASS(ASTagsPanel, VBoxContainer);
 
@@ -81,3 +78,4 @@ public:
 
 	ASTagsPanel();
 };
+} // namespace godot

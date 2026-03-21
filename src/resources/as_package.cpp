@@ -36,9 +36,7 @@
 #include "modules/ability_system/resources/as_package.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
+namespace godot {
 
 void ASPackage::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_effects", "effects"), &ASPackage::set_effects);
@@ -66,6 +64,12 @@ void ASPackage::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_events_on_deliver", "events"), &ASPackage::set_events_on_deliver);
 	ClassDB::bind_method(D_METHOD("get_events_on_deliver"), &ASPackage::get_events_on_deliver);
 
+	ClassDB::bind_method(D_METHOD("set_package_tag", "tag"), &ASPackage::set_package_tag);
+	ClassDB::bind_method(D_METHOD("get_package_tag"), &ASPackage::get_package_tag);
+
+	ADD_GROUP("Identity", "package_");
+	ADD_PROPERTY(PropertyInfo(Variant::STRING_NAME, "package_tag"), "set_package_tag", "get_package_tag");
+
 	ADD_GROUP("Effects", "effects_");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "effects_resources", PROPERTY_HINT_ARRAY_TYPE, "ASEffect"), "set_effects", "get_effects");
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "effects_tags", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_effect_tags", "get_effect_tags");
@@ -78,19 +82,32 @@ void ASPackage::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "events_on_deliver", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_events_on_deliver", "get_events_on_deliver");
 }
 
+void ASPackage::set_effects(const TypedArray<ASEffect> &p_effects) {
+	effects = p_effects;
+}
+
+TypedArray<ASEffect> ASPackage::get_effects() const {
+	return effects;
+}
+
 void ASPackage::add_effect(const Ref<ASEffect> &p_effect) {
 	effects.append(p_effect);
 }
 
 void ASPackage::remove_effect(const Ref<ASEffect> &p_effect) {
-	int idx = effects.find(p_effect);
-	if (idx != -1) {
-		effects.remove_at(idx);
-	}
+	effects.erase(p_effect);
 }
 
 void ASPackage::clear_effects() {
 	effects.clear();
+}
+
+void ASPackage::set_effect_tags(const TypedArray<StringName> &p_tags) {
+	effect_tags = p_tags;
+}
+
+TypedArray<StringName> ASPackage::get_effect_tags() const {
+	return effect_tags;
 }
 
 void ASPackage::add_effect_tag(const StringName &p_tag) {
@@ -98,10 +115,15 @@ void ASPackage::add_effect_tag(const StringName &p_tag) {
 }
 
 void ASPackage::remove_effect_tag(const StringName &p_tag) {
-	int idx = effect_tags.find(p_tag);
-	if (idx != -1) {
-		effect_tags.remove_at(idx);
-	}
+	effect_tags.erase(p_tag);
+}
+
+void ASPackage::set_cues(const TypedArray<ASCue> &p_cues) {
+	cues = p_cues;
+}
+
+TypedArray<ASCue> ASPackage::get_cues() const {
+	return cues;
 }
 
 void ASPackage::add_cue(const Ref<ASCue> &p_cue) {
@@ -109,14 +131,19 @@ void ASPackage::add_cue(const Ref<ASCue> &p_cue) {
 }
 
 void ASPackage::remove_cue(const Ref<ASCue> &p_cue) {
-	int idx = cues.find(p_cue);
-	if (idx != -1) {
-		cues.remove_at(idx);
-	}
+	cues.erase(p_cue);
 }
 
 void ASPackage::clear_cues() {
 	cues.clear();
+}
+
+void ASPackage::set_cue_tags(const TypedArray<StringName> &p_tags) {
+	cue_tags = p_tags;
+}
+
+TypedArray<StringName> ASPackage::get_cue_tags() const {
+	return cue_tags;
 }
 
 void ASPackage::add_cue_tag(const StringName &p_tag) {
@@ -124,10 +151,7 @@ void ASPackage::add_cue_tag(const StringName &p_tag) {
 }
 
 void ASPackage::remove_cue_tag(const StringName &p_tag) {
-	int idx = cue_tags.find(p_tag);
-	if (idx != -1) {
-		cue_tags.remove_at(idx);
-	}
+	cue_tags.erase(p_tag);
 }
 
 void ASPackage::set_events_on_deliver(const TypedArray<StringName> &p_events) {
@@ -139,8 +163,21 @@ void ASPackage::set_events_on_deliver(const TypedArray<StringName> &p_events) {
 	}
 }
 
+TypedArray<StringName> ASPackage::get_events_on_deliver() const {
+	return events_on_deliver;
+}
+
+void ASPackage::set_package_tag(const StringName &p_tag) {
+	package_tag = p_tag;
+}
+
+StringName ASPackage::get_package_tag() const {
+	return package_tag;
+}
+
 ASPackage::ASPackage() {
 }
 
 ASPackage::~ASPackage() {
 }
+} // namespace godot

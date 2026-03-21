@@ -38,17 +38,7 @@
 #include "scene/main/node.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
-
-/**
- * ASEvent
- *
- * Data-driven payload for transient events.
- * This class replaces the previous internal struct to allow better
- * scripting integration and persistence where needed.
- */
+namespace godot {
 class ASEvent : public Resource {
 	GDCLASS(ASEvent, Resource);
 
@@ -81,3 +71,4 @@ public:
 	ASEvent();
 	~ASEvent();
 };
+} // namespace godot

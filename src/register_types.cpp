@@ -94,13 +94,13 @@
 using namespace godot;
 static AbilitySystem *as_singleton = nullptr;
 
-void initialize_as_module(ModuleInitializationLevel p_level) {
+void initialize_as_module(ModuleInitializationLevel p_lvl) {
 #else
 static AbilitySystem *as_singleton = nullptr;
 
-void initialize_ability_system_module(ModuleInitializationLevel p_level) {
+void initialize_ability_system_module(ModuleInitializationLevel p_lvl) {
 #endif
-	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
+	if (p_lvl == MODULE_INITIALIZATION_LEVEL_SCENE) {
 		GDREGISTER_CLASS(AbilitySystem);
 		GDREGISTER_CLASS(ASTagSpec);
 		GDREGISTER_CLASS(ASAbility);
@@ -130,7 +130,7 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 	}
 
 #ifdef TOOLS_ENABLED
-	if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR) {
+	if (p_lvl == MODULE_INITIALIZATION_LEVEL_EDITOR) {
 		GDREGISTER_CLASS(ASInspectorPlugin);
 		GDREGISTER_CLASS(ASEditorPropertySelector);
 		GDREGISTER_CLASS(ASEditorPropertyName);
@@ -146,11 +146,11 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 }
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-void uninitialize_as_module(ModuleInitializationLevel p_level) {
+void uninitialize_as_module(ModuleInitializationLevel p_lvl) {
 #else
-void uninitialize_ability_system_module(ModuleInitializationLevel p_level) {
+void uninitialize_ability_system_module(ModuleInitializationLevel p_lvl) {
 #endif
-	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
+	if (p_lvl == MODULE_INITIALIZATION_LEVEL_SCENE) {
 		if (as_singleton) {
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 			Engine::get_singleton()->unregister_singleton("AbilitySystem");

@@ -50,10 +50,7 @@
 #include "scene/gui/tree.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
-
+namespace godot {
 class ASEditorPropertySelector : public EditorProperty {
 	GDCLASS(ASEditorPropertySelector, EditorProperty);
 
@@ -134,3 +131,4 @@ public:
 
 	ASEditorPropertyTagSelector();
 };
+} // namespace godot

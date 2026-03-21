@@ -37,13 +37,12 @@
 #include "src/resources/as_state_snapshot.h"
 #include <godot_cpp/classes/audio_stream.hpp>
 #include <godot_cpp/classes/node.hpp>
-#include <godot_cpp/core/gdvirtual.gen.inc>
-#include <godot_cpp/core/type_info.hpp>
+#include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/templates/hash_map.hpp>
 #include <godot_cpp/templates/vector.hpp>
+#include <godot_cpp/variant/typed_array.hpp>
 #else
-#include "core/object/gdvirtual.gen.inc"
-#include "core/object/object.h"
+#include "core/object/ref_counted.h"
 #include "core/templates/hash_map.h"
 #include "core/templates/vector.h"
 #include "modules/ability_system/core/as_effect_spec.h"
@@ -55,16 +54,17 @@
 #endif
 
 // In Native mode, engine classes live in the global namespace.
-#ifndef ABILITY_SYSTEM_GDEXTENSION
-
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+namespace godot {
+class CharacterBody2D;
+class CharacterBody3D;
+} // namespace godot
+#else
 class CharacterBody2D;
 class CharacterBody3D;
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
-
+namespace godot {
 class ASAttributeSet;
 class ASTagSpec;
 class ASAttribute;
@@ -72,20 +72,14 @@ class ASAttribute;
 class ASAbility;
 class ASAbilitySpec;
 class ASEffect;
-class ASCue;
-class ASCueSpec;
+class ASEffectSpec;
 class ASContainer;
 class ASPackage;
 class ASStateSnapshot;
+class ASCue;
+class ASCueSpec;
+class ASEvent;
 class ASComponent;
-
-// In GDExtension mode, all Godot classes live inside namespace godot.
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-namespace godot {
-class CharacterBody2D;
-class CharacterBody3D;
-} // namespace godot
-#endif
 
 /**
  * ASEventData
@@ -199,7 +193,7 @@ public:
 	void request_activate_ability(const StringName &p_tag);
 	void confirm_ability_activation(const StringName &p_tag);
 
-	void apply_container(Ref<ASContainer> p_container, int p_level = 1);
+	void apply_container(Ref<ASContainer> p_container, int p_lvl = 1);
 	void add_attribute_set(Ref<ASAttributeSet> p_set);
 	TypedArray<ASAttributeSet> get_attribute_sets() const;
 
@@ -224,11 +218,11 @@ public:
 
 	// --- Effect Activation API ---
 	bool can_activate_effect_by_tag(const StringName &p_tag);
-	bool try_activate_effect_by_tag(const StringName &p_tag, float p_level = 1.0f, Object *p_target_node = nullptr);
+	bool try_activate_effect_by_tag(const StringName &p_tag, float p_lvl = 1.0f, Object *p_target_node = nullptr);
 	void cancel_effect_by_tag(const StringName &p_tag);
 
 	bool can_activate_effect_by_resource(const Ref<ASEffect> &p_effect);
-	bool try_activate_effect_by_resource(const Ref<ASEffect> &p_effect, float p_level = 1.0f, Object *p_target_node = nullptr);
+	bool try_activate_effect_by_resource(const Ref<ASEffect> &p_effect, float p_lvl = 1.0f, Object *p_target_node = nullptr);
 	void cancel_effect_by_resource(const Ref<ASEffect> &p_effect);
 
 	void remove_effect_by_tag(const StringName &p_tag);
@@ -236,11 +230,11 @@ public:
 	void clear_effects();
 
 	// --- Effect Execution API (Low level) ---
-	void apply_effect_by_tag(const StringName &p_tag, float p_level = 1.0f, Object *p_target_node = nullptr);
-	void apply_effect_by_resource(const Ref<ASEffect> &p_effect, float p_level = 1.0f, Object *p_target_node = nullptr);
-	void apply_package(const Ref<ASPackage> &p_package, float p_level = 1.0f, ASComponent *p_source_component = nullptr);
+	void apply_effect_by_tag(const StringName &p_tag, float p_lvl = 1.0f, Object *p_target_node = nullptr);
+	void apply_effect_by_resource(const Ref<ASEffect> &p_effect, float p_lvl = 1.0f, Object *p_target_node = nullptr);
+	void apply_package(const Ref<ASPackage> &p_package, float p_lvl = 1.0f, ASComponent *p_source_component = nullptr);
 
-	Ref<ASEffectSpec> make_outgoing_spec(Ref<ASEffect> p_effect, float p_level = 1.0f, Object *p_target_node = nullptr);
+	Ref<ASEffectSpec> make_outgoing_spec(Ref<ASEffect> p_effect, float p_lvl = 1.0f, Object *p_target_node = nullptr);
 	void apply_effect_spec_to_self(Ref<ASEffectSpec> p_spec);
 	void apply_effect_spec_to_target(Ref<ASEffectSpec> p_spec, ASComponent *p_target);
 	void remove_active_effect(Ref<ASEffectSpec> p_spec);
@@ -324,3 +318,4 @@ public:
 	ASComponent();
 	~ASComponent();
 };
+} // namespace godot

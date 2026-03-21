@@ -42,9 +42,7 @@
 #include "scene/gui/tab_container.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
+namespace godot {
 
 void ASEditorPlugin::_bind_methods() {
 }
@@ -76,3 +74,4 @@ ASEditorPlugin::ASEditorPlugin() {
 
 ASEditorPlugin::~ASEditorPlugin() {
 }
+} // namespace godot

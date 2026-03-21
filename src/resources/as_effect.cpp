@@ -31,14 +31,16 @@
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/resources/as_effect.h"
 #include "src/core/ability_system.h"
+#include "src/resources/as_ability.h"
+#include "src/resources/as_cue.h"
 #else
 #include "modules/ability_system/core/ability_system.h"
+#include "modules/ability_system/resources/as_ability.h"
+#include "modules/ability_system/resources/as_cue.h"
 #include "modules/ability_system/resources/as_effect.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
+namespace godot {
 
 void ASEffect::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_effect_name", "name"), &ASEffect::set_effect_name);
@@ -329,6 +331,10 @@ void ASEffect::set_activation_required_all_tags(const TypedArray<StringName> &p_
 	}
 }
 
+TypedArray<StringName> ASEffect::get_activation_required_all_tags() const {
+	return activation_required_all_tags;
+}
+
 void ASEffect::set_activation_required_any_tags(const TypedArray<StringName> &p_tags) {
 	activation_required_any_tags = p_tags;
 	if (AbilitySystem::get_singleton()) {
@@ -380,6 +386,10 @@ void ASEffect::set_granted_tags(const TypedArray<StringName> &p_tags) {
 	}
 }
 
+TypedArray<StringName> ASEffect::get_granted_tags() const {
+	return granted_tags;
+}
+
 void ASEffect::set_blocked_tags(const TypedArray<StringName> &p_tags) {
 	blocked_tags = p_tags;
 	if (AbilitySystem::get_singleton()) {
@@ -389,6 +399,10 @@ void ASEffect::set_blocked_tags(const TypedArray<StringName> &p_tags) {
 	}
 }
 
+TypedArray<StringName> ASEffect::get_blocked_tags() const {
+	return blocked_tags;
+}
+
 void ASEffect::set_removed_tags(const TypedArray<StringName> &p_tags) {
 	removed_tags = p_tags;
 	if (AbilitySystem::get_singleton()) {
@@ -396,6 +410,10 @@ void ASEffect::set_removed_tags(const TypedArray<StringName> &p_tags) {
 			AbilitySystem::get_singleton()->register_tag(p_tags[i], AbilitySystem::TAG_TYPE_CONDITIONAL);
 		}
 	}
+}
+
+TypedArray<StringName> ASEffect::get_removed_tags() const {
+	return removed_tags;
 }
 
 void ASEffect::set_events_on_apply(const TypedArray<StringName> &p_events) {
@@ -411,6 +429,19 @@ TypedArray<StringName> ASEffect::get_events_on_apply() const {
 	return events_on_apply;
 }
 
+void ASEffect::set_events_on_remove(const TypedArray<StringName> &p_events) {
+	events_on_remove = p_events;
+	if (AbilitySystem::get_singleton()) {
+		for (int i = 0; i < p_events.size(); i++) {
+			AbilitySystem::get_singleton()->register_tag(p_events[i], AbilitySystem::TAG_TYPE_EVENT);
+		}
+	}
+}
+
+TypedArray<StringName> ASEffect::get_events_on_remove() const {
+	return events_on_remove;
+}
+
 void ASEffect::set_cues(const TypedArray<ASCue> &p_cues) {
 	cues = p_cues;
 	if (effect_tag != StringName()) {
@@ -423,8 +454,13 @@ void ASEffect::set_cues(const TypedArray<ASCue> &p_cues) {
 	}
 }
 
+TypedArray<ASCue> ASEffect::get_cues() const {
+	return cues;
+}
+
 ASEffect::ASEffect() {
 }
 
 ASEffect::~ASEffect() {
 }
+} // namespace godot

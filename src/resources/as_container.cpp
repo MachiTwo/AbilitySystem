@@ -30,11 +30,13 @@
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/resources/as_container.h"
+#include "src/core/ability_system.h"
 #include "src/resources/as_ability.h"
 #include "src/resources/as_attribute_set.h"
 #include "src/resources/as_cue.h"
 #include "src/resources/as_effect.h"
 #else
+#include "modules/ability_system/core/ability_system.h"
 #include "modules/ability_system/resources/as_ability.h"
 #include "modules/ability_system/resources/as_attribute_set.h"
 #include "modules/ability_system/resources/as_container.h"
@@ -42,9 +44,7 @@
 #include "modules/ability_system/resources/as_effect.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
+namespace godot {
 
 void ASContainer::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_abilities", "abilities"), &ASContainer::set_abilities);
@@ -78,6 +78,51 @@ void ASContainer::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "events", PROPERTY_HINT_ARRAY_TYPE, "StringName"), "set_events", "get_events");
 }
 
+void ASContainer::set_abilities(const TypedArray<ASAbility> &p_abilities) {
+	abilities = p_abilities;
+}
+
+TypedArray<ASAbility> ASContainer::get_abilities() const {
+	return abilities;
+}
+
+void ASContainer::set_effects(const TypedArray<ASEffect> &p_effects) {
+	effects = p_effects;
+}
+
+TypedArray<ASEffect> ASContainer::get_effects() const {
+	return effects;
+}
+
+void ASContainer::set_attribute_set(const Ref<ASAttributeSet> &p_set) {
+	attribute_set = p_set;
+}
+
+Ref<ASAttributeSet> ASContainer::get_attribute_set() const {
+	return attribute_set;
+}
+
+void ASContainer::set_cues(const TypedArray<ASCue> &p_cues) {
+	cues = p_cues;
+}
+
+TypedArray<ASCue> ASContainer::get_cues() const {
+	return cues;
+}
+
+void ASContainer::set_events(const TypedArray<StringName> &p_events) {
+	events = p_events;
+	if (AbilitySystem::get_singleton()) {
+		for (int i = 0; i < p_events.size(); i++) {
+			AbilitySystem::get_singleton()->register_tag(p_events[i], AbilitySystem::TAG_TYPE_EVENT);
+		}
+	}
+}
+
+TypedArray<StringName> ASContainer::get_events() const {
+	return events;
+}
+
 bool ASContainer::has_ability(const Ref<ASAbility> &p_ability) const {
 	for (int i = 0; i < abilities.size(); i++) {
 		if (abilities[i] == p_ability) {
@@ -100,50 +145,6 @@ bool ASContainer::has_effect(const Ref<ASEffect> &p_effect) const {
 	for (int i = 0; i < effects.size(); i++) {
 		if (effects[i] == p_effect) {
 			return true;
-		}
-	}
-
-	// Also check if any of the abilities use this effect as a cost, cooldown or main effect
-	for (int i = 0; i < abilities.size(); i++) {
-		Ref<ASAbility> ability = abilities[i];
-		if (ability.is_valid()) {
-			TypedArray<ASEffect> ability_effects = ability->get_effects();
-			for (int j = 0; j < ability_effects.size(); j++) {
-				if (ability_effects[j] == p_effect) {
-					return true;
-				}
-			}
-			// Check costs
-			TypedArray<Dictionary> costs = ability->get_costs();
-			for (int j = 0; j < costs.size(); j++) {
-				Dictionary cost = costs[j];
-				if (cost.has("effect") && (Ref<ASEffect>)cost["effect"] == p_effect) {
-					return true;
-				}
-			}
-		}
-	}
-	// Check AttributeSet unlocked abilities too
-	if (attribute_set.is_valid()) {
-		TypedArray<ASAbility> unlocked = attribute_set->get_unlocked_abilities();
-		for (int i = 0; i < unlocked.size(); i++) {
-			Ref<ASAbility> ability = unlocked[i];
-			if (ability.is_valid()) {
-				TypedArray<ASEffect> ability_effects = ability->get_effects();
-				for (int k = 0; k < ability_effects.size(); k++) {
-					if (ability_effects[k] == p_effect) {
-						return true;
-					}
-				}
-				// Check costs
-				TypedArray<Dictionary> costs = ability->get_costs();
-				for (int j = 0; j < costs.size(); j++) {
-					Dictionary cost = costs[j];
-					if (cost.has("effect") && (Ref<ASEffect>)cost["effect"] == p_effect) {
-						return true;
-					}
-				}
-			}
 		}
 	}
 	return false;
@@ -186,17 +187,9 @@ void ASContainer::add_cue(const Ref<ASCue> &p_cue) {
 	}
 }
 
-void ASContainer::set_events(const TypedArray<StringName> &p_events) {
-	events = p_events;
-	if (AbilitySystem::get_singleton()) {
-		for (int i = 0; i < p_events.size(); i++) {
-			AbilitySystem::get_singleton()->register_tag(p_events[i], AbilitySystem::TAG_TYPE_EVENT);
-		}
-	}
-}
-
 ASContainer::ASContainer() {
 }
 
 ASContainer::~ASContainer() {
 }
+} // namespace godot

@@ -36,9 +36,7 @@
 #include "modules/ability_system/resources/as_attribute.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
+namespace godot {
 
 void ASAttribute::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_attribute_name", "name"), &ASAttribute::set_attribute_name);
@@ -135,3 +133,4 @@ ASAttribute::ASAttribute() {
 
 ASAttribute::~ASAttribute() {
 }
+} // namespace godot

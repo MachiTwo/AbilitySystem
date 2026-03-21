@@ -46,9 +46,7 @@
 #include "scene/3d/physics/area_3d.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
+namespace godot {
 
 void ASDelivery::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_source_component", "source"), &ASDelivery::set_source_component);
@@ -299,3 +297,4 @@ void ASDelivery::set_active(bool p_active) {
 	is_active = p_active;
 	set_physics_process(is_active && life_span > 0.0f);
 }
+} // namespace godot

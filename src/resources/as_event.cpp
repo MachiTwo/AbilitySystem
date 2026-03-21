@@ -34,9 +34,7 @@
 #include "modules/ability_system/resources/as_event.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
+namespace godot {
 
 void ASEvent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_event_tag", "tag"), &ASEvent::set_event_tag);
@@ -66,3 +64,4 @@ ASEvent::ASEvent() {
 
 ASEvent::~ASEvent() {
 }
+} // namespace godot

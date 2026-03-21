@@ -49,10 +49,7 @@
 #include "core/variant/variant.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
-
+namespace godot {
 class ASComponent;
 class ASEffectSpec;
 
@@ -80,14 +77,14 @@ private:
 	int current_phase_index = -1;
 
 public:
-	void init(Ref<ASAbility> p_ability, int p_level = 1);
+	void init(Ref<ASAbility> p_ability, int p_lvl = 1);
 	Ref<ASAbility> get_ability() const { return ability; }
 
 	bool get_is_active() const { return is_active; }
 	void set_is_active(bool p_active) { is_active = p_active; }
 
 	int get_level() const { return level; }
-	void set_level(int p_level) { level = p_level; }
+	void set_level(int p_lvl) { level = p_lvl; }
 
 	void set_owner(ASComponent *p_owner);
 	ASComponent *get_owner() const;
@@ -103,7 +100,7 @@ public:
 
 	void add_sub_spec(Ref<ASAbilitySpec> p_spec) { sub_specs.push_back(p_spec); }
 	void remove_sub_spec(Ref<ASAbilitySpec> p_spec);
-	Vector<Ref<ASAbilitySpec>> get_sub_specs() const { return sub_specs; }
+	TypedArray<ASAbilitySpec> get_sub_specs() const;
 
 	void set_current_phase_index(int p_index) { current_phase_index = p_index; }
 	int get_current_phase_index() const { return current_phase_index; }
@@ -126,9 +123,10 @@ public:
 	// Effect tracking for cascading cancellation
 	void add_active_effect(Ref<ASEffectSpec> p_spec);
 	void remove_active_effect(Ref<ASEffectSpec> p_spec);
-	Vector<Ref<ASEffectSpec>> get_active_effects() const { return active_effects; }
+	TypedArray<ASEffectSpec> get_active_effects() const;
 	void clear_active_effects();
 
 	ASAbilitySpec();
 	~ASAbilitySpec();
 };
+} // namespace godot

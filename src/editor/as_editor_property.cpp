@@ -38,9 +38,7 @@
 #include "scene/gui/box_container.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
+namespace godot {
 
 void ASEditorPropertySelector::_edit_pressed() {
 	_update_tree();

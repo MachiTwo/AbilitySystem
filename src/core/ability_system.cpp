@@ -42,14 +42,11 @@
 #include "core/config/project_settings.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
-
+namespace godot {
 AbilitySystem *AbilitySystem::singleton = nullptr;
 
 void AbilitySystem::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("register_tag", "tag", "type", "owner_id"), &AbilitySystem::register_tag, DEFVAL(TAG_TYPE_NAME), DEFVAL(0));
+	ClassDB::bind_method(D_METHOD("register_tag", "tag", "type", "owner_id"), &AbilitySystem::register_tag, DEFVAL(AbilitySystem::TAG_TYPE_NAME), DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("rename_tag", "old_tag", "new_tag"), &AbilitySystem::rename_tag);
 	ClassDB::bind_method(D_METHOD("is_tag_registered", "tag"), &AbilitySystem::is_tag_registered);
 	ClassDB::bind_method(D_METHOD("unregister_tag", "tag"), &AbilitySystem::unregister_tag);
@@ -341,8 +338,8 @@ AbilitySystem::AbilitySystem() {
 }
 
 AbilitySystem::~AbilitySystem() {
-	registered_tags.clear();
-	tag_owners.clear();
-	resource_names.clear();
-	singleton = nullptr;
+	if (singleton == this) {
+		singleton = nullptr;
+	}
 }
+} // namespace godot

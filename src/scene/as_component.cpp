@@ -51,6 +51,7 @@
 #include "modules/ability_system/core/as_effect_spec.h"
 #include "modules/ability_system/core/as_tag_spec.h"
 #include "modules/ability_system/resources/as_ability.h"
+#include "modules/ability_system/resources/as_ability_phase.h"
 #include "modules/ability_system/resources/as_attribute.h"
 #include "modules/ability_system/resources/as_attribute_set.h"
 #include "modules/ability_system/resources/as_container.h"
@@ -86,13 +87,11 @@
 #include "scene/3d/sprite_3d.h"
 #include "scene/animation/animation_player.h"
 #include "scene/audio/audio_stream_player.h"
-#include "scene/main/multiplayer_api.h"
+#scene / main / multiplayer_api.h "
 #include "servers/audio/audio_stream.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
+namespace godot {
 
 // Methods implementation
 
@@ -119,7 +118,7 @@ void ASComponent::_bind_methods() {
 
 	// --- Ability Activation API (By Tag) ---
 	ClassDB::bind_method(D_METHOD("can_activate_ability_by_tag", "tag"), &ASComponent::can_activate_ability_by_tag);
-	ClassDB::bind_method(D_METHOD("try_activate_ability_by_tag", "tag"), &ASComponent::try_activate_ability_by_tag);
+	ClassDB::bind_method(D_METHOD("try_activate_ability_by_tag", "tag", "target_node"), &ASComponent::try_activate_ability_by_tag, DEFVAL(Variant()));
 	ClassDB::bind_method(D_METHOD("cancel_ability_by_tag", "tag"), &ASComponent::cancel_ability_by_tag);
 	ClassDB::bind_method(D_METHOD("is_ability_active", "tag"), &ASComponent::is_ability_active);
 
@@ -556,7 +555,7 @@ void ASComponent::_process_abilities(float p_delta) {
 				}
 
 				bool phase_started = true;
-				ObjectID current_sub_id = spec->get_instance_id();
+				ObjectID current_sub_id = ObjectID(spec->get_instance_id());
 
 				// Loop to handle multiple sequential instant phases in the same frame
 				while (phase_started) {
@@ -566,32 +565,28 @@ void ASComponent::_process_abilities(float p_delta) {
 
 					if (parent_spec && parent_spec->get_is_active()) {
 						Ref<ASAbility> parent_ability = parent_spec->get_ability();
-						TypedArray<ASAbilityPhase> phases = parent_ability->get_phases();
+						TypedArray<ASAbility> phases = parent_ability->get_phases();
 						int next_phase_idx = parent_spec->get_current_phase_index() + 1;
 
 						if (next_phase_idx > 0 && next_phase_idx < phases.size()) {
-							Ref<ASAbilityPhase> next_phase = phases[next_phase_idx];
+							Ref<ASAbility> next_phase = phases[next_phase_idx];
 							if (next_phase.is_valid()) {
 								parent_spec->set_current_phase_index(next_phase_idx);
 								Ref<ASAbilitySpec> next_spec;
 								next_spec.instantiate();
 								next_spec->init(next_phase, parent_spec->get_level());
 								next_spec->set_owner(this);
-								next_spec->set_parent_id(parent_id);
-								parent_spec->add_sub_spec(next_spec);
+								next_spec->set_parent_id(ObjectID(parent_id));
 
-								if (next_phase->can_activate_ability(this, next_spec)) {
-									next_spec->set_is_active(true);
-									next_phase->activate_ability(this, next_spec);
+								if (next_spec->can_activate_ability()) {
+									// Mark as sub-spec
+									parent_spec->add_sub_spec(next_spec);
+									next_spec->activate_ability();
 									emit_signal("ability_activated", next_spec);
 
-									if (next_phase->get_duration_policy() != ASAbility::POLICY_INSTANT) {
-										active_abilities.push_back(next_spec);
-										// Not instant, so we stop the loop and wait for next frame/duration.
-										phase_started = false;
-									} else {
-										// Instant phase: execute end immediately and try next one
-										next_phase->end_ability(this, next_spec);
+									// If instant, we might need another phase
+									if (next_phase->get_duration_policy() == ASAbility::POLICY_INSTANT) {
+										next_spec->end_ability();
 										next_spec->set_is_active(false);
 										emit_signal("ability_ended", next_spec, false);
 										parent_spec->remove_sub_spec(next_spec);
@@ -750,7 +745,7 @@ void ASComponent::cancel_all_abilities() {
 	active_abilities.clear();
 }
 
-void ASComponent::apply_container(Ref<ASContainer> p_container, int p_level) {
+void ASComponent::apply_container(Ref<ASContainer> p_container, int p_lvl) {
 	ERR_FAIL_COND(p_container.is_null());
 
 	// 1. Duplicate container (shallow) to allow local modifications without affecting the resource file
@@ -780,7 +775,7 @@ void ASComponent::apply_container(Ref<ASContainer> p_container, int p_level) {
 	for (int i = 0; i < effects.size(); i++) {
 		Ref<ASEffect> effect = effects[i];
 		if (effect.is_valid()) {
-			Ref<ASEffectSpec> spec = make_outgoing_spec(effect, (float)p_level);
+			Ref<ASEffectSpec> spec = make_outgoing_spec(effect, (float)p_lvl);
 			apply_effect_spec_to_self(spec);
 		}
 	}
@@ -946,7 +941,7 @@ bool ASComponent::can_activate_ability_by_tag(const StringName &p_tag) {
 	return false;
 }
 
-bool ASComponent::try_activate_ability_by_tag(const StringName &p_tag) {
+bool ASComponent::try_activate_ability_by_tag(const StringName &p_tag, Object *p_target_node) {
 	bool authority = is_multiplayer_authority();
 	if (!authority) {
 		_is_predicting = true;
@@ -1224,17 +1219,17 @@ bool ASComponent::can_activate_effect_by_tag(const StringName &p_tag) {
 	return false;
 }
 
-bool ASComponent::try_activate_effect_by_resource(const Ref<ASEffect> &p_effect, float p_level, Object *p_target_node) {
+bool ASComponent::try_activate_effect_by_resource(const Ref<ASEffect> &p_effect, float p_lvl, Object *p_target_node) {
 	if (can_activate_effect_by_resource(p_effect)) {
-		apply_effect_by_resource(p_effect, p_level, p_target_node);
+		apply_effect_by_resource(p_effect, p_lvl, p_target_node);
 		return true;
 	}
 	return false;
 }
 
-bool ASComponent::try_activate_effect_by_tag(const StringName &p_tag, float p_level, Object *p_target_node) {
+bool ASComponent::try_activate_effect_by_tag(const StringName &p_tag, float p_lvl, Object *p_target_node) {
 	if (can_activate_effect_by_tag(p_tag)) {
-		apply_effect_by_tag(p_tag, p_level, p_target_node);
+		apply_effect_by_tag(p_tag, p_lvl, p_target_node);
 		return true;
 	}
 	return false;
@@ -1250,21 +1245,21 @@ void ASComponent::cancel_effect_by_resource(const Ref<ASEffect> &p_effect) {
 
 // --- Effect Execution API (Low level) ---
 
-void ASComponent::apply_effect_by_tag(const StringName &p_tag, float p_level, Object *p_target_node) {
+void ASComponent::apply_effect_by_tag(const StringName &p_tag, float p_lvl, Object *p_target_node) {
 	Ref<ASEffect> effect = find_effect_by_tag(p_tag);
 	if (effect.is_valid()) {
-		apply_effect_by_resource(effect, p_level, p_target_node);
+		apply_effect_by_resource(effect, p_lvl, p_target_node);
 	} else {
 		ERR_PRINT(vformat("ASComponent: apply_effect_by_tag failed - Effect tag '%s' not found in container or unlocked abilities.", p_tag));
 	}
 }
 
-void ASComponent::apply_effect_by_resource(const Ref<ASEffect> &p_effect, float p_level, Object *p_target_node) {
-	Ref<ASEffectSpec> spec = make_outgoing_spec(p_effect, p_level, p_target_node);
+void ASComponent::apply_effect_by_resource(const Ref<ASEffect> &p_effect, float p_lvl, Object *p_target_node) {
+	Ref<ASEffectSpec> spec = make_outgoing_spec(p_effect, p_lvl, p_target_node);
 	apply_effect_spec_to_self(spec);
 }
 
-void ASComponent::apply_package(const Ref<ASPackage> &p_package, float p_level, ASComponent *p_source_component) {
+void ASComponent::apply_package(const Ref<ASPackage> &p_package, float p_lvl, ASComponent *p_source_component) {
 	ERR_FAIL_COND(p_package.is_null());
 
 	// 1. Deliver effect resources
@@ -1274,10 +1269,10 @@ void ASComponent::apply_package(const Ref<ASPackage> &p_package, float p_level, 
 		if (effect.is_valid()) {
 			Ref<ASEffectSpec> spec;
 			if (p_source_component) {
-				spec = p_source_component->make_outgoing_spec(effect, p_level);
+				spec = p_source_component->make_outgoing_spec(effect, p_lvl);
 			} else {
 				spec.instantiate();
-				spec->init(effect, p_level);
+				spec->init(effect, p_lvl);
 			}
 			apply_effect_spec_to_self(spec);
 		}
@@ -1294,14 +1289,14 @@ void ASComponent::apply_package(const Ref<ASPackage> &p_package, float p_level, 
 				for (int j = 0; j < source_effects.size(); j++) {
 					Ref<ASEffect> e = source_effects[j];
 					if (e.is_valid() && e->get_effect_tag() == tag) {
-						Ref<ASEffectSpec> spec = p_source_component->make_outgoing_spec(e, p_level);
+						Ref<ASEffectSpec> spec = p_source_component->make_outgoing_spec(e, p_lvl);
 						apply_effect_spec_to_self(spec);
 						break;
 					}
 				}
 			}
 		} else {
-			apply_effect_by_tag(tag, p_level);
+			apply_effect_by_tag(tag, p_lvl);
 		}
 	}
 
@@ -1311,7 +1306,7 @@ void ASComponent::apply_package(const Ref<ASPackage> &p_package, float p_level, 
 		Ref<ASCue> cue = cues[i];
 		if (cue.is_valid()) {
 			Dictionary cue_data;
-			cue_data["level"] = p_level;
+			cue_data["level"] = p_lvl;
 			try_activate_cue_by_resource(cue, cue_data, nullptr);
 		}
 	}
@@ -1321,14 +1316,14 @@ void ASComponent::apply_package(const Ref<ASPackage> &p_package, float p_level, 
 	for (int i = 0; i < cue_tags.size(); i++) {
 		StringName tag = cue_tags[i];
 		Dictionary cue_tag_data;
-		cue_tag_data["level"] = p_level;
+		cue_tag_data["level"] = p_lvl;
 		try_activate_cue_by_tag(tag, cue_tag_data, nullptr);
 	}
 
 	// 5. Deliver events
 	TypedArray<StringName> deliver_events = p_package->get_events_on_deliver();
 	for (int i = 0; i < deliver_events.size(); i++) {
-		dispatch_event(deliver_events[i], p_source_component, p_level);
+		dispatch_event(deliver_events[i], p_source_component, p_lvl);
 	}
 }
 
@@ -1361,7 +1356,7 @@ Ref<ASEffect> ASComponent::find_effect_by_tag(const StringName &p_tag) const {
 	return Ref<ASEffect>();
 }
 
-Ref<ASEffectSpec> ASComponent::make_outgoing_spec(Ref<ASEffect> p_effect, float p_level, Object *p_target_node) {
+Ref<ASEffectSpec> ASComponent::make_outgoing_spec(Ref<ASEffect> p_effect, float p_lvl, Object *p_target_node) {
 	ERR_FAIL_COND_V(p_effect.is_null(), Ref<ASEffectSpec>());
 
 	// Validation: Outgoing effects must be part of the archetype contract.
@@ -1408,7 +1403,7 @@ Ref<ASEffectSpec> ASComponent::make_outgoing_spec(Ref<ASEffect> p_effect, float 
 
 	Ref<ASEffectSpec> spec;
 	spec.instantiate();
-	spec->init(p_effect, p_level);
+	spec->init(p_effect, p_lvl);
 	spec->set_source_component(this);
 	spec->set_target_node(p_target_node);
 	return spec;
@@ -2195,7 +2190,7 @@ void ASComponent::dispatch_event(const StringName &p_tag, Node *p_instigator, fl
 	data.custom_payload = p_custom_payload;
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-	data.timestamp = (double)UtilityFunctions::get_ticks_msec() / 1000.0;
+	data.timestamp = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
 #else
 	data.timestamp = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
 #endif
@@ -2219,7 +2214,7 @@ void ASComponent::dispatch_event(const StringName &p_tag, Node *p_instigator, fl
 bool ASComponent::has_event_occurred(const StringName &p_tag, float p_lookback_sec) const {
 	double current_time;
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-	current_time = (double)UtilityFunctions::get_ticks_msec() / 1000.0;
+	current_time = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
 #else
 	current_time = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
 #endif
@@ -2254,3 +2249,4 @@ ASComponent::~ASComponent() {
 	active_effects.clear();
 	unlocked_abilities.clear();
 }
+} // namespace godot

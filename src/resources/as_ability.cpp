@@ -35,6 +35,7 @@
 #include "src/core/as_cue_spec.h"
 #include "src/core/as_effect_spec.h"
 #include "src/core/as_tag_spec.h"
+#include "src/resources/as_ability_phase.h"
 #include "src/resources/as_cue.h"
 #include "src/resources/as_effect.h"
 #include "src/scene/as_component.h"
@@ -45,14 +46,13 @@
 #include "modules/ability_system/core/as_effect_spec.h"
 #include "modules/ability_system/core/as_tag_spec.h"
 #include "modules/ability_system/resources/as_ability.h"
+#include "modules/ability_system/resources/as_ability_phase.h"
 #include "modules/ability_system/resources/as_cue.h"
 #include "modules/ability_system/resources/as_effect.h"
 #include "modules/ability_system/scene/as_component.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
+namespace godot {
 
 void ASAbility::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_ability_name", "name"), &ASAbility::set_ability_name);
@@ -608,8 +608,17 @@ TypedArray<StringName> ASAbility::get_events_on_end() const {
 	return events_on_end;
 }
 
+void ASAbility::set_phases(const TypedArray<ASAbility> &p_phases) {
+	phases = p_phases;
+}
+
+TypedArray<ASAbility> ASAbility::get_phases() const {
+	return phases;
+}
+
 ASAbility::ASAbility() {
 }
 
 ASAbility::~ASAbility() {
 }
+} // namespace godot

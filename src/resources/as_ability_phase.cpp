@@ -34,9 +34,7 @@
 #include "modules/ability_system/resources/as_ability_phase.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
+namespace godot {
 
 void ASAbilityPhase::_bind_methods() {
 	// Unique phase methods can be bound here
@@ -47,3 +45,4 @@ ASAbilityPhase::ASAbilityPhase() {
 
 ASAbilityPhase::~ASAbilityPhase() {
 }
+} // namespace godot
