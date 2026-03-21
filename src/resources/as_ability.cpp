@@ -186,7 +186,7 @@ void ASAbility::_bind_methods() {
 	ADD_PROPERTY(PropertyInfo(Variant::ARRAY, "requirements", PROPERTY_HINT_ARRAY_TYPE, "Dictionary"), "set_requirements", "get_requirements");
 }
 
-bool ASAbility::can_activate_ability(ASComponent *p_owner, Ref<ASAbilitySpec> p_spec) const {
+bool ASAbility::can_activate_ability(ASComponent *p_owner, const Ref<ASAbilitySpec> &p_spec) const {
 	ERR_FAIL_NULL_V(p_owner, false);
 
 	if (!p_owner->get_owned_tags()->has_all_tags(activation_required_all_tags)) {
@@ -218,7 +218,7 @@ bool ASAbility::can_activate_ability(ASComponent *p_owner, Ref<ASAbilitySpec> p_
 	}
 
 	bool script_ret = true;
-	if (GDVIRTUAL_CALL(_on_can_activate_ability, p_owner, p_spec, script_ret)) {
+	if (const_cast<ASAbility *>(this)->GDVIRTUAL_CALL(_on_can_activate_ability, p_owner, p_spec, script_ret)) {
 		if (!script_ret) {
 			return false;
 		}
@@ -227,12 +227,12 @@ bool ASAbility::can_activate_ability(ASComponent *p_owner, Ref<ASAbilitySpec> p_
 	return true;
 }
 
-void ASAbility::activate_ability(ASComponent *p_owner, Ref<ASAbilitySpec> p_spec, Object *p_target_node) {
+void ASAbility::activate_ability(ASComponent *p_owner, const Ref<ASAbilitySpec> &p_spec, Object *p_target_node) {
 	ERR_FAIL_COND(p_spec.is_null());
 	p_spec->activate(p_target_node);
 }
 
-void ASAbility::end_ability(ASComponent *p_owner, Ref<ASAbilitySpec> p_spec) {
+void ASAbility::end_ability(ASComponent *p_owner, const Ref<ASAbilitySpec> &p_spec) {
 	ERR_FAIL_COND(p_spec.is_null());
 	p_spec->deactivate();
 }

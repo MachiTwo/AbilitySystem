@@ -76,6 +76,7 @@
 #include <godot_cpp/classes/multiplayer_api.hpp>
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/sprite3d.hpp>
+#include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #else
 #include "core/config/project_settings.h"
@@ -1147,7 +1148,7 @@ void ASComponent::cancel_ability_by_resource(const Ref<ASAbility> &p_ability) {
 		Ref<ASAbilitySpec> spec = active_abilities[i];
 		if (spec->get_ability() == p_ability) {
 			// Cascade cancel sub-specs
-			Vector<Ref<ASAbilitySpec>> subs = spec->get_sub_specs();
+			TypedArray<ASAbilitySpec> subs = spec->get_sub_specs();
 			for (int j = 0; j < subs.size(); j++) {
 				if (subs[j].is_valid()) {
 					cancel_ability_by_resource(subs[j]->get_ability());
@@ -2190,7 +2191,7 @@ void ASComponent::dispatch_event(const StringName &p_tag, Node *p_instigator, fl
 	data.custom_payload = p_custom_payload;
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-	data.timestamp = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+	data.timestamp = (double)Time::get_ticks_msec() / 1000.0;
 #else
 	data.timestamp = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
 #endif
@@ -2214,7 +2215,7 @@ void ASComponent::dispatch_event(const StringName &p_tag, Node *p_instigator, fl
 bool ASComponent::has_event_occurred(const StringName &p_tag, float p_lookback_sec) const {
 	double current_time;
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-	current_time = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+	current_time = (double)Time::get_ticks_msec() / 1000.0;
 #else
 	current_time = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
 #endif

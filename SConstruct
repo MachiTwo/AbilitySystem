@@ -68,10 +68,12 @@ gcpp_tool_path = "godot-cpp/tools/godotcpp.py"
 if os.path.exists(gcpp_tool_path):
     with open(gcpp_tool_path, "r") as f:
         content = f.read()
-    new_content = content.replace("env.NoCache(library)", "# env.NoCache(library)")
-    new_content = new_content.replace(
-        "env.NoCache(bindings)", "# env.NoCache(bindings)"
-    )
+    if "env.NoCache(library)" in content:
+        new_content = content.replace("env.NoCache(library)", "# env.NoCache(library)")
+    if "env.NoCache(bindings)" in content:
+        new_content = new_content.replace(
+            "env.NoCache(bindings)", "# env.NoCache(bindings)"
+        )
     if new_content != content:
         print("[SCONSTRUCT] Patching godot-cpp/tools/godotcpp.py to enable caching...")
         with open(gcpp_tool_path, "w") as f:
@@ -81,25 +83,17 @@ gcpp_sconstruct_path = "godot-cpp/SConstruct"
 if os.path.exists(gcpp_sconstruct_path):
     with open(gcpp_sconstruct_path, "r") as f:
         content = f.read()
-    if 'Decider("MD5")' not in content:
+    # We check for a marker to avoid double patching and ensure our Decider is the one used.
+    if "[GCPP_MD5_PATCH]" not in content:
         print("[SCONSTRUCT] Patching godot-cpp/SConstruct to enforce MD5 decider...")
-        lines = content.splitlines()
-        insert_idx = 0
-        for i, line in enumerate(lines):
-            if (
-                not line.startswith("#")
-                and not line.startswith("import")
-                and not line.startswith("sys.path")
-                and line.strip()
-            ):
-                insert_idx = i
-                break
-        lines.insert(
-            insert_idx,
-            'Decider("MD5")\nif "env" in globals() or "env" in locals():\n    env.Decider("MD5")\n',
-        )
+        # Force MD5 at the very top of the file
+        patch = '# [GCPP_MD5_PATCH]\nDecider("MD5")\nif "env" in globals() or "env" in locals():\n    env.Decider("MD5")\n'
+        content = patch + content
         with open(gcpp_sconstruct_path, "w") as f:
-            f.write("\n".join(lines))
+            f.write(content)
+
+if scons_cache_path:
+    os.environ["SCONS_CACHE"] = scons_cache_path
 
 env = SConscript("godot-cpp/SConstruct", {"env": env.Clone(), "customs": customs})
 

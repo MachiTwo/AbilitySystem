@@ -74,6 +74,45 @@ public:
 	GDVIRTUAL2RC(bool, _on_can_activate_ability, godot::Object *, godot::Ref<godot::RefCounted>);
 	GDVIRTUAL2(_on_end_ability, godot::Object *, godot::Ref<godot::RefCounted>);
 
+public:
+	static void _bind_methods();
+
+	void set_ability_name(const String &p_name);
+	String get_ability_name() const;
+
+	void set_ability_tag(const StringName &p_tag);
+	StringName get_ability_tag() const;
+
+	void set_activation_owned_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_owned_tags() const;
+
+	void set_activation_required_all_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_required_all_tags() const;
+
+	void set_activation_required_any_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_required_any_tags() const;
+
+	void set_activation_blocked_any_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_blocked_any_tags() const;
+
+	void set_activation_blocked_all_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_blocked_all_tags() const;
+
+	void set_activation_cancel_tags(const TypedArray<StringName> &p_tags);
+	TypedArray<StringName> get_activation_cancel_tags() const;
+
+	void set_cues(const TypedArray<ASCue> &p_cues);
+	TypedArray<ASCue> get_cues() const;
+
+	void set_events_on_activate(const TypedArray<StringName> &p_events);
+	TypedArray<StringName> get_events_on_activate() const;
+
+	void set_events_on_end(const TypedArray<StringName> &p_events);
+	TypedArray<StringName> get_events_on_end() const;
+
+	void set_effects(const TypedArray<ASEffect> &p_effects);
+	TypedArray<ASEffect> get_effects() const;
+
 protected:
 	String ability_name;
 	StringName ability_tag;
@@ -115,10 +154,8 @@ protected:
 	TypedArray<StringName> sub_abilities_auto_activate;
 	TypedArray<ASAbility> phases;
 
-protected:
+public:
 	static void _bind_methods();
-
-	// GDScript virtuals shifted to public above.
 
 	void set_ability_name(const String &p_name);
 	String get_ability_name() const;
@@ -216,6 +253,7 @@ protected:
 
 	ASAbility();
 	~ASAbility();
+
 };
 } // namespace godot
 
