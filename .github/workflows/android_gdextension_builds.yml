@@ -39,6 +39,13 @@ jobs:
           path: godot-cpp
           submodules: recursive
 
+      - name: Fetch LimboAI
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ env.PROJECT_INTEGRATION_GITHUB }}
+          ref: ${{ env.PROJECT_INTEGRATION_BRANCH }}
+          path: limboai
+
       - name: Setup Java
         uses: actions/setup-java@v4.7.0
         with:

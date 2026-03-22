@@ -10,7 +10,7 @@
 ASContainer
 ===========
 
-**Inherits:** :ref:`Resource<class_Resource>`
+**Inherits:** ``Resource``
 
 Archetype blueprint for an actor.
 
@@ -47,21 +47,21 @@ Methods
 .. table::
    :widths: auto
 
-   +-------------------------+---------------------------------------------------------------------------------------------------------------------+
-   | |void|                  | :ref:`add_ability<class_ASContainer_method_add_ability>`\ (\ ability\: :ref:`ASAbility<class_ASAbility>`\ )         |
-   +-------------------------+---------------------------------------------------------------------------------------------------------------------+
-   | |void|                  | :ref:`add_cue<class_ASContainer_method_add_cue>`\ (\ cue\: :ref:`ASCue<class_ASCue>`\ )                             |
-   +-------------------------+---------------------------------------------------------------------------------------------------------------------+
-   | |void|                  | :ref:`add_effect<class_ASContainer_method_add_effect>`\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ )              |
-   +-------------------------+---------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>` | :ref:`has_ability<class_ASContainer_method_has_ability>`\ (\ ability\: :ref:`ASAbility<class_ASAbility>`\ ) |const| |
-   +-------------------------+---------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>` | :ref:`has_cue<class_ASContainer_method_has_cue>`\ (\ tag\: :ref:`StringName<class_StringName>`\ ) |const|           |
-   +-------------------------+---------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>` | :ref:`has_cue_resource<class_ASContainer_method_has_cue_resource>`\ (\ cue\: :ref:`ASCue<class_ASCue>`\ ) |const|   |
-   +-------------------------+---------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>` | :ref:`has_effect<class_ASContainer_method_has_effect>`\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ ) |const|      |
-   +-------------------------+---------------------------------------------------------------------------------------------------------------------+
+   +----------+---------------------------------------------------------------------------------------------------------------------+
+   | |void|   | :ref:`add_ability<class_ASContainer_method_add_ability>`\ (\ ability\: :ref:`ASAbility<class_ASAbility>`\ )         |
+   +----------+---------------------------------------------------------------------------------------------------------------------+
+   | |void|   | :ref:`add_cue<class_ASContainer_method_add_cue>`\ (\ cue\: :ref:`ASCue<class_ASCue>`\ )                             |
+   +----------+---------------------------------------------------------------------------------------------------------------------+
+   | |void|   | :ref:`add_effect<class_ASContainer_method_add_effect>`\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ )              |
+   +----------+---------------------------------------------------------------------------------------------------------------------+
+   | ``bool`` | :ref:`has_ability<class_ASContainer_method_has_ability>`\ (\ ability\: :ref:`ASAbility<class_ASAbility>`\ ) |const| |
+   +----------+---------------------------------------------------------------------------------------------------------------------+
+   | ``bool`` | :ref:`has_cue<class_ASContainer_method_has_cue>`\ (\ tag\: ``StringName``\ ) |const|                                |
+   +----------+---------------------------------------------------------------------------------------------------------------------+
+   | ``bool`` | :ref:`has_cue_resource<class_ASContainer_method_has_cue_resource>`\ (\ cue\: :ref:`ASCue<class_ASCue>`\ ) |const|   |
+   +----------+---------------------------------------------------------------------------------------------------------------------+
+   | ``bool`` | :ref:`has_effect<class_ASContainer_method_has_effect>`\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ ) |const|      |
+   +----------+---------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -185,7 +185,7 @@ Adds an effect resource to the initial effects list.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **has_ability**\ (\ ability\: :ref:`ASAbility<class_ASAbility>`\ ) |const| :ref:`🔗<class_ASContainer_method_has_ability>`
+``bool`` **has_ability**\ (\ ability\: :ref:`ASAbility<class_ASAbility>`\ ) |const| :ref:`🔗<class_ASContainer_method_has_ability>`
 
 Checks if an ability is in the catalog.
 
@@ -197,7 +197,7 @@ Checks if an ability is in the catalog.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **has_cue**\ (\ tag\: :ref:`StringName<class_StringName>`\ ) |const| :ref:`🔗<class_ASContainer_method_has_cue>`
+``bool`` **has_cue**\ (\ tag\: ``StringName``\ ) |const| :ref:`🔗<class_ASContainer_method_has_cue>`
 
 Returns true if a cue with the specified tag exists in the container.
 
@@ -209,7 +209,7 @@ Returns true if a cue with the specified tag exists in the container.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **has_cue_resource**\ (\ cue\: :ref:`ASCue<class_ASCue>`\ ) |const| :ref:`🔗<class_ASContainer_method_has_cue_resource>`
+``bool`` **has_cue_resource**\ (\ cue\: :ref:`ASCue<class_ASCue>`\ ) |const| :ref:`🔗<class_ASContainer_method_has_cue_resource>`
 
 .. container:: contribute
 
@@ -223,7 +223,7 @@ Returns true if a cue with the specified tag exists in the container.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **has_effect**\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ ) |const| :ref:`🔗<class_ASContainer_method_has_effect>`
+``bool`` **has_effect**\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ ) |const| :ref:`🔗<class_ASContainer_method_has_effect>`
 
 Returns true if the specified effect resource is present in the container.
 

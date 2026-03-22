@@ -29,7 +29,6 @@
 /**************************************************************************/
 
 #include "as_state_snapshot.h"
-
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/as_tag_spec.h"
 #include "src/resources/as_attribute.h"
@@ -45,6 +44,10 @@
 #include "modules/ability_system/resources/as_container.h"
 #include "modules/ability_system/resources/as_effect.h"
 #include "modules/ability_system/scene/as_component.h"
+#endif
+
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
 #endif
 
 void ASStateSnapshot::_bind_methods() {

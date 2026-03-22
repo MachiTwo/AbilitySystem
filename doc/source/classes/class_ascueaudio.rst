@@ -10,7 +10,7 @@
 ASCueAudio
 ==========
 
-**Inherits:** :ref:`ASCue<class_ASCue>` **<** :ref:`Resource<class_Resource>`
+**Inherits:** :ref:`ASCue<class_ASCue>` **<** ``Resource``
 
 Cue specialized for playing audio.
 
@@ -19,7 +19,7 @@ Cue specialized for playing audio.
 Description
 -----------
 
-**ASCueAudio** is a specialized cue that automatically plays audio when triggered. It works with :ref:`AudioStreamPlayer<class_AudioStreamPlayer>`, :ref:`AudioStreamPlayer2D<class_AudioStreamPlayer2D>`, and :ref:`AudioStreamPlayer3D<class_AudioStreamPlayer3D>` nodes provided to the :ref:`ASComponent<class_ASComponent>`.
+**ASCueAudio** is a specialized cue that automatically plays audio when triggered. It works with ``AudioStreamPlayer``, ``AudioStreamPlayer2D``, and ``AudioStreamPlayer3D`` nodes provided to the :ref:`ASComponent<class_ASComponent>`.
 
 
 
@@ -37,9 +37,9 @@ Properties
 .. table::
    :widths: auto
 
-   +---------------------------------------+-------------------------------------------------------------+
-   | :ref:`AudioStream<class_AudioStream>` | :ref:`audio_stream<class_ASCueAudio_property_audio_stream>` |
-   +---------------------------------------+-------------------------------------------------------------+
+   +-----------------+-------------------------------------------------------------+
+   | ``AudioStream`` | :ref:`audio_stream<class_ASCueAudio_property_audio_stream>` |
+   +-----------------+-------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -54,12 +54,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-:ref:`AudioStream<class_AudioStream>` **audio_stream** :ref:`🔗<class_ASCueAudio_property_audio_stream>`
+``AudioStream`` **audio_stream** :ref:`🔗<class_ASCueAudio_property_audio_stream>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_audio_stream**\ (\ value\: :ref:`AudioStream<class_AudioStream>`\ )
-- :ref:`AudioStream<class_AudioStream>` **get_audio_stream**\ (\ )
+- |void| **set_audio_stream**\ (\ value\: ``AudioStream``\ )
+- ``AudioStream`` **get_audio_stream**\ (\ )
 
 AudioStream resource to play (.wav, .ogg, .mp3). Create AudioStream resources in your project and assign them here. Leave empty to skip.
 

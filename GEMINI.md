@@ -1,4 +1,5 @@
-# GEMINI.md - Governança Técnica & Memória do Projeto
+ba
+}r�(��l̂/�dS��j�%� �I�P��# GEMINI.md - Governança Técnica & Memória do Projeto
 
 > **Status:** v0.1.0 (Stable) - ATIVO
 > **Par:** Machi (Navigator) & Gemini (Pilot)
@@ -528,4 +529,4 @@ Para garantir segurança e legibilidade no código-fonte GDExtension:
 - **Variáveis Privadas/Protegidas:** Devem obrigatoriamente começar com `_` (underscore). Ex: `_attribute_set`, `_is_active`.
 - **Getters/Setters Reativos:** Sempre que uma mudança de variável exigir uma reavaliação (ex: mudar a tag exige recontar o ASTagSpec), deve-se usar um setter formal em vez de acesso direto.
 - **Propriedades Públicas:** Devem espelhar os nomes brutos (sem `_`) para serem expostas corretamente ao Inspetor do Godot.
-- **Dual Build:** Todo código de teste deve suportar a compilação via `#ifdef ABILITY_SYSTEM_GDEXTENSION`.
+- **Dual Build:** Todo código de teste deve suportar a compilação via `#ifd

@@ -14,7 +14,7 @@ We are proud to announce the stable release (v0.1.0) of the **Ability System Fra
 
 - **`ASContainer` (Class Template)**: Eliminates manual setup. It acts as an archetype to fully initialize the component from a single `.tres`, making it easy to structure a "Mage" or "Warrior" based on pre-selected inventories of abilities and native attributes.
 
-- **`ASDelivery` & `ASPackage`**: Pure physics injectors! An `Area2D` or `Area3D` now propagates a package (`ASPackage`) containing dozens of spells and cues in one hit when naturally colliding with a target, separating damage math from target tracking.
+- **`ASDelivery` & `ASPackage`**: Pure logic injectors! `ASDelivery` is an agnostic `Node` (not dependent on 2D or 3D) that carries an `ASPackage`. It can be attached to any entity or projectile to inject collections of effects and cues into a target, decoupling gameplay logic from the physical collision infrastructure.
 
 ## 2. Reusable Resources (Immutable Blueprints)
 

@@ -10,7 +10,7 @@
 ASPackage
 =========
 
-**Inherits:** :ref:`Resource<class_Resource>`
+**Inherits:** ``Resource``
 
 A reusable container for effects and cues that can be delivered.
 
@@ -29,15 +29,15 @@ Properties
 .. table::
    :widths: auto
 
-   +------------------------------------------------------------------+----------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\]           | :ref:`cues_resources<class_ASPackage_property_cues_resources>`       | ``[]`` |
-   +------------------------------------------------------------------+----------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`cues_tags<class_ASPackage_property_cues_tags>`                 | ``[]`` |
-   +------------------------------------------------------------------+----------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\]     | :ref:`effects_resources<class_ASPackage_property_effects_resources>` | ``[]`` |
-   +------------------------------------------------------------------+----------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`effects_tags<class_ASPackage_property_effects_tags>`           | ``[]`` |
-   +------------------------------------------------------------------+----------------------------------------------------------------------+--------+
+   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
+   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\]       | :ref:`cues_resources<class_ASPackage_property_cues_resources>`       | ``[]`` |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                  | :ref:`cues_tags<class_ASPackage_property_cues_tags>`                 | ``[]`` |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
+   | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\] | :ref:`effects_resources<class_ASPackage_property_effects_resources>` | ``[]`` |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                  | :ref:`effects_tags<class_ASPackage_property_effects_tags>`           | ``[]`` |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
 
 .. rst-class:: classref-reftable-group
 
@@ -47,27 +47,27 @@ Methods
 .. table::
    :widths: auto
 
-   +--------+---------------------------------------------------------------------------------------------------------------------+
-   | |void| | :ref:`add_cue<class_ASPackage_method_add_cue>`\ (\ cue\: :ref:`ASCue<class_ASCue>`\ )                               |
-   +--------+---------------------------------------------------------------------------------------------------------------------+
-   | |void| | :ref:`add_cue_tag<class_ASPackage_method_add_cue_tag>`\ (\ tag\: :ref:`StringName<class_StringName>`\ )             |
-   +--------+---------------------------------------------------------------------------------------------------------------------+
-   | |void| | :ref:`add_effect<class_ASPackage_method_add_effect>`\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ )                |
-   +--------+---------------------------------------------------------------------------------------------------------------------+
-   | |void| | :ref:`add_effect_tag<class_ASPackage_method_add_effect_tag>`\ (\ tag\: :ref:`StringName<class_StringName>`\ )       |
-   +--------+---------------------------------------------------------------------------------------------------------------------+
-   | |void| | :ref:`clear_cues<class_ASPackage_method_clear_cues>`\ (\ )                                                          |
-   +--------+---------------------------------------------------------------------------------------------------------------------+
-   | |void| | :ref:`clear_effects<class_ASPackage_method_clear_effects>`\ (\ )                                                    |
-   +--------+---------------------------------------------------------------------------------------------------------------------+
-   | |void| | :ref:`remove_cue<class_ASPackage_method_remove_cue>`\ (\ cue\: :ref:`ASCue<class_ASCue>`\ )                         |
-   +--------+---------------------------------------------------------------------------------------------------------------------+
-   | |void| | :ref:`remove_cue_tag<class_ASPackage_method_remove_cue_tag>`\ (\ tag\: :ref:`StringName<class_StringName>`\ )       |
-   +--------+---------------------------------------------------------------------------------------------------------------------+
-   | |void| | :ref:`remove_effect<class_ASPackage_method_remove_effect>`\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ )          |
-   +--------+---------------------------------------------------------------------------------------------------------------------+
-   | |void| | :ref:`remove_effect_tag<class_ASPackage_method_remove_effect_tag>`\ (\ tag\: :ref:`StringName<class_StringName>`\ ) |
-   +--------+---------------------------------------------------------------------------------------------------------------------+
+   +--------+------------------------------------------------------------------------------------------------------------+
+   | |void| | :ref:`add_cue<class_ASPackage_method_add_cue>`\ (\ cue\: :ref:`ASCue<class_ASCue>`\ )                      |
+   +--------+------------------------------------------------------------------------------------------------------------+
+   | |void| | :ref:`add_cue_tag<class_ASPackage_method_add_cue_tag>`\ (\ tag\: ``StringName``\ )                         |
+   +--------+------------------------------------------------------------------------------------------------------------+
+   | |void| | :ref:`add_effect<class_ASPackage_method_add_effect>`\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ )       |
+   +--------+------------------------------------------------------------------------------------------------------------+
+   | |void| | :ref:`add_effect_tag<class_ASPackage_method_add_effect_tag>`\ (\ tag\: ``StringName``\ )                   |
+   +--------+------------------------------------------------------------------------------------------------------------+
+   | |void| | :ref:`clear_cues<class_ASPackage_method_clear_cues>`\ (\ )                                                 |
+   +--------+------------------------------------------------------------------------------------------------------------+
+   | |void| | :ref:`clear_effects<class_ASPackage_method_clear_effects>`\ (\ )                                           |
+   +--------+------------------------------------------------------------------------------------------------------------+
+   | |void| | :ref:`remove_cue<class_ASPackage_method_remove_cue>`\ (\ cue\: :ref:`ASCue<class_ASCue>`\ )                |
+   +--------+------------------------------------------------------------------------------------------------------------+
+   | |void| | :ref:`remove_cue_tag<class_ASPackage_method_remove_cue_tag>`\ (\ tag\: ``StringName``\ )                   |
+   +--------+------------------------------------------------------------------------------------------------------------+
+   | |void| | :ref:`remove_effect<class_ASPackage_method_remove_effect>`\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ ) |
+   +--------+------------------------------------------------------------------------------------------------------------+
+   | |void| | :ref:`remove_effect_tag<class_ASPackage_method_remove_effect_tag>`\ (\ tag\: ``StringName``\ )             |
+   +--------+------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -99,12 +99,12 @@ List of direct :ref:`ASCue<class_ASCue>` resources.
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **cues_tags** = ``[]`` :ref:`🔗<class_ASPackage_property_cues_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **cues_tags** = ``[]`` :ref:`🔗<class_ASPackage_property_cues_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_cue_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_cue_tags**\ (\ )
+- |void| **set_cue_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_cue_tags**\ (\ )
 
 List of cue tags.
 
@@ -133,12 +133,12 @@ List of direct :ref:`ASEffect<class_ASEffect>` resources.
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **effects_tags** = ``[]`` :ref:`🔗<class_ASPackage_property_effects_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **effects_tags** = ``[]`` :ref:`🔗<class_ASPackage_property_effects_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_effect_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_effect_tags**\ (\ )
+- |void| **set_effect_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_effect_tags**\ (\ )
 
 List of effect tags.
 
@@ -167,7 +167,7 @@ Adds a direct :ref:`ASCue<class_ASCue>` resource to the package.
 
 .. rst-class:: classref-method
 
-|void| **add_cue_tag**\ (\ tag\: :ref:`StringName<class_StringName>`\ ) :ref:`🔗<class_ASPackage_method_add_cue_tag>`
+|void| **add_cue_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_ASPackage_method_add_cue_tag>`
 
 Adds a cue tag to be resolved by the target.
 
@@ -191,7 +191,7 @@ Adds a direct :ref:`ASEffect<class_ASEffect>` resource to the package.
 
 .. rst-class:: classref-method
 
-|void| **add_effect_tag**\ (\ tag\: :ref:`StringName<class_StringName>`\ ) :ref:`🔗<class_ASPackage_method_add_effect_tag>`
+|void| **add_effect_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_ASPackage_method_add_effect_tag>`
 
 Adds an effect tag to be resolved by the target.
 
@@ -241,7 +241,7 @@ Clears all effects from the package.
 
 .. rst-class:: classref-method
 
-|void| **remove_cue_tag**\ (\ tag\: :ref:`StringName<class_StringName>`\ ) :ref:`🔗<class_ASPackage_method_remove_cue_tag>`
+|void| **remove_cue_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_ASPackage_method_remove_cue_tag>`
 
 .. container:: contribute
 
@@ -269,7 +269,7 @@ Clears all effects from the package.
 
 .. rst-class:: classref-method
 
-|void| **remove_effect_tag**\ (\ tag\: :ref:`StringName<class_StringName>`\ ) :ref:`🔗<class_ASPackage_method_remove_effect_tag>`
+|void| **remove_effect_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_ASPackage_method_remove_effect_tag>`
 
 .. container:: contribute
 

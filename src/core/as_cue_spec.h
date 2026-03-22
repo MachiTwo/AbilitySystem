@@ -45,7 +45,6 @@
 using namespace godot;
 #endif
 
-// Forward declarations to break circularity
 class ASCue;
 class ASComponent;
 class ASEffectSpec;
@@ -121,7 +120,7 @@ public:
 	float get_magnitude() const { return magnitude; }
 
 	// --- Level ---
-	void set_level(float p_level) { level = p_level; }
+	void set_level(float p_lvl) { level = p_lvl; }
 	float get_level() const { return level; }
 
 	// --- Extra Data ---

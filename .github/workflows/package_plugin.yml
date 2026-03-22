@@ -220,6 +220,8 @@ jobs:
         run: |
           # Copy the fully prepared addons back into the repo structure
           cp -r out/addons/* addons/
+          # Ensure binaries are force-added to bypass .gitignore if they are new or modified
+          git add -f addons/${{ env.MODULE_NAME }}/bin/*
 
       - name: Auto-Commit Plugin Addons
         if: github.event_name != 'pull_request' && !startsWith(github.ref, 'refs/tags/')

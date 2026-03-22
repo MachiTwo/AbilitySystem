@@ -10,7 +10,7 @@
 ASAttribute
 ===========
 
-**Inherits:** :ref:`Resource<class_Resource>`
+**Inherits:** ``Resource``
 
 Resource that defines an ability system attribute with validation and limits.
 
@@ -19,7 +19,7 @@ Resource that defines an ability system attribute with validation and limits.
 Description
 -----------
 
-**ASAttribute** is a :ref:`Resource<class_Resource>` that serves as a definition for attributes in the Ability System. It contains metadata about the attribute including name, base value, and minimum/maximum limits.
+**ASAttribute** is a ``Resource`` that serves as a definition for attributes in the Ability System. It contains metadata about the attribute including name, base value, and minimum/maximum limits.
 
 Usage with :ref:`ASAttributeSet<class_ASAttributeSet>` provides a typed and validated structure for attributes like HP, Mana, Stamina, etc.
 
@@ -31,15 +31,15 @@ Properties
 .. table::
    :widths: auto
 
-   +-----------------------------+------------------------------------------------------------------+------------+
-   | :ref:`String<class_String>` | :ref:`attribute_name<class_ASAttribute_property_attribute_name>` | ``""``     |
-   +-----------------------------+------------------------------------------------------------------+------------+
-   | :ref:`float<class_float>`   | :ref:`base_value<class_ASAttribute_property_base_value>`         | ``0.0``    |
-   +-----------------------------+------------------------------------------------------------------+------------+
-   | :ref:`float<class_float>`   | :ref:`max_value<class_ASAttribute_property_max_value>`           | ``1000.0`` |
-   +-----------------------------+------------------------------------------------------------------+------------+
-   | :ref:`float<class_float>`   | :ref:`min_value<class_ASAttribute_property_min_value>`           | ``0.0``    |
-   +-----------------------------+------------------------------------------------------------------+------------+
+   +------------+------------------------------------------------------------------+------------+
+   | ``String`` | :ref:`attribute_name<class_ASAttribute_property_attribute_name>` | ``""``     |
+   +------------+------------------------------------------------------------------+------------+
+   | ``float``  | :ref:`base_value<class_ASAttribute_property_base_value>`         | ``0.0``    |
+   +------------+------------------------------------------------------------------+------------+
+   | ``float``  | :ref:`max_value<class_ASAttribute_property_max_value>`           | ``1000.0`` |
+   +------------+------------------------------------------------------------------+------------+
+   | ``float``  | :ref:`min_value<class_ASAttribute_property_min_value>`           | ``0.0``    |
+   +------------+------------------------------------------------------------------+------------+
 
 .. rst-class:: classref-reftable-group
 
@@ -49,11 +49,11 @@ Methods
 .. table::
    :widths: auto
 
-   +---------------------------+-----------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>` | :ref:`clamp_value<class_ASAttribute_method_clamp_value>`\ (\ value\: :ref:`float<class_float>`\ ) |const|       |
-   +---------------------------+-----------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`   | :ref:`is_valid_value<class_ASAttribute_method_is_valid_value>`\ (\ value\: :ref:`float<class_float>`\ ) |const| |
-   +---------------------------+-----------------------------------------------------------------------------------------------------------------+
+   +-----------+-------------------------------------------------------------------------------------------------+
+   | ``float`` | :ref:`clamp_value<class_ASAttribute_method_clamp_value>`\ (\ value\: ``float``\ ) |const|       |
+   +-----------+-------------------------------------------------------------------------------------------------+
+   | ``bool``  | :ref:`is_valid_value<class_ASAttribute_method_is_valid_value>`\ (\ value\: ``float``\ ) |const| |
+   +-----------+-------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -68,7 +68,7 @@ Signals
 
 .. rst-class:: classref-signal
 
-**limits_changed**\ (\ min_value\: :ref:`float<class_float>`, max_value\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASAttribute_signal_limits_changed>`
+**limits_changed**\ (\ min_value\: ``float``, max_value\: ``float``\ ) :ref:`🔗<class_ASAttribute_signal_limits_changed>`
 
 Emitted when the limits of the attribute are changed.
 
@@ -80,7 +80,7 @@ Emitted when the limits of the attribute are changed.
 
 .. rst-class:: classref-signal
 
-**value_changed**\ (\ old_value\: :ref:`float<class_float>`, new_value\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASAttribute_signal_value_changed>`
+**value_changed**\ (\ old_value\: ``float``, new_value\: ``float``\ ) :ref:`🔗<class_ASAttribute_signal_value_changed>`
 
 Emitted when the base value of the attribute is changed.
 
@@ -97,12 +97,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-:ref:`String<class_String>` **attribute_name** = ``""`` :ref:`🔗<class_ASAttribute_property_attribute_name>`
+``String`` **attribute_name** = ``""`` :ref:`🔗<class_ASAttribute_property_attribute_name>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_attribute_name**\ (\ value\: :ref:`String<class_String>`\ )
-- :ref:`String<class_String>` **get_attribute_name**\ (\ )
+- |void| **set_attribute_name**\ (\ value\: ``String``\ )
+- ``String`` **get_attribute_name**\ (\ )
 
 The unique name of this attribute.
 
@@ -114,12 +114,12 @@ The unique name of this attribute.
 
 .. rst-class:: classref-property
 
-:ref:`float<class_float>` **base_value** = ``0.0`` :ref:`🔗<class_ASAttribute_property_base_value>`
+``float`` **base_value** = ``0.0`` :ref:`🔗<class_ASAttribute_property_base_value>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_base_value**\ (\ value\: :ref:`float<class_float>`\ )
-- :ref:`float<class_float>` **get_base_value**\ (\ )
+- |void| **set_base_value**\ (\ value\: ``float``\ )
+- ``float`` **get_base_value**\ (\ )
 
 The base value of the attribute. Will be automatically clamped between :ref:`min_value<class_ASAttribute_property_min_value>` and :ref:`max_value<class_ASAttribute_property_max_value>`.
 
@@ -131,12 +131,12 @@ The base value of the attribute. Will be automatically clamped between :ref:`min
 
 .. rst-class:: classref-property
 
-:ref:`float<class_float>` **max_value** = ``1000.0`` :ref:`🔗<class_ASAttribute_property_max_value>`
+``float`` **max_value** = ``1000.0`` :ref:`🔗<class_ASAttribute_property_max_value>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_max_value**\ (\ value\: :ref:`float<class_float>`\ )
-- :ref:`float<class_float>` **get_max_value**\ (\ )
+- |void| **set_max_value**\ (\ value\: ``float``\ )
+- ``float`` **get_max_value**\ (\ )
 
 The maximum value allowed for this attribute.
 
@@ -148,12 +148,12 @@ The maximum value allowed for this attribute.
 
 .. rst-class:: classref-property
 
-:ref:`float<class_float>` **min_value** = ``0.0`` :ref:`🔗<class_ASAttribute_property_min_value>`
+``float`` **min_value** = ``0.0`` :ref:`🔗<class_ASAttribute_property_min_value>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_min_value**\ (\ value\: :ref:`float<class_float>`\ )
-- :ref:`float<class_float>` **get_min_value**\ (\ )
+- |void| **set_min_value**\ (\ value\: ``float``\ )
+- ``float`` **get_min_value**\ (\ )
 
 The minimum value allowed for this attribute.
 
@@ -170,7 +170,7 @@ Method Descriptions
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **clamp_value**\ (\ value\: :ref:`float<class_float>`\ ) |const| :ref:`🔗<class_ASAttribute_method_clamp_value>`
+``float`` **clamp_value**\ (\ value\: ``float``\ ) |const| :ref:`🔗<class_ASAttribute_method_clamp_value>`
 
 Returns the value clamped between :ref:`min_value<class_ASAttribute_property_min_value>` and :ref:`max_value<class_ASAttribute_property_max_value>`.
 
@@ -182,7 +182,7 @@ Returns the value clamped between :ref:`min_value<class_ASAttribute_property_min
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **is_valid_value**\ (\ value\: :ref:`float<class_float>`\ ) |const| :ref:`🔗<class_ASAttribute_method_is_valid_value>`
+``bool`` **is_valid_value**\ (\ value\: ``float``\ ) |const| :ref:`🔗<class_ASAttribute_method_is_valid_value>`
 
 Checks if the value is within the defined limits (:ref:`min_value<class_ASAttribute_property_min_value>` and :ref:`max_value<class_ASAttribute_property_max_value>`).
 

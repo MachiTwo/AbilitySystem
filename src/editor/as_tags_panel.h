@@ -46,6 +46,8 @@
 #include "scene/gui/tree.h"
 #endif
 
+#ifdef TOOLS_ENABLED
+
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 #endif
@@ -59,6 +61,7 @@ class ASTagsPanel : public VBoxContainer {
 	TabContainer *tabs = nullptr;
 	Tree *name_tags_tree = nullptr;
 	Tree *cond_tags_tree = nullptr;
+	Tree *event_tags_tree = nullptr;
 
 	void _add_tag();
 	void _add_tag_text(const String &p_tag);
@@ -68,8 +71,8 @@ class ASTagsPanel : public VBoxContainer {
 	void _rename_tag(Object *p_item, int p_column, int p_id, MouseButton p_button);
 	void _tag_edited();
 
-	void _update_tree(Tree *p_tree, AbilitySystem::TagType p_type, const String &p_search);
-	void _create_tree_items(Tree *p_tree, TreeItem *p_parent, const String &p_prefix, const TypedArray<StringName> &p_tags, AbilitySystem::TagType p_type, const String &p_search);
+	void _update_tree(Tree *p_tree, ASTagType p_type, const String &p_search);
+	void _create_tree_items(Tree *p_tree, TreeItem *p_parent, const String &p_prefix, const TypedArray<StringName> &p_tags, ASTagType p_type, const String &p_search);
 
 protected:
 	void _notification(int p_what);
@@ -80,3 +83,5 @@ public:
 
 	ASTagsPanel();
 };
+
+#endif // TOOLS_ENABLED

@@ -10,7 +10,7 @@
 ASCueAnimation
 ==============
 
-**Inherits:** :ref:`ASCue<class_ASCue>` **<** :ref:`Resource<class_Resource>`
+**Inherits:** :ref:`ASCue<class_ASCue>` **<** ``Resource``
 
 Cue specialized for playing animations.
 
@@ -19,7 +19,7 @@ Cue specialized for playing animations.
 Description
 -----------
 
-**ASCueAnimation** is a specialized cue that automatically plays animations when triggered. It works with :ref:`AnimationPlayer<class_AnimationPlayer>`, :ref:`AnimatedSprite2D<class_AnimatedSprite2D>`, and :ref:`AnimatedSprite3D<class_AnimatedSprite3D>` nodes provided to the :ref:`ASComponent<class_ASComponent>`.
+**ASCueAnimation** is a specialized cue that automatically plays animations when triggered. It works with ``AnimationPlayer``, ``AnimatedSprite2D``, and ``AnimatedSprite3D`` nodes provided to the :ref:`ASComponent<class_ASComponent>`.
 
 
 
@@ -56,9 +56,9 @@ Properties
 .. table::
    :widths: auto
 
-   +-----------------------------+---------------------------------------------------------------------+--------+
-   | :ref:`String<class_String>` | :ref:`animation_name<class_ASCueAnimation_property_animation_name>` | ``""`` |
-   +-----------------------------+---------------------------------------------------------------------+--------+
+   +------------+---------------------------------------------------------------------+--------+
+   | ``String`` | :ref:`animation_name<class_ASCueAnimation_property_animation_name>` | ``""`` |
+   +------------+---------------------------------------------------------------------+--------+
 
 .. rst-class:: classref-section-separator
 
@@ -73,12 +73,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-:ref:`String<class_String>` **animation_name** = ``""`` :ref:`🔗<class_ASCueAnimation_property_animation_name>`
+``String`` **animation_name** = ``""`` :ref:`🔗<class_ASCueAnimation_property_animation_name>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_animation_name**\ (\ value\: :ref:`String<class_String>`\ )
-- :ref:`String<class_String>` **get_animation_name**\ (\ )
+- |void| **set_animation_name**\ (\ value\: ``String``\ )
+- ``String`` **get_animation_name**\ (\ )
 
 Name of the animation to play. The cue will look for a node with the alias :ref:`ASCue.node_name<class_ASCue_property_node_name>` in the component's registry. If no name is specified, the component will try its default animation nodes.
 

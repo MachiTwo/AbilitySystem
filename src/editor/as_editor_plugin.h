@@ -36,6 +36,8 @@
 #include "editor/plugins/editor_plugin.h"
 #endif
 
+#ifdef TOOLS_ENABLED
+
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 #endif
@@ -56,3 +58,5 @@ public:
 	ASEditorPlugin();
 	~ASEditorPlugin();
 };
+
+#endif // TOOLS_ENABLED

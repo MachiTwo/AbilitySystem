@@ -10,7 +10,7 @@
 ASDelivery
 ==========
 
-**Inherits:** :ref:`Node<class_Node>`
+**Inherits:** ``Node``
 
 Reactive effect delivery node for projectiles and payloads.
 
@@ -31,23 +31,23 @@ Properties
 .. table::
    :widths: auto
 
-   +------------------------------------------------------------------+---------------------------------------------------------------------+-----------+
-   | :ref:`bool<class_bool>`                                          | :ref:`auto_connect<class_ASDelivery_property_auto_connect>`         | ``false`` |
-   +------------------------------------------------------------------+---------------------------------------------------------------------+-----------+
-   | :ref:`bool<class_bool>`                                          | :ref:`is_active<class_ASDelivery_property_is_active>`               | ``false`` |
-   +------------------------------------------------------------------+---------------------------------------------------------------------+-----------+
-   | :ref:`float<class_float>`                                        | :ref:`level<class_ASDelivery_property_level>`                       | ``1.0``   |
-   +------------------------------------------------------------------+---------------------------------------------------------------------+-----------+
-   | :ref:`float<class_float>`                                        | :ref:`life_span<class_ASDelivery_property_life_span>`               | ``0.0``   |
-   +------------------------------------------------------------------+---------------------------------------------------------------------+-----------+
-   | :ref:`bool<class_bool>`                                          | :ref:`one_shot<class_ASDelivery_property_one_shot>`                 | ``false`` |
-   +------------------------------------------------------------------+---------------------------------------------------------------------+-----------+
-   | :ref:`ASPackage<class_ASPackage>`                                | :ref:`package<class_ASDelivery_property_package>`                   |           |
-   +------------------------------------------------------------------+---------------------------------------------------------------------+-----------+
-   | :ref:`ASComponent<class_ASComponent>`                            | :ref:`source_component<class_ASDelivery_property_source_component>` |           |
-   +------------------------------------------------------------------+---------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`target_groups<class_ASDelivery_property_target_groups>`       | ``[]``    |
-   +------------------------------------------------------------------+---------------------------------------------------------------------+-----------+
+   +---------------------------------------------+---------------------------------------------------------------------+-----------+
+   | ``bool``                                    | :ref:`auto_connect<class_ASDelivery_property_auto_connect>`         | ``false`` |
+   +---------------------------------------------+---------------------------------------------------------------------+-----------+
+   | ``bool``                                    | :ref:`is_active<class_ASDelivery_property_is_active>`               | ``false`` |
+   +---------------------------------------------+---------------------------------------------------------------------+-----------+
+   | ``float``                                   | :ref:`level<class_ASDelivery_property_level>`                       | ``1.0``   |
+   +---------------------------------------------+---------------------------------------------------------------------+-----------+
+   | ``float``                                   | :ref:`life_span<class_ASDelivery_property_life_span>`               | ``0.0``   |
+   +---------------------------------------------+---------------------------------------------------------------------+-----------+
+   | ``bool``                                    | :ref:`one_shot<class_ASDelivery_property_one_shot>`                 | ``false`` |
+   +---------------------------------------------+---------------------------------------------------------------------+-----------+
+   | :ref:`ASPackage<class_ASPackage>`           | :ref:`package<class_ASDelivery_property_package>`                   |           |
+   +---------------------------------------------+---------------------------------------------------------------------+-----------+
+   | :ref:`ASComponent<class_ASComponent>`       | :ref:`source_component<class_ASDelivery_property_source_component>` |           |
+   +---------------------------------------------+---------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\] | :ref:`target_groups<class_ASDelivery_property_target_groups>`       | ``[]``    |
+   +---------------------------------------------+---------------------------------------------------------------------+-----------+
 
 .. rst-class:: classref-reftable-group
 
@@ -57,17 +57,17 @@ Methods
 .. table::
    :widths: auto
 
-   +-------------------------+---------------------------------------------------------------------------------------------------------------+
-   | |void|                  | :ref:`activate<class_ASDelivery_method_activate>`\ (\ duration\: :ref:`float<class_float>` = -1.0\ )          |
-   +-------------------------+---------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>` | :ref:`can_deliver_to<class_ASDelivery_method_can_deliver_to>`\ (\ target\: :ref:`Node<class_Node>`\ ) |const| |
-   +-------------------------+---------------------------------------------------------------------------------------------------------------+
-   | |void|                  | :ref:`deactivate<class_ASDelivery_method_deactivate>`\ (\ )                                                   |
-   +-------------------------+---------------------------------------------------------------------------------------------------------------+
-   | |void|                  | :ref:`deliver<class_ASDelivery_method_deliver>`\ (\ target\: :ref:`Node<class_Node>`\ )                       |
-   +-------------------------+---------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>` | :ref:`is_delivery_valid<class_ASDelivery_method_is_delivery_valid>`\ (\ ) |const|                             |
-   +-------------------------+---------------------------------------------------------------------------------------------------------------+
+   +----------+------------------------------------------------------------------------------------------------+
+   | |void|   | :ref:`activate<class_ASDelivery_method_activate>`\ (\ duration\: ``float`` = -1.0\ )           |
+   +----------+------------------------------------------------------------------------------------------------+
+   | ``bool`` | :ref:`can_deliver_to<class_ASDelivery_method_can_deliver_to>`\ (\ target\: ``Node``\ ) |const| |
+   +----------+------------------------------------------------------------------------------------------------+
+   | |void|   | :ref:`deactivate<class_ASDelivery_method_deactivate>`\ (\ )                                    |
+   +----------+------------------------------------------------------------------------------------------------+
+   | |void|   | :ref:`deliver<class_ASDelivery_method_deliver>`\ (\ target\: ``Node``\ )                       |
+   +----------+------------------------------------------------------------------------------------------------+
+   | ``bool`` | :ref:`is_delivery_valid<class_ASDelivery_method_is_delivery_valid>`\ (\ ) |const|              |
+   +----------+------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -82,7 +82,7 @@ Signals
 
 .. rst-class:: classref-signal
 
-**delivered**\ (\ target\: :ref:`Object<class_Object>`\ ) :ref:`🔗<class_ASDelivery_signal_delivered>`
+**delivered**\ (\ target\: ``Object``\ ) :ref:`🔗<class_ASDelivery_signal_delivered>`
 
 Emitted when a package is successfully delivered to a target.
 
@@ -111,14 +111,14 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-:ref:`bool<class_bool>` **auto_connect** = ``false`` :ref:`🔗<class_ASDelivery_property_auto_connect>`
+``bool`` **auto_connect** = ``false`` :ref:`🔗<class_ASDelivery_property_auto_connect>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_auto_connect**\ (\ value\: :ref:`bool<class_bool>`\ )
-- :ref:`bool<class_bool>` **get_auto_connect**\ (\ )
+- |void| **set_auto_connect**\ (\ value\: ``bool``\ )
+- ``bool`` **get_auto_connect**\ (\ )
 
-If true, attempts to connect automatically to :ref:`Area2D<class_Area2D>` or :ref:`Area3D<class_Area3D>` signals in the parent node.
+If true, attempts to connect automatically to ``Area2D`` or ``Area3D`` signals in the parent node.
 
 .. rst-class:: classref-item-separator
 
@@ -128,12 +128,12 @@ If true, attempts to connect automatically to :ref:`Area2D<class_Area2D>` or :re
 
 .. rst-class:: classref-property
 
-:ref:`bool<class_bool>` **is_active** = ``false`` :ref:`🔗<class_ASDelivery_property_is_active>`
+``bool`` **is_active** = ``false`` :ref:`🔗<class_ASDelivery_property_is_active>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_active**\ (\ value\: :ref:`bool<class_bool>`\ )
-- :ref:`bool<class_bool>` **get_active**\ (\ )
+- |void| **set_active**\ (\ value\: ``bool``\ )
+- ``bool`` **get_active**\ (\ )
 
 Current activation state.
 
@@ -145,12 +145,12 @@ Current activation state.
 
 .. rst-class:: classref-property
 
-:ref:`float<class_float>` **level** = ``1.0`` :ref:`🔗<class_ASDelivery_property_level>`
+``float`` **level** = ``1.0`` :ref:`🔗<class_ASDelivery_property_level>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_level**\ (\ value\: :ref:`float<class_float>`\ )
-- :ref:`float<class_float>` **get_level**\ (\ )
+- |void| **set_level**\ (\ value\: ``float``\ )
+- ``float`` **get_level**\ (\ )
 
 The magnitude or strength level of the delivery. This gets injected into all effects spawned by the delivery.
 
@@ -162,12 +162,12 @@ The magnitude or strength level of the delivery. This gets injected into all eff
 
 .. rst-class:: classref-property
 
-:ref:`float<class_float>` **life_span** = ``0.0`` :ref:`🔗<class_ASDelivery_property_life_span>`
+``float`` **life_span** = ``0.0`` :ref:`🔗<class_ASDelivery_property_life_span>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_life_span**\ (\ value\: :ref:`float<class_float>`\ )
-- :ref:`float<class_float>` **get_life_span**\ (\ )
+- |void| **set_life_span**\ (\ value\: ``float``\ )
+- ``float`` **get_life_span**\ (\ )
 
 Maximum duration the delivery stays active (0 = infinite).
 
@@ -179,12 +179,12 @@ Maximum duration the delivery stays active (0 = infinite).
 
 .. rst-class:: classref-property
 
-:ref:`bool<class_bool>` **one_shot** = ``false`` :ref:`🔗<class_ASDelivery_property_one_shot>`
+``bool`` **one_shot** = ``false`` :ref:`🔗<class_ASDelivery_property_one_shot>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_one_shot**\ (\ value\: :ref:`bool<class_bool>`\ )
-- :ref:`bool<class_bool>` **get_one_shot**\ (\ )
+- |void| **set_one_shot**\ (\ value\: ``bool``\ )
+- ``bool`` **get_one_shot**\ (\ )
 
 If true, the delivery deactivates automatically after the first successful delivery.
 
@@ -230,12 +230,12 @@ The :ref:`ASComponent<class_ASComponent>` that initiated this delivery (e.g., th
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **target_groups** = ``[]`` :ref:`🔗<class_ASDelivery_property_target_groups>`
+:ref:`Array<class_Array>`\[``StringName``\] **target_groups** = ``[]`` :ref:`🔗<class_ASDelivery_property_target_groups>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_target_groups**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_target_groups**\ (\ )
+- |void| **set_target_groups**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_target_groups**\ (\ )
 
 List of groups that targets must belong to for delivery to occur.
 
@@ -252,7 +252,7 @@ Method Descriptions
 
 .. rst-class:: classref-method
 
-|void| **activate**\ (\ duration\: :ref:`float<class_float>` = -1.0\ ) :ref:`🔗<class_ASDelivery_method_activate>`
+|void| **activate**\ (\ duration\: ``float`` = -1.0\ ) :ref:`🔗<class_ASDelivery_method_activate>`
 
 Activates the delivery. If ``duration`` is positive, it overrides :ref:`life_span<class_ASDelivery_property_life_span>`.
 
@@ -264,7 +264,7 @@ Activates the delivery. If ``duration`` is positive, it overrides :ref:`life_spa
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **can_deliver_to**\ (\ target\: :ref:`Node<class_Node>`\ ) |const| :ref:`🔗<class_ASDelivery_method_can_deliver_to>`
+``bool`` **can_deliver_to**\ (\ target\: ``Node``\ ) |const| :ref:`🔗<class_ASDelivery_method_can_deliver_to>`
 
 Checks if the delivery can reach the specified target (checks groups and validity).
 
@@ -288,9 +288,9 @@ Deactivates the delivery.
 
 .. rst-class:: classref-method
 
-|void| **deliver**\ (\ target\: :ref:`Node<class_Node>`\ ) :ref:`🔗<class_ASDelivery_method_deliver>`
+|void| **deliver**\ (\ target\: ``Node``\ ) :ref:`🔗<class_ASDelivery_method_deliver>`
 
-Delivers the :ref:`package<class_ASDelivery_property_package>` to the target :ref:`ASComponent<class_ASComponent>` (or its parents/children if the node itself isn't one).
+Delivers the payload of an :ref:`ASPackage<class_ASPackage>` to the target component. Automatically dispatches :ref:`ASEventTag<class_ASEventTag>`\ s defined in the package upon successful delivery.
 
 .. rst-class:: classref-item-separator
 
@@ -300,7 +300,7 @@ Delivers the :ref:`package<class_ASDelivery_property_package>` to the target :re
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **is_delivery_valid**\ (\ ) |const| :ref:`🔗<class_ASDelivery_method_is_delivery_valid>`
+``bool`` **is_delivery_valid**\ (\ ) |const| :ref:`🔗<class_ASDelivery_method_is_delivery_valid>`
 
 Returns true if the delivery is active and hasn't expired.
 

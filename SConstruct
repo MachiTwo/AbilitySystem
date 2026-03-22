@@ -106,6 +106,71 @@ env = SConscript("godot-cpp/SConstruct", {"env": env.Clone(), "customs": customs
 env.Append(CPPPATH=[".", "src"])
 env.Append(CPPDEFINES=["ABILITY_SYSTEM_GDEXTENSION"])
 
+# Configure LimboAI Integration if available
+if os.path.isdir("limboai"):
+    print("[SCONSTRUCT] LimboAI detected. Integrating sources...")
+    env.Append(CPPPATH=["limboai"])
+    env.Append(CPPDEFINES=["LIMBOAI_GDEXTENSION"])
+
+    # --- LimboAI Automatic Patching (CI Resilience) ---
+    # Patch limboai/compat/variant.cpp to fix include-order bug:
+    # variant.h transitively includes variant.hpp -> hashfuncs.hpp which
+    # forward-declares Ref<>, shadowing the full template from ref.hpp.
+    # We insert ref.hpp + ref_counted.hpp BEFORE variant.h to fix this.
+    limboai_variant_cpp = os.path.join("limboai", "compat", "variant.cpp")
+    if os.path.exists(limboai_variant_cpp):
+        with open(limboai_variant_cpp, "r") as f:
+            variant_content = f.read()
+        if "ABILITY_SYSTEM_GDEXTENSION" not in variant_content:
+            patched = variant_content.replace(
+                '#include "variant.h"',
+                "#if defined(ABILITY_SYSTEM_GDEXTENSION)\n"
+                "#include <godot_cpp/classes/ref.hpp>\n"
+                "#include <godot_cpp/classes/ref_counted.hpp>\n"
+                "#endif // ABILITY_SYSTEM_GDEXTENSION\n"
+                '#include "variant.h"',
+            )
+            if patched != variant_content:
+                print(
+                    "[SCONSTRUCT] Patching limboai/compat/variant.cpp for GDExtension compatibility..."
+                )
+                with open(limboai_variant_cpp, "w") as f:
+                    f.write(patched)
+
+    # Patch limboai/compat/variant.h to also activate under ABILITY_SYSTEM_GDEXTENSION
+    limboai_variant_h = os.path.join("limboai", "compat", "variant.h")
+    if os.path.exists(limboai_variant_h):
+        with open(limboai_variant_h, "r") as f:
+            variant_h_content = f.read()
+        if "ABILITY_SYSTEM_GDEXTENSION" not in variant_h_content:
+            patched_h = variant_h_content.replace(
+                "#ifdef LIMBOAI_GDEXTENSION\n",
+                "#if defined(LIMBOAI_GDEXTENSION) || defined(ABILITY_SYSTEM_GDEXTENSION)\n",
+                1,  # Only first occurrence (the include/using block)
+            )
+            if patched_h != variant_h_content:
+                print(
+                    "[SCONSTRUCT] Patching limboai/compat/variant.h for GDExtension compatibility..."
+                )
+                with open(limboai_variant_h, "w") as f:
+                    f.write(patched_h)
+
+    # Generate LimboAI version header (required for compilation)
+    sys.path.append("limboai")
+    try:
+        import limboai_version
+
+        # We need to be in the limboai directory for the script to find its 'util' folder
+        curr_dir = os.getcwd()
+        os.chdir("limboai")
+        try:
+            limboai_version.generate_module_version_header()
+            print("[SCONSTRUCT] Generated LimboAI version header.")
+        finally:
+            os.chdir(curr_dir)
+    except Exception as e:
+        print(f"[SCONSTRUCT] Warning: Could not generate limboai_version.gen.h: {e}")
+
 # Configure object folder mapping (VariantDir)
 env.VariantDir("src/bin", "src", duplicate=0)
 
@@ -114,9 +179,31 @@ sources = Glob("src/bin/*.cpp")
 sources += Glob("src/bin/core/*.cpp")
 sources += Glob("src/bin/resources/*.cpp")
 sources += Glob("src/bin/scene/*.cpp")
+sources += Glob("src/bin/editor/*.cpp")
+sources += Glob("src/bin/compat/*.cpp")
+sources += Glob("src/bin/bridge/*.cpp")
+
+# Collect LimboAI sources if available
+if os.path.isdir("limboai"):
+    env.VariantDir("src/bin/limboai", "limboai", duplicate=0)
+    sources += Glob("src/bin/limboai/*.cpp")
+    sources += Glob("src/bin/limboai/blackboard/*.cpp")
+    sources += Glob("src/bin/limboai/blackboard/bb_param/*.cpp")
+    sources += Glob("src/bin/limboai/bt/*.cpp")
+    sources += Glob("src/bin/limboai/bt/tasks/*.cpp")
+    sources += Glob("src/bin/limboai/bt/tasks/blackboard/*.cpp")
+    sources += Glob("src/bin/limboai/bt/tasks/composites/*.cpp")
+    sources += Glob("src/bin/limboai/bt/tasks/decorators/*.cpp")
+    sources += Glob("src/bin/limboai/bt/tasks/misc/*.cpp")
+    sources += Glob("src/bin/limboai/bt/tasks/scene/*.cpp")
+    sources += Glob("src/bin/limboai/bt/tasks/utility/*.cpp")
+    sources += Glob("src/bin/limboai/compat/*.cpp")
+    sources += Glob("src/bin/limboai/hsm/*.cpp")
+    sources += Glob("src/bin/limboai/util/*.cpp")
+    sources += Glob("src/bin/limboai/editor/debugger/*.cpp")
+    sources += Glob("src/bin/limboai/editor/*.cpp")
 
 if env["target"] in ["editor"]:
-    sources += Glob("src/bin/editor/*.cpp")
     try:
         doc_data = env.GodotCPPDocData(
             "src/bin/gen/doc_data.gen.cpp", source=Glob("src/doc_classes/*.xml")
