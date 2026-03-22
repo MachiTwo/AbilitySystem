@@ -29,7 +29,6 @@
 /**************************************************************************/
 
 #include "as_state_snapshot.h"
-namespace godot {
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/as_tag_spec.h"
@@ -174,4 +173,3 @@ void ASStateSnapshot::deserialize_binary(const PackedByteArray &p_data) {
 
 ASStateSnapshot::ASStateSnapshot() {}
 ASStateSnapshot::~ASStateSnapshot() {}
-} // namespace godot

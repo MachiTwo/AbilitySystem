@@ -36,7 +36,9 @@
 #include "modules/ability_system/core/as_tag_spec.h"
 #endif
 
-namespace godot {
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
 
 void ASTagSpec::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("has_tag", "tag", "exact"), &ASTagSpec::has_tag, DEFVAL(false));
@@ -126,4 +128,3 @@ ASTagSpec::ASTagSpec() {
 
 ASTagSpec::~ASTagSpec() {
 }
-} // namespace godot

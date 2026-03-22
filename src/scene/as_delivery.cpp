@@ -46,7 +46,9 @@
 #include "scene/3d/physics/area_3d.h"
 #endif
 
-namespace godot {
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
 
 void ASDelivery::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_source_component", "source"), &ASDelivery::set_source_component);
@@ -245,18 +247,6 @@ void ASDelivery::deliver(Node *p_target) {
 	ASComponent *source_component = get_source_component();
 	target_asc->apply_package(package, level, source_component);
 
-	// Dispatch Historical Event
-	StringName package_tag = package->get_package_tag();
-	if (package_tag != StringName()) {
-		target_asc->dispatch_event(package_tag, source_component, level);
-	}
-
-	// Dispatch Package Events
-	TypedArray<StringName> deliver_events = package->get_events_on_deliver();
-	for (int i = 0; i < deliver_events.size(); i++) {
-		target_asc->dispatch_event(deliver_events[i], source_component, level);
-	}
-
 	emit_signal("delivered", p_target);
 
 	if (one_shot) {
@@ -297,4 +287,3 @@ void ASDelivery::set_active(bool p_active) {
 	is_active = p_active;
 	set_physics_process(is_active && life_span > 0.0f);
 }
-} // namespace godot

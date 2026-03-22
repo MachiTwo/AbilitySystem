@@ -42,7 +42,10 @@
 #include "core/variant/variant.h"
 #endif
 
-namespace godot {
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
+
 class ASComponent;
 
 /**
@@ -86,6 +89,5 @@ public:
 	ASStateSnapshot();
 	~ASStateSnapshot();
 };
-} // namespace godot
 
 #endif // AS_STATE_SNAPSHOT_H

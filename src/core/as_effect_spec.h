@@ -41,7 +41,10 @@
 #include "modules/ability_system/resources/as_effect.h"
 #endif
 
-namespace godot {
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
+
 class ASComponent;
 
 class ASEffectSpec : public RefCounted {
@@ -69,7 +72,7 @@ private:
 	float period_timer = 0.0f;
 
 public:
-	void init(Ref<ASEffect> p_effect, float p_lvl = 1.0f);
+	void init(Ref<ASEffect> p_effect, float p_level = 1.0f);
 	Ref<ASEffect> get_effect() const { return effect; }
 
 	float get_duration_remaining() const { return duration_remaining; }
@@ -94,7 +97,7 @@ public:
 	Variant get_hit_position() const { return hit_position; }
 
 	float get_level() const { return level; }
-	void set_level(float p_lvl) { level = p_lvl; }
+	void set_level(float p_level) { level = p_level; }
 
 	// Stacking interface
 	int get_stack_count() const { return stack_count; }
@@ -111,4 +114,3 @@ public:
 	ASEffectSpec();
 	~ASEffectSpec();
 };
-} // namespace godot

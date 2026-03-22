@@ -10,7 +10,6 @@ def get_doc_classes():
     return [
         "AbilitySystem",
         "ASAbility",
-        "ASAbilityPhase",
         "ASContainer",
         "ASAbilitySpec",
         "ASAttribute",
@@ -27,7 +26,6 @@ def get_doc_classes():
         "ASEditorPropertyTagSelector",
         "ASEffect",
         "ASEffectSpec",
-        "ASEvent",
         "ASInspectorPlugin",
         "ASPackage",
         "ASTagSpec",

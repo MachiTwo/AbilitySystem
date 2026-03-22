@@ -46,7 +46,10 @@
 #include "scene/gui/tree.h"
 #endif
 
-namespace godot {
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
+
 class ASTagsPanel : public VBoxContainer {
 	GDCLASS(ASTagsPanel, VBoxContainer);
 
@@ -56,7 +59,6 @@ class ASTagsPanel : public VBoxContainer {
 	TabContainer *tabs = nullptr;
 	Tree *name_tags_tree = nullptr;
 	Tree *cond_tags_tree = nullptr;
-	Tree *event_tags_tree = nullptr;
 
 	void _add_tag();
 	void _add_tag_text(const String &p_tag);
@@ -78,4 +80,3 @@ public:
 
 	ASTagsPanel();
 };
-} // namespace godot

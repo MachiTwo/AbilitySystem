@@ -42,7 +42,6 @@
 #include "src/core/as_effect_spec.h"
 #include "src/core/as_tag_spec.h"
 #include "src/resources/as_ability.h"
-#include "src/resources/as_ability_phase.h"
 #include "src/resources/as_attribute.h"
 #include "src/resources/as_attribute_set.h"
 #include "src/resources/as_container.h"
@@ -50,7 +49,6 @@
 #include "src/resources/as_cue_animation.h"
 #include "src/resources/as_cue_audio.h"
 #include "src/resources/as_effect.h"
-#include "src/resources/as_event.h"
 #include "src/resources/as_package.h"
 #include "src/resources/as_state_snapshot.h"
 #include "src/scene/as_component.h"
@@ -70,7 +68,6 @@
 #include "modules/ability_system/core/as_effect_spec.h"
 #include "modules/ability_system/core/as_tag_spec.h"
 #include "modules/ability_system/resources/as_ability.h"
-#include "modules/ability_system/resources/as_ability_phase.h"
 #include "modules/ability_system/resources/as_attribute.h"
 #include "modules/ability_system/resources/as_attribute_set.h"
 #include "modules/ability_system/resources/as_container.h"
@@ -78,7 +75,6 @@
 #include "modules/ability_system/resources/as_cue_animation.h"
 #include "modules/ability_system/resources/as_cue_audio.h"
 #include "modules/ability_system/resources/as_effect.h"
-#include "modules/ability_system/resources/as_event.h"
 #include "modules/ability_system/resources/as_state_snapshot.h"
 #include "modules/ability_system/scene/as_component.h"
 #include "modules/ability_system/scene/as_delivery.h"
@@ -104,7 +100,6 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 		GDREGISTER_CLASS(AbilitySystem);
 		GDREGISTER_CLASS(ASTagSpec);
 		GDREGISTER_CLASS(ASAbility);
-		GDREGISTER_CLASS(ASAbilityPhase);
 		GDREGISTER_CLASS(ASAbilitySpec);
 		GDREGISTER_CLASS(ASContainer);
 		GDREGISTER_CLASS(ASStateSnapshot);
@@ -112,7 +107,6 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 		GDREGISTER_CLASS(ASAttributeSet);
 		GDREGISTER_CLASS(ASEffect);
 		GDREGISTER_CLASS(ASEffectSpec);
-		GDREGISTER_CLASS(ASEvent);
 		GDREGISTER_CLASS(ASPackage);
 		GDREGISTER_CLASS(ASCue);
 		GDREGISTER_CLASS(ASCueSpec);

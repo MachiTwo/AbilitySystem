@@ -290,7 +290,7 @@ Deactivates the delivery.
 
 |void| **deliver**\ (\ target\: :ref:`Node<class_Node>`\ ) :ref:`🔗<class_ASDelivery_method_deliver>`
 
-Delivers the payload of an :ref:`ASPackage<class_ASPackage>` to the target component. Automatically dispatches :ref:`ASEvent<class_ASEvent>`\ s defined in the package upon successful delivery.
+Delivers the :ref:`package<class_ASDelivery_property_package>` to the target :ref:`ASComponent<class_ASComponent>` (or its parents/children if the node itself isn't one).
 
 .. rst-class:: classref-item-separator
 

@@ -42,11 +42,14 @@
 #include "core/config/project_settings.h"
 #endif
 
-namespace godot {
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
+
 AbilitySystem *AbilitySystem::singleton = nullptr;
 
 void AbilitySystem::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("register_tag", "tag", "type", "owner_id"), &AbilitySystem::register_tag, DEFVAL(AbilitySystem::TAG_TYPE_NAME), DEFVAL(0));
+	ClassDB::bind_method(D_METHOD("register_tag", "tag", "type", "owner_id"), &AbilitySystem::register_tag, DEFVAL(TAG_TYPE_NAME), DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("rename_tag", "old_tag", "new_tag"), &AbilitySystem::rename_tag);
 	ClassDB::bind_method(D_METHOD("is_tag_registered", "tag"), &AbilitySystem::is_tag_registered);
 	ClassDB::bind_method(D_METHOD("unregister_tag", "tag"), &AbilitySystem::unregister_tag);
@@ -65,7 +68,6 @@ void AbilitySystem::_bind_methods() {
 
 	BIND_ENUM_CONSTANT(TAG_TYPE_NAME);
 	BIND_ENUM_CONSTANT(TAG_TYPE_CONDITIONAL);
-	BIND_ENUM_CONSTANT(TAG_TYPE_EVENT);
 }
 
 void AbilitySystem::_load_settings() {
@@ -92,41 +94,25 @@ void AbilitySystem::_load_settings() {
 		ps->set_setting("ability_system/common/conditional_tags", PackedStringArray());
 		ps->set_initial_value("ability_system/common/conditional_tags", PackedStringArray());
 	}
-
-	// Load Event Tags
-	if (ps->has_setting("ability_system/common/event_tags")) {
-		PackedStringArray tags = ps->get_setting("ability_system/common/event_tags");
-		for (int i = 0; i < tags.size(); i++) {
-			registered_tags[tags[i]] = TAG_TYPE_EVENT;
-		}
-	} else {
-		ps->set_setting("ability_system/common/event_tags", PackedStringArray());
-		ps->set_initial_value("ability_system/common/event_tags", PackedStringArray());
-	}
 }
 
 void AbilitySystem::_update_settings() {
 	PackedStringArray name_tags;
 	PackedStringArray cond_tags;
-	PackedStringArray event_tags;
 
 	for (const KeyValue<StringName, TagType> &E : registered_tags) {
 		if (E.value == TAG_TYPE_NAME) {
 			name_tags.push_back(E.key);
-		} else if (E.value == TAG_TYPE_CONDITIONAL) {
-			cond_tags.push_back(E.key);
 		} else {
-			event_tags.push_back(E.key);
+			cond_tags.push_back(E.key);
 		}
 	}
 
 	name_tags.sort();
 	cond_tags.sort();
-	event_tags.sort();
 
 	ProjectSettings::get_singleton()->set_setting("ability_system/common/name_tags", name_tags);
 	ProjectSettings::get_singleton()->set_setting("ability_system/common/conditional_tags", cond_tags);
-	ProjectSettings::get_singleton()->set_setting("ability_system/common/event_tags", event_tags);
 
 	if (ProjectSettings::get_singleton()->has_method("save") || Engine::get_singleton()->is_editor_hint()) {
 		ProjectSettings::get_singleton()->save();
@@ -338,8 +324,8 @@ AbilitySystem::AbilitySystem() {
 }
 
 AbilitySystem::~AbilitySystem() {
-	if (singleton == this) {
-		singleton = nullptr;
-	}
+	registered_tags.clear();
+	tag_owners.clear();
+	resource_names.clear();
+	singleton = nullptr;
 }
-} // namespace godot
