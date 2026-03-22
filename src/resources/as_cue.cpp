@@ -40,9 +40,7 @@
 #include "modules/ability_system/scene/as_component.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
+namespace godot {
 
 void ASCue::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_cue_name", "name"), &ASCue::set_cue_name);
@@ -161,3 +159,4 @@ ASCue::ASCue() {
 
 ASCue::~ASCue() {
 }
+} // namespace godot

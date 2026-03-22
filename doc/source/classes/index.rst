@@ -30,6 +30,7 @@ Resources
 
     class_resource
     class_asability
+    class_asabilityphase
     class_asattribute
     class_asattributeset
     class_ascontainer
@@ -37,6 +38,7 @@ Resources
     class_ascueanimation
     class_ascueaudio
     class_aseffect
+    class_asevent
     class_aspackage
     class_asstatesnapshot
 

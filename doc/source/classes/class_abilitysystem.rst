@@ -103,6 +103,14 @@ Identity tags (Ability, Effect, Cue, Attribute).
 
 Status/State tags (on_fire, stunned, moving).
 
+.. _class_AbilitySystem_constant_TAG_TYPE_EVENT:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`TagType<enum_AbilitySystem_TagType>` **TAG_TYPE_EVENT** = ``2``
+
+Transient signals/events tags (Hit, Impact, Death).
+
 .. rst-class:: classref-section-separator
 
 ----
