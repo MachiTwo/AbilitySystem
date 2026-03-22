@@ -24,6 +24,16 @@
 
 ---
 
+## 🧬 High Scalability Systems
+
+This framework introduces advanced concepts to decouple game logic:
+
+- **Ability Phases**: Divide your abilities into stages like `Windup`, `Execution`, and `Recovery`. Manage durations and specific effects for each phase natively.
+- **AS Events**: Transient triggers that carry data (`ASEvent`). Perfect for communicating impacts, UI interactions, or animation triggers without polluting the character's state.
+- **Events Historical**: Short-term memory for events that occurred recently, allowing abilities and effects to query the immediate past (e.g., "If blocked an attack in the last 0.5s").
+
+---
+
 ## 🛠️ Dual Build Architecture
 
 This project is uniquely engineered to support **Dual Compilation**, serving both the core engine development and the plugin ecosystem:
@@ -244,7 +254,8 @@ To ensure the server and client calculate damage identically:
 
 | Resource            | Purpose               | Key Features                                                  |
 | :------------------ | :-------------------- | :------------------------------------------------------------ |
-| **ASAbility**       | Logic of an action.   | Native Costs, Cooldowns, and Activation Tags.                 |
+| **ASAbility**       | Logic of an action.   | Costs, Cooldowns and Activation Tags. Supports **Phases**.    |
+| **ASAbilityPhase**  | Phase Definition.     | Defines duration and effects for specific ability stages.     |
 | **ASEffect**        | Modification package. | Instant damage, timed buffs, or infinite passives.            |
 | **ASAttributeSet**  | Stat container.       | Manages collections of attributes. Deep-duplicated per actor. |
 | **ASAttribute**     | Stat definition.      | Individual HP, Mana, XP schema with clamping.                 |
@@ -254,6 +265,7 @@ To ensure the server and client calculate damage identically:
 | **ASCueAnimation**  | Animation Feedback.   | Specialized for playing montages on actors.                   |
 | **ASCueAudio**      | Audio Feedback.       | Specialized for playing spatial or global sound.              |
 | **ASStateSnapshot** | State Persistence.    | Captures Attributes/Tags for Multiplayer Rollback or Saving.  |
+| **ASEvent**         | Event Definition.     | Defines custom events for ability system interactions.        |
 
 ### 🚀 Runtime Objects (Specs)
 

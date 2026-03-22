@@ -117,6 +117,7 @@ sources += Glob("src/bin/scene/*.cpp")
 
 if env["target"] in ["editor"]:
     sources += Glob("src/bin/editor/*.cpp")
+    sources += Glob("src/bin/compat/*.cpp")
     try:
         doc_data = env.GodotCPPDocData(
             "src/bin/gen/doc_data.gen.cpp", source=Glob("src/doc_classes/*.xml")

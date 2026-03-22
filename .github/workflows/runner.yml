@@ -1,12 +1,12 @@
 name: 🔗 CI/CD Runner
 on:
   push:
-    branches: ["master", "tests"]
+    branches: ["master", "tests", "dev"]
     tags: ["v*"]
   pull_request:
-    branches: ["master", "tests"]
+    branches: ["master"]
   merge_group:
-    branches: ["master", "tests"]
+    branches: ["master", "tests", "dev"]
   workflow_dispatch:
     inputs:
       build_modules:

@@ -130,11 +130,8 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 		GDREGISTER_CLASS(ASEditorPropertyName);
 		GDREGISTER_CLASS(ASEditorPropertyTagSelector);
 		GDREGISTER_CLASS(ASTagsPanel);
-
-#ifndef ABILITY_SYSTEM_GDEXTENSION
 		GDREGISTER_CLASS(ASEditorPlugin);
 		EditorPlugins::add_by_type<ASEditorPlugin>();
-#endif
 	}
 #endif
 }
