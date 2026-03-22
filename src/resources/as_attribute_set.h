@@ -134,4 +134,8 @@ public:
 	~ASAttributeSet();
 };
 
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
+
 VARIANT_ENUM_CAST(ASAttributeSet::ModifierType);

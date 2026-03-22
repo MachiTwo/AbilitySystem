@@ -10,7 +10,7 @@
 ASEditorPropertyName
 ====================
 
-**Inherits:** :ref:`EditorProperty<class_EditorProperty>`
+**Inherits:** ``EditorProperty``
 
 Editor property for resource names with uniqueness validation.
 

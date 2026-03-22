@@ -10,7 +10,7 @@
 ASCueSpec
 =========
 
-**Inherits:** :ref:`RefCounted<class_RefCounted>`
+**Inherits:** ``RefCounted``
 
 Runtime context for a cue execution.
 
@@ -34,17 +34,17 @@ Properties
    +-----------------------------------------+------------------------------------------------------------+----------+
    | :ref:`ASEffectSpec<class_ASEffectSpec>` | :ref:`effect_spec<class_ASCueSpec_property_effect_spec>`   |          |
    +-----------------------------------------+------------------------------------------------------------+----------+
-   | :ref:`Dictionary<class_Dictionary>`     | :ref:`extra_data<class_ASCueSpec_property_extra_data>`     | ``{}``   |
+   | ``Dictionary``                          | :ref:`extra_data<class_ASCueSpec_property_extra_data>`     | ``{}``   |
    +-----------------------------------------+------------------------------------------------------------+----------+
-   | :ref:`Variant<class_Variant>`           | :ref:`hit_position<class_ASCueSpec_property_hit_position>` | ``null`` |
+   | ``Variant``                             | :ref:`hit_position<class_ASCueSpec_property_hit_position>` | ``null`` |
    +-----------------------------------------+------------------------------------------------------------+----------+
-   | :ref:`float<class_float>`               | :ref:`magnitude<class_ASCueSpec_property_magnitude>`       | ``0.0``  |
+   | ``float``                               | :ref:`magnitude<class_ASCueSpec_property_magnitude>`       | ``0.0``  |
    +-----------------------------------------+------------------------------------------------------------+----------+
    | :ref:`ASComponent<class_ASComponent>`   | :ref:`source_asc<class_ASCueSpec_property_source_asc>`     |          |
    +-----------------------------------------+------------------------------------------------------------+----------+
    | :ref:`ASComponent<class_ASComponent>`   | :ref:`target_asc<class_ASCueSpec_property_target_asc>`     |          |
    +-----------------------------------------+------------------------------------------------------------+----------+
-   | :ref:`Object<class_Object>`             | :ref:`target_node<class_ASCueSpec_property_target_node>`   |          |
+   | ``Object``                              | :ref:`target_node<class_ASCueSpec_property_target_node>`   |          |
    +-----------------------------------------+------------------------------------------------------------+----------+
 
 .. rst-class:: classref-reftable-group
@@ -55,11 +55,11 @@ Methods
 .. table::
    :widths: auto
 
-   +---------------------------+---------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>` | :ref:`get_level<class_ASCueSpec_method_get_level>`\ (\ ) |const|                            |
-   +---------------------------+---------------------------------------------------------------------------------------------+
-   | |void|                    | :ref:`set_level<class_ASCueSpec_method_set_level>`\ (\ level\: :ref:`float<class_float>`\ ) |
-   +---------------------------+---------------------------------------------------------------------------------------------+
+   +-----------+-----------------------------------------------------------------------------+
+   | ``float`` | :ref:`get_level<class_ASCueSpec_method_get_level>`\ (\ ) |const|            |
+   +-----------+-----------------------------------------------------------------------------+
+   | |void|    | :ref:`set_level<class_ASCueSpec_method_set_level>`\ (\ level\: ``float``\ ) |
+   +-----------+-----------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -108,12 +108,12 @@ The associated effect specification that triggered this cue.
 
 .. rst-class:: classref-property
 
-:ref:`Dictionary<class_Dictionary>` **extra_data** = ``{}`` :ref:`🔗<class_ASCueSpec_property_extra_data>`
+``Dictionary`` **extra_data** = ``{}`` :ref:`🔗<class_ASCueSpec_property_extra_data>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_extra_data**\ (\ value\: :ref:`Dictionary<class_Dictionary>`\ )
-- :ref:`Dictionary<class_Dictionary>` **get_extra_data**\ (\ )
+- |void| **set_extra_data**\ (\ value\: ``Dictionary``\ )
+- ``Dictionary`` **get_extra_data**\ (\ )
 
 Any extra data passed to the cue.
 
@@ -125,12 +125,12 @@ Any extra data passed to the cue.
 
 .. rst-class:: classref-property
 
-:ref:`Variant<class_Variant>` **hit_position** = ``null`` :ref:`🔗<class_ASCueSpec_property_hit_position>`
+``Variant`` **hit_position** = ``null`` :ref:`🔗<class_ASCueSpec_property_hit_position>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_hit_position**\ (\ value\: :ref:`Variant<class_Variant>`\ )
-- :ref:`Variant<class_Variant>` **get_hit_position**\ (\ )
+- |void| **set_hit_position**\ (\ value\: ``Variant``\ )
+- ``Variant`` **get_hit_position**\ (\ )
 
 Position.
 
@@ -142,12 +142,12 @@ Position.
 
 .. rst-class:: classref-property
 
-:ref:`float<class_float>` **magnitude** = ``0.0`` :ref:`🔗<class_ASCueSpec_property_magnitude>`
+``float`` **magnitude** = ``0.0`` :ref:`🔗<class_ASCueSpec_property_magnitude>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_magnitude**\ (\ value\: :ref:`float<class_float>`\ )
-- :ref:`float<class_float>` **get_magnitude**\ (\ )
+- |void| **set_magnitude**\ (\ value\: ``float``\ )
+- ``float`` **get_magnitude**\ (\ )
 
 Calculated magnitude.
 
@@ -193,12 +193,12 @@ The component the cue is applied to.
 
 .. rst-class:: classref-property
 
-:ref:`Object<class_Object>` **target_node** :ref:`🔗<class_ASCueSpec_property_target_node>`
+``Object`` **target_node** :ref:`🔗<class_ASCueSpec_property_target_node>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_target_node**\ (\ value\: :ref:`Object<class_Object>`\ )
-- :ref:`Object<class_Object>` **get_target_node**\ (\ )
+- |void| **set_target_node**\ (\ value\: ``Object``\ )
+- ``Object`` **get_target_node**\ (\ )
 
 The target Node the cue is playing on.
 
@@ -215,7 +215,7 @@ Method Descriptions
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_level**\ (\ ) |const| :ref:`🔗<class_ASCueSpec_method_get_level>`
+``float`` **get_level**\ (\ ) |const| :ref:`🔗<class_ASCueSpec_method_get_level>`
 
 Returns the level of the cue spec.
 
@@ -227,7 +227,7 @@ Returns the level of the cue spec.
 
 .. rst-class:: classref-method
 
-|void| **set_level**\ (\ level\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASCueSpec_method_set_level>`
+|void| **set_level**\ (\ level\: ``float``\ ) :ref:`🔗<class_ASCueSpec_method_set_level>`
 
 Sets the level of the cue spec.
 

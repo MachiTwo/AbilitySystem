@@ -10,7 +10,7 @@
 ASEditorPropertySelector
 ========================
 
-**Inherits:** :ref:`EditorProperty<class_EditorProperty>`
+**Inherits:** ``EditorProperty``
 
 Editor property for selecting multiple ability system tags.
 

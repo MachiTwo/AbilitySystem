@@ -1,7 +1,6 @@
 name: 🍏 iOS GDExtension
 
 on:
-
   workflow_call:
     inputs:
       plugin-version:
@@ -39,6 +38,13 @@ jobs:
           ref: ${{ inputs.godot-cpp-version }}
           path: godot-cpp
           submodules: recursive
+
+      - name: Fetch LimboAI
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: ${{ env.PROJECT_INTEGRATION_GITHUB }}
+          ref: ${{ env.PROJECT_INTEGRATION_BRANCH }}
+          path: limboai
 
       - name: Setup godot-cpp
         uses: ./godot-cpp/.github/actions/setup-godot-cpp

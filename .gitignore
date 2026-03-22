@@ -112,3 +112,6 @@ CMakeUserPresets.json
 /build
 /tests-godot
 /tmp-integration-dl
+/limboai
+*.tmp
+/godot

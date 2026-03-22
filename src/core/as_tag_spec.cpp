@@ -88,7 +88,7 @@ bool ASTagSpec::add_tag(const StringName &p_tag) {
 
 	// Register with global system if available
 	if (AbilitySystem::get_singleton()) {
-		AbilitySystem::get_singleton()->register_tag(p_tag, AbilitySystem::TAG_TYPE_CONDITIONAL);
+		AbilitySystem::get_singleton()->register_tag(p_tag, (ASTagType)AbilitySystem::TAG_TYPE_CONDITIONAL);
 	}
 
 	if (tags.has(p_tag)) {
@@ -107,6 +107,14 @@ bool ASTagSpec::remove_tag(const StringName &p_tag) {
 			tags.erase(p_tag);
 			return true;
 		}
+	}
+	return false;
+}
+
+bool ASTagSpec::remove_tag_fully(const StringName &p_tag) {
+	if (tags.has(p_tag)) {
+		tags.erase(p_tag);
+		return true;
 	}
 	return false;
 }

@@ -21,6 +21,13 @@ repos:
         files: ^(src/doc_classes)/.*\.xml$
         additional_dependencies: [xmlschema]
 
+      - id: doc-source-generator
+        name: doc-source-generator
+        language: python
+        entry: python utility/doc_source_generator.py src/bin/gen/doc_data.gen.cpp src/doc_classes
+        files: ^(src/doc_classes)/.*\.xml$
+        pass_filenames: false
+
       - id: copyright-headers
         name: copyright-headers
         language: python

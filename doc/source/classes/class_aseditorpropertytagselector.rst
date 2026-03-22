@@ -10,7 +10,7 @@
 ASEditorPropertyTagSelector
 ===========================
 
-**Inherits:** :ref:`EditorProperty<class_EditorProperty>`
+**Inherits:** ``EditorProperty``
 
 Editor property for selecting a single ability system tag.
 

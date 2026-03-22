@@ -10,7 +10,7 @@
 ASEditorPlugin
 ==============
 
-**Inherits:** :ref:`EditorPlugin<class_EditorPlugin>`
+**Inherits:** ``EditorPlugin``
 
 Main editor plugin for the Ability System.
 

@@ -18,9 +18,19 @@
 
 ## 📦 Installation
 
-1. Download the latest `ability-system-plugin.zip` from [Releases](https://github.com/MachiTwo/AbilitySystemPlugin/releases/download/0.1.0-dev/ability-system-plugin.zip).
+1. Download the latest `ability-system-plugin.zip` from [Releases](https://github.com/MachiTwo/AbilitySystem/releases/download/v0.1.0/ability-system+v0.1.0-dev.gdextension.zip).
 2. Extract and copy the `addons/ability_system` folder to your project's `addons/` directory.
 3. Restart Godot and go to **Project > Project Settings > Plugins** to enable the "Ability System" plugin. This activates the Tag Editor and custom Inspector features.
+
+---
+
+## 🧬 High Scalability Systems
+
+This framework introduces advanced concepts to decouple game logic:
+
+- **Ability Phases**: Divide your abilities into stages like `Windup`, `Execution`, and `Recovery`. Manage durations and specific effects for each phase natively.
+- **AS Events**: Transient triggers that carry data (`ASEventTag`). Perfect for communicating impacts, UI interactions, or animation triggers without polluting the character's state.
+- **Events Historical**: Short-term memory for events that occurred recently, allowing abilities and effects to query the immediate past (e.g., "If blocked an attack in the last 0.5s").
 
 ---
 
@@ -102,10 +112,10 @@ The system handles both seamlessly. Applying a "Frozen" effect will automaticall
 ```gdscript
 
 func interact_with_npc(npc: ASComponent):
-	if npc.can_activate_ability_by_tag(&"ability.social.talk"):
-		npc.try_activate_ability_by_tag(&"ability.social.talk")
-	else:
-		print("The NPC is too angry or stunned to talk!")
+ if npc.can_activate_ability_by_tag(&"ability.social.talk"):
+  npc.try_activate_ability_by_tag(&"ability.social.talk")
+ else:
+  print("The NPC is too angry or stunned to talk!")
 ```
 
 ### 9. Handling State Changes (Signals)
@@ -115,11 +125,11 @@ The ASC notifies your game logic when significant changes occur:
 ```gdscript
 
 func _ready():
-	asc.tag_changed.connect(_on_tag_changed)
+ asc.tag_changed.connect(_on_tag_changed)
 
 func _on_tag_changed(tag: StringName, is_present: bool):
-	if tag == &"state.emotional.angry" and is_present:
-		$Sprite.modulate = Color.RED # Visual feedback for emotion change
+ if tag == &"state.emotional.angry" and is_present:
+  $Sprite.modulate = Color.RED # Visual feedback for emotion change
 ```
 
 ### 10. The Payload: ASPackage
@@ -139,6 +149,7 @@ Typically an Area2D attached to the player that is only active during hit frames
 2. Add an `ASDelivery` as a child.
 3. **Set**: `Package` = `MeleeDamage.tres`, `Auto Connect` = **On**.
 4. **Trigger**:
+
    ```gdscript
    func _on_attack_animation_hit_frame():
        $SwordArea/ASDelivery.activate(0.1) # Active for 100ms
@@ -151,6 +162,7 @@ A projectile carries intent across the screen.
 1. Create a Bullet scene (`Area2D` + `ASDelivery`).
 2. **Set**: `Auto Connect` = **On**, `One Shot` = **On**.
 3. **Spawn**:
+
    ```gdscript
    func fire():
        var bullet = BulletScene.instantiate()
@@ -244,7 +256,8 @@ To ensure the server and client calculate damage identically:
 
 | Resource            | Purpose               | Key Features                                                  |
 | :------------------ | :-------------------- | :------------------------------------------------------------ |
-| **ASAbility**       | Logic of an action.   | Native Costs, Cooldowns, and Activation Tags.                 |
+| **ASAbility**       | Logic of an action.   | Costs, Cooldowns and Activation Tags. Supports **Phases**.    |
+| **ASAbilityPhase**  | Phase Definition.     | Defines duration and effects for specific ability stages.     |
 | **ASEffect**        | Modification package. | Instant damage, timed buffs, or infinite passives.            |
 | **ASAttributeSet**  | Stat container.       | Manages collections of attributes. Deep-duplicated per actor. |
 | **ASAttribute**     | Stat definition.      | Individual HP, Mana, XP schema with clamping.                 |
@@ -254,6 +267,7 @@ To ensure the server and client calculate damage identically:
 | **ASCueAnimation**  | Animation Feedback.   | Specialized for playing montages on actors.                   |
 | **ASCueAudio**      | Audio Feedback.       | Specialized for playing spatial or global sound.              |
 | **ASStateSnapshot** | State Persistence.    | Captures Attributes/Tags for Multiplayer Rollback or Saving.  |
+| **ASEventTag**      | Event Definition.     | Defines custom events for ability system interactions.        |
 
 ### 🚀 Runtime Objects (Specs)
 

@@ -10,7 +10,9 @@
 ASAbility
 =========
 
-**Inherits:** :ref:`Resource<class_Resource>`
+**Inherits:** ``Resource``
+
+**Inherited By:** :ref:`ASAbilityPhase<class_ASAbilityPhase>`
 
 Base resource for defining abilities within the module.
 
@@ -29,47 +31,57 @@ Properties
 .. table::
    :widths: auto
 
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`float<class_float>`                                        | :ref:`ability_duration<class_ASAbility_property_ability_duration>`                         | ``0.0``   |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`DurationPolicy<enum_ASAbility_DurationPolicy>`             | :ref:`ability_duration_policy<class_ASAbility_property_ability_duration_policy>`           | ``0``     |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`String<class_String>`                                      | :ref:`ability_name<class_ASAbility_property_ability_name>`                                 | ``""``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`StringName<class_StringName>`                              | :ref:`ability_tag<class_ASAbility_property_ability_tag>`                                   | ``&""``   |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`bool<class_bool>`                                          | :ref:`ability_use_custom_duration<class_ASAbility_property_ability_use_custom_duration>`   | ``false`` |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_all_tags<class_ASAbility_property_activation_blocked_all_tags>`   | ``[]``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_any_tags<class_ASAbility_property_activation_blocked_any_tags>`   | ``[]``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_cancel_tags<class_ASAbility_property_activation_cancel_tags>`             | ``[]``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_owned_tags<class_ASAbility_property_activation_owned_tags>`               | ``[]``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_all_tags<class_ASAbility_property_activation_required_all_tags>` | ``[]``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_any_tags<class_ASAbility_property_activation_required_any_tags>` | ``[]``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`float<class_float>`                                        | :ref:`cooldown_duration<class_ASAbility_property_cooldown_duration>`                       | ``0.0``   |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`cooldown_tags<class_ASAbility_property_cooldown_tags>`                               | ``[]``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`bool<class_bool>`                                          | :ref:`cooldown_use_custom<class_ASAbility_property_cooldown_use_custom>`                   | ``false`` |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] | :ref:`costs<class_ASAbility_property_costs>`                                               | ``[]``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`bool<class_bool>`                                          | :ref:`costs_use_custom<class_ASAbility_property_costs_use_custom>`                         | ``false`` |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\]           | :ref:`cues<class_ASAbility_property_cues>`                                                 | ``[]``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\]     | :ref:`effects<class_ASAbility_property_effects>`                                           | ``[]``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] | :ref:`requirements<class_ASAbility_property_requirements>`                                 | ``[]``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] | :ref:`triggers<class_ASAbility_property_triggers>`                                         | ``[]``    |
-   +------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | ``float``                                                                | :ref:`ability_duration<class_ASAbility_property_ability_duration>`                         | ``0.0``   |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`DurationPolicy<enum_ASAbility_DurationPolicy>`                     | :ref:`ability_duration_policy<class_ASAbility_property_ability_duration_policy>`           | ``0``     |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | ``String``                                                               | :ref:`ability_name<class_ASAbility_property_ability_name>`                                 | ``""``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | ``StringName``                                                           | :ref:`ability_tag<class_ASAbility_property_ability_tag>`                                   | ``&""``   |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | ``bool``                                                                 | :ref:`ability_use_custom_duration<class_ASAbility_property_ability_use_custom_duration>`   | ``false`` |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                              | :ref:`events_on_activate<class_ASAbility_property_events_on_activate>`                     | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                              | :ref:`events_on_end<class_ASAbility_property_events_on_end>`                               | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                              | :ref:`activation_blocked_all_tags<class_ASAbility_property_activation_blocked_all_tags>`   | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                              | :ref:`activation_blocked_any_tags<class_ASAbility_property_activation_blocked_any_tags>`   | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                              | :ref:`activation_cancel_tags<class_ASAbility_property_activation_cancel_tags>`             | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                              | :ref:`activation_owned_tags<class_ASAbility_property_activation_owned_tags>`               | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                              | :ref:`activation_required_all_tags<class_ASAbility_property_activation_required_all_tags>` | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                              | :ref:`activation_required_any_tags<class_ASAbility_property_activation_required_any_tags>` | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | ``float``                                                                | :ref:`cooldown_duration<class_ASAbility_property_cooldown_duration>`                       | ``0.0``   |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                              | :ref:`cooldown_tags<class_ASAbility_property_cooldown_tags>`                               | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | ``bool``                                                                 | :ref:`cooldown_use_custom<class_ASAbility_property_cooldown_use_custom>`                   | ``false`` |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``Dictionary``\]                              | :ref:`costs<class_ASAbility_property_costs>`                                               | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | ``bool``                                                                 | :ref:`costs_use_custom<class_ASAbility_property_costs_use_custom>`                         | ``false`` |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\]                   | :ref:`cues<class_ASAbility_property_cues>`                                                 | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\]             | :ref:`effects<class_ASAbility_property_effects>`                                           | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`ASAbility<class_ASAbility>`\]           | :ref:`sub_abilities<class_ASAbility_property_sub_abilities>`                               | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                              | :ref:`sub_abilities_auto_activate<class_ASAbility_property_sub_abilities_auto_activate>`   | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`ASAbilityPhase<class_ASAbilityPhase>`\] | :ref:`phases<class_ASAbility_property_phases>`                                             | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``Dictionary``\]                              | :ref:`requirements<class_ASAbility_property_requirements>`                                 | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``Dictionary``\]                              | :ref:`triggers<class_ASAbility_property_triggers>`                                         | ``[]``    |
+   +--------------------------------------------------------------------------+--------------------------------------------------------------------------------------------+-----------+
 
 .. rst-class:: classref-reftable-group
 
@@ -79,43 +91,43 @@ Methods
 .. table::
    :widths: auto
 
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                    | :ref:`_on_activate_ability<class_ASAbility_private_method__on_activate_ability>`\ (\ owner\: :ref:`Object<class_Object>`, spec\: :ref:`RefCounted<class_RefCounted>`\ ) |virtual|                                                |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`   | :ref:`_on_can_activate_ability<class_ASAbility_private_method__on_can_activate_ability>`\ (\ owner\: :ref:`Object<class_Object>`, spec\: :ref:`RefCounted<class_RefCounted>`\ ) |virtual| |const|                                |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                    | :ref:`_on_end_ability<class_ASAbility_private_method__on_end_ability>`\ (\ owner\: :ref:`Object<class_Object>`, spec\: :ref:`RefCounted<class_RefCounted>`\ ) |virtual|                                                          |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                    | :ref:`activate_ability<class_ASAbility_method_activate_ability>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null, target_node\: :ref:`Object<class_Object>` = null\ ) |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                    | :ref:`add_cost<class_ASAbility_method_add_cost>`\ (\ attribute\: :ref:`StringName<class_StringName>`, amount\: :ref:`float<class_float>`\ )                                                                                      |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                    | :ref:`add_requirement<class_ASAbility_method_add_requirement>`\ (\ attribute\: :ref:`StringName<class_StringName>`, amount\: :ref:`float<class_float>`\ )                                                                        |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                    | :ref:`add_trigger<class_ASAbility_method_add_trigger>`\ (\ tag\: :ref:`StringName<class_StringName>`, type\: :ref:`TriggerType<enum_ASAbility_TriggerType>`\ )                                                                   |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                    | :ref:`apply_costs<class_ASAbility_method_apply_costs>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const|                                                     |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>` | :ref:`calculate_ability_duration<class_ASAbility_method_calculate_ability_duration>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`\ ) |const|                                                                                |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`   | :ref:`can_activate_ability<class_ASAbility_method_can_activate_ability>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const|                                   |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`   | :ref:`can_afford_costs<class_ASAbility_method_can_afford_costs>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const|                                           |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`   | :ref:`can_satisfy_requirements<class_ASAbility_method_can_satisfy_requirements>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const|                           |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                    | :ref:`end_ability<class_ASAbility_method_end_ability>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ )                                                             |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>` | :ref:`get_cost_amount<class_ASAbility_method_get_cost_amount>`\ (\ attribute\: :ref:`StringName<class_StringName>`\ ) |const|                                                                                                    |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>` | :ref:`get_requirement_amount<class_ASAbility_method_get_requirement_amount>`\ (\ attribute\: :ref:`StringName<class_StringName>`\ ) |const|                                                                                      |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`int<class_int>`     | :ref:`get_requirement_count<class_ASAbility_method_get_requirement_count>`\ (\ ) |const|                                                                                                                                         |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`   | :ref:`remove_cost<class_ASAbility_method_remove_cost>`\ (\ attribute\: :ref:`StringName<class_StringName>`\ )                                                                                                                    |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`   | :ref:`remove_requirement<class_ASAbility_method_remove_requirement>`\ (\ attribute\: :ref:`StringName<class_StringName>`\ )                                                                                                      |
-   +---------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|    | :ref:`_on_activate_ability<class_ASAbility_private_method__on_activate_ability>`\ (\ owner\: ``Object``, spec\: ``RefCounted``\ ) |virtual|                                                                     |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``  | :ref:`_on_can_activate_ability<class_ASAbility_private_method__on_can_activate_ability>`\ (\ owner\: ``Object``, spec\: ``RefCounted``\ ) |virtual| |const|                                                     |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|    | :ref:`_on_end_ability<class_ASAbility_private_method__on_end_ability>`\ (\ owner\: ``Object``, spec\: ``RefCounted``\ ) |virtual|                                                                               |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|    | :ref:`activate_ability<class_ASAbility_method_activate_ability>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null, target_node\: ``Object`` = null\ ) |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|    | :ref:`add_cost<class_ASAbility_method_add_cost>`\ (\ attribute\: ``StringName``, amount\: ``float``\ )                                                                                                          |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|    | :ref:`add_requirement<class_ASAbility_method_add_requirement>`\ (\ attribute\: ``StringName``, amount\: ``float``\ )                                                                                            |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|    | :ref:`add_trigger<class_ASAbility_method_add_trigger>`\ (\ tag\: ``StringName``, type\: :ref:`TriggerType<enum_ASAbility_TriggerType>`\ )                                                                       |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|    | :ref:`apply_costs<class_ASAbility_method_apply_costs>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const|                                    |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float`` | :ref:`calculate_ability_duration<class_ASAbility_method_calculate_ability_duration>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`\ ) |const|                                                               |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``  | :ref:`can_activate_ability<class_ASAbility_method_can_activate_ability>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const|                  |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``  | :ref:`can_afford_costs<class_ASAbility_method_can_afford_costs>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const|                          |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``  | :ref:`can_satisfy_requirements<class_ASAbility_method_can_satisfy_requirements>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const|          |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|    | :ref:`end_ability<class_ASAbility_method_end_ability>`\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ )                                            |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float`` | :ref:`get_cost_amount<class_ASAbility_method_get_cost_amount>`\ (\ attribute\: ``StringName``\ ) |const|                                                                                                        |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float`` | :ref:`get_requirement_amount<class_ASAbility_method_get_requirement_amount>`\ (\ attribute\: ``StringName``\ ) |const|                                                                                          |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``   | :ref:`get_requirement_count<class_ASAbility_method_get_requirement_count>`\ (\ ) |const|                                                                                                                        |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``  | :ref:`remove_cost<class_ASAbility_method_remove_cost>`\ (\ attribute\: ``StringName``\ )                                                                                                                        |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``  | :ref:`remove_requirement<class_ASAbility_method_remove_requirement>`\ (\ attribute\: ``StringName``\ )                                                                                                          |
+   +-----------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -172,11 +184,7 @@ enum **TriggerType**: :ref:`🔗<enum_ASAbility_TriggerType>`
 
 :ref:`TriggerType<enum_ASAbility_TriggerType>` **TRIGGER_ON_TAG_ADDED** = ``0``
 
-.. container:: contribute
-
-	There is currently no description for this enum. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
-
-
+Ability attempts to activate when a specific Tag is added to the owner.
 
 .. _class_ASAbility_constant_TRIGGER_ON_TAG_REMOVED:
 
@@ -184,11 +192,15 @@ enum **TriggerType**: :ref:`🔗<enum_ASAbility_TriggerType>`
 
 :ref:`TriggerType<enum_ASAbility_TriggerType>` **TRIGGER_ON_TAG_REMOVED** = ``1``
 
-.. container:: contribute
+Ability attempts to activate when a specific Tag is removed from the owner.
 
-	There is currently no description for this enum. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+.. _class_ASAbility_constant_TRIGGER_ON_EVENT:
 
+.. rst-class:: classref-enumeration-constant
 
+:ref:`TriggerType<enum_ASAbility_TriggerType>` **TRIGGER_ON_EVENT** = ``2``
+
+Ability attempts to activate when a specific :ref:`ASEventTag<class_ASEventTag>` is dispatched to the owner. This is the preferred way for reactive triggers like "Counter-attack on Hit".
 
 .. rst-class:: classref-section-separator
 
@@ -203,12 +215,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-:ref:`float<class_float>` **ability_duration** = ``0.0`` :ref:`🔗<class_ASAbility_property_ability_duration>`
+``float`` **ability_duration** = ``0.0`` :ref:`🔗<class_ASAbility_property_ability_duration>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_ability_duration**\ (\ value\: :ref:`float<class_float>`\ )
-- :ref:`float<class_float>` **get_ability_duration**\ (\ )
+- |void| **set_ability_duration**\ (\ value\: ``float``\ )
+- ``float`` **get_ability_duration**\ (\ )
 
 Base duration of the ability.
 
@@ -237,12 +249,12 @@ Defines how the ability duration is handled (0: Instant, 1: Duration, 2: Infinit
 
 .. rst-class:: classref-property
 
-:ref:`String<class_String>` **ability_name** = ``""`` :ref:`🔗<class_ASAbility_property_ability_name>`
+``String`` **ability_name** = ``""`` :ref:`🔗<class_ASAbility_property_ability_name>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_ability_name**\ (\ value\: :ref:`String<class_String>`\ )
-- :ref:`String<class_String>` **get_ability_name**\ (\ )
+- |void| **set_ability_name**\ (\ value\: ``String``\ )
+- ``String`` **get_ability_name**\ (\ )
 
 Unique name for this ability.
 
@@ -254,12 +266,12 @@ Unique name for this ability.
 
 .. rst-class:: classref-property
 
-:ref:`StringName<class_StringName>` **ability_tag** = ``&""`` :ref:`🔗<class_ASAbility_property_ability_tag>`
+``StringName`` **ability_tag** = ``&""`` :ref:`🔗<class_ASAbility_property_ability_tag>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_ability_tag**\ (\ value\: :ref:`StringName<class_StringName>`\ )
-- :ref:`StringName<class_StringName>` **get_ability_tag**\ (\ )
+- |void| **set_ability_tag**\ (\ value\: ``StringName``\ )
+- ``StringName`` **get_ability_tag**\ (\ )
 
 The unique tag identifying this ability.
 
@@ -271,14 +283,48 @@ The unique tag identifying this ability.
 
 .. rst-class:: classref-property
 
-:ref:`bool<class_bool>` **ability_use_custom_duration** = ``false`` :ref:`🔗<class_ASAbility_property_ability_use_custom_duration>`
+``bool`` **ability_use_custom_duration** = ``false`` :ref:`🔗<class_ASAbility_property_ability_use_custom_duration>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_use_custom_duration**\ (\ value\: :ref:`bool<class_bool>`\ )
-- :ref:`bool<class_bool>` **get_use_custom_duration**\ (\ )
+- |void| **set_use_custom_duration**\ (\ value\: ``bool``\ )
+- ``bool`` **get_use_custom_duration**\ (\ )
 
-If true, triggers :ref:`ASComponent._on_calculate_custom_magnitude()<class_ASComponent_private_method__on_calculate_custom_magnitude>` with index -1 for duration.
+If true, triggers custom magnitude calculation for duration.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAbility_property_events_on_activate:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[``StringName``\] **events_on_activate** = ``[]`` :ref:`🔗<class_ASAbility_property_events_on_activate>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_events_on_activate**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_events_on_activate**\ (\ )
+
+Events dispatched when the ability is successfully activated.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAbility_property_events_on_end:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[``StringName``\] **events_on_end** = ``[]`` :ref:`🔗<class_ASAbility_property_events_on_end>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_events_on_end**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_events_on_end**\ (\ )
+
+Events dispatched when the ability ends (regardless of whether it was canceled or finished naturally).
 
 .. rst-class:: classref-item-separator
 
@@ -288,12 +334,12 @@ If true, triggers :ref:`ASComponent._on_calculate_custom_magnitude()<class_ASCom
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_all_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_blocked_all_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **activation_blocked_all_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_blocked_all_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_blocked_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_all_tags**\ (\ )
+- |void| **set_activation_blocked_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_activation_blocked_all_tags**\ (\ )
 
 Ability cannot activate if owner has **all** of these tags simultaneously (AND logic).
 
@@ -305,12 +351,12 @@ Ability cannot activate if owner has **all** of these tags simultaneously (AND l
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_any_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_blocked_any_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **activation_blocked_any_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_blocked_any_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_blocked_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_any_tags**\ (\ )
+- |void| **set_activation_blocked_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_activation_blocked_any_tags**\ (\ )
 
 Ability cannot activate if owner has **any** of these tags (OR logic).
 
@@ -322,12 +368,12 @@ Ability cannot activate if owner has **any** of these tags (OR logic).
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_cancel_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_cancel_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **activation_cancel_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_cancel_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_cancel_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_cancel_tags**\ (\ )
+- |void| **set_activation_cancel_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_activation_cancel_tags**\ (\ )
 
 Tags of active abilities that will be canceled when this ability activates.
 
@@ -339,12 +385,12 @@ Tags of active abilities that will be canceled when this ability activates.
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_owned_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_owned_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **activation_owned_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_owned_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_owned_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_owned_tags**\ (\ )
+- |void| **set_activation_owned_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_activation_owned_tags**\ (\ )
 
 Tags granted to the owner while the ability is active.
 
@@ -356,12 +402,12 @@ Tags granted to the owner while the ability is active.
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_all_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_required_all_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **activation_required_all_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_required_all_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_required_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_all_tags**\ (\ )
+- |void| **set_activation_required_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_activation_required_all_tags**\ (\ )
 
 Owner must have **all** of these tags to activate (AND logic).
 
@@ -373,12 +419,12 @@ Owner must have **all** of these tags to activate (AND logic).
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_any_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_required_any_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **activation_required_any_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_activation_required_any_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_required_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_any_tags**\ (\ )
+- |void| **set_activation_required_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_activation_required_any_tags**\ (\ )
 
 Owner must have **at least one** of these tags to activate (OR logic).
 
@@ -390,12 +436,12 @@ Owner must have **at least one** of these tags to activate (OR logic).
 
 .. rst-class:: classref-property
 
-:ref:`float<class_float>` **cooldown_duration** = ``0.0`` :ref:`🔗<class_ASAbility_property_cooldown_duration>`
+``float`` **cooldown_duration** = ``0.0`` :ref:`🔗<class_ASAbility_property_cooldown_duration>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_cooldown_duration**\ (\ value\: :ref:`float<class_float>`\ )
-- :ref:`float<class_float>` **get_cooldown_duration**\ (\ )
+- |void| **set_cooldown_duration**\ (\ value\: ``float``\ )
+- ``float`` **get_cooldown_duration**\ (\ )
 
 Base duration of cooldown.
 
@@ -407,12 +453,12 @@ Base duration of cooldown.
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **cooldown_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_cooldown_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **cooldown_tags** = ``[]`` :ref:`🔗<class_ASAbility_property_cooldown_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_cooldown_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_cooldown_tags**\ (\ )
+- |void| **set_cooldown_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_cooldown_tags**\ (\ )
 
 Tags applied during cooldown.
 
@@ -424,14 +470,14 @@ Tags applied during cooldown.
 
 .. rst-class:: classref-property
 
-:ref:`bool<class_bool>` **cooldown_use_custom** = ``false`` :ref:`🔗<class_ASAbility_property_cooldown_use_custom>`
+``bool`` **cooldown_use_custom** = ``false`` :ref:`🔗<class_ASAbility_property_cooldown_use_custom>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_use_custom_cooldown**\ (\ value\: :ref:`bool<class_bool>`\ )
-- :ref:`bool<class_bool>` **get_use_custom_cooldown**\ (\ )
+- |void| **set_use_custom_cooldown**\ (\ value\: ``bool``\ )
+- ``bool`` **get_use_custom_cooldown**\ (\ )
 
-If true, triggers :ref:`ASComponent._on_calculate_custom_magnitude()<class_ASComponent_private_method__on_calculate_custom_magnitude>` with index -2 for duration.
+If true, triggers custom magnitude calculation for cooldown duration.
 
 .. rst-class:: classref-item-separator
 
@@ -441,12 +487,12 @@ If true, triggers :ref:`ASComponent._on_calculate_custom_magnitude()<class_ASCom
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **costs** = ``[]`` :ref:`🔗<class_ASAbility_property_costs>`
+:ref:`Array<class_Array>`\[``Dictionary``\] **costs** = ``[]`` :ref:`🔗<class_ASAbility_property_costs>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_costs**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **get_costs**\ (\ )
+- |void| **set_costs**\ (\ value\: :ref:`Array<class_Array>`\[``Dictionary``\]\ )
+- :ref:`Array<class_Array>`\[``Dictionary``\] **get_costs**\ (\ )
 
 Array of native costs (attribute and amount).
 
@@ -458,14 +504,14 @@ Array of native costs (attribute and amount).
 
 .. rst-class:: classref-property
 
-:ref:`bool<class_bool>` **costs_use_custom** = ``false`` :ref:`🔗<class_ASAbility_property_costs_use_custom>`
+``bool`` **costs_use_custom** = ``false`` :ref:`🔗<class_ASAbility_property_costs_use_custom>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_use_custom_costs**\ (\ value\: :ref:`bool<class_bool>`\ )
-- :ref:`bool<class_bool>` **get_use_custom_costs**\ (\ )
+- |void| **set_use_custom_costs**\ (\ value\: ``bool``\ )
+- ``bool`` **get_use_custom_costs**\ (\ )
 
-If true, triggers :ref:`ASComponent._on_calculate_custom_magnitude()<class_ASComponent_private_method__on_calculate_custom_magnitude>` with index -3 and below for amounts.
+If true, triggers custom magnitude calculation for modifier amounts.
 
 .. rst-class:: classref-item-separator
 
@@ -505,16 +551,67 @@ List of effects applied by this ability.
 
 ----
 
+.. _class_ASAbility_property_sub_abilities:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[:ref:`ASAbility<class_ASAbility>`\] **sub_abilities** = ``[]`` :ref:`🔗<class_ASAbility_property_sub_abilities>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_sub_abilities**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`ASAbility<class_ASAbility>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`ASAbility<class_ASAbility>`\] **get_sub_abilities**\ (\ )
+
+Hierarchical sub-abilities that are unlocked alongside this parent ability.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAbility_property_sub_abilities_auto_activate:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[``StringName``\] **sub_abilities_auto_activate** = ``[]`` :ref:`🔗<class_ASAbility_property_sub_abilities_auto_activate>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_sub_abilities_auto_activate**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_sub_abilities_auto_activate**\ (\ )
+
+Tags of sub-abilities that should automatically activate when the parent ability starts.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAbility_property_phases:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[:ref:`ASAbilityPhase<class_ASAbilityPhase>`\] **phases** = ``[]`` :ref:`🔗<class_ASAbility_property_phases>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_phases**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`ASAbilityPhase<class_ASAbilityPhase>`\]\ )
+- :ref:`Array<class_Array>`\[:ref:`ASAbilityPhase<class_ASAbilityPhase>`\] **get_phases**\ (\ )
+
+Sequential phases that this ability will execute in order.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_ASAbility_property_requirements:
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **requirements** = ``[]`` :ref:`🔗<class_ASAbility_property_requirements>`
+:ref:`Array<class_Array>`\[``Dictionary``\] **requirements** = ``[]`` :ref:`🔗<class_ASAbility_property_requirements>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_requirements**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **get_requirements**\ (\ )
+- |void| **set_requirements**\ (\ value\: :ref:`Array<class_Array>`\[``Dictionary``\]\ )
+- :ref:`Array<class_Array>`\[``Dictionary``\] **get_requirements**\ (\ )
 
 Attribute requirements needed to activate the ability.
 
@@ -526,12 +623,12 @@ Attribute requirements needed to activate the ability.
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **triggers** = ``[]`` :ref:`🔗<class_ASAbility_property_triggers>`
+:ref:`Array<class_Array>`\[``Dictionary``\] **triggers** = ``[]`` :ref:`🔗<class_ASAbility_property_triggers>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_triggers**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **get_triggers**\ (\ )
+- |void| **set_triggers**\ (\ value\: :ref:`Array<class_Array>`\[``Dictionary``\]\ )
+- :ref:`Array<class_Array>`\[``Dictionary``\] **get_triggers**\ (\ )
 
 Automatic triggers for this ability (e.g. activate when a tag is added).
 
@@ -548,7 +645,7 @@ Method Descriptions
 
 .. rst-class:: classref-method
 
-|void| **_on_activate_ability**\ (\ owner\: :ref:`Object<class_Object>`, spec\: :ref:`RefCounted<class_RefCounted>`\ ) |virtual| :ref:`🔗<class_ASAbility_private_method__on_activate_ability>`
+|void| **_on_activate_ability**\ (\ owner\: ``Object``, spec\: ``RefCounted``\ ) |virtual| :ref:`🔗<class_ASAbility_private_method__on_activate_ability>`
 
 Virtual method to implement the ability's logic.
 
@@ -560,7 +657,7 @@ Virtual method to implement the ability's logic.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **_on_can_activate_ability**\ (\ owner\: :ref:`Object<class_Object>`, spec\: :ref:`RefCounted<class_RefCounted>`\ ) |virtual| |const| :ref:`🔗<class_ASAbility_private_method__on_can_activate_ability>`
+``bool`` **_on_can_activate_ability**\ (\ owner\: ``Object``, spec\: ``RefCounted``\ ) |virtual| |const| :ref:`🔗<class_ASAbility_private_method__on_can_activate_ability>`
 
 Virtual method to implement custom activation requirements.
 
@@ -572,7 +669,7 @@ Virtual method to implement custom activation requirements.
 
 .. rst-class:: classref-method
 
-|void| **_on_end_ability**\ (\ owner\: :ref:`Object<class_Object>`, spec\: :ref:`RefCounted<class_RefCounted>`\ ) |virtual| :ref:`🔗<class_ASAbility_private_method__on_end_ability>`
+|void| **_on_end_ability**\ (\ owner\: ``Object``, spec\: ``RefCounted``\ ) |virtual| :ref:`🔗<class_ASAbility_private_method__on_end_ability>`
 
 Virtual method called when the ability ends.
 
@@ -584,7 +681,7 @@ Virtual method called when the ability ends.
 
 .. rst-class:: classref-method
 
-|void| **activate_ability**\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null, target_node\: :ref:`Object<class_Object>` = null\ ) :ref:`🔗<class_ASAbility_method_activate_ability>`
+|void| **activate_ability**\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null, target_node\: ``Object`` = null\ ) :ref:`🔗<class_ASAbility_method_activate_ability>`
 
 Starts the ability execution. Handles native costs and cooldown application automatically.
 
@@ -596,7 +693,7 @@ Starts the ability execution. Handles native costs and cooldown application auto
 
 .. rst-class:: classref-method
 
-|void| **add_cost**\ (\ attribute\: :ref:`StringName<class_StringName>`, amount\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASAbility_method_add_cost>`
+|void| **add_cost**\ (\ attribute\: ``StringName``, amount\: ``float``\ ) :ref:`🔗<class_ASAbility_method_add_cost>`
 
 Adds a native cost modifier.
 
@@ -608,7 +705,7 @@ Adds a native cost modifier.
 
 .. rst-class:: classref-method
 
-|void| **add_requirement**\ (\ attribute\: :ref:`StringName<class_StringName>`, amount\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASAbility_method_add_requirement>`
+|void| **add_requirement**\ (\ attribute\: ``StringName``, amount\: ``float``\ ) :ref:`🔗<class_ASAbility_method_add_requirement>`
 
 .. container:: contribute
 
@@ -622,7 +719,7 @@ Adds a native cost modifier.
 
 .. rst-class:: classref-method
 
-|void| **add_trigger**\ (\ tag\: :ref:`StringName<class_StringName>`, type\: :ref:`TriggerType<enum_ASAbility_TriggerType>`\ ) :ref:`🔗<class_ASAbility_method_add_trigger>`
+|void| **add_trigger**\ (\ tag\: ``StringName``, type\: :ref:`TriggerType<enum_ASAbility_TriggerType>`\ ) :ref:`🔗<class_ASAbility_method_add_trigger>`
 
 .. container:: contribute
 
@@ -648,7 +745,7 @@ Applies the costs of the ability to the owner.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **calculate_ability_duration**\ (\ owner\: :ref:`ASComponent<class_ASComponent>`\ ) |const| :ref:`🔗<class_ASAbility_method_calculate_ability_duration>`
+``float`` **calculate_ability_duration**\ (\ owner\: :ref:`ASComponent<class_ASComponent>`\ ) |const| :ref:`🔗<class_ASAbility_method_calculate_ability_duration>`
 
 Calculates the duration of the ability, considering :ref:`ability_use_custom_duration<class_ASAbility_property_ability_use_custom_duration>`.
 
@@ -660,7 +757,7 @@ Calculates the duration of the ability, considering :ref:`ability_use_custom_dur
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **can_activate_ability**\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const| :ref:`🔗<class_ASAbility_method_can_activate_ability>`
+``bool`` **can_activate_ability**\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const| :ref:`🔗<class_ASAbility_method_can_activate_ability>`
 
 Returns true if the ability can be activated (checks tags, costs, and cooldown).
 
@@ -672,7 +769,7 @@ Returns true if the ability can be activated (checks tags, costs, and cooldown).
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **can_afford_costs**\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const| :ref:`🔗<class_ASAbility_method_can_afford_costs>`
+``bool`` **can_afford_costs**\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const| :ref:`🔗<class_ASAbility_method_can_afford_costs>`
 
 Checks if the owner has enough resources to afford the costs.
 
@@ -684,7 +781,7 @@ Checks if the owner has enough resources to afford the costs.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **can_satisfy_requirements**\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const| :ref:`🔗<class_ASAbility_method_can_satisfy_requirements>`
+``bool`` **can_satisfy_requirements**\ (\ owner\: :ref:`ASComponent<class_ASComponent>`, spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>` = null\ ) |const| :ref:`🔗<class_ASAbility_method_can_satisfy_requirements>`
 
 Checks if the owner satisfies the attribute requirements defined in this ability.
 
@@ -708,7 +805,7 @@ Ends the ability execution and cleans up owned tags.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_cost_amount**\ (\ attribute\: :ref:`StringName<class_StringName>`\ ) |const| :ref:`🔗<class_ASAbility_method_get_cost_amount>`
+``float`` **get_cost_amount**\ (\ attribute\: ``StringName``\ ) |const| :ref:`🔗<class_ASAbility_method_get_cost_amount>`
 
 Returns the cost amount for a specific attribute of this ability.
 
@@ -720,7 +817,7 @@ Returns the cost amount for a specific attribute of this ability.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_requirement_amount**\ (\ attribute\: :ref:`StringName<class_StringName>`\ ) |const| :ref:`🔗<class_ASAbility_method_get_requirement_amount>`
+``float`` **get_requirement_amount**\ (\ attribute\: ``StringName``\ ) |const| :ref:`🔗<class_ASAbility_method_get_requirement_amount>`
 
 .. container:: contribute
 
@@ -734,7 +831,7 @@ Returns the cost amount for a specific attribute of this ability.
 
 .. rst-class:: classref-method
 
-:ref:`int<class_int>` **get_requirement_count**\ (\ ) |const| :ref:`🔗<class_ASAbility_method_get_requirement_count>`
+``int`` **get_requirement_count**\ (\ ) |const| :ref:`🔗<class_ASAbility_method_get_requirement_count>`
 
 .. container:: contribute
 
@@ -748,7 +845,7 @@ Returns the cost amount for a specific attribute of this ability.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **remove_cost**\ (\ attribute\: :ref:`StringName<class_StringName>`\ ) :ref:`🔗<class_ASAbility_method_remove_cost>`
+``bool`` **remove_cost**\ (\ attribute\: ``StringName``\ ) :ref:`🔗<class_ASAbility_method_remove_cost>`
 
 Removes a cost definition for a specific attribute.
 
@@ -760,7 +857,7 @@ Removes a cost definition for a specific attribute.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **remove_requirement**\ (\ attribute\: :ref:`StringName<class_StringName>`\ ) :ref:`🔗<class_ASAbility_method_remove_requirement>`
+``bool`` **remove_requirement**\ (\ attribute\: ``StringName``\ ) :ref:`🔗<class_ASAbility_method_remove_requirement>`
 
 .. container:: contribute
 

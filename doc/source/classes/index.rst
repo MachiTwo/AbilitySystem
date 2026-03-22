@@ -30,6 +30,7 @@ Resources
 
     class_resource
     class_asability
+    class_asabilityphase
     class_asattribute
     class_asattributeset
     class_ascontainer
@@ -76,24 +77,58 @@ Variant types
     class_area3d
     class_array
     class_asabilityspec
+    class_asattributevalue
+    class_asbridge
+    class_asbridgestate
+    class_ascomponentstate
+    class_asconditionaltag
+    class_asconditionaltaghistoricalentry
+    class_ascooldowndata
     class_ascuespec
     class_aseditorplugin
     class_aseditorpropertyname
     class_aseditorpropertyselector
     class_aseditorpropertytagselector
+    class_aseffectmodifier
+    class_aseffectmodifierdata
+    class_aseffectrequirement
     class_aseffectspec
+    class_aseffectstate
+    class_aseventtag
+    class_aseventtagdata
+    class_aseventtaghistoricalentry
     class_asinspectorplugin
+    class_asnametag
+    class_asnametaghistoricalentry
+    class_asstatecache
+    class_asstatecacheentry
+    class_asstateutils
+    class_astagbase
     class_astagspanel
     class_astagspec
+    class_astagutils
     class_audiostream
     class_audiostreamplayer
     class_audiostreamplayer2d
     class_audiostreamplayer3d
     class_bool
+    class_bt
+    class_btaction
+    class_btactionas_activateability
+    class_btactionas_dispatchevent
+    class_btactionas_waitforevent
+    class_btcomposite
+    class_btcondition
+    class_btconditionas_canactivate
+    class_btconditionas_eventoccurred
+    class_btconditionas_hastag
+    class_btdecorator
+    class_bttask
     class_button
     class_callable
     class_characterbody2d
     class_characterbody3d
+    class_class
     class_color
     class_container
     class_control
@@ -102,13 +137,18 @@ Variant types
     class_editorplugin
     class_editorproperty
     class_float
+    class_hashmap
     class_hboxcontainer
     class_int
     class_label
+    class_limbohsm
+    class_limbostate
+    class_list
     class_nil
     class_node
     class_node2d
     class_node3d
+    class_nodepath
     class_object
     class_packedbytearray
     class_packedcolorarray
@@ -124,6 +164,7 @@ Variant types
     class_physicsbody3d
     class_rect2
     class_rect2i
+    class_ref
     class_refcounted
     class_reference
     class_resource
@@ -131,7 +172,10 @@ Variant types
     class_signal
     class_string
     class_stringname
+    class_struct
+    class_t
     class_vboxcontainer
+    class_vector
     class_vector2
     class_vector2i
     class_vector3

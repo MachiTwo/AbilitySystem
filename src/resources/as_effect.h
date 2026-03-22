@@ -31,6 +31,7 @@
 #pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
+#include "src/core/as_utils.h"
 #include "src/resources/as_cue.h"
 #include <godot_cpp/classes/resource.hpp>
 #include <godot_cpp/templates/vector.hpp>
@@ -39,6 +40,7 @@
 #include "core/io/resource.h"
 #include "core/templates/vector.h"
 #include "core/variant/typed_array.h"
+#include "modules/ability_system/core/as_utils.h"
 #include "modules/ability_system/resources/as_cue.h"
 #endif
 
@@ -72,16 +74,10 @@ public:
 	};
 
 	enum ModifierOp {
-		OP_ADD,
-		OP_MULTIPLY,
-		OP_DIVIDE,
-		OP_OVERRIDE
-	};
-
-	struct Modifier {
-		StringName attribute;
-		ModifierOp operation = OP_ADD;
-		float magnitude = 0.0f;
+		OP_ADD = 0,
+		OP_MULTIPLY = 1,
+		OP_DIVIDE = 2,
+		OP_OVERRIDE = 3
 	};
 
 protected:
@@ -103,19 +99,8 @@ private:
 	float period = 0.0f; // 0 means non-periodic.
 	bool execute_periodic_tick_on_application = false;
 
-	struct ModifierData {
-		StringName attribute;
-		ModifierOp operation;
-		float magnitude;
-		bool use_custom_magnitude = false;
-	};
-	Vector<ModifierData> modifiers;
-
-	struct RequirementData {
-		StringName attribute;
-		float amount;
-	};
-	Vector<RequirementData> requirements;
+	Vector<ASEffectModifierData> modifiers;
+	Vector<ASEffectRequirement> requirements;
 
 	// Activation requirements
 	TypedArray<StringName> activation_required_all_tags;
@@ -127,6 +112,8 @@ private:
 	TypedArray<StringName> blocked_tags;
 	TypedArray<StringName> removed_tags;
 	TypedArray<ASCue> cues;
+	TypedArray<StringName> events_on_apply;
+	TypedArray<StringName> events_on_remove;
 
 public:
 	void set_effect_name(const String &p_name);
@@ -169,16 +156,22 @@ public:
 	float get_requirement_amount(int p_idx) const;
 
 	void set_granted_tags(const TypedArray<StringName> &p_tags);
-	TypedArray<StringName> get_granted_tags() const { return granted_tags; }
+	TypedArray<StringName> get_granted_tags() const;
 
 	void set_blocked_tags(const TypedArray<StringName> &p_tags);
-	TypedArray<StringName> get_blocked_tags() const { return blocked_tags; }
+	TypedArray<StringName> get_blocked_tags() const;
 
 	void set_removed_tags(const TypedArray<StringName> &p_tags);
-	TypedArray<StringName> get_removed_tags() const { return removed_tags; }
+	TypedArray<StringName> get_removed_tags() const;
 
 	void set_cues(const TypedArray<ASCue> &p_cues);
-	TypedArray<ASCue> get_cues() const { return cues; }
+	TypedArray<ASCue> get_cues() const;
+
+	void set_events_on_apply(const TypedArray<StringName> &p_events);
+	TypedArray<StringName> get_events_on_apply() const;
+
+	void set_events_on_remove(const TypedArray<StringName> &p_events);
+	TypedArray<StringName> get_events_on_remove() const;
 
 	void set_modifiers_count(int p_count);
 	int get_modifiers_count() const;
@@ -187,7 +180,7 @@ public:
 	int get_requirements_count() const;
 
 	void set_activation_required_all_tags(const TypedArray<StringName> &p_tags);
-	TypedArray<StringName> get_activation_required_all_tags() const { return activation_required_all_tags; }
+	TypedArray<StringName> get_activation_required_all_tags() const;
 
 	void set_activation_required_any_tags(const TypedArray<StringName> &p_tags);
 	TypedArray<StringName> get_activation_required_any_tags() const { return activation_required_any_tags; }
@@ -201,6 +194,10 @@ public:
 	ASEffect();
 	~ASEffect();
 };
+
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
+#endif
 
 VARIANT_ENUM_CAST(ASEffect::DurationPolicy);
 VARIANT_ENUM_CAST(ASEffect::StackingPolicy);

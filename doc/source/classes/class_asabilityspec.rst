@@ -10,7 +10,7 @@
 ASAbilitySpec
 =============
 
-**Inherits:** :ref:`RefCounted<class_RefCounted>`
+**Inherits:** ``RefCounted``
 
 Runtime instance of an ability.
 
@@ -29,41 +29,49 @@ Methods
 .. table::
    :widths: auto
 
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASAbility<class_ASAbility>`                            | :ref:`get_ability<class_ASAbilitySpec_method_get_ability>`\ (\ ) |const|                                                            |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`                                    | :ref:`get_cooldown_duration<class_ASAbilitySpec_method_get_cooldown_duration>`\ (\ ) |const|                                        |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`                                    | :ref:`get_cooldown_remaining<class_ASAbilitySpec_method_get_cooldown_remaining>`\ (\ ) |const|                                      |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`                                    | :ref:`get_cost_amount<class_ASAbilitySpec_method_get_cost_amount>`\ (\ attribute\: :ref:`StringName<class_StringName>`\ ) |const|   |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`                                    | :ref:`get_duration_remaining<class_ASAbilitySpec_method_get_duration_remaining>`\ (\ ) |const|                                      |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\] | :ref:`get_effects_for_target<class_ASAbilitySpec_method_get_effects_for_target>`\ (\ target_type\: :ref:`int<class_int>`\ ) |const| |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`                                      | :ref:`get_is_active<class_ASAbilitySpec_method_get_is_active>`\ (\ ) |const|                                                        |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`int<class_int>`                                        | :ref:`get_level<class_ASAbilitySpec_method_get_level>`\ (\ ) |const|                                                                |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASComponent<class_ASComponent>`                        | :ref:`get_owner<class_ASAbilitySpec_method_get_owner>`\ (\ ) |const|                                                                |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`                                    | :ref:`get_total_duration<class_ASAbilitySpec_method_get_total_duration>`\ (\ ) |const|                                              |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                       | :ref:`init<class_ASAbilitySpec_method_init>`\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, level\: :ref:`int<class_int>` = 1\ )  |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`                                      | :ref:`is_on_cooldown<class_ASAbilitySpec_method_is_on_cooldown>`\ (\ ) |const|                                                      |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                       | :ref:`set_duration_remaining<class_ASAbilitySpec_method_set_duration_remaining>`\ (\ duration\: :ref:`float<class_float>`\ )        |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                       | :ref:`set_is_active<class_ASAbilitySpec_method_set_is_active>`\ (\ active\: :ref:`bool<class_bool>`\ )                              |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                       | :ref:`set_level<class_ASAbilitySpec_method_set_level>`\ (\ level\: :ref:`int<class_int>`\ )                                         |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                       | :ref:`set_total_duration<class_ASAbilitySpec_method_set_total_duration>`\ (\ duration\: :ref:`float<class_float>`\ )                |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`                                      | :ref:`tick<class_ASAbilitySpec_method_tick>`\ (\ delta\: :ref:`float<class_float>`\ )                                               |
-   +--------------------------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------+
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ASAbility<class_ASAbility>`                                      | :ref:`get_ability<class_ASAbilitySpec_method_get_ability>`\ (\ ) |const|                                                   |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                              | :ref:`get_cooldown_duration<class_ASAbilitySpec_method_get_cooldown_duration>`\ (\ ) |const|                               |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                                                | :ref:`get_current_phase_index<class_ASAbilitySpec_method_get_current_phase_index>`\ (\ ) |const|                           |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                              | :ref:`get_cooldown_remaining<class_ASAbilitySpec_method_get_cooldown_remaining>`\ (\ ) |const|                             |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                              | :ref:`get_cost_amount<class_ASAbilitySpec_method_get_cost_amount>`\ (\ attribute\: ``StringName``\ ) |const|               |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                              | :ref:`get_duration_remaining<class_ASAbilitySpec_method_get_duration_remaining>`\ (\ ) |const|                             |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\]           | :ref:`get_effects_for_target<class_ASAbilitySpec_method_get_effects_for_target>`\ (\ target_type\: ``int``\ ) |const|      |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                                               | :ref:`get_is_active<class_ASAbilitySpec_method_get_is_active>`\ (\ ) |const|                                               |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                                                | :ref:`get_level<class_ASAbilitySpec_method_get_level>`\ (\ ) |const|                                                       |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ASComponent<class_ASComponent>`                                  | :ref:`get_owner<class_ASAbilitySpec_method_get_owner>`\ (\ ) |const|                                                       |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                              | :ref:`get_total_duration<class_ASAbilitySpec_method_get_total_duration>`\ (\ ) |const|                                     |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                 | :ref:`add_sub_spec<class_ASAbilitySpec_method_add_sub_spec>`\ (\ spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>`\ )       |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                 | :ref:`remove_sub_spec<class_ASAbilitySpec_method_remove_sub_spec>`\ (\ spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>`\ ) |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[:ref:`ASAbilitySpec<class_ASAbilitySpec>`\] | :ref:`get_sub_specs<class_ASAbilitySpec_method_get_sub_specs>`\ (\ ) |const|                                               |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                 | :ref:`init<class_ASAbilitySpec_method_init>`\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, level\: ``int`` = 1\ )       |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                                               | :ref:`is_on_cooldown<class_ASAbilitySpec_method_is_on_cooldown>`\ (\ ) |const|                                             |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                 | :ref:`set_duration_remaining<class_ASAbilitySpec_method_set_duration_remaining>`\ (\ duration\: ``float``\ )               |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                 | :ref:`set_is_active<class_ASAbilitySpec_method_set_is_active>`\ (\ active\: ``bool``\ )                                    |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                 | :ref:`set_level<class_ASAbilitySpec_method_set_level>`\ (\ level\: ``int``\ )                                              |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                 | :ref:`set_total_duration<class_ASAbilitySpec_method_set_total_duration>`\ (\ duration\: ``float``\ )                       |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                                               | :ref:`tick<class_ASAbilitySpec_method_tick>`\ (\ delta\: ``float``\ )                                                      |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -90,9 +98,21 @@ Returns the ability resource.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_cooldown_duration**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_cooldown_duration>`
+``float`` **get_cooldown_duration**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_cooldown_duration>`
 
 Returns the base cooldown duration defined in the ability.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAbilitySpec_method_get_current_phase_index:
+
+.. rst-class:: classref-method
+
+``int`` **get_current_phase_index**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_current_phase_index>`
+
+Returns the index of the currently active phase.
 
 .. rst-class:: classref-item-separator
 
@@ -102,7 +122,7 @@ Returns the base cooldown duration defined in the ability.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_cooldown_remaining**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_cooldown_remaining>`
+``float`` **get_cooldown_remaining**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_cooldown_remaining>`
 
 Returns the time remaining for the cooldown on the owner ASC.
 
@@ -114,7 +134,7 @@ Returns the time remaining for the cooldown on the owner ASC.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_cost_amount**\ (\ attribute\: :ref:`StringName<class_StringName>`\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_cost_amount>`
+``float`` **get_cost_amount**\ (\ attribute\: ``StringName``\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_cost_amount>`
 
 Returns the cost for a specific attribute.
 
@@ -126,7 +146,7 @@ Returns the cost for a specific attribute.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_duration_remaining**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_duration_remaining>`
+``float`` **get_duration_remaining**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_duration_remaining>`
 
 .. container:: contribute
 
@@ -140,7 +160,7 @@ Returns the cost for a specific attribute.
 
 .. rst-class:: classref-method
 
-:ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\] **get_effects_for_target**\ (\ target_type\: :ref:`int<class_int>`\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_effects_for_target>`
+:ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\] **get_effects_for_target**\ (\ target_type\: ``int``\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_effects_for_target>`
 
 Returns effects filtered by their target type (:ref:`ASEffect.TARGET_SELF<class_ASEffect_constant_TARGET_SELF>` or :ref:`ASEffect.TARGET_OTHERS<class_ASEffect_constant_TARGET_OTHERS>`).
 
@@ -152,7 +172,7 @@ Returns effects filtered by their target type (:ref:`ASEffect.TARGET_SELF<class_
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **get_is_active**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_is_active>`
+``bool`` **get_is_active**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_is_active>`
 
 Returns true if the ability is currently running.
 
@@ -164,7 +184,7 @@ Returns true if the ability is currently running.
 
 .. rst-class:: classref-method
 
-:ref:`int<class_int>` **get_level**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_level>`
+``int`` **get_level**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_level>`
 
 Returns the level of this instance.
 
@@ -188,7 +208,7 @@ Returns the component that owns this spec.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_total_duration**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_total_duration>`
+``float`` **get_total_duration**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_total_duration>`
 
 .. container:: contribute
 
@@ -198,11 +218,47 @@ Returns the component that owns this spec.
 
 ----
 
+.. _class_ASAbilitySpec_method_add_sub_spec:
+
+.. rst-class:: classref-method
+
+|void| **add_sub_spec**\ (\ spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>`\ ) :ref:`🔗<class_ASAbilitySpec_method_add_sub_spec>`
+
+Adds a sub-ability spec to this parent spec's lifecycle.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAbilitySpec_method_remove_sub_spec:
+
+.. rst-class:: classref-method
+
+|void| **remove_sub_spec**\ (\ spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>`\ ) :ref:`🔗<class_ASAbilitySpec_method_remove_sub_spec>`
+
+Removes a sub-ability spec.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAbilitySpec_method_get_sub_specs:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[:ref:`ASAbilitySpec<class_ASAbilitySpec>`\] **get_sub_specs**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_sub_specs>`
+
+Returns the list of active sub-specs (phases or sub-abilities) managed by this spec.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_ASAbilitySpec_method_init:
 
 .. rst-class:: classref-method
 
-|void| **init**\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, level\: :ref:`int<class_int>` = 1\ ) :ref:`🔗<class_ASAbilitySpec_method_init>`
+|void| **init**\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, level\: ``int`` = 1\ ) :ref:`🔗<class_ASAbilitySpec_method_init>`
 
 Initializes the spec.
 
@@ -214,7 +270,7 @@ Initializes the spec.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **is_on_cooldown**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_is_on_cooldown>`
+``bool`` **is_on_cooldown**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_is_on_cooldown>`
 
 Returns true if the ability tag is currently on cooldown.
 
@@ -226,7 +282,7 @@ Returns true if the ability tag is currently on cooldown.
 
 .. rst-class:: classref-method
 
-|void| **set_duration_remaining**\ (\ duration\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASAbilitySpec_method_set_duration_remaining>`
+|void| **set_duration_remaining**\ (\ duration\: ``float``\ ) :ref:`🔗<class_ASAbilitySpec_method_set_duration_remaining>`
 
 .. container:: contribute
 
@@ -240,7 +296,7 @@ Returns true if the ability tag is currently on cooldown.
 
 .. rst-class:: classref-method
 
-|void| **set_is_active**\ (\ active\: :ref:`bool<class_bool>`\ ) :ref:`🔗<class_ASAbilitySpec_method_set_is_active>`
+|void| **set_is_active**\ (\ active\: ``bool``\ ) :ref:`🔗<class_ASAbilitySpec_method_set_is_active>`
 
 Sets the active state.
 
@@ -252,7 +308,7 @@ Sets the active state.
 
 .. rst-class:: classref-method
 
-|void| **set_level**\ (\ level\: :ref:`int<class_int>`\ ) :ref:`🔗<class_ASAbilitySpec_method_set_level>`
+|void| **set_level**\ (\ level\: ``int``\ ) :ref:`🔗<class_ASAbilitySpec_method_set_level>`
 
 Sets the instance level.
 
@@ -264,7 +320,7 @@ Sets the instance level.
 
 .. rst-class:: classref-method
 
-|void| **set_total_duration**\ (\ duration\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASAbilitySpec_method_set_total_duration>`
+|void| **set_total_duration**\ (\ duration\: ``float``\ ) :ref:`🔗<class_ASAbilitySpec_method_set_total_duration>`
 
 .. container:: contribute
 
@@ -278,7 +334,7 @@ Sets the instance level.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **tick**\ (\ delta\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASAbilitySpec_method_tick>`
+``bool`` **tick**\ (\ delta\: ``float``\ ) :ref:`🔗<class_ASAbilitySpec_method_tick>`
 
 .. container:: contribute
 

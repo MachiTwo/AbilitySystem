@@ -41,7 +41,10 @@
 #include "src/core/as_cue_spec.h"
 #include "src/core/as_effect_spec.h"
 #include "src/core/as_tag_spec.h"
+#include "src/core/as_tag_types.h"
+#include "src/core/as_utils.h"
 #include "src/resources/as_ability.h"
+#include "src/resources/as_ability_phase.h"
 #include "src/resources/as_attribute.h"
 #include "src/resources/as_attribute_set.h"
 #include "src/resources/as_container.h"
@@ -53,6 +56,18 @@
 #include "src/resources/as_state_snapshot.h"
 #include "src/scene/as_component.h"
 #include "src/scene/as_delivery.h"
+
+// AS Bridge for LimboAI integration
+#include "limboai/register_types.h"
+#include "src/bridge/as_bridge.h"
+#include "src/bridge/as_bridge_action_activate.h"
+#include "src/bridge/as_bridge_action_dispatch_event.h"
+#include "src/bridge/as_bridge_action_wait_event.h"
+#include "src/bridge/as_bridge_condition_can_activate.h"
+#include "src/bridge/as_bridge_condition_event_occurred.h"
+#include "src/bridge/as_bridge_condition_has_tag.h"
+#include "src/bridge/as_bridge_state.h"
+
 #ifdef TOOLS_ENABLED
 #include "src/editor/as_editor_plugin.h"
 #include "src/editor/as_editor_property.h"
@@ -68,6 +83,7 @@
 #include "modules/ability_system/core/as_effect_spec.h"
 #include "modules/ability_system/core/as_tag_spec.h"
 #include "modules/ability_system/resources/as_ability.h"
+#include "modules/ability_system/resources/as_ability_phase.h"
 #include "modules/ability_system/resources/as_attribute.h"
 #include "modules/ability_system/resources/as_attribute_set.h"
 #include "modules/ability_system/resources/as_container.h"
@@ -78,6 +94,17 @@
 #include "modules/ability_system/resources/as_state_snapshot.h"
 #include "modules/ability_system/scene/as_component.h"
 #include "modules/ability_system/scene/as_delivery.h"
+
+// AS Bridge for LimboAI integration
+#include "modules/ability_system/bridge/as_bridge.h"
+#include "modules/ability_system/bridge/as_bridge_action_activate.h"
+#include "modules/ability_system/bridge/as_bridge_action_dispatch_event.h"
+#include "modules/ability_system/bridge/as_bridge_action_wait_event.h"
+#include "modules/ability_system/bridge/as_bridge_condition_can_activate.h"
+#include "modules/ability_system/bridge/as_bridge_condition_event_occurred.h"
+#include "modules/ability_system/bridge/as_bridge_condition_has_tag.h"
+#include "modules/ability_system/bridge/as_bridge_state.h"
+
 #ifdef TOOLS_ENABLED
 #include "modules/ability_system/editor/as_editor_plugin.h"
 #include "modules/ability_system/editor/as_editor_property.h"
@@ -89,17 +116,25 @@
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 static AbilitySystem *as_singleton = nullptr;
+static ASBridge *as_bridge = nullptr;
 
 void initialize_as_module(ModuleInitializationLevel p_level) {
 #else
 static AbilitySystem *as_singleton = nullptr;
+static ASBridge *as_bridge = nullptr;
 
 void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 #endif
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	// Initialize LimboAI module for every level (it handles internally)
+	initialize_limboai_module(p_level);
+#endif
+
 	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
 		GDREGISTER_CLASS(AbilitySystem);
 		GDREGISTER_CLASS(ASTagSpec);
 		GDREGISTER_CLASS(ASAbility);
+		GDREGISTER_CLASS(ASAbilityPhase);
 		GDREGISTER_CLASS(ASAbilitySpec);
 		GDREGISTER_CLASS(ASContainer);
 		GDREGISTER_CLASS(ASStateSnapshot);
@@ -112,8 +147,21 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 		GDREGISTER_CLASS(ASCueSpec);
 		GDREGISTER_CLASS(ASCueAnimation);
 		GDREGISTER_CLASS(ASCueAudio);
+		GDREGISTER_CLASS(ASTagUtils);
+		GDREGISTER_CLASS(ASStateCache);
+		GDREGISTER_CLASS(ASStateUtils);
 		GDREGISTER_CLASS(ASComponent);
 		GDREGISTER_CLASS(ASDelivery);
+
+		// Register AS Bridge classes (only functional if LimboAI present)
+		GDREGISTER_CLASS(ASBridge);
+		GDREGISTER_CLASS(BTActionAS_ActivateAbility);
+		GDREGISTER_CLASS(BTActionAS_DispatchEvent);
+		GDREGISTER_CLASS(BTActionAS_WaitForEvent);
+		GDREGISTER_CLASS(BTConditionAS_HasTag);
+		GDREGISTER_CLASS(BTConditionAS_CanActivate);
+		GDREGISTER_CLASS(BTConditionAS_EventOccurred);
+		GDREGISTER_CLASS(ASBridgeState);
 
 		as_singleton = memnew(AbilitySystem);
 #ifdef ABILITY_SYSTEM_GDEXTENSION
@@ -121,6 +169,11 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 #else
 		Engine::get_singleton()->add_singleton(Engine::Singleton("AbilitySystem", as_singleton));
 #endif
+
+		// Initialize AS Bridge for LimboAI integration (if available)
+		as_bridge = memnew(ASBridge);
+		as_bridge->initialize();
+		// Note: Bridge auto-detects LimboAI at runtime
 	}
 
 #ifdef TOOLS_ENABLED
@@ -130,11 +183,8 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 		GDREGISTER_CLASS(ASEditorPropertyName);
 		GDREGISTER_CLASS(ASEditorPropertyTagSelector);
 		GDREGISTER_CLASS(ASTagsPanel);
-
-#ifndef ABILITY_SYSTEM_GDEXTENSION
 		GDREGISTER_CLASS(ASEditorPlugin);
 		EditorPlugins::add_by_type<ASEditorPlugin>();
-#endif
 	}
 #endif
 }
@@ -145,6 +195,12 @@ void uninitialize_as_module(ModuleInitializationLevel p_level) {
 void uninitialize_ability_system_module(ModuleInitializationLevel p_level) {
 #endif
 	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
+		if (as_bridge) {
+			as_bridge->shutdown();
+			memdelete(as_bridge);
+			as_bridge = nullptr;
+		}
+
 		if (as_singleton) {
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 			Engine::get_singleton()->unregister_singleton("AbilitySystem");
@@ -155,6 +211,11 @@ void uninitialize_ability_system_module(ModuleInitializationLevel p_level) {
 			as_singleton = nullptr;
 		}
 	}
+
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	// Uninitialize LimboAI module (it handles internally)
+	uninitialize_limboai_module(p_level);
+#endif
 }
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION

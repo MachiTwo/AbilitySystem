@@ -1,14 +1,10 @@
 blank_issues_enabled: false
 
 contact_links:
-  - name: Zyris proposals
-    url: https://github.com/godotengine/godot-proposals
-    about: Please submit feature proposals on the Zyris proposals repository, not here.
+  - name: Bug Reports
+    url: https://github.com/MachiTwo/AbilitySystem/issues
+    about: Please report bugs and issues related to the Ability System here.
 
-  - name: Zyris documentation repository
-    url: https://github.com/godotengine/godot-docs
-    about: Please report issues with documentation on the Zyris documentation repository, not here.
-
-  - name: Zyris community channels
-    url: https://godotengine.org/community
-    about: Please ask for technical support on one of the other community channels, not here.
+  - name: Feature Requests & Discussions
+    url: https://github.com/MachiTwo/AbilitySystem/discussions
+    about: Please propose new features or ask for technical support on the discussions board.

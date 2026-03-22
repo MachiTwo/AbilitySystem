@@ -10,7 +10,7 @@
 ASEffectSpec
 ============
 
-**Inherits:** :ref:`RefCounted<class_RefCounted>`
+**Inherits:** ``RefCounted``
 
 Runtime instance of an effect.
 
@@ -29,11 +29,11 @@ Properties
 .. table::
    :widths: auto
 
-   +-------------------------------+---------------------------------------------------------------+----------+
-   | :ref:`Variant<class_Variant>` | :ref:`hit_position<class_ASEffectSpec_property_hit_position>` | ``null`` |
-   +-------------------------------+---------------------------------------------------------------+----------+
-   | :ref:`Object<class_Object>`   | :ref:`target_node<class_ASEffectSpec_property_target_node>`   |          |
-   +-------------------------------+---------------------------------------------------------------+----------+
+   +-------------+---------------------------------------------------------------+----------+
+   | ``Variant`` | :ref:`hit_position<class_ASEffectSpec_property_hit_position>` | ``null`` |
+   +-------------+---------------------------------------------------------------+----------+
+   | ``Object``  | :ref:`target_node<class_ASEffectSpec_property_target_node>`   |          |
+   +-------------+---------------------------------------------------------------+----------+
 
 .. rst-class:: classref-reftable-group
 
@@ -43,43 +43,43 @@ Methods
 .. table::
    :widths: auto
 
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`             | :ref:`get_duration_remaining<class_ASEffectSpec_method_get_duration_remaining>`\ (\ ) |const|                                                          |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASEffect<class_ASEffect>`       | :ref:`get_effect<class_ASEffectSpec_method_get_effect>`\ (\ ) |const|                                                                                  |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`             | :ref:`get_level<class_ASEffectSpec_method_get_level>`\ (\ ) |const|                                                                                    |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`             | :ref:`get_magnitude<class_ASEffectSpec_method_get_magnitude>`\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const|                                |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`             | :ref:`get_period_timer<class_ASEffectSpec_method_get_period_timer>`\ (\ ) |const|                                                                      |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`             | :ref:`get_source_attribute_value<class_ASEffectSpec_method_get_source_attribute_value>`\ (\ attribute\: :ref:`StringName<class_StringName>`\ ) |const| |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASComponent<class_ASComponent>` | :ref:`get_source_component<class_ASEffectSpec_method_get_source_component>`\ (\ ) |const|                                                              |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`int<class_int>`                 | :ref:`get_stack_count<class_ASEffectSpec_method_get_stack_count>`\ (\ ) |const|                                                                        |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`             | :ref:`get_target_attribute_value<class_ASEffectSpec_method_get_target_attribute_value>`\ (\ attribute\: :ref:`StringName<class_StringName>`\ ) |const| |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASComponent<class_ASComponent>` | :ref:`get_target_component<class_ASEffectSpec_method_get_target_component>`\ (\ ) |const|                                                              |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`             | :ref:`get_total_duration<class_ASEffectSpec_method_get_total_duration>`\ (\ ) |const|                                                                  |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                | :ref:`init<class_ASEffectSpec_method_init>`\ (\ effect\: :ref:`ASEffect<class_ASEffect>`, level\: :ref:`float<class_float>` = 1.0\ )                   |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                | :ref:`set_duration_remaining<class_ASEffectSpec_method_set_duration_remaining>`\ (\ value\: :ref:`float<class_float>`\ )                               |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                | :ref:`set_level<class_ASEffectSpec_method_set_level>`\ (\ level\: :ref:`float<class_float>`\ )                                                         |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                | :ref:`set_magnitude<class_ASEffectSpec_method_set_magnitude>`\ (\ name\: :ref:`StringName<class_StringName>`, value\: :ref:`float<class_float>`\ )     |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                | :ref:`set_period_timer<class_ASEffectSpec_method_set_period_timer>`\ (\ timer\: :ref:`float<class_float>`\ )                                           |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                | :ref:`set_stack_count<class_ASEffectSpec_method_set_stack_count>`\ (\ count\: :ref:`int<class_int>`\ )                                                 |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                | :ref:`set_total_duration<class_ASEffectSpec_method_set_total_duration>`\ (\ value\: :ref:`float<class_float>`\ )                                       |
-   +---------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                             | :ref:`get_duration_remaining<class_ASEffectSpec_method_get_duration_remaining>`\ (\ ) |const|                                     |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ASEffect<class_ASEffect>`       | :ref:`get_effect<class_ASEffectSpec_method_get_effect>`\ (\ ) |const|                                                             |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                             | :ref:`get_level<class_ASEffectSpec_method_get_level>`\ (\ ) |const|                                                               |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                             | :ref:`get_magnitude<class_ASEffectSpec_method_get_magnitude>`\ (\ name\: ``StringName``\ ) |const|                                |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                             | :ref:`get_period_timer<class_ASEffectSpec_method_get_period_timer>`\ (\ ) |const|                                                 |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                             | :ref:`get_source_attribute_value<class_ASEffectSpec_method_get_source_attribute_value>`\ (\ attribute\: ``StringName``\ ) |const| |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ASComponent<class_ASComponent>` | :ref:`get_source_component<class_ASEffectSpec_method_get_source_component>`\ (\ ) |const|                                         |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                               | :ref:`get_stack_count<class_ASEffectSpec_method_get_stack_count>`\ (\ ) |const|                                                   |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                             | :ref:`get_target_attribute_value<class_ASEffectSpec_method_get_target_attribute_value>`\ (\ attribute\: ``StringName``\ ) |const| |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ASComponent<class_ASComponent>` | :ref:`get_target_component<class_ASEffectSpec_method_get_target_component>`\ (\ ) |const|                                         |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                             | :ref:`get_total_duration<class_ASEffectSpec_method_get_total_duration>`\ (\ ) |const|                                             |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                | :ref:`init<class_ASEffectSpec_method_init>`\ (\ effect\: :ref:`ASEffect<class_ASEffect>`, level\: ``float`` = 1.0\ )              |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                | :ref:`set_duration_remaining<class_ASEffectSpec_method_set_duration_remaining>`\ (\ value\: ``float``\ )                          |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                | :ref:`set_level<class_ASEffectSpec_method_set_level>`\ (\ level\: ``float``\ )                                                    |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                | :ref:`set_magnitude<class_ASEffectSpec_method_set_magnitude>`\ (\ name\: ``StringName``, value\: ``float``\ )                     |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                | :ref:`set_period_timer<class_ASEffectSpec_method_set_period_timer>`\ (\ timer\: ``float``\ )                                      |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                | :ref:`set_stack_count<class_ASEffectSpec_method_set_stack_count>`\ (\ count\: ``int``\ )                                          |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                | :ref:`set_total_duration<class_ASEffectSpec_method_set_total_duration>`\ (\ value\: ``float``\ )                                  |
+   +---------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -94,12 +94,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-:ref:`Variant<class_Variant>` **hit_position** = ``null`` :ref:`🔗<class_ASEffectSpec_property_hit_position>`
+``Variant`` **hit_position** = ``null`` :ref:`🔗<class_ASEffectSpec_property_hit_position>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_hit_position**\ (\ value\: :ref:`Variant<class_Variant>`\ )
-- :ref:`Variant<class_Variant>` **get_hit_position**\ (\ )
+- |void| **set_hit_position**\ (\ value\: ``Variant``\ )
+- ``Variant`` **get_hit_position**\ (\ )
 
 Impact position (Vector2 or Vector3) usually associated with a collision query.
 
@@ -111,12 +111,12 @@ Impact position (Vector2 or Vector3) usually associated with a collision query.
 
 .. rst-class:: classref-property
 
-:ref:`Object<class_Object>` **target_node** :ref:`🔗<class_ASEffectSpec_property_target_node>`
+``Object`` **target_node** :ref:`🔗<class_ASEffectSpec_property_target_node>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_target_node**\ (\ value\: :ref:`Object<class_Object>`\ )
-- :ref:`Object<class_Object>` **get_target_node**\ (\ )
+- |void| **set_target_node**\ (\ value\: ``Object``\ )
+- ``Object`` **get_target_node**\ (\ )
 
 The target Object/Node that the effect is applied to or interacting with.
 
@@ -133,7 +133,7 @@ Method Descriptions
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_duration_remaining**\ (\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_duration_remaining>`
+``float`` **get_duration_remaining**\ (\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_duration_remaining>`
 
 Returns time left before effect ends.
 
@@ -157,7 +157,7 @@ Returns the effect resource definition.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_level**\ (\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_level>`
+``float`` **get_level**\ (\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_level>`
 
 Returns the power level of the effect instance.
 
@@ -169,7 +169,7 @@ Returns the power level of the effect instance.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_magnitude**\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_magnitude>`
+``float`` **get_magnitude**\ (\ name\: ``StringName``\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_magnitude>`
 
 Returns the calculated modifier value for an attribute.
 
@@ -181,7 +181,7 @@ Returns the calculated modifier value for an attribute.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_period_timer**\ (\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_period_timer>`
+``float`` **get_period_timer**\ (\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_period_timer>`
 
 Returns the time remaining until the next periodic tick.
 
@@ -193,7 +193,7 @@ Returns the time remaining until the next periodic tick.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_source_attribute_value**\ (\ attribute\: :ref:`StringName<class_StringName>`\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_source_attribute_value>`
+``float`` **get_source_attribute_value**\ (\ attribute\: ``StringName``\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_source_attribute_value>`
 
 Returns the value of an attribute on the source component.
 
@@ -217,7 +217,7 @@ Returns the ASC that applied this effect.
 
 .. rst-class:: classref-method
 
-:ref:`int<class_int>` **get_stack_count**\ (\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_stack_count>`
+``int`` **get_stack_count**\ (\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_stack_count>`
 
 Returns the current number of stacks for this effect.
 
@@ -229,7 +229,7 @@ Returns the current number of stacks for this effect.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_target_attribute_value**\ (\ attribute\: :ref:`StringName<class_StringName>`\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_target_attribute_value>`
+``float`` **get_target_attribute_value**\ (\ attribute\: ``StringName``\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_target_attribute_value>`
 
 Returns the value of an attribute on the target component.
 
@@ -253,7 +253,7 @@ Returns the destination component where the effect is applied.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_total_duration**\ (\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_total_duration>`
+``float`` **get_total_duration**\ (\ ) |const| :ref:`🔗<class_ASEffectSpec_method_get_total_duration>`
 
 Returns the initial calculated duration.
 
@@ -265,7 +265,7 @@ Returns the initial calculated duration.
 
 .. rst-class:: classref-method
 
-|void| **init**\ (\ effect\: :ref:`ASEffect<class_ASEffect>`, level\: :ref:`float<class_float>` = 1.0\ ) :ref:`🔗<class_ASEffectSpec_method_init>`
+|void| **init**\ (\ effect\: :ref:`ASEffect<class_ASEffect>`, level\: ``float`` = 1.0\ ) :ref:`🔗<class_ASEffectSpec_method_init>`
 
 Initializes the effect specification with a definition and level.
 
@@ -277,7 +277,7 @@ Initializes the effect specification with a definition and level.
 
 .. rst-class:: classref-method
 
-|void| **set_duration_remaining**\ (\ value\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASEffectSpec_method_set_duration_remaining>`
+|void| **set_duration_remaining**\ (\ value\: ``float``\ ) :ref:`🔗<class_ASEffectSpec_method_set_duration_remaining>`
 
 Sets the remaining time for the effect.
 
@@ -289,7 +289,7 @@ Sets the remaining time for the effect.
 
 .. rst-class:: classref-method
 
-|void| **set_level**\ (\ level\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASEffectSpec_method_set_level>`
+|void| **set_level**\ (\ level\: ``float``\ ) :ref:`🔗<class_ASEffectSpec_method_set_level>`
 
 Sets the power level of this instance.
 
@@ -301,7 +301,7 @@ Sets the power level of this instance.
 
 .. rst-class:: classref-method
 
-|void| **set_magnitude**\ (\ name\: :ref:`StringName<class_StringName>`, value\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASEffectSpec_method_set_magnitude>`
+|void| **set_magnitude**\ (\ name\: ``StringName``, value\: ``float``\ ) :ref:`🔗<class_ASEffectSpec_method_set_magnitude>`
 
 Manually sets the calculated magnitude for an attribute.
 
@@ -313,7 +313,7 @@ Manually sets the calculated magnitude for an attribute.
 
 .. rst-class:: classref-method
 
-|void| **set_period_timer**\ (\ timer\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASEffectSpec_method_set_period_timer>`
+|void| **set_period_timer**\ (\ timer\: ``float``\ ) :ref:`🔗<class_ASEffectSpec_method_set_period_timer>`
 
 Sets the internal timer for the next periodic tick.
 
@@ -325,7 +325,7 @@ Sets the internal timer for the next periodic tick.
 
 .. rst-class:: classref-method
 
-|void| **set_stack_count**\ (\ count\: :ref:`int<class_int>`\ ) :ref:`🔗<class_ASEffectSpec_method_set_stack_count>`
+|void| **set_stack_count**\ (\ count\: ``int``\ ) :ref:`🔗<class_ASEffectSpec_method_set_stack_count>`
 
 Sets the number of stacks.
 
@@ -337,7 +337,7 @@ Sets the number of stacks.
 
 .. rst-class:: classref-method
 
-|void| **set_total_duration**\ (\ value\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASEffectSpec_method_set_total_duration>`
+|void| **set_total_duration**\ (\ value\: ``float``\ ) :ref:`🔗<class_ASEffectSpec_method_set_total_duration>`
 
 Sets the total duration.
 

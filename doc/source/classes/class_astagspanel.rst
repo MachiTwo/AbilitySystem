@@ -10,7 +10,7 @@
 ASTagsPanel
 ===========
 
-**Inherits:** :ref:`VBoxContainer<class_VBoxContainer>`
+**Inherits:** ``VBoxContainer``
 
 Editor UI for managing Ability System Tags.
 

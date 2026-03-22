@@ -10,7 +10,7 @@
 ASEffect
 ========
 
-**Inherits:** :ref:`Resource<class_Resource>`
+**Inherits:** ``Resource``
 
 Resource defining modifications to attributes and tags.
 
@@ -29,45 +29,49 @@ Properties
 .. table::
    :widths: auto
 
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_all_tags<class_ASEffect_property_activation_blocked_all_tags>`                   | ``[]``    |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_blocked_any_tags<class_ASEffect_property_activation_blocked_any_tags>`                   | ``[]``    |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_all_tags<class_ASEffect_property_activation_required_all_tags>`                 | ``[]``    |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`activation_required_any_tags<class_ASEffect_property_activation_required_any_tags>`                 | ``[]``    |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`blocked_tags<class_ASEffect_property_blocked_tags>`                                                 | ``[]``    |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\]           | :ref:`cues<class_ASEffect_property_cues>`                                                                 | ``[]``    |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`float<class_float>`                                        | :ref:`duration_magnitude<class_ASEffect_property_duration_magnitude>`                                     | ``0.0``   |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`DurationPolicy<enum_ASEffect_DurationPolicy>`              | :ref:`duration_policy<class_ASEffect_property_duration_policy>`                                           | ``0``     |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`String<class_String>`                                      | :ref:`effect_name<class_ASEffect_property_effect_name>`                                                   | ``""``    |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`StringName<class_StringName>`                              | :ref:`effect_tag<class_ASEffect_property_effect_tag>`                                                     | ``&""``   |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`bool<class_bool>`                                          | :ref:`execute_periodic_tick_on_application<class_ASEffect_property_execute_periodic_tick_on_application>` | ``false`` |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`granted_tags<class_ASEffect_property_granted_tags>`                                                 | ``[]``    |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`int<class_int>`                                            | :ref:`modifiers<class_ASEffect_property_modifiers>`                                                       | ``0``     |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`float<class_float>`                                        | :ref:`period<class_ASEffect_property_period>`                                                             | ``0.0``   |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`removed_tags<class_ASEffect_property_removed_tags>`                                                 | ``[]``    |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`int<class_int>`                                            | :ref:`requirements<class_ASEffect_property_requirements>`                                                 | ``0``     |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`StackingPolicy<enum_ASEffect_StackingPolicy>`              | :ref:`stacking_policy<class_ASEffect_property_stacking_policy>`                                           | ``0``     |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`TargetType<enum_ASEffect_TargetType>`                      | :ref:`target_type<class_ASEffect_property_target_type>`                                                   | ``0``     |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`bool<class_bool>`                                          | :ref:`use_custom_duration<class_ASEffect_property_use_custom_duration>`                                   | ``false`` |
-   +------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`activation_blocked_all_tags<class_ASEffect_property_activation_blocked_all_tags>`                   | ``[]``    |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`activation_blocked_any_tags<class_ASEffect_property_activation_blocked_any_tags>`                   | ``[]``    |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`activation_required_all_tags<class_ASEffect_property_activation_required_all_tags>`                 | ``[]``    |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`activation_required_any_tags<class_ASEffect_property_activation_required_any_tags>`                 | ``[]``    |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`blocked_tags<class_ASEffect_property_blocked_tags>`                                                 | ``[]``    |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\] | :ref:`cues<class_ASEffect_property_cues>`                                                                 | ``[]``    |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | ``float``                                              | :ref:`duration_magnitude<class_ASEffect_property_duration_magnitude>`                                     | ``0.0``   |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`DurationPolicy<enum_ASEffect_DurationPolicy>`    | :ref:`duration_policy<class_ASEffect_property_duration_policy>`                                           | ``0``     |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | ``String``                                             | :ref:`effect_name<class_ASEffect_property_effect_name>`                                                   | ``""``    |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | ``StringName``                                         | :ref:`effect_tag<class_ASEffect_property_effect_tag>`                                                     | ``&""``   |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | ``bool``                                               | :ref:`execute_periodic_tick_on_application<class_ASEffect_property_execute_periodic_tick_on_application>` | ``false`` |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`granted_tags<class_ASEffect_property_granted_tags>`                                                 | ``[]``    |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`events_on_apply<class_ASEffect_property_events_on_apply>`                                           | ``[]``    |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`events_on_remove<class_ASEffect_property_events_on_remove>`                                         | ``[]``    |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | ``int``                                                | :ref:`modifiers<class_ASEffect_property_modifiers>`                                                       | ``0``     |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | ``float``                                              | :ref:`period<class_ASEffect_property_period>`                                                             | ``0.0``   |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`removed_tags<class_ASEffect_property_removed_tags>`                                                 | ``[]``    |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | ``int``                                                | :ref:`requirements<class_ASEffect_property_requirements>`                                                 | ``0``     |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`StackingPolicy<enum_ASEffect_StackingPolicy>`    | :ref:`stacking_policy<class_ASEffect_property_stacking_policy>`                                           | ``0``     |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`TargetType<enum_ASEffect_TargetType>`            | :ref:`target_type<class_ASEffect_property_target_type>`                                                   | ``0``     |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | ``bool``                                               | :ref:`use_custom_duration<class_ASEffect_property_use_custom_duration>`                                   | ``false`` |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
 
 .. rst-class:: classref-reftable-group
 
@@ -77,25 +81,25 @@ Methods
 .. table::
    :widths: auto
 
-   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                      | :ref:`add_modifier<class_ASEffect_method_add_modifier>`\ (\ attribute\: :ref:`StringName<class_StringName>`, operation\: :ref:`ModifierOp<enum_ASEffect_ModifierOp>`, magnitude\: :ref:`float<class_float>`, use_custom_magnitude\: :ref:`bool<class_bool>` = false\ ) |
-   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                      | :ref:`add_requirement<class_ASEffect_method_add_requirement>`\ (\ attribute\: :ref:`StringName<class_StringName>`, amount\: :ref:`float<class_float>`\ )                                                                                                               |
-   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`StringName<class_StringName>`         | :ref:`get_modifier_attribute<class_ASEffect_method_get_modifier_attribute>`\ (\ index\: :ref:`int<class_int>`\ ) |const|                                                                                                                                               |
-   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`int<class_int>`                       | :ref:`get_modifier_count<class_ASEffect_method_get_modifier_count>`\ (\ ) |const|                                                                                                                                                                                      |
-   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`                   | :ref:`get_modifier_magnitude<class_ASEffect_method_get_modifier_magnitude>`\ (\ index\: :ref:`int<class_int>`\ ) |const|                                                                                                                                               |
-   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ModifierOp<enum_ASEffect_ModifierOp>` | :ref:`get_modifier_operation<class_ASEffect_method_get_modifier_operation>`\ (\ index\: :ref:`int<class_int>`\ ) |const|                                                                                                                                               |
-   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`                   | :ref:`get_requirement_amount<class_ASEffect_method_get_requirement_amount>`\ (\ index\: :ref:`int<class_int>`\ ) |const|                                                                                                                                               |
-   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`StringName<class_StringName>`         | :ref:`get_requirement_attribute<class_ASEffect_method_get_requirement_attribute>`\ (\ index\: :ref:`int<class_int>`\ ) |const|                                                                                                                                         |
-   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`                     | :ref:`is_modifier_custom<class_ASEffect_method_is_modifier_custom>`\ (\ index\: :ref:`int<class_int>`\ ) |const|                                                                                                                                                       |
-   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   +---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                      | :ref:`add_modifier<class_ASEffect_method_add_modifier>`\ (\ attribute\: ``StringName``, operation\: :ref:`ModifierOp<enum_ASEffect_ModifierOp>`, magnitude\: ``float``, use_custom_magnitude\: ``bool`` = false\ ) |
+   +---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                      | :ref:`add_requirement<class_ASEffect_method_add_requirement>`\ (\ attribute\: ``StringName``, amount\: ``float``\ )                                                                                                |
+   +---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``StringName``                              | :ref:`get_modifier_attribute<class_ASEffect_method_get_modifier_attribute>`\ (\ index\: ``int``\ ) |const|                                                                                                         |
+   +---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                     | :ref:`get_modifier_count<class_ASEffect_method_get_modifier_count>`\ (\ ) |const|                                                                                                                                  |
+   +---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                   | :ref:`get_modifier_magnitude<class_ASEffect_method_get_modifier_magnitude>`\ (\ index\: ``int``\ ) |const|                                                                                                         |
+   +---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ModifierOp<enum_ASEffect_ModifierOp>` | :ref:`get_modifier_operation<class_ASEffect_method_get_modifier_operation>`\ (\ index\: ``int``\ ) |const|                                                                                                         |
+   +---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                   | :ref:`get_requirement_amount<class_ASEffect_method_get_requirement_amount>`\ (\ index\: ``int``\ ) |const|                                                                                                         |
+   +---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``StringName``                              | :ref:`get_requirement_attribute<class_ASEffect_method_get_requirement_attribute>`\ (\ index\: ``int``\ ) |const|                                                                                                   |
+   +---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`is_modifier_custom<class_ASEffect_method_is_modifier_custom>`\ (\ index\: ``int``\ ) |const|                                                                                                                 |
+   +---------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -259,12 +263,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_all_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_blocked_all_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **activation_blocked_all_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_blocked_all_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_blocked_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_all_tags**\ (\ )
+- |void| **set_activation_blocked_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_activation_blocked_all_tags**\ (\ )
 
 Effect cannot be applied if the target has **all** of these tags simultaneously (AND logic).
 
@@ -276,12 +280,12 @@ Effect cannot be applied if the target has **all** of these tags simultaneously 
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_blocked_any_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_blocked_any_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **activation_blocked_any_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_blocked_any_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_blocked_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_blocked_any_tags**\ (\ )
+- |void| **set_activation_blocked_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_activation_blocked_any_tags**\ (\ )
 
 Effect cannot be applied if the target has **any** of these tags (OR logic).
 
@@ -293,12 +297,12 @@ Effect cannot be applied if the target has **any** of these tags (OR logic).
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_all_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_required_all_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **activation_required_all_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_required_all_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_required_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_all_tags**\ (\ )
+- |void| **set_activation_required_all_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_activation_required_all_tags**\ (\ )
 
 Effect requires the target to have **all** of these tags to be applied (AND logic).
 
@@ -310,12 +314,12 @@ Effect requires the target to have **all** of these tags to be applied (AND logi
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **activation_required_any_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_required_any_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **activation_required_any_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_activation_required_any_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_required_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_activation_required_any_tags**\ (\ )
+- |void| **set_activation_required_any_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_activation_required_any_tags**\ (\ )
 
 Effect requires the target to have **at least one** of these tags to be applied (OR logic).
 
@@ -327,12 +331,12 @@ Effect requires the target to have **at least one** of these tags to be applied 
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **blocked_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_blocked_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **blocked_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_blocked_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_blocked_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_blocked_tags**\ (\ )
+- |void| **set_blocked_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_blocked_tags**\ (\ )
 
 Tags that dictate whether this effect is blocked from applying.
 
@@ -361,12 +365,12 @@ Visual and Audio Cues emitted by this effect.
 
 .. rst-class:: classref-property
 
-:ref:`float<class_float>` **duration_magnitude** = ``0.0`` :ref:`🔗<class_ASEffect_property_duration_magnitude>`
+``float`` **duration_magnitude** = ``0.0`` :ref:`🔗<class_ASEffect_property_duration_magnitude>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_duration_magnitude**\ (\ value\: :ref:`float<class_float>`\ )
-- :ref:`float<class_float>` **get_duration_magnitude**\ (\ )
+- |void| **set_duration_magnitude**\ (\ value\: ``float``\ )
+- ``float`` **get_duration_magnitude**\ (\ )
 
 Base duration value.
 
@@ -395,12 +399,12 @@ INSTANT (0), DURATION (1), INFINITE (2).
 
 .. rst-class:: classref-property
 
-:ref:`String<class_String>` **effect_name** = ``""`` :ref:`🔗<class_ASEffect_property_effect_name>`
+``String`` **effect_name** = ``""`` :ref:`🔗<class_ASEffect_property_effect_name>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_effect_name**\ (\ value\: :ref:`String<class_String>`\ )
-- :ref:`String<class_String>` **get_effect_name**\ (\ )
+- |void| **set_effect_name**\ (\ value\: ``String``\ )
+- ``String`` **get_effect_name**\ (\ )
 
 Unique name for the effect.
 
@@ -412,12 +416,12 @@ Unique name for the effect.
 
 .. rst-class:: classref-property
 
-:ref:`StringName<class_StringName>` **effect_tag** = ``&""`` :ref:`🔗<class_ASEffect_property_effect_tag>`
+``StringName`` **effect_tag** = ``&""`` :ref:`🔗<class_ASEffect_property_effect_tag>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_effect_tag**\ (\ value\: :ref:`StringName<class_StringName>`\ )
-- :ref:`StringName<class_StringName>` **get_effect_tag**\ (\ )
+- |void| **set_effect_tag**\ (\ value\: ``StringName``\ )
+- ``StringName`` **get_effect_tag**\ (\ )
 
 Tag identifying this effect.
 
@@ -429,12 +433,12 @@ Tag identifying this effect.
 
 .. rst-class:: classref-property
 
-:ref:`bool<class_bool>` **execute_periodic_tick_on_application** = ``false`` :ref:`🔗<class_ASEffect_property_execute_periodic_tick_on_application>`
+``bool`` **execute_periodic_tick_on_application** = ``false`` :ref:`🔗<class_ASEffect_property_execute_periodic_tick_on_application>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_execute_periodic_tick_on_application**\ (\ value\: :ref:`bool<class_bool>`\ )
-- :ref:`bool<class_bool>` **get_execute_periodic_tick_on_application**\ (\ )
+- |void| **set_execute_periodic_tick_on_application**\ (\ value\: ``bool``\ )
+- ``bool`` **get_execute_periodic_tick_on_application**\ (\ )
 
 If true, the periodic effect triggers immediately upon application instead of waiting for the first period to elapse.
 
@@ -446,14 +450,48 @@ If true, the periodic effect triggers immediately upon application instead of wa
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **granted_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_granted_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **granted_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_granted_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_granted_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_granted_tags**\ (\ )
+- |void| **set_granted_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_granted_tags**\ (\ )
 
 Tags granted while effect is active.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASEffect_property_events_on_apply:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[``StringName``\] **events_on_apply** = ``[]`` :ref:`🔗<class_ASEffect_property_events_on_apply>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_events_on_apply**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_events_on_apply**\ (\ )
+
+Events dispatched when this effect is successfully applied to a target.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASEffect_property_events_on_remove:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[``StringName``\] **events_on_remove** = ``[]`` :ref:`🔗<class_ASEffect_property_events_on_remove>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_events_on_remove**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_events_on_remove**\ (\ )
+
+Events dispatched when this effect is removed from a target.
 
 .. rst-class:: classref-item-separator
 
@@ -463,12 +501,12 @@ Tags granted while effect is active.
 
 .. rst-class:: classref-property
 
-:ref:`int<class_int>` **modifiers** = ``0`` :ref:`🔗<class_ASEffect_property_modifiers>`
+``int`` **modifiers** = ``0`` :ref:`🔗<class_ASEffect_property_modifiers>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_modifiers_count**\ (\ value\: :ref:`int<class_int>`\ )
-- :ref:`int<class_int>` **get_modifiers_count**\ (\ )
+- |void| **set_modifiers_count**\ (\ value\: ``int``\ )
+- ``int`` **get_modifiers_count**\ (\ )
 
 The number of attribute modifiers in this effect package.
 
@@ -480,12 +518,12 @@ The number of attribute modifiers in this effect package.
 
 .. rst-class:: classref-property
 
-:ref:`float<class_float>` **period** = ``0.0`` :ref:`🔗<class_ASEffect_property_period>`
+``float`` **period** = ``0.0`` :ref:`🔗<class_ASEffect_property_period>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_period**\ (\ value\: :ref:`float<class_float>`\ )
-- :ref:`float<class_float>` **get_period**\ (\ )
+- |void| **set_period**\ (\ value\: ``float``\ )
+- ``float`` **get_period**\ (\ )
 
 The time in seconds between periodic applications. Only used if duration_policy is DURATION or INFINITE.
 
@@ -497,12 +535,12 @@ The time in seconds between periodic applications. Only used if duration_policy 
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **removed_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_removed_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **removed_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_removed_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_removed_tags**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_removed_tags**\ (\ )
+- |void| **set_removed_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_removed_tags**\ (\ )
 
 Tags corresponding to effects that should be removed when this effect applies.
 
@@ -514,12 +552,12 @@ Tags corresponding to effects that should be removed when this effect applies.
 
 .. rst-class:: classref-property
 
-:ref:`int<class_int>` **requirements** = ``0`` :ref:`🔗<class_ASEffect_property_requirements>`
+``int`` **requirements** = ``0`` :ref:`🔗<class_ASEffect_property_requirements>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_requirements_count**\ (\ value\: :ref:`int<class_int>`\ )
-- :ref:`int<class_int>` **get_requirements_count**\ (\ )
+- |void| **set_requirements_count**\ (\ value\: ``int``\ )
+- ``int`` **get_requirements_count**\ (\ )
 
 The number of attribute requirements needed to apply this effect.
 
@@ -565,12 +603,12 @@ Defines whether the effect applies to the owner (Self) or should be passed to ot
 
 .. rst-class:: classref-property
 
-:ref:`bool<class_bool>` **use_custom_duration** = ``false`` :ref:`🔗<class_ASEffect_property_use_custom_duration>`
+``bool`` **use_custom_duration** = ``false`` :ref:`🔗<class_ASEffect_property_use_custom_duration>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_use_custom_duration**\ (\ value\: :ref:`bool<class_bool>`\ )
-- :ref:`bool<class_bool>` **get_use_custom_duration**\ (\ )
+- |void| **set_use_custom_duration**\ (\ value\: ``bool``\ )
+- ``bool`` **get_use_custom_duration**\ (\ )
 
 If true, duration is calculated via ASC callback (index -1).
 
@@ -587,7 +625,7 @@ Method Descriptions
 
 .. rst-class:: classref-method
 
-|void| **add_modifier**\ (\ attribute\: :ref:`StringName<class_StringName>`, operation\: :ref:`ModifierOp<enum_ASEffect_ModifierOp>`, magnitude\: :ref:`float<class_float>`, use_custom_magnitude\: :ref:`bool<class_bool>` = false\ ) :ref:`🔗<class_ASEffect_method_add_modifier>`
+|void| **add_modifier**\ (\ attribute\: ``StringName``, operation\: :ref:`ModifierOp<enum_ASEffect_ModifierOp>`, magnitude\: ``float``, use_custom_magnitude\: ``bool`` = false\ ) :ref:`🔗<class_ASEffect_method_add_modifier>`
 
 Adds an attribute modifier.
 
@@ -599,7 +637,7 @@ Adds an attribute modifier.
 
 .. rst-class:: classref-method
 
-|void| **add_requirement**\ (\ attribute\: :ref:`StringName<class_StringName>`, amount\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASEffect_method_add_requirement>`
+|void| **add_requirement**\ (\ attribute\: ``StringName``, amount\: ``float``\ ) :ref:`🔗<class_ASEffect_method_add_requirement>`
 
 Adds an attribute requirement.
 
@@ -611,7 +649,7 @@ Adds an attribute requirement.
 
 .. rst-class:: classref-method
 
-:ref:`StringName<class_StringName>` **get_modifier_attribute**\ (\ index\: :ref:`int<class_int>`\ ) |const| :ref:`🔗<class_ASEffect_method_get_modifier_attribute>`
+``StringName`` **get_modifier_attribute**\ (\ index\: ``int``\ ) |const| :ref:`🔗<class_ASEffect_method_get_modifier_attribute>`
 
 Returns the name of the attribute targeted by a modifier at a given index.
 
@@ -623,7 +661,7 @@ Returns the name of the attribute targeted by a modifier at a given index.
 
 .. rst-class:: classref-method
 
-:ref:`int<class_int>` **get_modifier_count**\ (\ ) |const| :ref:`🔗<class_ASEffect_method_get_modifier_count>`
+``int`` **get_modifier_count**\ (\ ) |const| :ref:`🔗<class_ASEffect_method_get_modifier_count>`
 
 Returns the number of modifiers defined in this effect.
 
@@ -635,7 +673,7 @@ Returns the number of modifiers defined in this effect.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_modifier_magnitude**\ (\ index\: :ref:`int<class_int>`\ ) |const| :ref:`🔗<class_ASEffect_method_get_modifier_magnitude>`
+``float`` **get_modifier_magnitude**\ (\ index\: ``int``\ ) |const| :ref:`🔗<class_ASEffect_method_get_modifier_magnitude>`
 
 Returns the base magnitude of a specific modifier by its index.
 
@@ -647,7 +685,7 @@ Returns the base magnitude of a specific modifier by its index.
 
 .. rst-class:: classref-method
 
-:ref:`ModifierOp<enum_ASEffect_ModifierOp>` **get_modifier_operation**\ (\ index\: :ref:`int<class_int>`\ ) |const| :ref:`🔗<class_ASEffect_method_get_modifier_operation>`
+:ref:`ModifierOp<enum_ASEffect_ModifierOp>` **get_modifier_operation**\ (\ index\: ``int``\ ) |const| :ref:`🔗<class_ASEffect_method_get_modifier_operation>`
 
 Returns the mathematical operation of a specific modifier.
 
@@ -659,7 +697,7 @@ Returns the mathematical operation of a specific modifier.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_requirement_amount**\ (\ index\: :ref:`int<class_int>`\ ) |const| :ref:`🔗<class_ASEffect_method_get_requirement_amount>`
+``float`` **get_requirement_amount**\ (\ index\: ``int``\ ) |const| :ref:`🔗<class_ASEffect_method_get_requirement_amount>`
 
 Returns the amount for the specified requirement.
 
@@ -671,7 +709,7 @@ Returns the amount for the specified requirement.
 
 .. rst-class:: classref-method
 
-:ref:`StringName<class_StringName>` **get_requirement_attribute**\ (\ index\: :ref:`int<class_int>`\ ) |const| :ref:`🔗<class_ASEffect_method_get_requirement_attribute>`
+``StringName`` **get_requirement_attribute**\ (\ index\: ``int``\ ) |const| :ref:`🔗<class_ASEffect_method_get_requirement_attribute>`
 
 Returns the attribute for the specified requirement.
 
@@ -683,7 +721,7 @@ Returns the attribute for the specified requirement.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **is_modifier_custom**\ (\ index\: :ref:`int<class_int>`\ ) |const| :ref:`🔗<class_ASEffect_method_is_modifier_custom>`
+``bool`` **is_modifier_custom**\ (\ index\: ``int``\ ) |const| :ref:`🔗<class_ASEffect_method_is_modifier_custom>`
 
 Returns true if the specified modifier uses custom calculation logic.
 

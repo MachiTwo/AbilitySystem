@@ -10,7 +10,7 @@
 ASInspectorPlugin
 =================
 
-**Inherits:** :ref:`EditorInspectorPlugin<class_EditorInspectorPlugin>`
+**Inherits:** ``EditorInspectorPlugin``
 
 Editor integration for the Ability System.
 

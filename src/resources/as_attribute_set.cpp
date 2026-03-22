@@ -89,7 +89,7 @@ void ASAttributeSet::add_attribute_definition(Ref<ASAttribute> p_attribute) {
 		attributes[p_attribute->get_attribute_name()] = val;
 
 		if (AbilitySystem::get_singleton()) {
-			AbilitySystem::get_singleton()->register_tag(p_attribute->get_attribute_name(), AbilitySystem::TAG_TYPE_NAME, get_instance_id());
+			AbilitySystem::get_singleton()->register_tag(p_attribute->get_attribute_name(), (ASTagType)AbilitySystem::TAG_TYPE_NAME, get_instance_id());
 		}
 	}
 }
@@ -132,7 +132,7 @@ void ASAttributeSet::set_attribute_definitions(const TypedArray<ASAttribute> &p_
 			attributes[attr->get_attribute_name()] = val;
 
 			if (AbilitySystem::get_singleton()) {
-				AbilitySystem::get_singleton()->register_tag(attr->get_attribute_name(), AbilitySystem::TAG_TYPE_NAME, get_instance_id());
+				AbilitySystem::get_singleton()->register_tag(attr->get_attribute_name(), (ASTagType)AbilitySystem::TAG_TYPE_NAME, get_instance_id());
 			}
 		}
 	}
@@ -261,7 +261,6 @@ void ASAttributeSet::_apply_drivers_for_source(const StringName &p_source, float
 		Dictionary d = attribute_drivers[i];
 		StringName src = d.get("source", StringName());
 		StringName dst = d.get("destination", StringName());
-		float ratio = d.get("ratio", 1.0f);
 		if (src == p_source && attributes.has(dst)) {
 			// Accumulate: start from base, add contribution
 			// Simple approach: set driven portion = source * ratio

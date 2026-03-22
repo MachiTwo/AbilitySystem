@@ -29,7 +29,6 @@
 /**************************************************************************/
 
 #include "as_state_snapshot.h"
-
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/as_tag_spec.h"
 #include "src/resources/as_attribute.h"
@@ -45,6 +44,10 @@
 #include "modules/ability_system/resources/as_container.h"
 #include "modules/ability_system/resources/as_effect.h"
 #include "modules/ability_system/scene/as_component.h"
+#endif
+
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+using namespace godot;
 #endif
 
 void ASStateSnapshot::_bind_methods() {
@@ -78,8 +81,9 @@ void ASStateSnapshot::capture_from_component(ASComponent *p_component) {
 	TypedArray<ASAttributeSet> sets = p_component->get_attribute_sets();
 	for (int i = 0; i < sets.size(); i++) {
 		Ref<ASAttributeSet> s = sets[i];
-		if (s.is_null())
+		if (s.is_null()) {
 			continue;
+		}
 
 		TypedArray<ASAttribute> defs = s->get_attribute_definitions();
 		for (int j = 0; j < defs.size(); j++) {
@@ -102,11 +106,13 @@ void ASStateSnapshot::capture_from_component(ASComponent *p_component) {
 	const Vector<Ref<ASEffectSpec>> &current_effects = p_component->active_effects;
 	for (int i = 0; i < current_effects.size(); i++) {
 		Ref<ASEffectSpec> spec = current_effects[i];
-		if (spec.is_null())
+		if (spec.is_null()) {
 			continue;
+		}
 		Ref<ASEffect> effect = spec->get_effect();
-		if (effect.is_null())
+		if (effect.is_null()) {
 			continue;
+		}
 
 		Dictionary es;
 		es["tag"] = effect->get_effect_tag();

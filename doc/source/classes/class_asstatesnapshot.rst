@@ -10,7 +10,7 @@
 ASStateSnapshot
 ===============
 
-**Inherits:** :ref:`Resource<class_Resource>`
+**Inherits:** ``Resource``
 
 Resource that captures and restores the state of an ASComponent.
 
@@ -29,15 +29,15 @@ Properties
 .. table::
    :widths: auto
 
-   +---------------------------------------------------+----------------------------------------------------------------------+-------------------------+
-   | :ref:`Array<class_Array>`                         | :ref:`active_effects<class_ASStateSnapshot_property_active_effects>` | ``[]``                  |
-   +---------------------------------------------------+----------------------------------------------------------------------+-------------------------+
-   | :ref:`Dictionary<class_Dictionary>`               | :ref:`attributes<class_ASStateSnapshot_property_attributes>`         | ``{}``                  |
-   +---------------------------------------------------+----------------------------------------------------------------------+-------------------------+
-   | :ref:`PackedStringArray<class_PackedStringArray>` | :ref:`tags<class_ASStateSnapshot_property_tags>`                     | ``PackedStringArray()`` |
-   +---------------------------------------------------+----------------------------------------------------------------------+-------------------------+
-   | :ref:`int<class_int>`                             | :ref:`tick<class_ASStateSnapshot_property_tick>`                     | ``0``                   |
-   +---------------------------------------------------+----------------------------------------------------------------------+-------------------------+
+   +-----------------------+----------------------------------------------------------------------+-------------------------+
+   | ``Array``             | :ref:`active_effects<class_ASStateSnapshot_property_active_effects>` | ``[]``                  |
+   +-----------------------+----------------------------------------------------------------------+-------------------------+
+   | ``Dictionary``        | :ref:`attributes<class_ASStateSnapshot_property_attributes>`         | ``{}``                  |
+   +-----------------------+----------------------------------------------------------------------+-------------------------+
+   | ``PackedStringArray`` | :ref:`tags<class_ASStateSnapshot_property_tags>`                     | ``PackedStringArray()`` |
+   +-----------------------+----------------------------------------------------------------------+-------------------------+
+   | ``int``               | :ref:`tick<class_ASStateSnapshot_property_tick>`                     | ``0``                   |
+   +-----------------------+----------------------------------------------------------------------+-------------------------+
 
 .. rst-class:: classref-reftable-group
 
@@ -66,12 +66,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>` **active_effects** = ``[]`` :ref:`🔗<class_ASStateSnapshot_property_active_effects>`
+``Array`` **active_effects** = ``[]`` :ref:`🔗<class_ASStateSnapshot_property_active_effects>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_active_effects**\ (\ value\: :ref:`Array<class_Array>`\ )
-- :ref:`Array<class_Array>` **get_active_effects**\ (\ )
+- |void| **set_active_effects**\ (\ value\: ``Array``\ )
+- ``Array`` **get_active_effects**\ (\ )
 
 .. container:: contribute
 
@@ -85,12 +85,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-:ref:`Dictionary<class_Dictionary>` **attributes** = ``{}`` :ref:`🔗<class_ASStateSnapshot_property_attributes>`
+``Dictionary`` **attributes** = ``{}`` :ref:`🔗<class_ASStateSnapshot_property_attributes>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_attributes**\ (\ value\: :ref:`Dictionary<class_Dictionary>`\ )
-- :ref:`Dictionary<class_Dictionary>` **get_attributes**\ (\ )
+- |void| **set_attributes**\ (\ value\: ``Dictionary``\ )
+- ``Dictionary`` **get_attributes**\ (\ )
 
 Dictionary mapping attribute names (StringName) to their base values (float).
 
@@ -102,16 +102,16 @@ Dictionary mapping attribute names (StringName) to their base values (float).
 
 .. rst-class:: classref-property
 
-:ref:`PackedStringArray<class_PackedStringArray>` **tags** = ``PackedStringArray()`` :ref:`🔗<class_ASStateSnapshot_property_tags>`
+``PackedStringArray`` **tags** = ``PackedStringArray()`` :ref:`🔗<class_ASStateSnapshot_property_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_tags**\ (\ value\: :ref:`PackedStringArray<class_PackedStringArray>`\ )
-- :ref:`PackedStringArray<class_PackedStringArray>` **get_tags**\ (\ )
+- |void| **set_tags**\ (\ value\: ``PackedStringArray``\ )
+- ``PackedStringArray`` **get_tags**\ (\ )
 
 List of all active tags at the time of capture.
 
-**Note:** The returned array is *copied* and any changes to it will not update the original property value. See :ref:`PackedStringArray<class_PackedStringArray>` for more details.
+**Note:** The returned array is *copied* and any changes to it will not update the original property value. See ``PackedStringArray`` for more details.
 
 .. rst-class:: classref-item-separator
 
@@ -121,12 +121,12 @@ List of all active tags at the time of capture.
 
 .. rst-class:: classref-property
 
-:ref:`int<class_int>` **tick** = ``0`` :ref:`🔗<class_ASStateSnapshot_property_tick>`
+``int`` **tick** = ``0`` :ref:`🔗<class_ASStateSnapshot_property_tick>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_tick**\ (\ value\: :ref:`int<class_int>`\ )
-- :ref:`int<class_int>` **get_tick**\ (\ )
+- |void| **set_tick**\ (\ value\: ``int``\ )
+- ``int`` **get_tick**\ (\ )
 
 The simulation tick number when this snapshot was captured.
 

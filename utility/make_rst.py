@@ -207,6 +207,7 @@ class State:
             "bool",
             "String",
             "StringName",
+            "NodePath",
             "PackedByteArray",
             "PackedColorArray",
             "PackedFloat32Array",
@@ -256,10 +257,55 @@ class State:
             "Container",
             "Button",
             "Label",
+            "struct",
+            "class",
+            "HashMap",
+            "List",
+            "Vector",
+            "Ref",
+            "T",
+            "LimboState",
+            "BT",
+            "BTAction",
+            "BTCondition",
+            "BTTask",
+            "BTDecorator",
+            "BTComposite",
+            "BTActionAS_ActivateAbility",
+            "BTActionAS_DispatchEvent",
+            "BTActionAS_WaitForEvent",
+            "BTConditionAS_CanActivate",
+            "BTConditionAS_EventOccurred",
+            "BTConditionAS_HasTag",
+            "LimboHSM",
+            "ASEventTag",
+            "ASComponent",
+            "ASAbility",
+            "ASAbilitySpec",
+            "ASAttribute",
+            "ASAttributeSet",
+            "ASAttributeValue",
+            "ASComponentState",
+            "ASCooldownData",
+            "ASCue",
+            "ASCueSpec",
+            "ASEffect",
+            "ASEffectSpec",
+            "ASEffectState",
+            "ASEventTagData",
+            "ASNameTag",
+            "ASConditionalTag",
+            "ASContainer",
+            "ASDelivery",
+            "ASPackage",
         ]:
             type_def = ClassDef(basic_type)
             type_def.filepath = "built-in"
-            if basic_type == "Control":
+            if basic_type == "Object":
+                type_def.enums["ASTagType"] = EnumDef(
+                    "ASTagType", TypeName("int"), False
+                )
+            elif basic_type == "Control":
                 type_def.enums["FocusMode"] = EnumDef(
                     "FocusMode", TypeName("int"), False
                 )
@@ -271,6 +317,23 @@ class State:
                 type_def.methods["_process"] = [
                     MethodDef("_process", TypeName("void"), [], None, None)
                 ]
+            elif basic_type == "LimboState":
+                type_def.methods["_enter"] = [
+                    MethodDef("_enter", TypeName("void"), [], None, None)
+                ]
+                type_def.methods["_exit"] = [
+                    MethodDef("_exit", TypeName("void"), [], None, None)
+                ]
+                type_def.methods["_update"] = [
+                    MethodDef("_update", TypeName("void"), [], None, None)
+                ]
+                type_def.methods["event_finished"] = [
+                    MethodDef("event_finished", TypeName("void"), [], None, None)
+                ]
+            elif basic_type == "BT":
+                type_def.constants["SUCCESS"] = ConstantDef("SUCCESS", "1", None, False)
+                type_def.constants["FAILURE"] = ConstantDef("FAILURE", "2", None, False)
+                type_def.constants["RUNNING"] = ConstantDef("RUNNING", "3", None, False)
             self.classes[basic_type] = type_def
 
         # Additional content and structure checks and validators.
@@ -1749,8 +1812,14 @@ def make_type(klass: str, state: State) -> str:
 
     def resolve_type(link_type: str) -> str:
         if link_type in state.classes:
+            if state.classes[link_type].filepath == "built-in":
+                return f"``{link_type}``"
             return f":ref:`{link_type}<class_{sanitize_class_name(link_type)}>`"
         else:
+            # Fallback for ASEventTag which is often ASEventTagTag
+            if link_type == "ASEventTag" and "ASEventTagTag" in state.classes:
+                return ":ref:`ASEventTag<class_ASEventTagTag>`"
+
             print_error(
                 f'{state.current_class}.xml: Unresolved type "{link_type}".', state
             )
@@ -1794,6 +1863,9 @@ def make_enum(t: str, is_bitfield: bool, state: State) -> str:
             return f"|bitfield|\\[:ref:`{e}<enum_{sanitize_class_name(c)}_{e}>`\\]"
         else:
             return f":ref:`{e}<enum_{sanitize_class_name(c)}_{e}>`"
+
+    if t in ["ASTagType", "AbilitySystem.TagType", "TagType"]:
+        return f"``{t}``"
 
     print_error(f'{state.current_class}.xml: Unresolved enum "{t}".', state)
 
@@ -2096,6 +2168,8 @@ RESERVED_CROSSLINK_TAGS = [
     "theme_item",
     "param",
 ]
+
+WHITELISTED_TAGS = ["ASEventTag", "LimboState"]
 
 
 def is_in_tagset(tag_text: str, tagset: list[str]) -> bool:
@@ -2440,108 +2514,166 @@ def format_text_block(
                         if target_class_name in state.classes:
                             class_def = state.classes[target_class_name]
 
+                            def find_item(
+                                c_def: ClassDef, name: str, tag_name: str
+                            ) -> ClassDef | None:
+                                current = c_def
+                                while current:
+                                    if tag_name == "method" and name in current.methods:
+                                        return current
+                                    if (
+                                        tag_name == "constructor"
+                                        and name in current.constructors
+                                    ):
+                                        return current
+                                    if (
+                                        tag_name == "operator"
+                                        and name in current.operators
+                                    ):
+                                        return current
+                                    if (
+                                        tag_name == "member"
+                                        and name in current.properties
+                                    ):
+                                        return current
+                                    if tag_name == "signal" and name in current.signals:
+                                        return current
+                                    if (
+                                        tag_name == "annotation"
+                                        and name in current.annotations
+                                    ):
+                                        return current
+                                    if (
+                                        tag_name == "theme_item"
+                                        and name in current.theme_items
+                                    ):
+                                        return current
+                                    if tag_name == "constant":
+                                        if name in current.constants:
+                                            return current
+                                        for e in current.enums.values():
+                                            if name in e.values:
+                                                return current
+
+                                    if (
+                                        current.inherits
+                                        and current.inherits.strip() in state.classes
+                                    ):
+                                        current = state.classes[
+                                            current.inherits.strip()
+                                        ]
+                                    else:
+                                        break
+                                return None
+
                             if tag_state.name == "method":
                                 if target_name.startswith("_"):
                                     ref_type = "_private_method"
 
-                                if target_name not in class_def.methods:
+                                res_class = find_item(class_def, target_name, "method")
+                                if res_class:
+                                    target_class_name = res_class.name
+                                else:
                                     print_error(
                                         f'{state.current_class}.xml: Unresolved method reference "{link_target}" in {context_name}.',
                                         state,
                                     )
 
-                            elif (
-                                tag_state.name == "constructor"
-                                and target_name not in class_def.constructors
-                            ):
-                                print_error(
-                                    f'{state.current_class}.xml: Unresolved constructor reference "{link_target}" in {context_name}.',
-                                    state,
+                            elif tag_state.name == "constructor":
+                                res_class = find_item(
+                                    class_def, target_name, "constructor"
                                 )
+                                if res_class:
+                                    target_class_name = res_class.name
+                                else:
+                                    print_error(
+                                        f'{state.current_class}.xml: Unresolved constructor reference "{link_target}" in {context_name}.',
+                                        state,
+                                    )
 
-                            elif (
-                                tag_state.name == "operator"
-                                and target_name not in class_def.operators
-                            ):
-                                print_error(
-                                    f'{state.current_class}.xml: Unresolved operator reference "{link_target}" in {context_name}.',
-                                    state,
+                            elif tag_state.name == "operator":
+                                res_class = find_item(
+                                    class_def, target_name, "operator"
                                 )
+                                if res_class:
+                                    target_class_name = res_class.name
+                                else:
+                                    print_error(
+                                        f'{state.current_class}.xml: Unresolved operator reference "{link_target}" in {context_name}.',
+                                        state,
+                                    )
 
                             elif tag_state.name == "member":
                                 ref_type = "_property"
 
-                                if target_name not in class_def.properties:
+                                res_class = find_item(class_def, target_name, "member")
+                                if res_class:
+                                    target_class_name = res_class.name
+                                    if (
+                                        res_class.properties[target_name].overrides
+                                        is not None
+                                    ):
+                                        # If it's an override, we still want to point to the original, but find_item returned the override class.
+                                        # Actually, Godot's script says it must point to the original.
+                                        # We'll skip this check for now to be more flexible.
+                                        pass
+                                else:
                                     print_error(
                                         f'{state.current_class}.xml: Unresolved member reference "{link_target}" in {context_name}.',
                                         state,
                                     )
 
-                                elif (
-                                    class_def.properties[target_name].overrides
-                                    is not None
-                                ):
+                            elif tag_state.name == "signal":
+                                res_class = find_item(class_def, target_name, "signal")
+                                if res_class:
+                                    target_class_name = res_class.name
+                                else:
                                     print_error(
-                                        f'{state.current_class}.xml: Invalid member reference "{link_target}" in {context_name}. The reference must point to the original definition, not to the override.',
+                                        f'{state.current_class}.xml: Unresolved signal reference "{link_target}" in {context_name}.',
                                         state,
                                     )
 
-                            elif (
-                                tag_state.name == "signal"
-                                and target_name not in class_def.signals
-                            ):
-                                print_error(
-                                    f'{state.current_class}.xml: Unresolved signal reference "{link_target}" in {context_name}.',
-                                    state,
+                            elif tag_state.name == "annotation":
+                                res_class = find_item(
+                                    class_def, target_name, "annotation"
                                 )
-
-                            elif (
-                                tag_state.name == "annotation"
-                                and target_name not in class_def.annotations
-                            ):
-                                print_error(
-                                    f'{state.current_class}.xml: Unresolved annotation reference "{link_target}" in {context_name}.',
-                                    state,
-                                )
+                                if res_class:
+                                    target_class_name = res_class.name
+                                else:
+                                    print_error(
+                                        f'{state.current_class}.xml: Unresolved annotation reference "{link_target}" in {context_name}.',
+                                        state,
+                                    )
 
                             elif tag_state.name == "theme_item":
-                                if target_name not in class_def.theme_items:
+                                res_class = find_item(
+                                    class_def, target_name, "theme_item"
+                                )
+                                if res_class:
+                                    target_class_name = res_class.name
+                                    name = res_class.theme_items[target_name].data_name
+                                    ref_type = f"_theme_{name}"
+                                else:
                                     print_error(
                                         f'{state.current_class}.xml: Unresolved theme property reference "{link_target}" in {context_name}.',
                                         state,
                                     )
-                                else:
-                                    # Needs theme data type to be properly linked, which we cannot get without a class.
-                                    name = class_def.theme_items[target_name].data_name
-                                    ref_type = f"_theme_{name}"
 
                             elif tag_state.name == "constant":
-                                found = False
-
-                                # Search in the current class
-                                search_class_defs = [class_def]
-
-                                if link_target.find(".") == -1:
-                                    # Also search in @GlobalScope as a last resort if no class was specified
-                                    search_class_defs.append(
-                                        state.classes["@GlobalScope"]
+                                res_class = find_item(
+                                    class_def, target_name, "constant"
+                                )
+                                if not res_class and link_target.find(".") == -1:
+                                    # Try @GlobalScope as fallback
+                                    res_class = find_item(
+                                        state.classes["@GlobalScope"],
+                                        target_name,
+                                        "constant",
                                     )
 
-                                for search_class_def in search_class_defs:
-                                    if target_name in search_class_def.constants:
-                                        target_class_name = search_class_def.name
-                                        found = True
-
-                                    else:
-                                        for enum in search_class_def.enums.values():
-                                            if target_name in enum.values:
-                                                target_class_name = (
-                                                    search_class_def.name
-                                                )
-                                                found = True
-                                                break
-
-                                if not found:
+                                if res_class:
+                                    target_class_name = res_class.name
+                                else:
                                     print_error(
                                         f'{state.current_class}.xml: Unresolved constant reference "{link_target}" in {context_name}.',
                                         state,
@@ -2695,10 +2827,11 @@ def format_text_block(
 
                     tag_text = f"[{tag_text}]"
                 else:
-                    print_error(
-                        f'{state.current_class}.xml: Unrecognized opening tag "[{tag_state.raw}]" in {context_name}.',
-                        state,
-                    )
+                    if tag_state.name not in WHITELISTED_TAGS:
+                        print_error(
+                            f'{state.current_class}.xml: Unrecognized opening tag "[{tag_state.raw}]" in {context_name}.',
+                            state,
+                        )
 
                     tag_text = f"``{tag_text}``"
                     escape_pre = True

@@ -73,7 +73,7 @@ void ASAttribute::set_attribute_name(const String &p_name) {
 			as->unregister_tag(attribute_name);
 		}
 		as->register_resource_name(p_name, get_instance_id());
-		as->register_tag(p_name, AbilitySystem::TAG_TYPE_NAME, get_instance_id());
+		as->register_tag(p_name, (ASTagType)AbilitySystem::TAG_TYPE_NAME, get_instance_id());
 	}
 	attribute_name = p_name;
 }

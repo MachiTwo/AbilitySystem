@@ -10,7 +10,7 @@
 ASAttributeSet
 ==============
 
-**Inherits:** :ref:`Resource<class_Resource>`
+**Inherits:** ``Resource``
 
 Resource managing a collection of attributes and unlocked abilities.
 
@@ -32,7 +32,7 @@ Properties
    +--------------------------------------------------------------------+-----------------------------------------------------------------------------------+--------+
    | :ref:`Array<class_Array>`\[:ref:`ASAttribute<class_ASAttribute>`\] | :ref:`attribute_definitions<class_ASAttributeSet_property_attribute_definitions>` | ``[]`` |
    +--------------------------------------------------------------------+-----------------------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]   | :ref:`attribute_drivers<class_ASAttributeSet_property_attribute_drivers>`         | ``[]`` |
+   | :ref:`Array<class_Array>`\[``Dictionary``\]                        | :ref:`attribute_drivers<class_ASAttributeSet_property_attribute_drivers>`         | ``[]`` |
    +--------------------------------------------------------------------+-----------------------------------------------------------------------------------+--------+
    | :ref:`Array<class_Array>`\[:ref:`ASAbility<class_ASAbility>`\]     | :ref:`unlocked_abilities<class_ASAttributeSet_property_unlocked_abilities>`       | ``[]`` |
    +--------------------------------------------------------------------+-----------------------------------------------------------------------------------+--------+
@@ -45,27 +45,27 @@ Methods
 .. table::
    :widths: auto
 
-   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                           | :ref:`add_attribute_definition<class_ASAttributeSet_method_add_attribute_definition>`\ (\ attribute\: :ref:`ASAttribute<class_ASAttribute>`\ )                                                                             |
-   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                           | :ref:`add_modifier<class_ASAttributeSet_method_add_modifier>`\ (\ name\: :ref:`StringName<class_StringName>`, value\: :ref:`float<class_float>`, type\: :ref:`ModifierType<enum_ASAttributeSet_ModifierType>` = 0\ )       |
-   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`                                        | :ref:`get_attribute_base_value<class_ASAttributeSet_method_get_attribute_base_value>`\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const|                                                                            |
-   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASAttribute<class_ASAttribute>`                            | :ref:`get_attribute_definition<class_ASAttributeSet_method_get_attribute_definition>`\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const|                                                                            |
-   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`get_attribute_list<class_ASAttributeSet_method_get_attribute_list>`\ (\ ) |const|                                                                                                                                    |
-   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`float<class_float>`                                        | :ref:`get_attribute_value<class_ASAttributeSet_method_get_attribute_value>`\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const|                                                                                      |
-   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`                                          | :ref:`has_attribute<class_ASAttributeSet_method_has_attribute>`\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const|                                                                                                  |
-   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                           | :ref:`remove_attribute_definition<class_ASAttributeSet_method_remove_attribute_definition>`\ (\ name\: :ref:`StringName<class_StringName>`\ )                                                                              |
-   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                           | :ref:`remove_modifier<class_ASAttributeSet_method_remove_modifier>`\ (\ name\: :ref:`StringName<class_StringName>`, value\: :ref:`float<class_float>`, type\: :ref:`ModifierType<enum_ASAttributeSet_ModifierType>` = 0\ ) |
-   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                           | :ref:`set_attribute_base_value<class_ASAttributeSet_method_set_attribute_base_value>`\ (\ name\: :ref:`StringName<class_StringName>`, value\: :ref:`float<class_float>`\ )                                                 |
-   +------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   +---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                      | :ref:`add_attribute_definition<class_ASAttributeSet_method_add_attribute_definition>`\ (\ attribute\: :ref:`ASAttribute<class_ASAttribute>`\ )                                        |
+   +---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                      | :ref:`add_modifier<class_ASAttributeSet_method_add_modifier>`\ (\ name\: ``StringName``, value\: ``float``, type\: :ref:`ModifierType<enum_ASAttributeSet_ModifierType>` = 0\ )       |
+   +---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                   | :ref:`get_attribute_base_value<class_ASAttributeSet_method_get_attribute_base_value>`\ (\ name\: ``StringName``\ ) |const|                                                            |
+   +---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ASAttribute<class_ASAttribute>`       | :ref:`get_attribute_definition<class_ASAttributeSet_method_get_attribute_definition>`\ (\ name\: ``StringName``\ ) |const|                                                            |
+   +---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[``StringName``\] | :ref:`get_attribute_list<class_ASAttributeSet_method_get_attribute_list>`\ (\ ) |const|                                                                                               |
+   +---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                   | :ref:`get_attribute_value<class_ASAttributeSet_method_get_attribute_value>`\ (\ name\: ``StringName``\ ) |const|                                                                      |
+   +---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`has_attribute<class_ASAttributeSet_method_has_attribute>`\ (\ name\: ``StringName``\ ) |const|                                                                                  |
+   +---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                      | :ref:`remove_attribute_definition<class_ASAttributeSet_method_remove_attribute_definition>`\ (\ name\: ``StringName``\ )                                                              |
+   +---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                      | :ref:`remove_modifier<class_ASAttributeSet_method_remove_modifier>`\ (\ name\: ``StringName``, value\: ``float``, type\: :ref:`ModifierType<enum_ASAttributeSet_ModifierType>` = 0\ ) |
+   +---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                      | :ref:`set_attribute_base_value<class_ASAttributeSet_method_set_attribute_base_value>`\ (\ name\: ``StringName``, value\: ``float``\ )                                                 |
+   +---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -80,7 +80,7 @@ Signals
 
 .. rst-class:: classref-signal
 
-**attribute_changed**\ (\ attribute_name\: :ref:`StringName<class_StringName>`, old_value\: :ref:`float<class_float>`, new_value\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASAttributeSet_signal_attribute_changed>`
+**attribute_changed**\ (\ attribute_name\: ``StringName``, old_value\: ``float``, new_value\: ``float``\ ) :ref:`🔗<class_ASAttributeSet_signal_attribute_changed>`
 
 Emitted when a value changes.
 
@@ -145,12 +145,12 @@ Definitions for each attribute (limits, base).
 
 .. rst-class:: classref-property
 
-:ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **attribute_drivers** = ``[]`` :ref:`🔗<class_ASAttributeSet_property_attribute_drivers>`
+:ref:`Array<class_Array>`\[``Dictionary``\] **attribute_drivers** = ``[]`` :ref:`🔗<class_ASAttributeSet_property_attribute_drivers>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_attribute_drivers**\ (\ value\: :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\]\ )
-- :ref:`Array<class_Array>`\[:ref:`Dictionary<class_Dictionary>`\] **get_attribute_drivers**\ (\ )
+- |void| **set_attribute_drivers**\ (\ value\: :ref:`Array<class_Array>`\[``Dictionary``\]\ )
+- :ref:`Array<class_Array>`\[``Dictionary``\] **get_attribute_drivers**\ (\ )
 
 List of rules that drive an attribute value based on another (e.g., Strength driving Attack).
 
@@ -196,7 +196,7 @@ Adds an attribute definition to the set.
 
 .. rst-class:: classref-method
 
-|void| **add_modifier**\ (\ name\: :ref:`StringName<class_StringName>`, value\: :ref:`float<class_float>`, type\: :ref:`ModifierType<enum_ASAttributeSet_ModifierType>` = 0\ ) :ref:`🔗<class_ASAttributeSet_method_add_modifier>`
+|void| **add_modifier**\ (\ name\: ``StringName``, value\: ``float``, type\: :ref:`ModifierType<enum_ASAttributeSet_ModifierType>` = 0\ ) :ref:`🔗<class_ASAttributeSet_method_add_modifier>`
 
 Adds a modifier to an attribute's current value.
 
@@ -208,7 +208,7 @@ Adds a modifier to an attribute's current value.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_attribute_base_value**\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const| :ref:`🔗<class_ASAttributeSet_method_get_attribute_base_value>`
+``float`` **get_attribute_base_value**\ (\ name\: ``StringName``\ ) |const| :ref:`🔗<class_ASAttributeSet_method_get_attribute_base_value>`
 
 Returns the base value of the specified attribute.
 
@@ -220,7 +220,7 @@ Returns the base value of the specified attribute.
 
 .. rst-class:: classref-method
 
-:ref:`ASAttribute<class_ASAttribute>` **get_attribute_definition**\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const| :ref:`🔗<class_ASAttributeSet_method_get_attribute_definition>`
+:ref:`ASAttribute<class_ASAttribute>` **get_attribute_definition**\ (\ name\: ``StringName``\ ) |const| :ref:`🔗<class_ASAttributeSet_method_get_attribute_definition>`
 
 Returns the definition of the specified attribute.
 
@@ -232,7 +232,7 @@ Returns the definition of the specified attribute.
 
 .. rst-class:: classref-method
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_attribute_list**\ (\ ) |const| :ref:`🔗<class_ASAttributeSet_method_get_attribute_list>`
+:ref:`Array<class_Array>`\[``StringName``\] **get_attribute_list**\ (\ ) |const| :ref:`🔗<class_ASAttributeSet_method_get_attribute_list>`
 
 Returns a list of all attribute names in the set.
 
@@ -244,7 +244,7 @@ Returns a list of all attribute names in the set.
 
 .. rst-class:: classref-method
 
-:ref:`float<class_float>` **get_attribute_value**\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const| :ref:`🔗<class_ASAttributeSet_method_get_attribute_value>`
+``float`` **get_attribute_value**\ (\ name\: ``StringName``\ ) |const| :ref:`🔗<class_ASAttributeSet_method_get_attribute_value>`
 
 Returns the current value of the specified attribute.
 
@@ -256,7 +256,7 @@ Returns the current value of the specified attribute.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **has_attribute**\ (\ name\: :ref:`StringName<class_StringName>`\ ) |const| :ref:`🔗<class_ASAttributeSet_method_has_attribute>`
+``bool`` **has_attribute**\ (\ name\: ``StringName``\ ) |const| :ref:`🔗<class_ASAttributeSet_method_has_attribute>`
 
 Returns true if the set contains the specified attribute.
 
@@ -268,7 +268,7 @@ Returns true if the set contains the specified attribute.
 
 .. rst-class:: classref-method
 
-|void| **remove_attribute_definition**\ (\ name\: :ref:`StringName<class_StringName>`\ ) :ref:`🔗<class_ASAttributeSet_method_remove_attribute_definition>`
+|void| **remove_attribute_definition**\ (\ name\: ``StringName``\ ) :ref:`🔗<class_ASAttributeSet_method_remove_attribute_definition>`
 
 Removes an attribute definition from the set by its tag name.
 
@@ -280,7 +280,7 @@ Removes an attribute definition from the set by its tag name.
 
 .. rst-class:: classref-method
 
-|void| **remove_modifier**\ (\ name\: :ref:`StringName<class_StringName>`, value\: :ref:`float<class_float>`, type\: :ref:`ModifierType<enum_ASAttributeSet_ModifierType>` = 0\ ) :ref:`🔗<class_ASAttributeSet_method_remove_modifier>`
+|void| **remove_modifier**\ (\ name\: ``StringName``, value\: ``float``, type\: :ref:`ModifierType<enum_ASAttributeSet_ModifierType>` = 0\ ) :ref:`🔗<class_ASAttributeSet_method_remove_modifier>`
 
 Removes a previously applied modifier from an attribute.
 
@@ -292,7 +292,7 @@ Removes a previously applied modifier from an attribute.
 
 .. rst-class:: classref-method
 
-|void| **set_attribute_base_value**\ (\ name\: :ref:`StringName<class_StringName>`, value\: :ref:`float<class_float>`\ ) :ref:`🔗<class_ASAttributeSet_method_set_attribute_base_value>`
+|void| **set_attribute_base_value**\ (\ name\: ``StringName``, value\: ``float``\ ) :ref:`🔗<class_ASAttributeSet_method_set_attribute_base_value>`
 
 Sets the base value for a specific attribute.
 

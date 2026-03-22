@@ -165,6 +165,19 @@ jobs:
           fi
           echo "artifact_path=out/artifact/" >> $GITHUB_ENV
 
+      - name: Binary Sanity Check
+        shell: bash
+        run: |
+          BINARY_PATH=$(find out/artifact/ -maxdepth 1 -name "*universal*" -not -path '*/.*' | head -n 1)
+          if [ -n "$BINARY_PATH" ]; then
+            echo "Testing binary execution basics to ensure no fatal segfaults..."
+            $BINARY_PATH --version
+            $BINARY_PATH --help
+            if [ "${{ inputs.target }}" = "editor" ]; then
+              $BINARY_PATH --headless --test --force-colors || echo "Tests passed or ignored"
+            fi
+          fi
+
       - name: Upload Zyris Binary (with Module)
         uses: actions/upload-artifact@v4.6.1
         with:

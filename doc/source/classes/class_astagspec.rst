@@ -10,7 +10,7 @@
 ASTagSpec
 =========
 
-**Inherits:** :ref:`RefCounted<class_RefCounted>`
+**Inherits:** ``RefCounted``
 
 Collection of unique Tags.
 
@@ -29,21 +29,21 @@ Methods
 .. table::
    :widths: auto
 
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`                                          | :ref:`add_tag<class_ASTagSpec_method_add_tag>`\ (\ tag\: :ref:`StringName<class_StringName>`\ )                                                                                          |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                           | :ref:`clear<class_ASTagSpec_method_clear>`\ (\ )                                                                                                                                         |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] | :ref:`get_all_tags<class_ASTagSpec_method_get_all_tags>`\ (\ ) |const|                                                                                                                   |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`                                          | :ref:`has_all_tags<class_ASTagSpec_method_has_all_tags>`\ (\ tags\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\], exact\: :ref:`bool<class_bool>` = false\ ) |const| |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`                                          | :ref:`has_any_tags<class_ASTagSpec_method_has_any_tags>`\ (\ tags\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\], exact\: :ref:`bool<class_bool>` = false\ ) |const| |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`                                          | :ref:`has_tag<class_ASTagSpec_method_has_tag>`\ (\ tag\: :ref:`StringName<class_StringName>`, exact\: :ref:`bool<class_bool>` = false\ ) |const|                                         |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`bool<class_bool>`                                          | :ref:`remove_tag<class_ASTagSpec_method_remove_tag>`\ (\ tag\: :ref:`StringName<class_StringName>`\ )                                                                                    |
-   +------------------------------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`add_tag<class_ASTagSpec_method_add_tag>`\ (\ tag\: ``StringName``\ )                                                                           |
+   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                      | :ref:`clear<class_ASTagSpec_method_clear>`\ (\ )                                                                                                     |
+   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[``StringName``\] | :ref:`get_all_tags<class_ASTagSpec_method_get_all_tags>`\ (\ ) |const|                                                                               |
+   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`has_all_tags<class_ASTagSpec_method_has_all_tags>`\ (\ tags\: :ref:`Array<class_Array>`\[``StringName``\], exact\: ``bool`` = false\ ) |const| |
+   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`has_any_tags<class_ASTagSpec_method_has_any_tags>`\ (\ tags\: :ref:`Array<class_Array>`\[``StringName``\], exact\: ``bool`` = false\ ) |const| |
+   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`has_tag<class_ASTagSpec_method_has_tag>`\ (\ tag\: ``StringName``, exact\: ``bool`` = false\ ) |const|                                         |
+   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`remove_tag<class_ASTagSpec_method_remove_tag>`\ (\ tag\: ``StringName``\ )                                                                     |
+   +---------------------------------------------+------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -58,7 +58,7 @@ Method Descriptions
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **add_tag**\ (\ tag\: :ref:`StringName<class_StringName>`\ ) :ref:`🔗<class_ASTagSpec_method_add_tag>`
+``bool`` **add_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_ASTagSpec_method_add_tag>`
 
 Adds a tag to the container. If the tag already exists, increments its reference count. Returns ``true`` if this is the first reference to the tag.
 
@@ -82,7 +82,7 @@ Removes all tags from the container.
 
 .. rst-class:: classref-method
 
-:ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\] **get_all_tags**\ (\ ) |const| :ref:`🔗<class_ASTagSpec_method_get_all_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **get_all_tags**\ (\ ) |const| :ref:`🔗<class_ASTagSpec_method_get_all_tags>`
 
 Returns all tags currently in this container.
 
@@ -94,7 +94,7 @@ Returns all tags currently in this container.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **has_all_tags**\ (\ tags\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\], exact\: :ref:`bool<class_bool>` = false\ ) |const| :ref:`🔗<class_ASTagSpec_method_has_all_tags>`
+``bool`` **has_all_tags**\ (\ tags\: :ref:`Array<class_Array>`\[``StringName``\], exact\: ``bool`` = false\ ) |const| :ref:`🔗<class_ASTagSpec_method_has_all_tags>`
 
 Returns true if the container has all of the specified tags.
 
@@ -106,7 +106,7 @@ Returns true if the container has all of the specified tags.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **has_any_tags**\ (\ tags\: :ref:`Array<class_Array>`\[:ref:`StringName<class_StringName>`\], exact\: :ref:`bool<class_bool>` = false\ ) |const| :ref:`🔗<class_ASTagSpec_method_has_any_tags>`
+``bool`` **has_any_tags**\ (\ tags\: :ref:`Array<class_Array>`\[``StringName``\], exact\: ``bool`` = false\ ) |const| :ref:`🔗<class_ASTagSpec_method_has_any_tags>`
 
 Returns true if the container has any of the specified tags.
 
@@ -118,7 +118,7 @@ Returns true if the container has any of the specified tags.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **has_tag**\ (\ tag\: :ref:`StringName<class_StringName>`, exact\: :ref:`bool<class_bool>` = false\ ) |const| :ref:`🔗<class_ASTagSpec_method_has_tag>`
+``bool`` **has_tag**\ (\ tag\: ``StringName``, exact\: ``bool`` = false\ ) |const| :ref:`🔗<class_ASTagSpec_method_has_tag>`
 
 Returns true if the container has the specified tag.
 
@@ -130,7 +130,7 @@ Returns true if the container has the specified tag.
 
 .. rst-class:: classref-method
 
-:ref:`bool<class_bool>` **remove_tag**\ (\ tag\: :ref:`StringName<class_StringName>`\ ) :ref:`🔗<class_ASTagSpec_method_remove_tag>`
+``bool`` **remove_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_ASTagSpec_method_remove_tag>`
 
 Decrements the reference count of a tag. If the count reaches zero, the tag is removed. Returns ``true`` if the tag was actually removed (reference count reached zero).
 

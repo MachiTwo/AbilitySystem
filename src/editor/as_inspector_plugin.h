@@ -35,6 +35,8 @@
 #include "editor/inspector/editor_inspector.h"
 #endif
 
+#ifdef TOOLS_ENABLED
+
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 #endif
@@ -59,3 +61,5 @@ public:
 	virtual bool _parse_property(Object *p_object, const Variant::Type p_type, const String &p_path, const PropertyHint p_hint, const String &p_hint_text, const BitField<PropertyUsageFlags> p_usage, const bool p_wide = false) override;
 #endif
 };
+
+#endif // TOOLS_ENABLED

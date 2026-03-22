@@ -18,9 +18,19 @@ O **Ability System** (AS) é um framework poderoso para criação de combate, ha
 
 ## 📦 Instalação
 
-1. Baixe o `ability-system-plugin.zip` mais recente em nossas [Releases](https://github.com/MachiTwo/AbilitySystemPlugin/releases/download/0.1.0-dev/ability-system-plugin.zip).
+1. Baixe o `ability-system-plugin.zip` mais recente em nossas [Releases](https://github.com/MachiTwo/AbilitySystem/releases/download/v0.1.0/ability-system+v0.1.0-dev.gdextension.zip).
 2. Extraia e copie a pasta `addons/ability_system` para o diretório `addons/` do seu projeto.
 3. Reinicie a Godot e vá em **Projeto > Configurações do Projeto > Plugins** para ativar o plugin "Ability System". Isso ativará o Editor de Tags e as funcionalidades customizadas do Inspetor.
+
+---
+
+## 🧬 Sistemas de Alta Escalabilidade
+
+Este framework introduz conceitos avançados para desacoplar a lógica de jogo:
+
+- **Ability Phases**: Divida suas habilidades em estágios como `Windup`, `Execution` e `Recovery`. Gerencie durações e efeitos específicos para cada fase de forma nativa.
+- **AS Events**: Gatilhos transitórios que carregam dados (`ASEventTag`). Perfeitos para comunicar impactos, interações de UI ou gatilhos de animação sem poluir o estado do personagem.
+- **Events Historical**: Memória de curto prazo para eventos que ocorreram recentemente, permitindo que habilidades e efeitos consultem o passado imediato (ex: "Se bloqueou um ataque nos últimos 0.5s").
 
 ---
 
@@ -102,10 +112,10 @@ O sistema lida com ambos de forma transparente. Aplicar um efeito "Congelado" ir
 ```gdscript
 
 func interagir_com_npc(npc: ASComponent):
-	if npc.can_activate_ability_by_tag(&"ability.social.talk"):
-		npc.try_activate_ability_by_tag(&"ability.social.talk")
-	else:
-		print("O NPC está muito furioso ou atordoado para conversar!")
+ if npc.can_activate_ability_by_tag(&"ability.social.talk"):
+  npc.try_activate_ability_by_tag(&"ability.social.talk")
+ else:
+  print("O NPC está muito furioso ou atordoado para conversar!")
 ```
 
 ### 9. Reagindo a Mudanças de Estado (Sinais)
@@ -115,11 +125,11 @@ O ASC notifica sua lógica de jogo quando mudanças significativas ocorrem:
 ```gdscript
 
 func _ready():
-	asc.tag_changed.connect(_on_tag_changed)
+ asc.tag_changed.connect(_on_tag_changed)
 
 func _on_tag_changed(tag: StringName, is_present: bool):
-	if tag == &"state.emotional.angry" and is_present:
-		$Sprite.modulate = Color.RED # Feedback visual para mudança de emoção
+ if tag == &"state.emotional.angry" and is_present:
+  $Sprite.modulate = Color.RED # Feedback visual para mudança de emoção
 ```
 
 ### 10. O Payload: ASPackage
@@ -139,6 +149,7 @@ Tipicamente um Area2D anexado ao jogador que fica ativo apenas durante frames de
 2. Adicione um `ASDelivery` como filho.
 3. **Configure**: `Package` = `DanoMelee.tres`, `Auto Connect` = **Ligado**.
 4. **Dispare**:
+
    ```gdscript
    func _on_attack_animation_hit_frame():
        $AreaEspada/ASDelivery.activate(0.1) # Ativo por 100ms
@@ -151,6 +162,7 @@ Um projétil carrega a intenção através da tela.
 1. Crie uma cena de Bala (`Area2D` + `ASDelivery`).
 2. **Configure**: `Auto Connect` = **Ligado**, `One Shot` = **Ligado**.
 3. **Spawne**:
+
    ```gdscript
    func disparar():
        var bala = CenaBala.instantiate()
@@ -242,6 +254,7 @@ Para garantir que servidor e cliente calculem o dano de forma idêntica:
 | Recurso             | Propósito               | Destaques                                                  |
 | :------------------ | :---------------------- | :--------------------------------------------------------- |
 | **ASAbility**       | Lógica de uma ação.     | Custos, Cooldowns e Tags de Ativação nativos.              |
+| **ASAbilityPhase**  | Definição de Fase.      | Define duração e efeitos para estágios específicos.        |
 | **ASEffect**        | Pacote de alteração.    | Dano instantâneo, buffs temporários ou passivas.           |
 | **ASAttributeSet**  | Container de stats.     | Gerencia coleções de atributos. Único por ator.            |
 | **ASAttribute**     | Definição de stat.      | Esquema individual de HP, Mana com limites (clamping).     |
@@ -251,6 +264,7 @@ Para garantir que servidor e cliente calculem o dano de forma idêntica:
 | **ASCueAnimation**  | Feedback de Animação.   | Especializado em tocar montagens (montages) nos atores.    |
 | **ASCueAudio**      | Feedback de Áudio.      | Especializado em tocar sons espaciais ou globais.          |
 | **ASStateSnapshot** | Persistência de Estado. | Captura Atributos/Tags para Rollback Multiplayer ou Saves. |
+| **ASEventTag**      | Definição de Evento.    | Define eventos customizados para interação entre sistemas. |
 
 ### 🚀 Objetos de Runtime (Specs)
 
