@@ -35,6 +35,7 @@
 #include "src/editor/as_tags_panel.h"
 #include <godot_cpp/classes/editor_plugin.hpp>
 #include <godot_cpp/classes/tab_container.hpp>
+#include <godot_cpp/variant/utility_functions.hpp>
 #else
 #include "modules/ability_system/compat/as_project_settings_compat.h"
 #include "modules/ability_system/editor/as_editor_plugin.h"
@@ -59,7 +60,7 @@ ASEditorPlugin::ASEditorPlugin() {
 	if (tabs) {
 		for (int i = 0; i < tabs->get_child_count(); i++) {
 			Node *c = tabs->get_child(i);
-			if (c->get_name() == "Ability System Tags") {
+			if (c->get_name() == StringName("Ability System Tags")) {
 				return; // Already added
 			}
 		}
@@ -67,7 +68,7 @@ ASEditorPlugin::ASEditorPlugin() {
 		ASTagsPanel *tags_editor = memnew(ASTagsPanel);
 		tags_editor->set_name("Ability System Tags");
 		tabs->add_child(tags_editor);
-		tabs->set_tab_title(tabs->get_tab_count() - 1, TTR("Ability System Tags"));
+		tabs->set_tab_title(tabs->get_tab_count() - 1, "Ability System Tags");
 		tabs->move_child(tags_editor, 2);
 	}
 }
