@@ -53,7 +53,7 @@
 #include "src/resources/as_state_snapshot.h"
 #include "src/scene/as_component.h"
 #include "src/scene/as_delivery.h"
-#ifdef TOOLS_ENABLED
+#if defined(TOOLS_ENABLED) || defined(ABILITY_SYSTEM_GDEXTENSION)
 #include "src/editor/as_editor_plugin.h"
 #include "src/editor/as_editor_property.h"
 #include "src/editor/as_inspector_plugin.h"
@@ -78,7 +78,7 @@
 #include "modules/ability_system/resources/as_state_snapshot.h"
 #include "modules/ability_system/scene/as_component.h"
 #include "modules/ability_system/scene/as_delivery.h"
-#ifdef TOOLS_ENABLED
+#if defined(TOOLS_ENABLED) || defined(ABILITY_SYSTEM_GDEXTENSION)
 #include "modules/ability_system/editor/as_editor_plugin.h"
 #include "modules/ability_system/editor/as_editor_property.h"
 #include "modules/ability_system/editor/as_inspector_plugin.h"
@@ -123,7 +123,7 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 #endif
 	}
 
-#ifdef TOOLS_ENABLED
+#if defined(TOOLS_ENABLED) || defined(ABILITY_SYSTEM_GDEXTENSION)
 	if (p_level == MODULE_INITIALIZATION_LEVEL_EDITOR) {
 		GDREGISTER_CLASS(ASInspectorPlugin);
 		GDREGISTER_CLASS(ASEditorPropertySelector);
