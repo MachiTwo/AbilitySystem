@@ -18,9 +18,19 @@
 
 ## 📦 Installation
 
-1. Download the latest `ability-system-plugin.zip` from [Releases](https://github.com/MachiTwo/AbilitySystemPlugin/releases/download/0.1.0-dev/ability-system-plugin.zip).
+1. Download the latest `ability-system-plugin.zip` from [Releases](https://github.com/MachiTwo/AbilitySystem/releases/download/v0.1.0/ability-system+v0.1.0-dev.gdextension.zip).
 2. Extract and copy the `addons/ability_system` folder to your project's `addons/` directory.
 3. Restart Godot and go to **Project > Project Settings > Plugins** to enable the "Ability System" plugin. This activates the Tag Editor and custom Inspector features.
+
+---
+
+## 🧬 High Scalability Systems
+
+This framework introduces advanced concepts to decouple game logic:
+
+- **Ability Phases**: Divide your abilities into stages like `Windup`, `Execution`, and `Recovery`. Manage durations and specific effects for each phase natively.
+- **AS Events**: Transient triggers that carry data (`ASEvent`). Perfect for communicating impacts, UI interactions, or animation triggers without polluting the character's state.
+- **Events Historical**: Short-term memory for events that occurred recently, allowing abilities and effects to query the immediate past (e.g., "If blocked an attack in the last 0.5s").
 
 ---
 
@@ -244,7 +254,8 @@ To ensure the server and client calculate damage identically:
 
 | Resource            | Purpose               | Key Features                                                  |
 | :------------------ | :-------------------- | :------------------------------------------------------------ |
-| **ASAbility**       | Logic of an action.   | Native Costs, Cooldowns, and Activation Tags.                 |
+| **ASAbility**       | Logic of an action.   | Costs, Cooldowns and Activation Tags. Supports **Phases**.    |
+| **ASAbilityPhase**  | Phase Definition.     | Defines duration and effects for specific ability stages.     |
 | **ASEffect**        | Modification package. | Instant damage, timed buffs, or infinite passives.            |
 | **ASAttributeSet**  | Stat container.       | Manages collections of attributes. Deep-duplicated per actor. |
 | **ASAttribute**     | Stat definition.      | Individual HP, Mana, XP schema with clamping.                 |
@@ -254,6 +265,7 @@ To ensure the server and client calculate damage identically:
 | **ASCueAnimation**  | Animation Feedback.   | Specialized for playing montages on actors.                   |
 | **ASCueAudio**      | Audio Feedback.       | Specialized for playing spatial or global sound.              |
 | **ASStateSnapshot** | State Persistence.    | Captures Attributes/Tags for Multiplayer Rollback or Saving.  |
+| **ASEvent**         | Event Definition.     | Defines custom events for ability system interactions.        |
 
 ### 🚀 Runtime Objects (Specs)
 

@@ -19,7 +19,6 @@ def sync_addons():
     for file in [
         "ability_system.gdextension",
         "plugin.cfg",
-        "ability_system_plugin.gd",
     ]:
         src_file = os.path.join(config_src_dir, file)
         if os.path.exists(src_file):
