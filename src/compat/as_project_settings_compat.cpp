@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  as_editor_plugin.cpp                                                  */
+/*  as_project_settings_compat.cpp                                        */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -28,50 +28,52 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
+#include "as_project_settings_compat.h"
+
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-#include "src/editor/as_editor_plugin.h"
-#include "src/compat/as_project_settings_compat.h"
-#include "src/editor/as_inspector_plugin.h"
-#include "src/editor/as_tags_panel.h"
-#include <godot_cpp/classes/editor_plugin.hpp>
-#include <godot_cpp/classes/tab_container.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
+#include <godot_cpp/classes/control.hpp>
+#include <godot_cpp/classes/editor_interface.hpp>
+#include <godot_cpp/classes/node.hpp>
+#include <godot_cpp/variant/typed_array.hpp>
 #else
-#include "modules/ability_system/compat/as_project_settings_compat.h"
-#include "modules/ability_system/editor/as_editor_plugin.h"
-#include "modules/ability_system/editor/as_inspector_plugin.h"
-#include "modules/ability_system/editor/as_tags_panel.h"
-#include "scene/gui/tab_container.h"
+#include "editor/settings/project_settings_editor.h"
 #endif
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-using namespace godot;
-#endif
-
-void ASEditorPlugin::_bind_methods() {
-}
-
-ASEditorPlugin::ASEditorPlugin() {
-	Ref<ASInspectorPlugin> inspector_plugin;
-	inspector_plugin.instantiate();
-	add_inspector_plugin(inspector_plugin);
-
-	TabContainer *tabs = ASProjectSettingsCompat::get_project_settings_tabs();
-	if (tabs) {
-		for (int i = 0; i < tabs->get_child_count(); i++) {
-			Node *c = tabs->get_child(i);
-			if (c->get_name() == StringName("Ability System Tags")) {
-				return; // Already added
-			}
-		}
-
-		ASTagsPanel *tags_editor = memnew(ASTagsPanel);
-		tags_editor->set_name("Ability System Tags");
-		tabs->add_child(tags_editor);
-		tabs->set_tab_title(tabs->get_tab_count() - 1, "Ability System Tags");
-		tabs->move_child(tags_editor, 2);
+TabContainer *ASProjectSettingsCompat::get_project_settings_tabs() {
+#ifndef ABILITY_SYSTEM_GDEXTENSION
+	ProjectSettingsEditor *ps_editor = ProjectSettingsEditor::get_singleton();
+	if (ps_editor) {
+		return ps_editor->get_tabs();
 	}
-}
+	return nullptr;
+#else
+	EditorInterface *editor = EditorInterface::get_singleton();
+	if (!editor) {
+		return nullptr;
+	}
 
-ASEditorPlugin::~ASEditorPlugin() {
+	Control *base_control = editor->get_base_control();
+	if (!base_control) {
+		return nullptr;
+	}
+
+	// Find the Project Settings Editor window dynamically
+	TypedArray<Node> ps_editors = base_control->find_children("*", "ProjectSettingsEditor", true, false);
+	if (ps_editors.is_empty()) {
+		return nullptr;
+	}
+
+	Node *ps_editor = Object::cast_to<Node>(ps_editors[0]);
+	if (!ps_editor) {
+		return nullptr;
+	}
+
+	// Inside it, find the general TabContainer that holds the different settings tabs
+	TypedArray<Node> tab_containers = ps_editor->find_children("*", "TabContainer", true, false);
+	if (tab_containers.is_empty()) {
+		return nullptr;
+	}
+
+	return Object::cast_to<TabContainer>(tab_containers[0]);
+#endif
 }

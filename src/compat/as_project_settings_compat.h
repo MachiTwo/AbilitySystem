@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  as_editor_plugin.cpp                                                  */
+/*  as_project_settings_compat.h                                          */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -28,19 +28,11 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
+#pragma once
+
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-#include "src/editor/as_editor_plugin.h"
-#include "src/compat/as_project_settings_compat.h"
-#include "src/editor/as_inspector_plugin.h"
-#include "src/editor/as_tags_panel.h"
-#include <godot_cpp/classes/editor_plugin.hpp>
 #include <godot_cpp/classes/tab_container.hpp>
-#include <godot_cpp/variant/utility_functions.hpp>
 #else
-#include "modules/ability_system/compat/as_project_settings_compat.h"
-#include "modules/ability_system/editor/as_editor_plugin.h"
-#include "modules/ability_system/editor/as_inspector_plugin.h"
-#include "modules/ability_system/editor/as_tags_panel.h"
 #include "scene/gui/tab_container.h"
 #endif
 
@@ -48,30 +40,7 @@
 using namespace godot;
 #endif
 
-void ASEditorPlugin::_bind_methods() {
-}
-
-ASEditorPlugin::ASEditorPlugin() {
-	Ref<ASInspectorPlugin> inspector_plugin;
-	inspector_plugin.instantiate();
-	add_inspector_plugin(inspector_plugin);
-
-	TabContainer *tabs = ASProjectSettingsCompat::get_project_settings_tabs();
-	if (tabs) {
-		for (int i = 0; i < tabs->get_child_count(); i++) {
-			Node *c = tabs->get_child(i);
-			if (c->get_name() == StringName("Ability System Tags")) {
-				return; // Already added
-			}
-		}
-
-		ASTagsPanel *tags_editor = memnew(ASTagsPanel);
-		tags_editor->set_name("Ability System Tags");
-		tabs->add_child(tags_editor);
-		tabs->set_tab_title(tabs->get_tab_count() - 1, "Ability System Tags");
-		tabs->move_child(tags_editor, 2);
-	}
-}
-
-ASEditorPlugin::~ASEditorPlugin() {
-}
+class ASProjectSettingsCompat {
+public:
+	static TabContainer *get_project_settings_tabs();
+};
