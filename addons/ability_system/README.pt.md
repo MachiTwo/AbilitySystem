@@ -18,9 +18,19 @@ O **Ability System** (AS) é um framework poderoso para criação de combate, ha
 
 ## 📦 Instalação
 
-1. Baixe o `ability-system-plugin.zip` mais recente em nossas [Releases](https://github.com/MachiTwo/AbilitySystemPlugin/releases/download/0.1.0-dev/ability-system-plugin.zip).
+1. Baixe o `ability-system-plugin.zip` mais recente em nossas [Releases](https://github.com/MachiTwo/AbilitySystem/releases/download/v0.1.0/ability-system+v0.1.0-dev.gdextension.zip).
 2. Extraia e copie a pasta `addons/ability_system` para o diretório `addons/` do seu projeto.
 3. Reinicie a Godot e vá em **Projeto > Configurações do Projeto > Plugins** para ativar o plugin "Ability System". Isso ativará o Editor de Tags e as funcionalidades customizadas do Inspetor.
+
+---
+
+## 🧬 Sistemas de Alta Escalabilidade
+
+Este framework introduz conceitos avançados para desacoplar a lógica de jogo:
+
+- **Ability Phases**: Divida suas habilidades em estágios como `Windup`, `Execution` e `Recovery`. Gerencie durações e efeitos específicos para cada fase de forma nativa.
+- **AS Events**: Gatilhos transitórios que carregam dados (`ASEvent`). Perfeitos para comunicar impactos, interações de UI ou gatilhos de animação sem poluir o estado do personagem.
+- **Events Historical**: Memória de curto prazo para eventos que ocorreram recentemente, permitindo que habilidades e efeitos consultem o passado imediato (ex: "Se bloqueou um ataque nos últimos 0.5s").
 
 ---
 
@@ -242,6 +252,7 @@ Para garantir que servidor e cliente calculem o dano de forma idêntica:
 | Recurso             | Propósito               | Destaques                                                  |
 | :------------------ | :---------------------- | :--------------------------------------------------------- |
 | **ASAbility**       | Lógica de uma ação.     | Custos, Cooldowns e Tags de Ativação nativos.              |
+| **ASAbilityPhase**  | Definição de Fase.      | Define duração e efeitos para estágios específicos.        |
 | **ASEffect**        | Pacote de alteração.    | Dano instantâneo, buffs temporários ou passivas.           |
 | **ASAttributeSet**  | Container de stats.     | Gerencia coleções de atributos. Único por ator.            |
 | **ASAttribute**     | Definição de stat.      | Esquema individual de HP, Mana com limites (clamping).     |
@@ -251,6 +262,7 @@ Para garantir que servidor e cliente calculem o dano de forma idêntica:
 | **ASCueAnimation**  | Feedback de Animação.   | Especializado em tocar montagens (montages) nos atores.    |
 | **ASCueAudio**      | Feedback de Áudio.      | Especializado em tocar sons espaciais ou globais.          |
 | **ASStateSnapshot** | Persistência de Estado. | Captura Atributos/Tags para Rollback Multiplayer ou Saves. |
+| **ASEvent**         | Definição de Evento.    | Define eventos customizados para interação entre sistemas. |
 
 ### 🚀 Objetos de Runtime (Specs)
 

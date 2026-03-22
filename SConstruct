@@ -115,8 +115,18 @@ sources += Glob("src/bin/core/*.cpp")
 sources += Glob("src/bin/resources/*.cpp")
 sources += Glob("src/bin/scene/*.cpp")
 
-if env["target"] in ["editor"]:
+# Always include editor files for GDExtension (they have TOOLS_ENABLED checks)
+if env["target"] in ["editor"] or env["platform"] in [
+    "ios",
+    "android",
+    "linuxbsd",
+    "macos",
+    "windows",
+]:
     sources += Glob("src/bin/editor/*.cpp")
+    sources += Glob("src/bin/compat/*.cpp")
+
+if env["target"] in ["editor"]:
     try:
         doc_data = env.GodotCPPDocData(
             "src/bin/gen/doc_data.gen.cpp", source=Glob("src/doc_classes/*.xml")

@@ -25,7 +25,7 @@ The Blackboard is the Agent's Memory mechanism. It is fundamental for sharing co
 - **Role:** Storing and sharing global and local AI data during the mental cycle (`tick`).
 - **Rule (Strict Typing):** Whenever possible, define a `BlackboardPlan` to delimit and type the options available to the agent, exporting the appropriate variables to the editor.
 - **Rule (Variable Semantics):** Variables defined in the Blackboard must be treated as "Facts" perceived by the agent from the world.
-- **Rule (Multi-Scope):** Leverage Blackboard scopes to share "faction data" or global environment info between different agents without using heavy Singletons, creating the illusion of a *Hive Mind* (Connected Minds).
+- **Rule (Multi-Scope):** Leverage Blackboard scopes to share "faction data" or global environment info between different agents without using heavy Singletons, creating the illusion of a _Hive Mind_ (Connected Minds).
 
 ---
 
@@ -57,7 +57,7 @@ Tasks must strictly return the following promise states:
 ### 4.2 BT Task Categories (Structuring)
 
 1. **BTComposite (Routers):** `Selector`, `Sequence`, etc. **Rule:** They must never execute real game logic; they only manipulate tree flow.
-2. **BTDecorator (Modifiers):** Inverters, Time Limiters. **Rule:** They operate only on the returns or pre-conditions of a *single* child node.
+2. **BTDecorator (Modifiers):** Inverters, Time Limiters. **Rule:** They operate only on the returns or pre-conditions of a _single_ child node.
 3. **BTCondition (Observers):** Querying Facts. **Rule:** Pure, fast nodes with "O(1)" complexity. Never modify game state here. Must return `SUCCESS` or `FAILURE` instantly. They primarily read from the `Blackboard`.
 4. **BTAction (Active Action - Leaf):** Where the "dirty work" resides. Interacts with `ASComponent`, triggers animations, moves characters. **Rule:** Actions can be instantaneous or `RUNNING`. They are the only nodes authorized to modify the environment.
 
@@ -82,7 +82,7 @@ To avoid "God Objects" in Actions and ensure correct usage of the Abilities and 
 AIs must react to context by applying and reading `Tags`, never by querying arbitrary boolean variables on the character.
 
 - Use Observer tasks that access the `ASComponent` and verify status via: `has_tag(...)`.
-- *Example:* An AI should retreat if it possesses the `Debuff.Fear` tag.
+- _Example:_ An AI should retreat if it possesses the `Debuff.Fear` tag.
 
 ### 6.2 Casting Abilities (BTAction)
 
@@ -93,7 +93,7 @@ The BTAction **must not** produce direct damage or projectiles unless it is itse
 
 ### 6.3 The Subordinate Agent
 
-The AI is merely a remote "Controller" simulating a local player operating the levers of the `ASComponent`. LimboAI dictates *when to act*, and the Ability System dictates *if it is possible* and the resulting *effects*.
+The AI is merely a remote "Controller" simulating a local player operating the levers of the `ASComponent`. LimboAI dictates _when to act_, and the Ability System dictates _if it is possible_ and the resulting _effects_.
 
 ---
 
