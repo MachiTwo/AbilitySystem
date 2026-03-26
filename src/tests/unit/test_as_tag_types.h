@@ -1,5 +1,5 @@
 /**************************************************************************/
-/*  test_as_tag_utils.h                                                   */
+/*  test_as_tag_types.h                                                   */
 /**************************************************************************/
 /*                         This file is part of:                          */
 /*                             GODOT ENGINE                               */
@@ -32,11 +32,11 @@
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/ability_system.h"
-#include "src/core/as_tag_utils.h"
+#include "src/core/as_tag_types.h"
 #include "src/tests/doctest.h"
 #else
 #include "modules/ability_system/core/ability_system.h"
-#include "modules/ability_system/core/as_tag_utils.h"
+#include "modules/ability_system/core/as_tag_types.h"
 #include "modules/ability_system/tests/doctest.h"
 #endif
 

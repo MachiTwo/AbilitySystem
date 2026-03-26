@@ -45,7 +45,7 @@
 #include "src/tests/unit/test_as_ability_spec.h"
 #include "src/tests/unit/test_as_effect_spec.h"
 #include "src/tests/unit/test_as_tag_spec.h"
-#include "src/tests/unit/test_as_tag_utils.h"
+#include "src/tests/unit/test_as_tag_types.h"
 
 // --- Unit: Core Component Hub ---
 #include "src/tests/unit/test_as_component.h"
