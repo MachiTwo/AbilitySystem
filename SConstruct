@@ -187,6 +187,7 @@ tests_arg = ARGUMENTS.get("tests", env.get("tests", "no"))
 if tests_arg in ["unit", "yes"]:
     env.VariantDir("src/bin/tests", "src/tests", duplicate=0)
     sources += Glob("src/bin/tests/*.cpp")
+    env.Append(CPPDEFINES=["AS_TESTS_ENABLED"])
 
 # Collect LimboAI sources if available
 if os.path.isdir("limboai"):

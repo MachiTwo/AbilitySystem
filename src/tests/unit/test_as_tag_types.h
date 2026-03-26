@@ -151,7 +151,9 @@ TEST_CASE("[AbilitySystem] Tag Registry (Singleton API)") {
 	// The Singleton must be initialized for unit tests to call it.
 	// In headless GDExtension mode this is set up by the test runner.
 	AbilitySystem *as = AbilitySystem::get_singleton();
-	REQUIRE(as != nullptr);
+	CHECK(as != nullptr);
+	if (!as)
+		return;
 
 	SUBCASE("register_tag / is_tag_registered / unregister_tag - 3 Variations") {
 		// Var 1: Fresh tag should not be registered
@@ -159,7 +161,7 @@ TEST_CASE("[AbilitySystem] Tag Registry (Singleton API)") {
 		CHECK_FALSE(as->is_tag_registered(StringName("Test.TagA")));
 
 		// Var 2: After register, it is found
-		as->register_tag(StringName("Test.TagA"), AbilitySystem::NAME);
+		as->register_tag(StringName("Test.TagA"), ASTagType::NAME);
 		CHECK(as->is_tag_registered(StringName("Test.TagA")));
 
 		// Var 3: After unregister, gone again
@@ -168,18 +170,18 @@ TEST_CASE("[AbilitySystem] Tag Registry (Singleton API)") {
 	}
 
 	SUBCASE("get_tag_type returns correct classification - 3 Variations") {
-		as->register_tag(StringName("Test.NameTag"), AbilitySystem::NAME);
-		as->register_tag(StringName("Test.EventTag"), AbilitySystem::EVENT);
-		as->register_tag(StringName("Test.CondTag"), AbilitySystem::CONDITIONAL);
+		as->register_tag(StringName("Test.NameTag"), ASTagType::NAME);
+		as->register_tag(StringName("Test.EventTag"), ASTagType::EVENT);
+		as->register_tag(StringName("Test.CondTag"), ASTagType::CONDITIONAL);
 
 		// Var 1: NAME type round-trips correctly
-		CHECK(as->get_tag_type(StringName("Test.NameTag")) == AbilitySystem::NAME);
+		CHECK(as->get_tag_type(StringName("Test.NameTag")) == ASTagType::NAME);
 
 		// Var 2: EVENT type round-trips correctly
-		CHECK(as->get_tag_type(StringName("Test.EventTag")) == AbilitySystem::EVENT);
+		CHECK(as->get_tag_type(StringName("Test.EventTag")) == ASTagType::EVENT);
 
 		// Var 3: CONDITIONAL type round-trips correctly
-		CHECK(as->get_tag_type(StringName("Test.CondTag")) == AbilitySystem::CONDITIONAL);
+		CHECK(as->get_tag_type(StringName("Test.CondTag")) == ASTagType::CONDITIONAL);
 
 		// Cleanup
 		as->unregister_tag(StringName("Test.NameTag"));
@@ -199,9 +201,9 @@ TEST_CASE("[AbilitySystem] Tag Registry (Singleton API)") {
 	}
 
 	SUBCASE("remove_tag_branch removes subtree - 3 Variations") {
-		as->register_tag(StringName("Branch.Root"), AbilitySystem::NAME);
-		as->register_tag(StringName("Branch.Root.Child"), AbilitySystem::NAME);
-		as->register_tag(StringName("Branch.Root.Child.Leaf"), AbilitySystem::NAME);
+		as->register_tag(StringName("Branch.Root"), ASTagType::NAME);
+		as->register_tag(StringName("Branch.Root.Child"), ASTagType::NAME);
+		as->register_tag(StringName("Branch.Root.Child.Leaf"), ASTagType::NAME);
 
 		// Var 1: All registered before removal
 		CHECK(as->is_tag_registered(StringName("Branch.Root")));
@@ -217,8 +219,8 @@ TEST_CASE("[AbilitySystem] Tag Registry (Singleton API)") {
 	}
 
 	SUBCASE("rename_tag updates hierarchy - 3 Variations") {
-		as->register_tag(StringName("Old.State"), AbilitySystem::NAME);
-		as->register_tag(StringName("Old.State.Active"), AbilitySystem::NAME);
+		as->register_tag(StringName("Old.State"), ASTagType::NAME);
+		as->register_tag(StringName("Old.State.Active"), ASTagType::NAME);
 
 		// Var 1: Old name registered before rename
 		CHECK(as->is_tag_registered(StringName("Old.State")));
