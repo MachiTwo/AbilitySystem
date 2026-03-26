@@ -340,12 +340,12 @@ bool AbilitySystem::tag_matches(const StringName &p_tag, const StringName &p_mat
 	return false;
 }
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
+#if defined(ABILITY_SYSTEM_GDEXTENSION) && defined(DEBUG_ENABLED)
 extern int run_gdextension_tests();
 #endif
 
 int AbilitySystem::run_tests() {
-#ifdef ABILITY_SYSTEM_GDEXTENSION
+#if defined(ABILITY_SYSTEM_GDEXTENSION) && defined(DEBUG_ENABLED)
 	return run_gdextension_tests();
 #else
 	// In Module mode, tests are executed natively by Godot Engine via --test flag.

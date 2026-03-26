@@ -40,9 +40,12 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #else
 #include "core/os/os.h"
+#include "core/string/print_string.h"
 #include "modules/ability_system/core/ability_system.h"
+#include "modules/ability_system/core/as_tag_spec.h"
 #include "modules/ability_system/core/as_tag_types.h"
 #include "modules/ability_system/core/as_utils.h"
+#include "modules/ability_system/resources/as_attribute_set.h"
 #include "modules/ability_system/scene/as_component.h"
 #endif
 
@@ -570,6 +573,7 @@ void ASStateCache::deserialize(const Array &p_data) {
 }
 
 void ASStateCache::dump_cache() const {
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 	UtilityFunctions::print("=== ASStateCache Dump ===");
 	UtilityFunctions::print("Buffer size: ", buffer_size);
 	UtilityFunctions::print("Current tick: ", current_tick);
@@ -585,6 +589,20 @@ void ASStateCache::dump_cache() const {
 		}
 	}
 	UtilityFunctions::print("=== End Cache Dump ===");
+#else
+	print_line("=== ASStateCache Dump ===");
+	print_line(vformat("Buffer size: %d", buffer_size));
+	print_line(vformat("Current tick: %d", current_tick));
+	print_line(vformat("Current index: %d", current_index));
+
+	for (int i = 0; i < cache_buffer.size(); i++) {
+		const ASStateCacheEntry &entry = cache_buffer[i];
+		if (entry.is_valid()) {
+			print_line(vformat("Slot %d: tick=%d attrs=%d tags=%d effects=%d", i, (int)entry.tick, (int)entry.attributes.size(), (int)entry.tags.size(), (int)entry.active_effects.size()));
+		}
+	}
+	print_line("=== End Cache Dump ===");
+#endif
 }
 
 int ASStateCache::get_used_slots() const {
@@ -876,15 +894,28 @@ Array ASStateUtils::get_validation_errors(const Ref<ASStateSnapshot> &p_state) {
 
 void ASStateUtils::dump_state(const Ref<ASStateSnapshot> &p_state) {
 	if (p_state.is_null()) {
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 		UtilityFunctions::print("ASComponentState: <null>");
+#else
+		print_line("ASComponentState: <null>");
+#endif
 		return;
 	}
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 	UtilityFunctions::print("=== ASComponentState Dump ===");
 	UtilityFunctions::print("Tick: ", (int)p_state->get_tick());
 	UtilityFunctions::print("Attributes: ", (int)p_state->get_attributes().size());
 	UtilityFunctions::print("Tags: ", (int)p_state->get_tags().size());
 	UtilityFunctions::print("Active Effects: ", (int)p_state->get_active_effects().size());
 	UtilityFunctions::print("=== End State Dump ===");
+#else
+	print_line("=== ASComponentState Dump ===");
+	print_line(vformat("Tick: %d", (int)p_state->get_tick()));
+	print_line(vformat("Attributes: %d", (int)p_state->get_attributes().size()));
+	print_line(vformat("Tags: %d", (int)p_state->get_tags().size()));
+	print_line(vformat("Active Effects: %d", (int)p_state->get_active_effects().size()));
+	print_line("=== End State Dump ===");
+#endif
 }
 
 String ASStateUtils::state_to_string(const Ref<ASStateSnapshot> &p_state) {

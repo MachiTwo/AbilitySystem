@@ -37,6 +37,7 @@
 #include <godot_cpp/variant/utility_functions.hpp>
 #else
 #include "core/os/os.h"
+#include "core/string/print_string.h"
 #include "modules/ability_system/core/ability_system.h"
 #include "modules/ability_system/core/as_tag_types.h"
 #include "modules/ability_system/core/as_utils.h"
