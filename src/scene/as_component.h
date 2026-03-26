@@ -58,8 +58,13 @@ using namespace godot;
 #endif
 
 // Forward Declarations
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+#include <godot_cpp/classes/character_body2d.hpp>
+#include <godot_cpp/classes/character_body3d.hpp>
+#else
 class CharacterBody2D;
 class CharacterBody3D;
+#endif
 class ASAttributeSet;
 class ASTagSpec;
 class ASAttribute;
