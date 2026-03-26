@@ -102,6 +102,8 @@ enum Status {
 };
 }
 
+VARIANT_ENUM_CAST(BT::Status)
+
 /**
  * BTTask - Base class for all Behavior Tree tasks
  *

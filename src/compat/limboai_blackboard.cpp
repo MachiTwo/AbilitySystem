@@ -187,7 +187,7 @@ void BlackboardPlan::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_variable_mapping", "var_name", "parent_var"), &BlackboardPlan::set_variable_mapping);
 	ClassDB::bind_method(D_METHOD("get_variable_mapping", "var_name"), &BlackboardPlan::get_variable_mapping);
 
-	ClassDB::bind_method(D_METHOD("create_blackboard", "agent"), &BlackboardPlan::create_blackboard, DEFVAL(nullptr));
+	ClassDB::bind_method(D_METHOD("create_blackboard", "agent"), &BlackboardPlan::create_blackboard, DEFVAL(Variant()));
 }
 
 void BlackboardPlan::add_variable(const StringName &p_name, const Variant &p_default_value,
@@ -259,7 +259,7 @@ Ref<Blackboard> BlackboardPlan::create_blackboard(Node *p_agent) {
 
 	// Initialize variables with default values
 	for (const auto &E : variables) {
-		blackboard->set_var(E.key, E.second.get_value());
+		blackboard->set_var(E.key, E.value.get_value());
 	}
 
 	return blackboard;

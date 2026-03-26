@@ -72,10 +72,10 @@ using namespace godot;
 #else
 #include "core/object/object.h"
 #include "core/object/ref_counted.h"
+#include "core/string/node_path.h"
 #include "core/string/string_name.h"
 #include "core/templates/hash_map.h"
 #include "core/variant/dictionary.h"
-#include "core/variant/node_path.h"
 #include "core/variant/variant.h"
 #include "scene/main/node.h"
 #endif
