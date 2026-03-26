@@ -49,39 +49,69 @@ long-term storage or save games.
 
 .. rst-class:: classref-reftable-group
 
+Properties
+----------
+
+.. table::
+   :widths: auto
+
+   +---------+-------------------------------------------------------------+---------+
+   | ``int`` | :ref:`buffer_size<class_ASStateCache_property_buffer_size>` | ``128`` |
+   +---------+-------------------------------------------------------------+---------+
+
+.. rst-class:: classref-reftable-group
+
 Methods
 -------
 
 .. table::
    :widths: auto
 
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                            | :ref:`capture_state<class_ASStateCache_method_capture_state>`\ (\ component\: :ref:`ASComponent<class_ASComponent>`\ )                 |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                          | :ref:`restore_state<class_ASStateCache_method_restore_state>`\ (\ component\: :ref:`ASComponent<class_ASComponent>`, tick\: ``int``\ ) |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                            | :ref:`clear<class_ASStateCache_method_clear>`\ (\ )                                                                                    |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                            | :ref:`set_buffer_size<class_ASStateCache_method_set_buffer_size>`\ (\ size\: ``int``\ )                                                |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int``                                           | :ref:`get_buffer_size<class_ASStateCache_method_get_buffer_size>`\ (\ ) |const|                                                        |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int``                                           | :ref:`get_current_tick<class_ASStateCache_method_get_current_tick>`\ (\ ) |const|                                                      |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                          | :ref:`has_tick<class_ASStateCache_method_has_tick>`\ (\ tick\: ``int``\ ) |const|                                                      |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASStateCacheEntry<class_ASStateCacheEntry>` | :ref:`get_entry<class_ASStateCache_method_get_entry>`\ (\ tick\: ``int``\ ) |const|                                                    |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | ``PackedInt32Array``                              | :ref:`get_available_ticks<class_ASStateCache_method_get_available_ticks>`\ (\ ) |const|                                                |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | ``Array``                                         | :ref:`serialize<class_ASStateCache_method_serialize>`\ (\ ) |const|                                                                    |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                            | :ref:`deserialize<class_ASStateCache_method_deserialize>`\ (\ data\: ``Array``\ )                                                      |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                            | :ref:`dump_cache<class_ASStateCache_method_dump_cache>`\ (\ ) |const|                                                                  |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int``                                           | :ref:`get_used_slots<class_ASStateCache_method_get_used_slots>`\ (\ ) |const|                                                          |
-   +---------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------+
+   +-----------+----------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|    | :ref:`capture_state<class_ASStateCache_method_capture_state>`\ (\ component\: :ref:`ASComponent<class_ASComponent>`\ )                 |
+   +-----------+----------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|    | :ref:`clear<class_ASStateCache_method_clear>`\ (\ )                                                                                    |
+   +-----------+----------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|    | :ref:`deserialize<class_ASStateCache_method_deserialize>`\ (\ data\: ``Array``\ )                                                      |
+   +-----------+----------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|    | :ref:`dump_cache<class_ASStateCache_method_dump_cache>`\ (\ ) |const|                                                                  |
+   +-----------+----------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array`` | :ref:`get_available_ticks<class_ASStateCache_method_get_available_ticks>`\ (\ ) |const|                                                |
+   +-----------+----------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``   | :ref:`get_current_tick<class_ASStateCache_method_get_current_tick>`\ (\ ) |const|                                                      |
+   +-----------+----------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``   | :ref:`get_used_slots<class_ASStateCache_method_get_used_slots>`\ (\ ) |const|                                                          |
+   +-----------+----------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``  | :ref:`has_tick<class_ASStateCache_method_has_tick>`\ (\ tick\: ``int``\ ) |const|                                                      |
+   +-----------+----------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``  | :ref:`restore_state<class_ASStateCache_method_restore_state>`\ (\ component\: :ref:`ASComponent<class_ASComponent>`, tick\: ``int``\ ) |
+   +-----------+----------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array`` | :ref:`serialize<class_ASStateCache_method_serialize>`\ (\ ) |const|                                                                    |
+   +-----------+----------------------------------------------------------------------------------------------------------------------------------------+
+
+.. rst-class:: classref-section-separator
+
+----
+
+.. rst-class:: classref-descriptions-group
+
+Property Descriptions
+---------------------
+
+.. _class_ASStateCache_property_buffer_size:
+
+.. rst-class:: classref-property
+
+``int`` **buffer_size** = ``128`` :ref:`🔗<class_ASStateCache_property_buffer_size>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_buffer_size**\ (\ value\: ``int``\ )
+- ``int`` **get_buffer_size**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
 
 .. rst-class:: classref-section-separator
 
@@ -106,20 +136,6 @@ Automatically increments tick and manages circular buffer indexing.
 
 ----
 
-.. _class_ASStateCache_method_restore_state:
-
-.. rst-class:: classref-method
-
-``bool`` **restore_state**\ (\ component\: :ref:`ASComponent<class_ASComponent>`, tick\: ``int``\ ) :ref:`🔗<class_ASStateCache_method_restore_state>`
-
-Restores the ASComponent state from the cached entry at the specified tick.
-
-Returns true if successful, false if tick not found in cache.
-
-.. rst-class:: classref-item-separator
-
-----
-
 .. _class_ASStateCache_method_clear:
 
 .. rst-class:: classref-method
@@ -127,92 +143,6 @@ Returns true if successful, false if tick not found in cache.
 |void| **clear**\ (\ ) :ref:`🔗<class_ASStateCache_method_clear>`
 
 Clears all cached state entries and resets the cache.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASStateCache_method_set_buffer_size:
-
-.. rst-class:: classref-method
-
-|void| **set_buffer_size**\ (\ size\: ``int``\ ) :ref:`🔗<class_ASStateCache_method_set_buffer_size>`
-
-Sets the circular buffer size. Clears existing cache data.
-
-Minimum size is 1, recommended size is 128 for most games.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASStateCache_method_get_buffer_size:
-
-.. rst-class:: classref-method
-
-``int`` **get_buffer_size**\ (\ ) |const| :ref:`🔗<class_ASStateCache_method_get_buffer_size>`
-
-Returns the current buffer size.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASStateCache_method_get_current_tick:
-
-.. rst-class:: classref-method
-
-``int`` **get_current_tick**\ (\ ) |const| :ref:`🔗<class_ASStateCache_method_get_current_tick>`
-
-Returns the current tick number of the cache.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASStateCache_method_has_tick:
-
-.. rst-class:: classref-method
-
-``bool`` **has_tick**\ (\ tick\: ``int``\ ) |const| :ref:`🔗<class_ASStateCache_method_has_tick>`
-
-Returns true if the cache contains an entry for the specified tick.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASStateCache_method_get_entry:
-
-.. rst-class:: classref-method
-
-:ref:`ASStateCacheEntry<class_ASStateCacheEntry>` **get_entry**\ (\ tick\: ``int``\ ) |const| :ref:`🔗<class_ASStateCache_method_get_entry>`
-
-Returns the cache entry for the specified tick, or empty entry if not found.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASStateCache_method_get_available_ticks:
-
-.. rst-class:: classref-method
-
-``PackedInt32Array`` **get_available_ticks**\ (\ ) |const| :ref:`🔗<class_ASStateCache_method_get_available_ticks>`
-
-Returns an array of all tick numbers currently stored in the cache.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASStateCache_method_serialize:
-
-.. rst-class:: classref-method
-
-``Array`` **serialize**\ (\ ) |const| :ref:`🔗<class_ASStateCache_method_serialize>`
-
-Serializes all valid cache entries to an Array for storage.
 
 .. rst-class:: classref-item-separator
 
@@ -242,6 +172,30 @@ Prints detailed cache information to the console for debugging.
 
 ----
 
+.. _class_ASStateCache_method_get_available_ticks:
+
+.. rst-class:: classref-method
+
+``Array`` **get_available_ticks**\ (\ ) |const| :ref:`🔗<class_ASStateCache_method_get_available_ticks>`
+
+Returns an array of all tick numbers currently stored in the cache.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASStateCache_method_get_current_tick:
+
+.. rst-class:: classref-method
+
+``int`` **get_current_tick**\ (\ ) |const| :ref:`🔗<class_ASStateCache_method_get_current_tick>`
+
+Returns the current tick number of the cache.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_ASStateCache_method_get_used_slots:
 
 .. rst-class:: classref-method
@@ -249,6 +203,44 @@ Prints detailed cache information to the console for debugging.
 ``int`` **get_used_slots**\ (\ ) |const| :ref:`🔗<class_ASStateCache_method_get_used_slots>`
 
 Returns the number of cache slots currently in use.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASStateCache_method_has_tick:
+
+.. rst-class:: classref-method
+
+``bool`` **has_tick**\ (\ tick\: ``int``\ ) |const| :ref:`🔗<class_ASStateCache_method_has_tick>`
+
+Returns true if the cache contains an entry for the specified tick.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASStateCache_method_restore_state:
+
+.. rst-class:: classref-method
+
+``bool`` **restore_state**\ (\ component\: :ref:`ASComponent<class_ASComponent>`, tick\: ``int``\ ) :ref:`🔗<class_ASStateCache_method_restore_state>`
+
+Restores the ASComponent state from the cached entry at the specified tick.
+
+Returns true if successful, false if tick not found in cache.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASStateCache_method_serialize:
+
+.. rst-class:: classref-method
+
+``Array`` **serialize**\ (\ ) |const| :ref:`🔗<class_ASStateCache_method_serialize>`
+
+Serializes all valid cache entries to an Array for storage.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

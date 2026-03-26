@@ -29,15 +29,19 @@ Properties
 .. table::
    :widths: auto
 
-   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\]       | :ref:`cues_resources<class_ASPackage_property_cues_resources>`       | ``[]`` |
-   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[``StringName``\]                  | :ref:`cues_tags<class_ASPackage_property_cues_tags>`                 | ``[]`` |
-   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\] | :ref:`effects_resources<class_ASPackage_property_effects_resources>` | ``[]`` |
-   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[``StringName``\]                  | :ref:`effects_tags<class_ASPackage_property_effects_tags>`           | ``[]`` |
-   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\]       | :ref:`cues_resources<class_ASPackage_property_cues_resources>`       | ``[]``  |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                  | :ref:`cues_tags<class_ASPackage_property_cues_tags>`                 | ``[]``  |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\] | :ref:`effects_resources<class_ASPackage_property_effects_resources>` | ``[]``  |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                  | :ref:`effects_tags<class_ASPackage_property_effects_tags>`           | ``[]``  |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                  | :ref:`events_on_deliver<class_ASPackage_property_events_on_deliver>` | ``[]``  |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
+   | ``StringName``                                               | :ref:`package_tag<class_ASPackage_property_package_tag>`             | ``&""`` |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
 
 .. rst-class:: classref-reftable-group
 
@@ -141,6 +145,44 @@ List of direct :ref:`ASEffect<class_ASEffect>` resources.
 - :ref:`Array<class_Array>`\[``StringName``\] **get_effect_tags**\ (\ )
 
 List of effect tags.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASPackage_property_events_on_deliver:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[``StringName``\] **events_on_deliver** = ``[]`` :ref:`🔗<class_ASPackage_property_events_on_deliver>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_events_on_deliver**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_events_on_deliver**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASPackage_property_package_tag:
+
+.. rst-class:: classref-property
+
+``StringName`` **package_tag** = ``&""`` :ref:`🔗<class_ASPackage_property_package_tag>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_package_tag**\ (\ value\: ``StringName``\ )
+- ``StringName`` **get_package_tag**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
 
 .. rst-class:: classref-section-separator
 

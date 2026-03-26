@@ -30,9 +30,7 @@
 
 #include "as_bridge_condition_has_tag.h"
 
-#include "as_bridge.h"
-
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
+#include "../core/ability_system.h"
 
 void BTConditionAS_HasTag::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_tag", "tag"), &BTConditionAS_HasTag::set_tag);
@@ -50,12 +48,12 @@ void BTConditionAS_HasTag::_bind_methods() {
 }
 
 BT::Status BTConditionAS_HasTag::_tick(double p_delta) {
-	Node *agent = get_agent();
-	if (!agent) {
+	Node *p_agent = get_agent();
+	if (!p_agent) {
 		return BT::FAILURE;
 	}
 
-	ASComponent *asc = resolve_asc(agent, asc_node_path);
+	ASComponent *asc = resolve_asc(p_agent, asc_node_path);
 	if (!asc) {
 		return BT::FAILURE;
 	}
@@ -69,5 +67,3 @@ BT::Status BTConditionAS_HasTag::_tick(double p_delta) {
 	bool result = asc->has_tag(tag);
 	return result ? BT::SUCCESS : BT::FAILURE;
 }
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

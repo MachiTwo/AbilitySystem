@@ -10,7 +10,7 @@
 BTActionAS_DispatchEvent
 ========================
 
-**Inherits:** ``RefCounted``
+**Inherits:** ``BTAction``
 
 BTAction that dispatches an Ability System event.
 
@@ -19,9 +19,9 @@ BTAction that dispatches an Ability System event.
 Description
 -----------
 
-A Behavior Tree action that dispatches an :ref:`ASEventTag<class_ASEventTag>` via :ref:`ASComponent.dispatch_event()<class_ASComponent_method_dispatch_event>`. Uses the native AS Event system (Split Registry Pattern).
+A Behavior Tree action that dispatches an ASEventTag via :ref:`ASComponent.dispatch_event()<class_ASComponent_method_dispatch_event>`. Uses the native AS Event system (Split Registry Pattern).
 
-Returns ``BT.SUCCESS`` immediately after dispatch.
+Returns :ref:`BT.SUCCESS<class_BT_constant_SUCCESS>` immediately after dispatch.
 
 .. rst-class:: classref-reftable-group
 
@@ -31,35 +31,15 @@ Properties
 .. table::
    :widths: auto
 
-   +----------------+-------------------------------------------------------------------------------+--------------+
-   | ``Dictionary`` | :ref:`custom_payload<class_BTActionAS_DispatchEvent_property_custom_payload>` | ``{}``       |
-   +----------------+-------------------------------------------------------------------------------+--------------+
-   | ``StringName`` | :ref:`event_tag<class_BTActionAS_DispatchEvent_property_event_tag>`           | ``&"&quot;`` |
-   +----------------+-------------------------------------------------------------------------------+--------------+
-   | ``float``      | :ref:`magnitude<class_BTActionAS_DispatchEvent_property_magnitude>`           | ``1.0``      |
-   +----------------+-------------------------------------------------------------------------------+--------------+
-
-.. rst-class:: classref-reftable-group
-
-Methods
--------
-
-.. table::
-   :widths: auto
-
-   +----------------+---------------------------------------------------------------------------------------------------------------------+
-   | ``Dictionary`` | :ref:`get_custom_payload<class_BTActionAS_DispatchEvent_method_get_custom_payload>`\ (\ )                           |
-   +----------------+---------------------------------------------------------------------------------------------------------------------+
-   | ``StringName`` | :ref:`get_event_tag<class_BTActionAS_DispatchEvent_method_get_event_tag>`\ (\ )                                     |
-   +----------------+---------------------------------------------------------------------------------------------------------------------+
-   | ``float``      | :ref:`get_magnitude<class_BTActionAS_DispatchEvent_method_get_magnitude>`\ (\ )                                     |
-   +----------------+---------------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_custom_payload<class_BTActionAS_DispatchEvent_method_set_custom_payload>`\ (\ payload\: ``Dictionary``\ ) |
-   +----------------+---------------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_event_tag<class_BTActionAS_DispatchEvent_method_set_event_tag>`\ (\ tag\: ``StringName``\ )               |
-   +----------------+---------------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_magnitude<class_BTActionAS_DispatchEvent_method_set_magnitude>`\ (\ value\: ``float``\ )                  |
-   +----------------+---------------------------------------------------------------------------------------------------------------------+
+   +----------------+-------------------------------------------------------------------------------+------------------+
+   | ``NodePath``   | :ref:`asc_node_path<class_BTActionAS_DispatchEvent_property_asc_node_path>`   | ``NodePath("")`` |
+   +----------------+-------------------------------------------------------------------------------+------------------+
+   | ``Dictionary`` | :ref:`custom_payload<class_BTActionAS_DispatchEvent_property_custom_payload>` | ``{}``           |
+   +----------------+-------------------------------------------------------------------------------+------------------+
+   | ``StringName`` | :ref:`event_tag<class_BTActionAS_DispatchEvent_property_event_tag>`           | ``&""``          |
+   +----------------+-------------------------------------------------------------------------------+------------------+
+   | ``float``      | :ref:`magnitude<class_BTActionAS_DispatchEvent_property_magnitude>`           | ``1.0``          |
+   +----------------+-------------------------------------------------------------------------------+------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -70,6 +50,25 @@ Methods
 Property Descriptions
 ---------------------
 
+.. _class_BTActionAS_DispatchEvent_property_asc_node_path:
+
+.. rst-class:: classref-property
+
+``NodePath`` **asc_node_path** = ``NodePath("")`` :ref:`🔗<class_BTActionAS_DispatchEvent_property_asc_node_path>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_asc_node_path**\ (\ value\: ``NodePath``\ )
+- ``NodePath`` **get_asc_node_path**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_BTActionAS_DispatchEvent_property_custom_payload:
 
 .. rst-class:: classref-property
@@ -78,7 +77,7 @@ Property Descriptions
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_custom_payload**\ (\ payload\: ``Dictionary``\ )
+- |void| **set_custom_payload**\ (\ value\: ``Dictionary``\ )
 - ``Dictionary`` **get_custom_payload**\ (\ )
 
 .. container:: contribute
@@ -93,11 +92,11 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-``StringName`` **event_tag** = ``&"&quot;`` :ref:`🔗<class_BTActionAS_DispatchEvent_property_event_tag>`
+``StringName`` **event_tag** = ``&""`` :ref:`🔗<class_BTActionAS_DispatchEvent_property_event_tag>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_event_tag**\ (\ tag\: ``StringName``\ )
+- |void| **set_event_tag**\ (\ value\: ``StringName``\ )
 - ``StringName`` **get_event_tag**\ (\ )
 
 .. container:: contribute
@@ -122,83 +121,6 @@ Property Descriptions
 .. container:: contribute
 
 	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
-
-.. rst-class:: classref-section-separator
-
-----
-
-.. rst-class:: classref-descriptions-group
-
-Method Descriptions
--------------------
-
-.. _class_BTActionAS_DispatchEvent_method_get_custom_payload:
-
-.. rst-class:: classref-method
-
-``Dictionary`` **get_custom_payload**\ (\ ) :ref:`🔗<class_BTActionAS_DispatchEvent_method_get_custom_payload>`
-
-Returns the custom payload dictionary for the event.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_DispatchEvent_method_get_event_tag:
-
-.. rst-class:: classref-method
-
-``StringName`` **get_event_tag**\ (\ ) :ref:`🔗<class_BTActionAS_DispatchEvent_method_get_event_tag>`
-
-Returns the event tag to dispatch.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_DispatchEvent_method_get_magnitude:
-
-.. rst-class:: classref-method
-
-``float`` **get_magnitude**\ (\ ) :ref:`🔗<class_BTActionAS_DispatchEvent_method_get_magnitude>`
-
-Returns the event magnitude.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_DispatchEvent_method_set_custom_payload:
-
-.. rst-class:: classref-method
-
-|void| **set_custom_payload**\ (\ payload\: ``Dictionary``\ ) :ref:`🔗<class_BTActionAS_DispatchEvent_method_set_custom_payload>`
-
-Sets the custom payload dictionary for the event.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_DispatchEvent_method_set_event_tag:
-
-.. rst-class:: classref-method
-
-|void| **set_event_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_BTActionAS_DispatchEvent_method_set_event_tag>`
-
-Sets the event tag to dispatch. Must be registered as ASTagType::EVENT.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_DispatchEvent_method_set_magnitude:
-
-.. rst-class:: classref-method
-
-|void| **set_magnitude**\ (\ value\: ``float``\ ) :ref:`🔗<class_BTActionAS_DispatchEvent_method_set_magnitude>`
-
-Sets the event magnitude (intensity).
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

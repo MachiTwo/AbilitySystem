@@ -32,10 +32,12 @@
 #include "src/core/ability_system.h"
 #include "src/core/as_tag_types.h"
 #include "src/core/as_utils.h"
+#include "src/scene/as_component.h"
 #else
 #include "modules/ability_system/core/ability_system.h"
 #include "modules/ability_system/core/as_tag_types.h"
 #include "modules/ability_system/core/as_utils.h"
+#include "modules/ability_system/scene/as_component.h"
 #endif
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
@@ -59,7 +61,7 @@ void AbilitySystem::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_tag_registered", "tag"), &AbilitySystem::is_tag_registered);
 	ClassDB::bind_method(D_METHOD("unregister_tag", "tag"), &AbilitySystem::unregister_tag);
 	ClassDB::bind_method(D_METHOD("remove_tag_branch", "tag"), &AbilitySystem::remove_tag_branch);
-	ClassDB::bind_method(D_METHOD("get_registered_tags"), &AbilitySystem::get_registered_tags);
+	ClassDB::bind_method(D_METHOD("get_all_registered_tags"), &AbilitySystem::get_all_registered_tags);
 	ClassDB::bind_method(D_METHOD("get_registered_tags_of_type", "type"), &AbilitySystem::get_registered_tags_of_type);
 	ClassDB::bind_method(D_METHOD("get_tag_type", "tag"), &AbilitySystem::get_tag_type);
 
@@ -70,6 +72,9 @@ void AbilitySystem::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_resource_name_owner", "name"), &AbilitySystem::get_resource_name_owner);
 
 	ClassDB::bind_static_method(get_class_static(), D_METHOD("tag_matches", "tag", "match_against", "exact"), &AbilitySystem::tag_matches, DEFVAL(false));
+
+	ClassDB::bind_static_method(get_class_static(), D_METHOD("resolve_component", "agent", "path"), &AbilitySystem::resolve_component, DEFVAL(NodePath()));
+	ClassDB::bind_static_method(get_class_static(), D_METHOD("get_component_from_node", "node"), &AbilitySystem::get_component_from_node);
 
 	BIND_ENUM_CONSTANT(ASTagType::NAME);
 	BIND_ENUM_CONSTANT(ASTagType::CONDITIONAL);
@@ -276,7 +281,7 @@ ASTagType AbilitySystem::get_tag_type(const StringName &p_tag) const {
 	return (ASTagType)ASTagType::NAME;
 }
 
-TypedArray<StringName> AbilitySystem::get_registered_tags() const {
+TypedArray<StringName> AbilitySystem::get_all_registered_tags() const {
 	TypedArray<StringName> res;
 	for (const KeyValue<StringName, ASTagType> &E : registered_tags) {
 		res.push_back(E.key);
@@ -338,6 +343,63 @@ bool AbilitySystem::tag_matches(const StringName &p_tag, const StringName &p_mat
 	}
 
 	return false;
+}
+
+ASComponent *AbilitySystem::get_component_from_node(Node *p_node) {
+	if (!p_node) {
+		return nullptr;
+	}
+	if (ASComponent *asc = Object::cast_to<ASComponent>(p_node)) {
+		return asc;
+	}
+	for (int i = 0; i < p_node->get_child_count(); i++) {
+		if (ASComponent *asc = Object::cast_to<ASComponent>(p_node->get_child(i))) {
+			return asc;
+		}
+	}
+	return nullptr;
+}
+
+ASComponent *AbilitySystem::resolve_component(Node *p_agent, const NodePath &p_path) {
+	if (!p_agent) {
+		return nullptr;
+	}
+
+	// 1. Explicit path takes priority
+	if (!p_path.is_empty()) {
+		Node *node = p_agent->get_node_or_null(p_path);
+		if (node) {
+			if (ASComponent *asc = Object::cast_to<ASComponent>(node)) {
+				return asc;
+			}
+		}
+	}
+
+	// 2. Direct cast or children of agent
+	ASComponent *asc = get_component_from_node(p_agent);
+	if (asc) {
+		return asc;
+	}
+
+	// 3. Try parent and parent's children
+	Node *parent = p_agent->get_parent();
+	if (parent) {
+		asc = get_component_from_node(parent);
+		if (asc) {
+			return asc;
+		}
+	}
+
+	// 4. Try owner and owner's children
+	Node *owner = p_agent->get_owner();
+	if (owner) {
+		asc = get_component_from_node(owner);
+		if (asc) {
+			return asc;
+		}
+	}
+
+	return nullptr;
 }
 
 #if defined(ABILITY_SYSTEM_GDEXTENSION) && defined(AS_TESTS_ENABLED)

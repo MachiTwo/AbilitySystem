@@ -71,5 +71,7 @@
 		<member name="effects" type="ASEffect[]" setter="set_effects" getter="get_effects" default="[]">
 			Initial effects applied on startup.
 		</member>
+		<member name="events" type="StringName[]" setter="set_events" getter="get_events" default="[]">
+		</member>
 	</members>
 </class>

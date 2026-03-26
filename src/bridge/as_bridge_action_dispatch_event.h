@@ -36,8 +36,6 @@
 using namespace godot;
 #endif
 
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
-
 /**
  * BTActionAS_DispatchEvent
  *
@@ -71,5 +69,3 @@ public:
 	void set_asc_node_path(const NodePath &p_path) { asc_node_path = p_path; }
 	NodePath get_asc_node_path() const { return asc_node_path; }
 };
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

@@ -1,21 +1,31 @@
 # ruff: noqa: F821
 # SCsub
 Import("env")
+Import("env_modules")
 
 module_env = env.Clone()
 
 # Add the module define if compiling as a native module
 if "ABILITY_SYSTEM_GDEXTENSION" not in env["CPPDEFINES"]:
-    module_env.Append(CPPDEFINES=["ABILITY_SYSTEM_MODULE"])
+    module_env.Append(CPPDEFINES=["ABILITY_SYSTEM_MODULE", "LIMBOAI_MODULE"])
 
-# Collect source files (now relative to src/)
+# Collect core source files (now relative to src/)
 sources = []
 sources += Glob("*.cpp")
 sources += Glob("core/*.cpp")
 sources += Glob("resources/*.cpp")
 sources += Glob("scene/*.cpp")
 sources += Glob("editor/*.cpp")
+sources += Glob("bridge/*.cpp")
 sources += Glob("compat/*.cpp")
+
+# --- Integrated LimboAI Sources (Atomic Module Build) ---
+SConscript("limboai/SCsub", exports=["env", "env_modules"])
+module_env.Append(CPPPATH=[
+    "#modules/ability_system/limboai",
+    "#modules/ability_system",
+    "#", # To allow including core/...
+])
 
 # Add collected files to Godot's module environment
 module_env.add_source_files(env.modules_sources, sources)

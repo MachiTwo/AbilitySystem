@@ -10,7 +10,7 @@
 BTConditionAS_CanActivate
 =========================
 
-**Inherits:** ``RefCounted``
+**Inherits:** ``BTCondition``
 
 BTCondition that checks if an ability can be activated.
 
@@ -21,7 +21,7 @@ Description
 
 A Behavior Tree condition that checks if an ability can be activated (requirements met, cooldown ready, costs affordable) without actually activating it.
 
-Uses :ref:`ASComponent.can_activate_ability_by_tag()<class_ASComponent_method_can_activate_ability_by_tag>`. Returns ``BT.SUCCESS`` if can activate, ``BT.FAILURE`` otherwise.
+Uses :ref:`ASComponent.can_activate_ability_by_tag()<class_ASComponent_method_can_activate_ability_by_tag>`. Returns :ref:`BT.SUCCESS<class_BT_constant_SUCCESS>` if can activate, :ref:`BT.FAILURE<class_BT_constant_FAILURE>` otherwise.
 
 .. rst-class:: classref-reftable-group
 
@@ -31,23 +31,11 @@ Properties
 .. table::
    :widths: auto
 
-   +----------------+--------------------------------------------------------------------------+--------------+
-   | ``StringName`` | :ref:`ability_tag<class_BTConditionAS_CanActivate_property_ability_tag>` | ``&"&quot;`` |
-   +----------------+--------------------------------------------------------------------------+--------------+
-
-.. rst-class:: classref-reftable-group
-
-Methods
--------
-
-.. table::
-   :widths: auto
-
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | ``StringName`` | :ref:`get_ability_tag<class_BTConditionAS_CanActivate_method_get_ability_tag>`\ (\ )                       |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_ability_tag<class_BTConditionAS_CanActivate_method_set_ability_tag>`\ (\ tag\: ``StringName``\ ) |
-   +----------------+------------------------------------------------------------------------------------------------------------+
+   +----------------+------------------------------------------------------------------------------+------------------+
+   | ``StringName`` | :ref:`ability_tag<class_BTConditionAS_CanActivate_property_ability_tag>`     | ``&""``          |
+   +----------------+------------------------------------------------------------------------------+------------------+
+   | ``NodePath``   | :ref:`asc_node_path<class_BTConditionAS_CanActivate_property_asc_node_path>` | ``NodePath("")`` |
+   +----------------+------------------------------------------------------------------------------+------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -62,45 +50,35 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-``StringName`` **ability_tag** = ``&"&quot;`` :ref:`🔗<class_BTConditionAS_CanActivate_property_ability_tag>`
+``StringName`` **ability_tag** = ``&""`` :ref:`🔗<class_BTConditionAS_CanActivate_property_ability_tag>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_ability_tag**\ (\ tag\: ``StringName``\ )
+- |void| **set_ability_tag**\ (\ value\: ``StringName``\ )
 - ``StringName`` **get_ability_tag**\ (\ )
 
 .. container:: contribute
 
 	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
 
-.. rst-class:: classref-section-separator
-
-----
-
-.. rst-class:: classref-descriptions-group
-
-Method Descriptions
--------------------
-
-.. _class_BTConditionAS_CanActivate_method_get_ability_tag:
-
-.. rst-class:: classref-method
-
-``StringName`` **get_ability_tag**\ (\ ) :ref:`🔗<class_BTConditionAS_CanActivate_method_get_ability_tag>`
-
-Returns the ability tag to check.
-
 .. rst-class:: classref-item-separator
 
 ----
 
-.. _class_BTConditionAS_CanActivate_method_set_ability_tag:
+.. _class_BTConditionAS_CanActivate_property_asc_node_path:
 
-.. rst-class:: classref-method
+.. rst-class:: classref-property
 
-|void| **set_ability_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_BTConditionAS_CanActivate_method_set_ability_tag>`
+``NodePath`` **asc_node_path** = ``NodePath("")`` :ref:`🔗<class_BTConditionAS_CanActivate_property_asc_node_path>`
 
-Sets the ability tag to check for activation possibility.
+.. rst-class:: classref-property-setget
+
+- |void| **set_asc_node_path**\ (\ value\: ``NodePath``\ )
+- ``NodePath`` **get_asc_node_path**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

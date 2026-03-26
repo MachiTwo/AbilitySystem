@@ -107,17 +107,17 @@
 		<member name="effect_tag" type="StringName" setter="set_effect_tag" getter="get_effect_tag" default="&amp;&quot;&quot;">
 			Tag identifying this effect.
 		</member>
-		<member name="execute_periodic_tick_on_application" type="bool" setter="set_execute_periodic_tick_on_application" getter="get_execute_periodic_tick_on_application" default="false">
-			If true, the periodic effect triggers immediately upon application instead of waiting for the first period to elapse.
-		</member>
-		<member name="granted_tags" type="StringName[]" setter="set_granted_tags" getter="get_granted_tags" default="[]">
-			Tags granted while effect is active.
-		</member>
 		<member name="events_on_apply" type="StringName[]" setter="set_events_on_apply" getter="get_events_on_apply" default="[]">
 			Events dispatched when this effect is successfully applied to a target.
 		</member>
 		<member name="events_on_remove" type="StringName[]" setter="set_events_on_remove" getter="get_events_on_remove" default="[]">
 			Events dispatched when this effect is removed from a target.
+		</member>
+		<member name="execute_periodic_tick_on_application" type="bool" setter="set_execute_periodic_tick_on_application" getter="get_execute_periodic_tick_on_application" default="false">
+			If true, the periodic effect triggers immediately upon application instead of waiting for the first period to elapse.
+		</member>
+		<member name="granted_tags" type="StringName[]" setter="set_granted_tags" getter="get_granted_tags" default="[]">
+			Tags granted while effect is active.
 		</member>
 		<member name="modifiers" type="int" setter="set_modifiers_count" getter="get_modifiers_count" default="0">
 			The number of attribute modifiers in this effect package.

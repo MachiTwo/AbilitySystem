@@ -71,12 +71,14 @@
 #include <godot_cpp/classes/audio_stream_player3d.hpp>
 #include <godot_cpp/classes/character_body2d.hpp>
 #include <godot_cpp/classes/character_body3d.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/multiplayer_api.hpp>
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/sprite3d.hpp>
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #else
+#include "core/config/engine.h"
 #include "core/config/project_settings.h"
 #include "scene/2d/animated_sprite_2d.h"
 #include "scene/2d/audio_stream_player_2d.h"
@@ -93,22 +95,6 @@
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 #endif
-
-ASComponent *ASComponent::get_from_node(Node *p_node) {
-	if (!p_node) {
-		return nullptr;
-	}
-	if (ASComponent *asc = Object::cast_to<ASComponent>(p_node)) {
-		return asc;
-	}
-	// Look for a child component
-	for (int i = 0; i < p_node->get_child_count(); i++) {
-		if (ASComponent *asc = Object::cast_to<ASComponent>(p_node->get_child(i))) {
-			return asc;
-		}
-	}
-	return nullptr;
-}
 
 // Methods implementation
 
@@ -141,7 +127,7 @@ void ASComponent::_bind_methods() {
 
 	// --- Ability Activation API (By Resource) ---
 	ClassDB::bind_method(D_METHOD("can_activate_ability_by_resource", "ability"), &ASComponent::can_activate_ability_by_resource);
-	ClassDB::bind_method(D_METHOD("try_activate_ability_by_resource", "ability"), &ASComponent::try_activate_ability_by_resource);
+	ClassDB::bind_method(D_METHOD("try_activate_ability_by_resource", "ability", "target_node", "parent_id"), &ASComponent::try_activate_ability_by_resource, DEFVAL(Variant()), DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("cancel_ability_by_resource", "ability"), &ASComponent::cancel_ability_by_resource);
 
 	ClassDB::bind_method(D_METHOD("cancel_all_abilities"), &ASComponent::cancel_all_abilities);
@@ -182,8 +168,6 @@ void ASComponent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_attribute_base_value_by_resource", "attribute", "value"), &ASComponent::set_attribute_base_value_by_resource);
 	ClassDB::bind_method(D_METHOD("has_attribute_by_resource", "attribute"), &ASComponent::has_attribute_by_resource);
 
-	ClassDB::bind_static_method(get_class_static(), D_METHOD("get_from_node", "node"), &ASComponent::get_from_node);
-
 	// --- Cooldown API ---
 	ClassDB::bind_method(D_METHOD("start_cooldown", "ability_tag", "duration", "tags"), &ASComponent::start_cooldown);
 	ClassDB::bind_method(D_METHOD("is_on_cooldown", "ability_tag"), &ASComponent::is_on_cooldown);
@@ -196,8 +180,8 @@ void ASComponent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("remove_all_tags"), &ASComponent::remove_all_tags);
 	ClassDB::bind_method(D_METHOD("has_tag", "tag"), &ASComponent::has_tag);
 	ClassDB::bind_method(D_METHOD("get_tags"), &ASComponent::get_tags);
-	ClassDB::bind_method(D_METHOD("get_owned_tags"), &ASComponent::get_owned_tags);
 	ClassDB::bind_method(D_METHOD("get_attribute_sets"), &ASComponent::get_attribute_sets);
+	ClassDB::bind_method(D_METHOD("get_unlocked_abilities"), &ASComponent::get_unlocked_abilities);
 
 	// --- Multiplayer & Prediction ---
 	ClassDB::bind_method(D_METHOD("capture_snapshot"), &ASComponent::capture_snapshot);
@@ -282,6 +266,12 @@ void ASComponent::_bind_methods() {
 void ASComponent::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_READY: {
+			if (Engine::get_singleton()->is_editor_hint()) {
+				set_physics_process(false);
+				set_process(false);
+				return;
+			}
+
 			// Validate parent is CharacterBody2D or CharacterBody3D
 			Node *parent = get_parent();
 			if (!parent || (!Object::cast_to<CharacterBody2D>(parent) && !Object::cast_to<CharacterBody3D>(parent))) {
@@ -303,6 +293,10 @@ void ASComponent::_notification(int p_what) {
 			set_physics_process(true);
 		} break;
 		case NOTIFICATION_PHYSICS_PROCESS: {
+			if (Engine::get_singleton()->is_editor_hint()) {
+				return;
+			}
+
 			if (_is_local_authority()) {
 				tick(get_physics_process_delta_time());
 			} else {
@@ -537,6 +531,14 @@ Ref<ASTagSpec> ASComponent::get_owned_tags() const {
 	return owned_tags;
 }
 
+TypedArray<ASAbilitySpec> ASComponent::get_unlocked_abilities() const {
+	TypedArray<ASAbilitySpec> ret;
+	for (int i = 0; i < unlocked_abilities.size(); i++) {
+		ret.push_back(unlocked_abilities[i]);
+	}
+	return ret;
+}
+
 void ASComponent::tick(float p_delta) {
 	current_tick++;
 	_process_effects(p_delta);
@@ -668,7 +670,6 @@ void ASComponent::_process_abilities(float p_delta) {
 				}
 
 				bool phase_started = true;
-				ObjectID current_sub_id = ObjectID(spec->get_instance_id());
 
 				// Loop to handle multiple sequential instant phases in the same frame
 				while (phase_started) {
@@ -1140,7 +1141,7 @@ bool ASComponent::can_activate_ability_by_resource(const Ref<ASAbility> &p_abili
 	return p_ability->can_activate_ability(this, temp_spec);
 }
 
-bool ASComponent::try_activate_ability_by_resource(const Ref<ASAbility> &p_ability, Object *p_target_node, uint64_t p_parent_id) {
+bool ASComponent::try_activate_ability_by_resource(const Ref<ASAbility> &p_ability, Object *p_target_node, int p_parent_id) {
 	ERR_FAIL_COND_V(p_ability.is_null(), false);
 
 	bool authority = is_multiplayer_authority();
@@ -1174,10 +1175,10 @@ bool ASComponent::try_activate_ability_by_resource(const Ref<ASAbility> &p_abili
 			}
 
 			spec->set_is_active(true);
-			spec->set_parent_id(ObjectID(p_parent_id));
+			spec->set_parent_id(ObjectID((uint64_t)p_parent_id));
 
 			if (p_parent_id != 0) {
-				Object *p_obj = ObjectDB::get_instance(ObjectID(p_parent_id));
+				Object *p_obj = ObjectDB::get_instance(ObjectID((uint64_t)p_parent_id));
 				ASAbilitySpec *p_spec = Object::cast_to<ASAbilitySpec>(p_obj);
 				if (p_spec) {
 					p_spec->add_sub_spec(spec);
@@ -1239,7 +1240,7 @@ bool ASComponent::try_activate_ability_by_resource(const Ref<ASAbility> &p_abili
 				for (int j = 0; j < sub_list.size(); j++) {
 					Ref<ASAbility> sub = sub_list[j];
 					if (sub.is_valid() && sub->get_ability_tag() == target_tag) {
-						try_activate_ability_by_resource(sub, p_target_node, spec->get_instance_id());
+						try_activate_ability_by_resource(sub, p_target_node, (int)(uint64_t)spec->get_instance_id());
 						break;
 					}
 				}
@@ -2157,8 +2158,12 @@ bool ASComponent::_is_local_authority() const {
 }
 
 void ASComponent::capture_snapshot() {
+	if (Engine::get_singleton()->is_editor_hint()) {
+		return;
+	}
+
 	// 1. Capture to Light Cache (In-memory circular buffer)
-	state_cache.capture_state(this);
+	state_cache->capture_state(this);
 
 	// 2. Capture to Snapshot Resource (If assigned - typically for Players/Saving)
 	if (snapshot_state.is_valid()) {
@@ -2171,7 +2176,7 @@ void ASComponent::apply_snapshot(uint32_t p_tick) {
 	_is_rolling_back = true;
 
 	// 1. Try Light Cache first (High performance circular buffer)
-	if (state_cache.restore_state(this, p_tick)) {
+	if (state_cache->restore_state(this, p_tick)) {
 		current_tick = p_tick;
 		_is_rolling_back = false;
 		_update_attribute_current_values();
@@ -2309,6 +2314,7 @@ void ASComponent::clear_conditional_history() {
 
 ASComponent::ASComponent() {
 	owned_tags.instantiate();
+	state_cache.instantiate();
 }
 ASComponent::~ASComponent() {
 	cancel_all_abilities();

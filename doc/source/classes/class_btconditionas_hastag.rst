@@ -10,7 +10,7 @@
 BTConditionAS_HasTag
 ====================
 
-**Inherits:** ``RefCounted``
+**Inherits:** ``BTCondition``
 
 BTCondition that checks if the agent has a specific Ability System tag.
 
@@ -19,7 +19,7 @@ BTCondition that checks if the agent has a specific Ability System tag.
 Description
 -----------
 
-A Behavior Tree condition that checks if the actor's :ref:`ASComponent<class_ASComponent>` has a specific tag. Returns ``BT.SUCCESS`` if tag present, ``BT.FAILURE`` otherwise.
+A Behavior Tree condition that checks if the actor's :ref:`ASComponent<class_ASComponent>` has a specific tag. Returns :ref:`BT.SUCCESS<class_BT_constant_SUCCESS>` if tag present, :ref:`BT.FAILURE<class_BT_constant_FAILURE>` otherwise.
 
 Supports hierarchical matching (e.g., checking ``State`` matches ``State.Stunned``).
 
@@ -31,29 +31,13 @@ Properties
 .. table::
    :widths: auto
 
-   +----------------+---------------------------------------------------------------------+--------------+
-   | ``bool``       | :ref:`exact_match<class_BTConditionAS_HasTag_property_exact_match>` | ``false``    |
-   +----------------+---------------------------------------------------------------------+--------------+
-   | ``StringName`` | :ref:`tag<class_BTConditionAS_HasTag_property_tag>`                 | ``&"&quot;`` |
-   +----------------+---------------------------------------------------------------------+--------------+
-
-.. rst-class:: classref-reftable-group
-
-Methods
--------
-
-.. table::
-   :widths: auto
-
-   +----------------+---------------------------------------------------------------------------------------------------+
-   | ``bool``       | :ref:`get_exact_match<class_BTConditionAS_HasTag_method_get_exact_match>`\ (\ )                   |
-   +----------------+---------------------------------------------------------------------------------------------------+
-   | ``StringName`` | :ref:`get_tag<class_BTConditionAS_HasTag_method_get_tag>`\ (\ )                                   |
-   +----------------+---------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_exact_match<class_BTConditionAS_HasTag_method_set_exact_match>`\ (\ exact\: ``bool``\ ) |
-   +----------------+---------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_tag<class_BTConditionAS_HasTag_method_set_tag>`\ (\ tag\: ``StringName``\ )             |
-   +----------------+---------------------------------------------------------------------------------------------------+
+   +----------------+-------------------------------------------------------------------------+------------------+
+   | ``NodePath``   | :ref:`asc_node_path<class_BTConditionAS_HasTag_property_asc_node_path>` | ``NodePath("")`` |
+   +----------------+-------------------------------------------------------------------------+------------------+
+   | ``bool``       | :ref:`exact_match<class_BTConditionAS_HasTag_property_exact_match>`     | ``false``        |
+   +----------------+-------------------------------------------------------------------------+------------------+
+   | ``StringName`` | :ref:`tag<class_BTConditionAS_HasTag_property_tag>`                     | ``&""``          |
+   +----------------+-------------------------------------------------------------------------+------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -64,6 +48,25 @@ Methods
 Property Descriptions
 ---------------------
 
+.. _class_BTConditionAS_HasTag_property_asc_node_path:
+
+.. rst-class:: classref-property
+
+``NodePath`` **asc_node_path** = ``NodePath("")`` :ref:`🔗<class_BTConditionAS_HasTag_property_asc_node_path>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_asc_node_path**\ (\ value\: ``NodePath``\ )
+- ``NodePath`` **get_asc_node_path**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_BTConditionAS_HasTag_property_exact_match:
 
 .. rst-class:: classref-property
@@ -72,7 +75,7 @@ Property Descriptions
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_exact_match**\ (\ exact\: ``bool``\ )
+- |void| **set_exact_match**\ (\ value\: ``bool``\ )
 - ``bool`` **get_exact_match**\ (\ )
 
 .. container:: contribute
@@ -87,69 +90,16 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-``StringName`` **tag** = ``&"&quot;`` :ref:`🔗<class_BTConditionAS_HasTag_property_tag>`
+``StringName`` **tag** = ``&""`` :ref:`🔗<class_BTConditionAS_HasTag_property_tag>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_tag**\ (\ tag\: ``StringName``\ )
+- |void| **set_tag**\ (\ value\: ``StringName``\ )
 - ``StringName`` **get_tag**\ (\ )
 
 .. container:: contribute
 
 	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
-
-.. rst-class:: classref-section-separator
-
-----
-
-.. rst-class:: classref-descriptions-group
-
-Method Descriptions
--------------------
-
-.. _class_BTConditionAS_HasTag_method_get_exact_match:
-
-.. rst-class:: classref-method
-
-``bool`` **get_exact_match**\ (\ ) :ref:`🔗<class_BTConditionAS_HasTag_method_get_exact_match>`
-
-Returns whether to use exact tag matching.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTConditionAS_HasTag_method_get_tag:
-
-.. rst-class:: classref-method
-
-``StringName`` **get_tag**\ (\ ) :ref:`🔗<class_BTConditionAS_HasTag_method_get_tag>`
-
-Returns the tag to check for.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTConditionAS_HasTag_method_set_exact_match:
-
-.. rst-class:: classref-method
-
-|void| **set_exact_match**\ (\ exact\: ``bool``\ ) :ref:`🔗<class_BTConditionAS_HasTag_method_set_exact_match>`
-
-If ``true``, requires exact tag match. If ``false``, allows hierarchical matching.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTConditionAS_HasTag_method_set_tag:
-
-.. rst-class:: classref-method
-
-|void| **set_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_BTConditionAS_HasTag_method_set_tag>`
-
-Sets the tag to check for.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

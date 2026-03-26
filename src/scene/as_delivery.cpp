@@ -30,6 +30,7 @@
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/scene/as_delivery.h"
+#include "src/core/ability_system.h"
 #include "src/core/as_effect_spec.h"
 #include "src/resources/as_container.h"
 #include "src/resources/as_package.h"
@@ -37,6 +38,7 @@
 #include <godot_cpp/classes/area2d.hpp>
 #include <godot_cpp/classes/area3d.hpp>
 #else
+#include "modules/ability_system/core/ability_system.h"
 #include "modules/ability_system/core/as_effect_spec.h"
 #include "modules/ability_system/resources/as_container.h"
 #include "modules/ability_system/resources/as_package.h"
@@ -205,49 +207,7 @@ void ASDelivery::deliver(Node *p_target) {
 		return;
 	}
 
-	ASComponent *target_asc = Object::cast_to<ASComponent>(p_target);
-	if (!target_asc) {
-		// Try children
-		for (int i = 0; i < p_target->get_child_count(); i++) {
-			target_asc = Object::cast_to<ASComponent>(p_target->get_child(i));
-			if (target_asc) {
-				break;
-			}
-		}
-	}
-
-	if (!target_asc) {
-		// Try parent
-		Node *parent = p_target->get_parent();
-		if (parent) {
-			target_asc = Object::cast_to<ASComponent>(parent);
-			if (!target_asc) {
-				for (int i = 0; i < parent->get_child_count(); i++) {
-					target_asc = Object::cast_to<ASComponent>(parent->get_child(i));
-					if (target_asc) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	if (!target_asc) {
-		// Try owner
-		Node *owner = p_target->get_owner();
-		if (owner) {
-			target_asc = Object::cast_to<ASComponent>(owner);
-			if (!target_asc) {
-				for (int i = 0; i < owner->get_child_count(); i++) {
-					target_asc = Object::cast_to<ASComponent>(owner->get_child(i));
-					if (target_asc) {
-						break;
-					}
-				}
-			}
-		}
-	}
-
+	ASComponent *target_asc = AbilitySystem::resolve_component(p_target);
 	if (!target_asc) {
 		return;
 	}

@@ -30,9 +30,7 @@
 
 #include "as_bridge_action_dispatch_event.h"
 
-#include "as_bridge.h"
-
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
+#include "../core/ability_system.h"
 
 void BTActionAS_DispatchEvent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_event_tag", "tag"), &BTActionAS_DispatchEvent::set_event_tag);
@@ -54,13 +52,13 @@ void BTActionAS_DispatchEvent::_bind_methods() {
 }
 
 BT::Status BTActionAS_DispatchEvent::_tick(double p_delta) {
-	Node *agent = get_agent();
-	if (!agent) {
+	Node *p_agent = get_agent();
+	if (!p_agent) {
 		WARN_PRINT("BTActionAS_DispatchEvent: No agent assigned");
 		return BT::FAILURE;
 	}
 
-	ASComponent *asc = resolve_asc(agent, asc_node_path);
+	ASComponent *asc = resolve_asc(p_agent, asc_node_path);
 	if (!asc) {
 		WARN_PRINT("BTActionAS_DispatchEvent: No ASComponent found on agent");
 		return BT::FAILURE;
@@ -79,9 +77,7 @@ BT::Status BTActionAS_DispatchEvent::_tick(double p_delta) {
 
 	// Dispatch event using AS Event system
 	// See BUSINESS_RULES.md section 2.6 - Events are imperative
-	asc->dispatch_event(event_tag, agent, magnitude, custom_payload);
+	asc->dispatch_event(event_tag, p_agent, magnitude, custom_payload);
 
 	return BT::SUCCESS; // Dispatch is always immediate
 }
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

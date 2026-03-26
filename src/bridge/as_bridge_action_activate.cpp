@@ -30,9 +30,7 @@
 
 #include "as_bridge_action_activate.h"
 
-#include "as_bridge.h"
-
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
+#include "../core/ability_system.h"
 
 void BTActionAS_ActivateAbility::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_ability_tag", "tag"), &BTActionAS_ActivateAbility::set_ability_tag);
@@ -50,13 +48,13 @@ void BTActionAS_ActivateAbility::_bind_methods() {
 }
 
 BT::Status BTActionAS_ActivateAbility::_tick(double p_delta) {
-	Node *agent = get_agent();
-	if (!agent) {
+	Node *p_agent = get_agent();
+	if (!p_agent) {
 		WARN_PRINT("BTActionAS_ActivateAbility: No agent assigned");
 		return BT::FAILURE;
 	}
 
-	ASComponent *asc = resolve_asc(agent, asc_node_path);
+	ASComponent *asc = resolve_asc(p_agent, asc_node_path);
 	if (!asc) {
 		WARN_PRINT("BTActionAS_ActivateAbility: No ASComponent found on agent");
 		return BT::FAILURE;
@@ -86,5 +84,3 @@ BT::Status BTActionAS_ActivateAbility::_tick(double p_delta) {
 		return BT::FAILURE;
 	}
 }
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

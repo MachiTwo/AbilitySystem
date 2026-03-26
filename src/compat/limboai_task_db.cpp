@@ -41,29 +41,15 @@ using namespace godot;
 LimboTaskDB *LimboTaskDB::singleton = nullptr;
 
 void LimboTaskDB::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("register_task", "class_name"), &LimboTaskDB::register_task);
+	ClassDB::bind_method(D_METHOD("register_task_name", "class_name"), &LimboTaskDB::register_task_name);
 	ClassDB::bind_method(D_METHOD("is_task_registered", "class_name"), &LimboTaskDB::is_task_registered);
 	ClassDB::bind_method(D_METHOD("get_registered_tasks"), &LimboTaskDB::get_registered_tasks);
 	ClassDB::bind_method(D_METHOD("is_available"), &LimboTaskDB::is_available);
 }
 
-void LimboTaskDB::register_task(const StringName &p_class_name) {
-#ifdef LIMBOAI_MODULE
-	// Real implementation when LimboAI module is available
-	// This would call the actual LimboAI TaskDB registration
-	// using Godot core print_line
-#elif defined(LIMBOAI_GDEXTENSION)
-	// GDExtension implementation
-	if (Engine::get_singleton()->has_singleton("LimboAI")) {
-		// Call LimboAI GDExtension registration
-		godot::UtilityFunctions::print(vformat("LimboTaskDB: Registering task '%s' (GDExtension)", p_class_name));
-	} else {
-		godot::UtilityFunctions::print(vformat("LimboTaskDB: Cannot register '%s' - LimboAI not available", p_class_name));
-	}
-#else
-	// Stub implementation - just log
-	godot::UtilityFunctions::print(vformat("LimboTaskDB: Stub registration for '%s'", p_class_name));
-#endif
+void LimboTaskDB::register_task_name(const StringName &p_class_name) {
+	// Stub implementation — just log
+	WARN_PRINT(vformat("LimboTaskDB: Stub registration for '%s'", p_class_name));
 }
 
 bool LimboTaskDB::is_task_registered(const StringName &p_class_name) const {

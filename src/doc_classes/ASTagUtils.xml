@@ -20,13 +20,65 @@
 	<tutorials>
 	</tutorials>
 	<methods>
-		<method name="validate_tag_type" qualifiers="static">
+		<method name="cond_count_additions" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="cond_count_removals" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="cond_get_recent_additions" qualifiers="static">
+			<return type="Array" />
+			<param index="0" name="target" type="Node" />
+			<param index="1" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="cond_get_recent_changes" qualifiers="static">
+			<return type="Array" />
+			<param index="0" name="target" type="Node" />
+			<param index="1" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="cond_get_recent_removals" qualifiers="static">
+			<return type="Array" />
+			<param index="0" name="target" type="Node" />
+			<param index="1" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="cond_had_tag" qualifiers="static">
 			<return type="bool" />
 			<param index="0" name="tag" type="StringName" />
-			<param index="1" name="expected_type" type="int" enum="ASTagType" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
-				Validates that a tag exists and matches the expected type.
-				Returns false if tag doesn't exist or type doesn't match.
+			</description>
+		</method>
+		<method name="cond_was_tag_added" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="cond_was_tag_removed" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
 			</description>
 		</method>
 		<method name="detect_tag_type" qualifiers="static">
@@ -34,22 +86,102 @@
 			<param index="0" name="tag" type="StringName" />
 			<description>
 				Detects tag type from naming convention.
-				Event.* -> EVENT, Can.* or Immune.* -> CONDITIONAL, others -> NAME.
+				Event.* -&gt; EVENT, Can.* or Immune.* -&gt; CONDITIONAL, others -&gt; NAME.
 			</description>
 		</method>
-		<method name="create_tag" qualifiers="static">
-			<return type="ASTagBase" />
+		<method name="event_count_occurrences" qualifiers="static">
+			<return type="int" />
 			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
-				Creates appropriate tag instance based on naming convention.
-				Returns ASNameTag, ASConditionalTag, or ASEventTag as appropriate.
 			</description>
 		</method>
-		<method name="is_state_tag" qualifiers="static">
+		<method name="event_did_occur" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="event_get_all_recent_events" qualifiers="static">
+			<return type="Array" />
+			<param index="0" name="target" type="Node" />
+			<param index="1" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="event_get_last_data" qualifiers="static">
+			<return type="Dictionary" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<description>
+			</description>
+		</method>
+		<method name="event_get_last_instigator" qualifiers="static">
+			<return type="Node" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<description>
+			</description>
+		</method>
+		<method name="event_get_last_magnitude" qualifiers="static">
+			<return type="float" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<description>
+			</description>
+		</method>
+		<method name="event_get_recent_events" qualifiers="static">
+			<return type="Array" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="history_dump" qualifiers="static">
+			<return type="void" />
+			<param index="0" name="target" type="Node" />
+			<param index="1" name="lookback_sec" type="float" default="5.0" />
+			<description>
+			</description>
+		</method>
+		<method name="history_get_all_changes" qualifiers="static">
+			<return type="Array" />
+			<param index="0" name="target" type="Node" />
+			<param index="1" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="history_get_tag_history" qualifiers="static">
+			<return type="Array" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="history_get_total_size" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="target" type="Node" />
+			<description>
+			</description>
+		</method>
+		<method name="history_was_tag_present" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="is_can_tag" qualifiers="static">
 			<return type="bool" />
 			<param index="0" name="tag" type="StringName" />
 			<description>
-				Returns true if tag name starts with "State.".
+				Returns true if tag name starts with "Can.".
 			</description>
 		</method>
 		<method name="is_class_tag" qualifiers="static">
@@ -57,13 +189,6 @@
 			<param index="0" name="tag" type="StringName" />
 			<description>
 				Returns true if tag name starts with "Class.".
-			</description>
-		</method>
-		<method name="is_team_tag" qualifiers="static">
-			<return type="bool" />
-			<param index="0" name="tag" type="StringName" />
-			<description>
-				Returns true if tag name starts with "Team.".
 			</description>
 		</method>
 		<method name="is_event_tag" qualifiers="static">
@@ -80,16 +205,91 @@
 				Returns true if tag name starts with "Immune.".
 			</description>
 		</method>
-		<method name="is_can_tag" qualifiers="static">
+		<method name="is_state_tag" qualifiers="static">
 			<return type="bool" />
 			<param index="0" name="tag" type="StringName" />
 			<description>
-				Returns true if tag name starts with "Can.".
+				Returns true if tag name starts with "State.".
+			</description>
+		</method>
+		<method name="is_team_tag" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="tag" type="StringName" />
+			<description>
+				Returns true if tag name starts with "Team.".
+			</description>
+		</method>
+		<method name="name_count_additions" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="name_count_removals" qualifiers="static">
+			<return type="int" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="name_get_recent_additions" qualifiers="static">
+			<return type="Array" />
+			<param index="0" name="target" type="Node" />
+			<param index="1" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="name_get_recent_changes" qualifiers="static">
+			<return type="Array" />
+			<param index="0" name="target" type="Node" />
+			<param index="1" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="name_get_recent_removals" qualifiers="static">
+			<return type="Array" />
+			<param index="0" name="target" type="Node" />
+			<param index="1" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="name_had_tag" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="name_was_tag_added" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="name_was_tag_removed" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="target" type="Node" />
+			<param index="2" name="lookback_sec" type="float" default="1.0" />
+			<description>
+			</description>
+		</method>
+		<method name="validate_tag_type" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="expected_type" type="int" enum="ASTagType" />
+			<description>
+				Validates that a tag exists and matches the expected type.
+				Returns false if tag doesn't exist or type doesn't match.
 			</description>
 		</method>
 	</methods>
-	<members>
-	</members>
 	<constants>
 		<constant name="NAME" value="0" enum="ASTagType">
 			A standard identity tag for classes, states, or teams (e.g., State.Stunned).
@@ -99,6 +299,8 @@
 		</constant>
 		<constant name="EVENT" value="2" enum="ASTagType">
 			A high-frequency ephemeral tag with payload support (e.g., Event.Damage).
+		</constant>
+		<constant name="UNKNOWN" value="255" enum="ASTagType">
 		</constant>
 	</constants>
 </class>

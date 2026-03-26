@@ -132,8 +132,6 @@ protected:
 	void _remove_effect_at_index(int p_idx);
 
 public:
-	static ASComponent *get_from_node(Node *p_node);
-
 	// --- Cooldown API ---
 	void start_cooldown(const StringName &p_ability_tag, float p_duration, const TypedArray<StringName> &p_cooldown_tags);
 	bool is_on_cooldown(const StringName &p_ability_tag) const;
@@ -142,7 +140,7 @@ public:
 	void _handle_ability_triggers(const StringName &p_tag, ASAbility::TriggerType p_type);
 
 	// Multiplayer & Prediction - Using dedicated ASStateCache from as_utils.h
-	ASStateCache state_cache;
+	Ref<ASStateCache> state_cache;
 	uint32_t current_tick = 0;
 
 	bool _is_server() const;
@@ -164,6 +162,7 @@ public:
 	void lock_ability_by_tag(const StringName &p_tag);
 	void lock_ability_by_resource(const Ref<ASAbility> &p_ability);
 	bool is_ability_unlocked(const StringName &p_tag) const;
+	TypedArray<ASAbilitySpec> get_unlocked_abilities() const;
 
 	// --- Ability Activation API (Transient execution) ---
 	bool can_activate_ability_by_tag(const StringName &p_tag);
@@ -172,7 +171,7 @@ public:
 	bool is_ability_active(const StringName &p_tag) const;
 
 	bool can_activate_ability_by_resource(const Ref<ASAbility> &p_ability);
-	bool try_activate_ability_by_resource(const Ref<ASAbility> &p_ability, Object *p_target_node = nullptr, uint64_t p_parent_id = 0);
+	bool try_activate_ability_by_resource(const Ref<ASAbility> &p_ability, Object *p_target_node = nullptr, int p_parent_id = 0);
 	void cancel_ability_by_resource(const Ref<ASAbility> &p_ability);
 
 	void cancel_all_abilities();

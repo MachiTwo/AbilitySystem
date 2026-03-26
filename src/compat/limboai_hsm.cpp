@@ -29,6 +29,7 @@
 /**************************************************************************/
 
 #include "limboai_hsm.h"
+#include "limboai_blackboard.h"
 
 #if !defined(LIMBOAI_MODULE) && !defined(LIMBOAI_GDEXTENSION)
 
@@ -42,6 +43,9 @@ void LimboState::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("set_agent", "agent"), &LimboState::set_agent);
 	ClassDB::bind_method(D_METHOD("get_agent"), &LimboState::get_agent);
+
+	ClassDB::bind_method(D_METHOD("set_blackboard", "blackboard"), &LimboState::set_blackboard);
+	ClassDB::bind_method(D_METHOD("get_blackboard"), &LimboState::get_blackboard);
 
 	ClassDB::bind_method(D_METHOD("add_substate", "substate"), &LimboState::add_substate);
 	ClassDB::bind_method(D_METHOD("remove_substate", "substate"), &LimboState::remove_substate);
@@ -89,6 +93,14 @@ void LimboState::remove_substate(const Ref<LimboState> &p_substate) {
 			current_substate = Ref<LimboState>();
 		}
 	}
+}
+
+TypedArray<LimboState> LimboState::get_substates() const {
+	TypedArray<LimboState> arr;
+	for (int i = 0; i < substates.size(); i++) {
+		arr.push_back(substates[i]);
+	}
+	return arr;
 }
 
 void LimboState::transition_to(const Ref<LimboState> &p_state) {
@@ -150,6 +162,9 @@ void LimboHSM::_bind_methods() {
 
 	ClassDB::bind_method(D_METHOD("set_agent", "agent"), &LimboHSM::set_agent);
 	ClassDB::bind_method(D_METHOD("get_agent"), &LimboHSM::get_agent);
+
+	ClassDB::bind_method(D_METHOD("set_blackboard", "blackboard"), &LimboHSM::set_blackboard);
+	ClassDB::bind_method(D_METHOD("get_blackboard"), &LimboHSM::get_blackboard);
 
 	ClassDB::bind_method(D_METHOD("find_state", "name"), &LimboHSM::find_state);
 	ClassDB::bind_method(D_METHOD("reset"), &LimboHSM::reset);
@@ -216,6 +231,14 @@ void LimboHSM::remove_state(const Ref<LimboState> &p_state) {
 			initial_state = Ref<LimboState>();
 		}
 	}
+}
+
+TypedArray<LimboState> LimboHSM::get_states() const {
+	TypedArray<LimboState> arr;
+	for (int i = 0; i < states.size(); i++) {
+		arr.push_back(states[i]);
+	}
+	return arr;
 }
 
 void LimboHSM::transition_to(const Ref<LimboState> &p_state) {

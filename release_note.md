@@ -1,85 +1,57 @@
-# 🚀 Release Notes - v0.1.0 (Official Release)
+# 🚀 Release Notes - v0.2.0 (The Atomic Integration Update)
 
 > [!TIP]
 > **Read this in other languages / Leia isto em outros idiomas:**
 > [**English**](release_note.md) | [**Português**](release_note.pt.md)
 
-We are proud to announce the stable release (v0.1.0) of the **Ability System Framework**, a mature, robust, and data-driven solution for Godot. Available as both a **GDExtension** plugin and a **Native Module** (C++), the system brings rigorous engineering of complex features to your game's architecture.
+This release marks the **pioneer birth** of the integration between **Ability System** and **LimboAI**. We've built from scratch an atomic architecture where both systems coexist in the same binary, providing unprecedented performance and stability for the Zyris Engine ecosystem.
 
 ---
 
-## 1. Orchestration and Base Entities
+## 🏗️ 1. Orchestrated Integration: LimboAI as a Framework Library
 
-- **`ASComponent` (The Brain)**: Attached to your `CharacterBody`, it operates exclusively on `physics_process` (ensuring determinism). It owns attributes and manages the list of active Specs.
+- **The Birth of AS Bridge**: We've introduced the first official bridge between LimboAI and the Ability System. This is a native and atomic integration where Behavior Trees can formally "speak" to the Ability System with zero latency.
+- **HSM Synergy**: `ASComponent` is now fully compatible with **LimboHSM**, acting as the gameplay executor for LimboAI's state-driven intelligence.
 
-- **`ASContainer` (Class Template)**: Eliminates manual setup. It acts as an archetype to fully initialize the component from a single `.tres`, making it easy to structure a "Mage" or "Warrior" based on pre-selected inventories of abilities and native attributes.
+## 🔗 2. ASBridge: The Native AI Node Suite
 
-- **`ASDelivery` & `ASPackage`**: Pure logic injectors! `ASDelivery` is an agnostic `Node` (not dependent on 2D or 3D) that carries an `ASPackage`. It can be attached to any entity or projectile to inject collections of effects and cues into a target, decoupling gameplay logic from the physical collision infrastructure.
+v0.2.0 introduces a comprehensive collection of nodes for Behavior Trees and HSM, allowing AI to perceive and interact with the Ability System:
 
-## 2. Reusable Resources (Immutable Blueprints)
+### **BT Actions (Behavioral Actions)**:
 
-- **`ASAbility`**: The core of an ability, validating level requirements, tags, and costs.
+- **`ASActivateAbility`**: Allows AI to trigger abilities directly by Tag, adhering to costs and requirements.
+- **`ASDispatchEvent`**: Allows behavioral logic to manually dispatch gameplay Event Tags.
+- **`ASWaitEvent`**: A reactive state node that waits for a specific Event Tag within a temporal window, leveraging the new tick-based memory of the ASC.
 
-- **`ASEffect`**: Isolated state modifiers with native support for duration, individual cooldowns, and precise stacking policies.
+### **BT Conditions (AI Sensors)**:
 
-- **`ASCue`**: Pure visual reactivity layer. Extensions (like `ASCueAudio`) operate independently without affecting game server data.
+- **`ASCanActivateAbility`**: Pre-check sensor for readiness, costs, and cooldowns before attempting an action.
+- **`ASEventOccurred`**: Checks if a specific event occurred recently (within the last few frames/seconds).
+- **`ASHasTag`**: Direct query of the actor's state via `CONDITIONAL` or `NAME` tags.
 
-- **`ASAttribute`**: Fundamental stats that react dynamically via **Attribute Drivers**. Changing a base strength reflexively alters the total calculated damage.
+### **LimboHSM Integration**:
 
-## 3. The Sovereignty of "Specs" (Runtime)
+- **`ASBridgeState`**: Specialized state nodes that bidirectionally synchronize the state machine state (e.g., Attacking, Stunned) with the Ability System's internal status.
 
-While `ASAbility` is static in the project folder, **`ASAbilitySpec`**, **`ASEffectSpec`**, **`ASCueSpec`**, and **`ASTagSpec`** are active instances based on `RefCounted`. This solves the overlapping problem! Opponents of different levels can use the exact same base ability — the Specs retain and calculate the current state based on the caster's isolated status, clearing from memory at the end of their utility.
+## 🏷️ 3. ASComponent v0.2.0: The Phase Maestro (Native HSM)
 
----
+- **Phase-Engine (Ability Phasing)**: The ASC now natively manages the lifecycle of **Multi-Phase Abilities** (e.g., Prelude, Action, Recovery), ensuring deterministic frame-by-frame transitions.
+- **Standalone HSM**: Even without LimboAI, the ASC acts as a gameplay state machine for ability logic.
+- **Tag Security & Governance**: Strict typing rules to ensure state integrity (`NAME`, `CONDITIONAL`, `EVENT`).
 
-## 🏷️ The Global Tag Engine
+## ⚡ 4. AS Event Tags: High-Performance Temporal Events
 
-We do not manage booleans spread across code; we manage **Tags**.
+- **Frame-Level Transience**: Event Tags (e.g., `Event.Damage.Block`) are instantaneous occurrences that do not persist in the actor's state.
+- **Reactive Memory**: `ASComponent` now possesses temporal memory via `ASEventTagHistorical`, allowing actors (and AI via Bridge) to react to past events from previous ticks.
 
-- **`AbilitySystem` (Singleton)**: The global server that extends _Project Settings_. It registers tags in the engine. It is the only entity that loads and saves the global list in `project.godot`.
+## 🛠️ 5. Mass Refactoring & Modularization
 
-- **NameTag & ConditionalTag**: Tags identify the source (`NameTag` e.g., `Ability.Skill.Fireball`) and the logical semantics (`ConditionalTag` e.g., `Damage.Element.Fire`). This makes global resistance logic incredibly simple compared to matching raw ability names.
+- **`ASUtils` & `ASTagTypes`**: Total reorganization of static logic and type safety into dedicated utility classes.
+- **Registry Unification**: Centralized types and validations, making the framework robust and optimized for the Zyris Engine.
 
-- **Logical Rules**: Built-in conditions such as `Required All`, `Required Any`, `Blocked Any`, and `Blocked All` are natively parsed in C++.
+## 🎮 6. New Functional Demo
 
-- **Automation via Ability Triggers**: Abilities now react autonomously to global Tags, without extra _scripting_. You can trigger reflex shields or counter-attacks purely by linking the `ON_TAG_ADDED` or `ON_TAG_REMOVED` of a received debuff or damage.
+A new, simple but functional demo project has been added:
 
-## API Patterns and Safe Access
-
-The Ability System interface encourages fetching resources securely and predictably, focusing on preventing stealth mutations:
-
-- **Dual Instantiation (`by_tag` vs `by_resource`)**: Every method features two signatures. Use `by_tag` to invoke dynamic actions natively driven by the Tag Engine, or `by_resource` for hard references (Path/UID).
-
-- **Safe Execution (`try_activate`)**: The API does not expose a direct `activate()` for functional abilities. The mandatory use of `try_...` ensures that Blueprint rules (mana cost, cooldown, logical requirements) are irrevocably respected before any execution.
-
-- **Authorization (`can_`)**: Evaluates whether an action is theoretically permitted to execute, without processing it.
-
-- **Status Query (`is_` / `has_`)**: Clean and safe checks to validate Tag possession (`has_tag`) or operational states (`is_active`), discouraging the use of manual boolean checks.
-
-- **Interruption (`cancel_`)**: Actively terminates ongoing flows of abilities or active effects.
-
-- **Network Intent (`request_`)**: Formal methodology to request executions via RPC, delegating authority to the server.
-
-- **Safe Extraction (`get_`)**: Retrieves values, instances, and calculated data cleanly without the risk of exposing unintended mutability.
-
-- **Inventory Management (`unlock_` / `lock_`)**: Defines the availability and the active catalog of equipable abilities for an actor at runtime.
-
----
-
-## 🌐 Multiplayer Engine
-
-For online instances and competitive games, we added practical superpowers:
-
-- **Multiplayer and Prediction (Rollback)**:
-
-- **`ASStateCache`**: Lightweight C++ structure (inline struct) designed to retain recent tick history in memory for optimized local prediction.
-
-- **`ASStateSnapshot`**: Literal capture (photo) of all fundamental status. Allows saving to disk with base Godot methods for a real **Save/Load** flow and acts as the central authority source (True State) when the Server signals corrections and forces a Rollback of the Frame.
-
----
-
-## 🧬 Interactions and Intelligence (LimboAI Bridge)
-
-Game intelligence was fundamentally redesigned to operate natively with our framework:
-
-- **Native Bridge with LimboAI**: Behavior trees can formally control subordinate agents carrying an `ASComponent`, activating commands and consuming `BTAction` nodes with precise physical latency natively synchronized by Godot.
+- **Reference Implementation**: Demonstrates character movement, ability activation, and LimboAI behavior trees operating in a unified atomic environment.
+- **Showcase**: See `ASDelivery` and `ASPackage` working together with the new bridge nodes (`AS Bridge`).

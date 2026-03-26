@@ -30,9 +30,7 @@
 
 #include "as_bridge_action_wait_event.h"
 
-#include "as_bridge.h"
-
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
+#include "../core/ability_system.h"
 
 void BTActionAS_WaitForEvent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_event_tag", "tag"), &BTActionAS_WaitForEvent::set_event_tag);
@@ -58,12 +56,12 @@ BT::Status BTActionAS_WaitForEvent::_tick(double p_delta) {
 		return BT::SUCCESS;
 	}
 
-	Node *agent = get_agent();
-	if (!agent) {
+	Node *p_agent = get_agent();
+	if (!p_agent) {
 		return BT::FAILURE;
 	}
 
-	ASComponent *asc = resolve_asc(agent, asc_node_path);
+	ASComponent *asc = resolve_asc(p_agent, asc_node_path);
 	if (!asc) {
 		return BT::FAILURE;
 	}
@@ -86,5 +84,3 @@ void BTActionAS_WaitForEvent::_exit() {
 	// Cleanup if needed
 	triggered = false;
 }
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

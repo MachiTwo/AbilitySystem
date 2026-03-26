@@ -37,16 +37,6 @@
 using namespace godot;
 #endif
 
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
-
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-#include <limboai/hsm/limbo_state.h>
-#else
-#ifdef LIMBOAI_MODULE
-#include "modules/limboai/hsm/limbo_state.h"
-#endif
-#endif
-
 /**
  * ASBridgeState
  *
@@ -118,5 +108,3 @@ public:
 	ASBridgeState() = default;
 	~ASBridgeState() = default;
 };
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

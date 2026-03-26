@@ -87,5 +87,9 @@
 		<member name="effects_tags" type="StringName[]" setter="set_effect_tags" getter="get_effect_tags" default="[]">
 			List of effect tags.
 		</member>
+		<member name="events_on_deliver" type="StringName[]" setter="set_events_on_deliver" getter="get_events_on_deliver" default="[]">
+		</member>
+		<member name="package_tag" type="StringName" setter="set_package_tag" getter="get_package_tag" default="&amp;&quot;&quot;">
+		</member>
 	</members>
 </class>

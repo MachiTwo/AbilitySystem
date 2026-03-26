@@ -10,7 +10,7 @@
 BTActionAS_ActivateAbility
 ==========================
 
-**Inherits:** ``RefCounted``
+**Inherits:** ``BTAction``
 
 BTAction that activates an Ability System ability by tag.
 
@@ -19,7 +19,7 @@ BTAction that activates an Ability System ability by tag.
 Description
 -----------
 
-A Behavior Tree action that attempts to activate an ability via :ref:`ASComponent<class_ASComponent>` using the ability's tag. Returns ``BT.SUCCESS`` if activation succeeds, ``BT.FAILURE`` otherwise.
+A Behavior Tree action that attempts to activate an ability via :ref:`ASComponent<class_ASComponent>` using the ability's tag. Returns :ref:`BT.SUCCESS<class_BT_constant_SUCCESS>` if activation succeeds, :ref:`BT.FAILURE<class_BT_constant_FAILURE>` otherwise.
 
 This task respects all ability requirements: tags, cooldowns, costs, and level restrictions.
 
@@ -31,35 +31,13 @@ Properties
 .. table::
    :widths: auto
 
-   +----------------+-------------------------------------------------------------------------------------+----------------------------+
-   | ``StringName`` | :ref:`ability_tag<class_BTActionAS_ActivateAbility_property_ability_tag>`           | ``&"&quot;``               |
-   +----------------+-------------------------------------------------------------------------------------+----------------------------+
-   | ``float``      | :ref:`activation_level<class_BTActionAS_ActivateAbility_property_activation_level>` | ``1.0``                    |
-   +----------------+-------------------------------------------------------------------------------------+----------------------------+
-   | ``NodePath``   | :ref:`asc_node_path<class_BTActionAS_ActivateAbility_property_asc_node_path>`       | ``NodePath(&quot;&quot;)`` |
-   +----------------+-------------------------------------------------------------------------------------+----------------------------+
-
-.. rst-class:: classref-reftable-group
-
-Methods
--------
-
-.. table::
-   :widths: auto
-
-   +----------------+--------------------------------------------------------------------------------------------------------------------+
-   | ``StringName`` | :ref:`get_ability_tag<class_BTActionAS_ActivateAbility_method_get_ability_tag>`\ (\ )                              |
-   +----------------+--------------------------------------------------------------------------------------------------------------------+
-   | ``float``      | :ref:`get_activation_level<class_BTActionAS_ActivateAbility_method_get_activation_level>`\ (\ )                    |
-   +----------------+--------------------------------------------------------------------------------------------------------------------+
-   | ``NodePath``   | :ref:`get_asc_node_path<class_BTActionAS_ActivateAbility_method_get_asc_node_path>`\ (\ )                          |
-   +----------------+--------------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_ability_tag<class_BTActionAS_ActivateAbility_method_set_ability_tag>`\ (\ tag\: ``StringName``\ )        |
-   +----------------+--------------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_activation_level<class_BTActionAS_ActivateAbility_method_set_activation_level>`\ (\ level\: ``float``\ ) |
-   +----------------+--------------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_asc_node_path<class_BTActionAS_ActivateAbility_method_set_asc_node_path>`\ (\ path\: ``NodePath``\ )     |
-   +----------------+--------------------------------------------------------------------------------------------------------------------+
+   +----------------+-------------------------------------------------------------------------------------+------------------+
+   | ``StringName`` | :ref:`ability_tag<class_BTActionAS_ActivateAbility_property_ability_tag>`           | ``&""``          |
+   +----------------+-------------------------------------------------------------------------------------+------------------+
+   | ``float``      | :ref:`activation_level<class_BTActionAS_ActivateAbility_property_activation_level>` | ``1.0``          |
+   +----------------+-------------------------------------------------------------------------------------+------------------+
+   | ``NodePath``   | :ref:`asc_node_path<class_BTActionAS_ActivateAbility_property_asc_node_path>`       | ``NodePath("")`` |
+   +----------------+-------------------------------------------------------------------------------------+------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -74,11 +52,11 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-``StringName`` **ability_tag** = ``&"&quot;`` :ref:`🔗<class_BTActionAS_ActivateAbility_property_ability_tag>`
+``StringName`` **ability_tag** = ``&""`` :ref:`🔗<class_BTActionAS_ActivateAbility_property_ability_tag>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_ability_tag**\ (\ tag\: ``StringName``\ )
+- |void| **set_ability_tag**\ (\ value\: ``StringName``\ )
 - ``StringName`` **get_ability_tag**\ (\ )
 
 The tag of the ability to activate.
@@ -95,7 +73,7 @@ The tag of the ability to activate.
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_activation_level**\ (\ level\: ``float``\ )
+- |void| **set_activation_level**\ (\ value\: ``float``\ )
 - ``float`` **get_activation_level**\ (\ )
 
 The level at which to activate the ability.
@@ -108,91 +86,14 @@ The level at which to activate the ability.
 
 .. rst-class:: classref-property
 
-``NodePath`` **asc_node_path** = ``NodePath(&quot;&quot;)`` :ref:`🔗<class_BTActionAS_ActivateAbility_property_asc_node_path>`
+``NodePath`` **asc_node_path** = ``NodePath("")`` :ref:`🔗<class_BTActionAS_ActivateAbility_property_asc_node_path>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_asc_node_path**\ (\ path\: ``NodePath``\ )
+- |void| **set_asc_node_path**\ (\ value\: ``NodePath``\ )
 - ``NodePath`` **get_asc_node_path**\ (\ )
 
 Explicit path to ASComponent. Auto-resolved if empty.
-
-.. rst-class:: classref-section-separator
-
-----
-
-.. rst-class:: classref-descriptions-group
-
-Method Descriptions
--------------------
-
-.. _class_BTActionAS_ActivateAbility_method_get_ability_tag:
-
-.. rst-class:: classref-method
-
-``StringName`` **get_ability_tag**\ (\ ) :ref:`🔗<class_BTActionAS_ActivateAbility_method_get_ability_tag>`
-
-Returns the ability tag that will be activated.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_ActivateAbility_method_get_activation_level:
-
-.. rst-class:: classref-method
-
-``float`` **get_activation_level**\ (\ ) :ref:`🔗<class_BTActionAS_ActivateAbility_method_get_activation_level>`
-
-Returns the activation level for the ability.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_ActivateAbility_method_get_asc_node_path:
-
-.. rst-class:: classref-method
-
-``NodePath`` **get_asc_node_path**\ (\ ) :ref:`🔗<class_BTActionAS_ActivateAbility_method_get_asc_node_path>`
-
-Returns the explicit path to the ASComponent. If empty, auto-resolves from agent.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_ActivateAbility_method_set_ability_tag:
-
-.. rst-class:: classref-method
-
-|void| **set_ability_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_BTActionAS_ActivateAbility_method_set_ability_tag>`
-
-Sets the ability tag to activate. Must be registered in AbilitySystem.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_ActivateAbility_method_set_activation_level:
-
-.. rst-class:: classref-method
-
-|void| **set_activation_level**\ (\ level\: ``float``\ ) :ref:`🔗<class_BTActionAS_ActivateAbility_method_set_activation_level>`
-
-Sets the activation level for the ability (affects magnitude calculations).
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_ActivateAbility_method_set_asc_node_path:
-
-.. rst-class:: classref-method
-
-|void| **set_asc_node_path**\ (\ path\: ``NodePath``\ ) :ref:`🔗<class_BTActionAS_ActivateAbility_method_set_asc_node_path>`
-
-Sets explicit path to ASComponent. If empty, searches agent and its children.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

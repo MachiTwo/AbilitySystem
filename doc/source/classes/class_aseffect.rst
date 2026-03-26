@@ -50,13 +50,13 @@ Properties
    +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
    | ``StringName``                                         | :ref:`effect_tag<class_ASEffect_property_effect_tag>`                                                     | ``&""``   |
    +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | ``bool``                                               | :ref:`execute_periodic_tick_on_application<class_ASEffect_property_execute_periodic_tick_on_application>` | ``false`` |
-   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
-   | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`granted_tags<class_ASEffect_property_granted_tags>`                                                 | ``[]``    |
-   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
    | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`events_on_apply<class_ASEffect_property_events_on_apply>`                                           | ``[]``    |
    +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
    | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`events_on_remove<class_ASEffect_property_events_on_remove>`                                         | ``[]``    |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | ``bool``                                               | :ref:`execute_periodic_tick_on_application<class_ASEffect_property_execute_periodic_tick_on_application>` | ``false`` |
+   +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
+   | :ref:`Array<class_Array>`\[``StringName``\]            | :ref:`granted_tags<class_ASEffect_property_granted_tags>`                                                 | ``[]``    |
    +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
    | ``int``                                                | :ref:`modifiers<class_ASEffect_property_modifiers>`                                                       | ``0``     |
    +--------------------------------------------------------+-----------------------------------------------------------------------------------------------------------+-----------+
@@ -429,40 +429,6 @@ Tag identifying this effect.
 
 ----
 
-.. _class_ASEffect_property_execute_periodic_tick_on_application:
-
-.. rst-class:: classref-property
-
-``bool`` **execute_periodic_tick_on_application** = ``false`` :ref:`🔗<class_ASEffect_property_execute_periodic_tick_on_application>`
-
-.. rst-class:: classref-property-setget
-
-- |void| **set_execute_periodic_tick_on_application**\ (\ value\: ``bool``\ )
-- ``bool`` **get_execute_periodic_tick_on_application**\ (\ )
-
-If true, the periodic effect triggers immediately upon application instead of waiting for the first period to elapse.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASEffect_property_granted_tags:
-
-.. rst-class:: classref-property
-
-:ref:`Array<class_Array>`\[``StringName``\] **granted_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_granted_tags>`
-
-.. rst-class:: classref-property-setget
-
-- |void| **set_granted_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
-- :ref:`Array<class_Array>`\[``StringName``\] **get_granted_tags**\ (\ )
-
-Tags granted while effect is active.
-
-.. rst-class:: classref-item-separator
-
-----
-
 .. _class_ASEffect_property_events_on_apply:
 
 .. rst-class:: classref-property
@@ -492,6 +458,40 @@ Events dispatched when this effect is successfully applied to a target.
 - :ref:`Array<class_Array>`\[``StringName``\] **get_events_on_remove**\ (\ )
 
 Events dispatched when this effect is removed from a target.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASEffect_property_execute_periodic_tick_on_application:
+
+.. rst-class:: classref-property
+
+``bool`` **execute_periodic_tick_on_application** = ``false`` :ref:`🔗<class_ASEffect_property_execute_periodic_tick_on_application>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_execute_periodic_tick_on_application**\ (\ value\: ``bool``\ )
+- ``bool`` **get_execute_periodic_tick_on_application**\ (\ )
+
+If true, the periodic effect triggers immediately upon application instead of waiting for the first period to elapse.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASEffect_property_granted_tags:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[``StringName``\] **granted_tags** = ``[]`` :ref:`🔗<class_ASEffect_property_granted_tags>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_granted_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_granted_tags**\ (\ )
+
+Tags granted while effect is active.
 
 .. rst-class:: classref-item-separator
 

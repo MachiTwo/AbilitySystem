@@ -30,9 +30,7 @@
 
 #include "as_bridge_condition_can_activate.h"
 
-#include "as_bridge.h"
-
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
+#include "../core/ability_system.h"
 
 void BTConditionAS_CanActivate::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_ability_tag", "tag"), &BTConditionAS_CanActivate::set_ability_tag);
@@ -46,12 +44,12 @@ void BTConditionAS_CanActivate::_bind_methods() {
 }
 
 BT::Status BTConditionAS_CanActivate::_tick(double p_delta) {
-	Node *agent = get_agent();
-	if (!agent) {
+	Node *p_agent = get_agent();
+	if (!p_agent) {
 		return BT::FAILURE;
 	}
 
-	ASComponent *asc = resolve_asc(agent, asc_node_path);
+	ASComponent *asc = resolve_asc(p_agent, asc_node_path);
 	if (!asc) {
 		return BT::FAILURE;
 	}
@@ -65,5 +63,3 @@ BT::Status BTConditionAS_CanActivate::_tick(double p_delta) {
 	bool can_activate = asc->can_activate_ability_by_tag(ability_tag);
 	return can_activate ? BT::SUCCESS : BT::FAILURE;
 }
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

@@ -9,28 +9,12 @@
 	<tutorials>
 	</tutorials>
 	<methods>
-		<method name="dispatch_event">
-			<return type="void" />
-			<param index="0" name="tag" type="StringName" />
-			<param index="1" name="instigator" type="Node" default="null" />
-			<param index="2" name="magnitude" type="float" default="0.0" />
-			<param index="3" name="custom_payload" type="Dictionary" default="{}" />
+		<method name="_on_calculate_custom_magnitude" qualifiers="virtual const">
+			<return type="float" />
+			<param index="0" name="effect_spec" type="ASEffectSpec" />
+			<param index="1" name="modifier_index" type="int" />
 			<description>
-				Dispatches a transient [ASEventTag] to this component. The event is broadcast to all listeners and stored in the short-term historical buffer ([method has_event_occurred]). This is the preferred way to signal non-persistent occurrences (e.g. Impact, Hit, Achievement).
-			</description>
-		</method>
-		<method name="has_event_occurred" qualifiers="const">
-			<return type="bool" />
-			<param index="0" name="tag" type="StringName" />
-			<param index="1" name="lookback_sec" type="float" default="1.0" />
-			<description>
-				Checks the internal historical buffer for a specific event tag that occurred within the last [param lookback_sec] seconds. Highly efficient for reactive logic and ability requirements.
-			</description>
-		</method>
-		<method name="clear_event_history">
-			<return type="void" />
-			<description>
-				Clears all events from the historical buffer.
+				Virtual callback for computing custom magnitude values for effect modifiers.
 			</description>
 		</method>
 		<method name="add_attribute_set">
@@ -220,7 +204,28 @@
 				If [member snapshot_state] is assigned, it also populates that resource for persistent storage or long-term synchronization.
 			</description>
 		</method>
+		<method name="clear_conditional_history">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
 		<method name="clear_effects">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="clear_event_history">
+			<return type="void" />
+			<description>
+				Clears all events from the historical buffer.
+			</description>
+		</method>
+		<method name="clear_name_history">
+			<return type="void" />
+			<description>
+			</description>
+		</method>
+		<method name="clear_tag_history">
 			<return type="void" />
 			<description>
 			</description>
@@ -230,6 +235,16 @@
 			<param index="0" name="tag" type="StringName" />
 			<description>
 				Confirms a previously predicted ability activation (Server-side confirmation).
+			</description>
+		</method>
+		<method name="dispatch_event">
+			<return type="void" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="instigator" type="Node" default="null" />
+			<param index="2" name="magnitude" type="float" default="0.0" />
+			<param index="3" name="custom_payload" type="Dictionary" default="{}" />
+			<description>
+				Dispatches a transient ASEventTag to this component. The event is broadcast to all listeners and stored in the short-term historical buffer ([method has_event_occurred]). This is the preferred way to signal non-persistent occurrences (e.g. Impact, Hit, Achievement).
 			</description>
 		</method>
 		<method name="get_ability_cooldown_preview" qualifiers="const">
@@ -297,6 +312,11 @@
 				Returns the registered AudioStreamPlayer node.
 			</description>
 		</method>
+		<method name="get_conditional_history_size" qualifiers="const">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
 		<method name="get_cooldown_remaining" qualifiers="const">
 			<return type="float" />
 			<param index="0" name="ability_tag" type="StringName" />
@@ -311,6 +331,16 @@
 				Returns the cue resource associated with the specified tag.
 			</description>
 		</method>
+		<method name="get_event_history_size" qualifiers="const">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
+		<method name="get_name_history_size" qualifiers="const">
+			<return type="int" />
+			<description>
+			</description>
+		</method>
 		<method name="get_node_ptr" qualifiers="const">
 			<return type="Node" />
 			<param index="0" name="name" type="StringName" />
@@ -318,16 +348,16 @@
 				Returns a registered node by its alias.
 			</description>
 		</method>
-		<method name="get_owned_tags" qualifiers="const">
-			<return type="ASTagSpec" />
-			<description>
-				Returns the tag specification object holding all tags currently owned by the actor.
-			</description>
-		</method>
 		<method name="get_tags" qualifiers="const">
 			<return type="StringName[]" />
 			<description>
 				Returns an array of all tags currently owned by the actor.
+			</description>
+		</method>
+		<method name="get_unlocked_abilities" qualifiers="const">
+			<return type="ASAbilitySpec[]" />
+			<description>
+				Returns a list of all abilities currently unlocked for this actor.
 			</description>
 		</method>
 		<method name="has_active_effect_by_resource" qualifiers="const">
@@ -356,6 +386,14 @@
 			<param index="0" name="tag" type="StringName" />
 			<description>
 				Returns true if the component has an attribute with the specified tag.
+			</description>
+		</method>
+		<method name="has_event_occurred" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="lookback_sec" type="float" default="1.0" />
+			<description>
+				Checks the internal historical buffer for a specific event tag that occurred within the last [param lookback_sec] seconds. Highly efficient for reactive logic and ability requirements.
 			</description>
 		</method>
 		<method name="has_tag" qualifiers="const">
@@ -693,6 +731,15 @@
 				Emitted when an active effect is removed.
 			</description>
 		</signal>
+		<signal name="event_received">
+			<param index="0" name="tag" type="StringName" />
+			<param index="1" name="instigator" type="Object" />
+			<param index="2" name="magnitude" type="float" />
+			<param index="3" name="custom_payload" type="Dictionary" />
+			<description>
+				Emitted when an ASEventTag is dispatched to this component. Used for transient signals.
+			</description>
+		</signal>
 		<signal name="tag_changed">
 			<param index="0" name="tag_name" type="StringName" />
 			<param index="1" name="is_present" type="bool" />
@@ -700,13 +747,10 @@
 				Emitted when persistent tags (states) are added or removed.
 			</description>
 		</signal>
-		<signal name="event_received">
-			<param index="0" name="tag" type="StringName" />
-			<param index="1" name="instigator" type="Node" />
-			<param index="2" name="magnitude" type="float" />
-			<param index="3" name="custom_payload" type="Dictionary" />
+		<signal name="tag_event_received">
+			<param index="0" name="event_tag" type="StringName" />
+			<param index="1" name="data" type="Dictionary" />
 			<description>
-				Emitted when an [ASEventTag] is dispatched to this component. Used for transient signals.
 			</description>
 		</signal>
 	</signals>
