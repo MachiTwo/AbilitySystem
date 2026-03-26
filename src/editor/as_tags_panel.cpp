@@ -28,11 +28,10 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#include "src/editor/as_tags_panel.h"
-
 #ifdef TOOLS_ENABLED
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
+#include "src/editor/as_tags_panel.h"
 #include "src/core/ability_system.h"
 #include <godot_cpp/classes/h_box_container.hpp>
 #include <godot_cpp/classes/h_separator.hpp>
