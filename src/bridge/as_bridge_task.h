@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef AS_BRIDGE_TASK_H
-#define AS_BRIDGE_TASK_H
+#pragma once
 
 #include "../compat/limboai_bt.h"
 #include "as_bridge.h"
@@ -40,8 +39,10 @@ using namespace godot;
 
 // LimboAI Task Macros
 #ifndef TASK_CATEGORY
-#define TASK_CATEGORY(m_category) \
-	virtual String get_category() const override { return m_category; }
+#define TASK_CATEGORY(m_category)                  \
+	virtual String get_category() const override { \
+		return m_category;                         \
+	}
 #endif
 
 /**
@@ -78,5 +79,3 @@ protected:
 public:
 	virtual ~ASBridgeTask() = default;
 };
-
-#endif // AS_BRIDGE_TASK_H

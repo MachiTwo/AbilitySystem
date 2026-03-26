@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_AS_CONTAINER_PACKAGE_H
-#define TEST_AS_CONTAINER_PACKAGE_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/resources/as_ability.h"
@@ -263,5 +262,3 @@ TEST_CASE("[ASPackage] apply_package to ASComponent via ASComponent::apply_packa
 
 	memdelete(target);
 }
-
-#endif // TEST_AS_CONTAINER_PACKAGE_H

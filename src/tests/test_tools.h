@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_TOOLS_H
-#define TEST_TOOLS_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/tests/doctest.h"
@@ -90,5 +89,3 @@ struct ErrorDetector {
 		ability_system::tests::ErrorDetector err_detector;                                     \
 		CHECK_FALSE_MESSAGE(err_detector.has_error, "An unexpected error occurred in Godot."); \
 	} while (0)
-
-#endif // TEST_TOOLS_H

@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef AS_BRIDGE_CONDITION_CAN_ACTIVATE_H
-#define AS_BRIDGE_CONDITION_CAN_ACTIVATE_H
+#pragma once
 
 #include "as_bridge_task.h"
 
@@ -66,5 +65,3 @@ public:
 };
 
 #endif // AS_BRIDGE_LIMBOAI_AVAILABLE
-
-#endif // AS_BRIDGE_CONDITION_CAN_ACTIVATE_H

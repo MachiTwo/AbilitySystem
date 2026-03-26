@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_AS_ABILITY_H
-#define TEST_AS_ABILITY_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/resources/as_ability.h"
@@ -235,5 +234,3 @@ TEST_CASE("[ASAbility] can_activate_ability via ASComponent") {
 
 	memdelete(player);
 }
-
-#endif // TEST_AS_ABILITY_H

@@ -1160,8 +1160,9 @@ bool ASComponent::try_activate_ability_by_resource(const Ref<ASAbility> &p_abili
 		}
 
 		if (spec.is_null() || spec->get_is_active()) {
-			if (!authority)
+			if (!authority) {
 				_is_predicting = false;
+			}
 			return false;
 		}
 
@@ -1487,8 +1488,9 @@ Ref<ASEffectSpec> ASComponent::make_outgoing_spec(Ref<ASEffect> p_effect, float 
 							break;
 						}
 					}
-					if (found)
+					if (found) {
 						break;
+					}
 
 					TypedArray<Dictionary> costs = ability->get_costs();
 					for (int j = 0; j < costs.size(); j++) {
@@ -1501,15 +1503,17 @@ Ref<ASEffectSpec> ASComponent::make_outgoing_spec(Ref<ASEffect> p_effect, float 
 							}
 						}
 					}
-					if (found)
+					if (found) {
 						break;
+					}
 				}
 			}
 
 			if (!found) {
 				String path = p_effect->get_path();
-				if (path.is_empty())
+				if (path.is_empty()) {
 					path = p_effect->get_class();
+				}
 				ERR_PRINT(vformat("ASComponent Error: Effect '%s' is NOT registered in the source's AbilityContainer.", path));
 			}
 		}
@@ -1951,8 +1955,9 @@ TypedArray<ASAttributeSet> ASComponent::get_attribute_sets() const {
 }
 
 void ASComponent::_on_attribute_set_attribute_changed(const StringName &p_name, float p_old_val, float p_new_val) {
-	if (_is_rolling_back)
+	if (_is_rolling_back) {
 		return;
+	}
 	emit_signal("attribute_changed", p_name, p_old_val, p_new_val);
 }
 
@@ -2138,8 +2143,9 @@ float ASComponent::get_ability_cooldown_preview(const StringName &p_tag) const {
 bool ASComponent::_is_server() const {
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 	Ref<MultiplayerAPI> mp = get_multiplayer();
-	if (mp.is_null())
+	if (mp.is_null()) {
 		return true; // Standalone
+	}
 	return mp->is_server();
 #else
 	return !get_tree() || get_tree()->get_multiplayer()->is_server();

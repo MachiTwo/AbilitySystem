@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_GAMEPLAY_SCENARIOS_H
-#define TEST_GAMEPLAY_SCENARIOS_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/ability_system.h"
@@ -107,14 +106,14 @@ static Ref<ASEffect> _make_periodic_effect(float p_tick_dmg, float p_period, flo
 }
 
 // ============================================================
-// SCENARIO 1: The Tavern — NPC Dialogue & Potions
+// SCENARIO 1: The Tavern — NPC Dialog & Potions
 // ============================================================
 
-TEST_CASE("[Gameplay] Tavern: NPC Dialogue Paralyzes Player + Potion Recovery") {
+TEST_CASE("[Gameplay] Tavern: NPC Dialog Paralyzes Player + Potion Recovery") {
 	ASComponent *player = _make_char("Hero", 100.0f, 50.0f);
 	ASComponent *merchant = _make_char("Merchant", 50.0f, 0.0f);
 
-	SUBCASE("Dialogue applies State.Paralyzed, blocks ability, then releases - 3 Variations") {
+	SUBCASE("Dialog applies State.Paralyzed, blocks ability, then releases - 3 Variations") {
 		// Var 1: NPC adds paralysis tag to player
 		player->add_tag(StringName("State.Paralyzed"));
 		CHECK(player->has_tag(StringName("State.Paralyzed")));
@@ -130,13 +129,13 @@ TEST_CASE("[Gameplay] Tavern: NPC Dialogue Paralyzes Player + Potion Recovery") 
 
 		player->unlock_ability_by_resource(attack);
 		bool failed = player->try_activate_ability_by_resource(attack);
-		CHECK_FALSE_MESSAGE(failed, "Player cannot act while paralyzed by dialogue.");
+		CHECK_FALSE_MESSAGE(failed, "Player cannot act while paralyzed by dialog.");
 
 		// Var 3: NPC removes paralysis, player can now act
 		player->remove_tag(StringName("State.Paralyzed"));
 		CHECK_FALSE(player->has_tag(StringName("State.Paralyzed")));
 		bool ok = player->try_activate_ability_by_resource(attack);
-		CHECK_MESSAGE(ok, "After dialogue ends, player regains freedom of action.");
+		CHECK_MESSAGE(ok, "After dialog ends, player regains freedom of action.");
 	}
 
 	SUBCASE("Potion: INSTANT effect heals from depleted HP - 3 Variations") {
@@ -320,5 +319,3 @@ TEST_CASE("[Gameplay] Combat: Event Dispatch + Reactive Window (Parry)") {
 
 	memdelete(warrior);
 }
-
-#endif // TEST_GAMEPLAY_SCENARIOS_H

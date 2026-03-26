@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef AS_BRIDGE_STATE_H
-#define AS_BRIDGE_STATE_H
+#pragma once
 
 #include "../compat/limboai_hsm.h"
 #include "as_bridge_task.h"
@@ -119,5 +118,3 @@ public:
 };
 
 #endif // AS_BRIDGE_LIMBOAI_AVAILABLE
-
-#endif // AS_BRIDGE_STATE_H

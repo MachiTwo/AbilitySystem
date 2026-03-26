@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef AS_STATE_SNAPSHOT_H
-#define AS_STATE_SNAPSHOT_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include <godot_cpp/classes/resource.hpp>
@@ -89,5 +88,3 @@ public:
 	ASStateSnapshot();
 	~ASStateSnapshot();
 };
-
-#endif // AS_STATE_SNAPSHOT_H

@@ -61,12 +61,15 @@ Dictionary ASEffectModifier::to_dict() const {
 }
 
 void ASEffectModifier::from_dict(const Dictionary &p_dict) {
-	if (p_dict.has("attribute"))
+	if (p_dict.has("attribute")) {
 		attribute = p_dict["attribute"];
-	if (p_dict.has("operation"))
+	}
+	if (p_dict.has("operation")) {
 		operation = (ModifierOp)(int)p_dict["operation"];
-	if (p_dict.has("magnitude"))
+	}
+	if (p_dict.has("magnitude")) {
 		magnitude = p_dict["magnitude"];
+	}
 }
 
 // === ASEffectModifierData Implementation ===
@@ -81,14 +84,18 @@ Dictionary ASEffectModifierData::to_dict() const {
 }
 
 void ASEffectModifierData::from_dict(const Dictionary &p_dict) {
-	if (p_dict.has("attribute"))
+	if (p_dict.has("attribute")) {
 		attribute = p_dict["attribute"];
-	if (p_dict.has("operation"))
+	}
+	if (p_dict.has("operation")) {
 		operation = (ModifierOp)(int)p_dict["operation"];
-	if (p_dict.has("magnitude"))
+	}
+	if (p_dict.has("magnitude")) {
 		magnitude = p_dict["magnitude"];
-	if (p_dict.has("use_custom_magnitude"))
+	}
+	if (p_dict.has("use_custom_magnitude")) {
 		use_custom_magnitude = p_dict["use_custom_magnitude"];
+	}
 }
 
 // === ASEffectRequirement Implementation ===
@@ -101,10 +108,12 @@ Dictionary ASEffectRequirement::to_dict() const {
 }
 
 void ASEffectRequirement::from_dict(const Dictionary &p_dict) {
-	if (p_dict.has("attribute"))
+	if (p_dict.has("attribute")) {
 		attribute = p_dict["attribute"];
-	if (p_dict.has("amount"))
+	}
+	if (p_dict.has("amount")) {
 		amount = p_dict["amount"];
+	}
 }
 
 // === ASAttributeValue Implementation ===
@@ -117,10 +126,12 @@ Dictionary ASAttributeValue::to_dict() const {
 }
 
 void ASAttributeValue::from_dict(const Dictionary &p_dict) {
-	if (p_dict.has("base_value"))
+	if (p_dict.has("base_value")) {
 		base_value = p_dict["base_value"];
-	if (p_dict.has("current_value"))
+	}
+	if (p_dict.has("current_value")) {
 		current_value = p_dict["current_value"];
+	}
 }
 
 // === ASEventTagData Implementation ===
@@ -138,20 +149,27 @@ Dictionary ASEventTagData::to_dict() const {
 }
 
 void ASEventTagData::from_dict(const Dictionary &p_dict) {
-	if (p_dict.has("event_tag"))
+	if (p_dict.has("event_tag")) {
 		event_tag = p_dict["event_tag"];
-	if (p_dict.has("instigator_id"))
+	}
+	if (p_dict.has("instigator_id")) {
 		instigator_id = ObjectID((uint64_t)p_dict["instigator_id"]);
-	if (p_dict.has("target_id"))
+	}
+	if (p_dict.has("target_id")) {
 		target_id = ObjectID((uint64_t)p_dict["target_id"]);
-	if (p_dict.has("magnitude"))
+	}
+	if (p_dict.has("magnitude")) {
 		magnitude = p_dict["magnitude"];
-	if (p_dict.has("custom_payload"))
+	}
+	if (p_dict.has("custom_payload")) {
 		custom_payload = p_dict["custom_payload"];
-	if (p_dict.has("timestamp"))
+	}
+	if (p_dict.has("timestamp")) {
 		timestamp = p_dict["timestamp"];
-	if (p_dict.has("tick_id"))
+	}
+	if (p_dict.has("tick_id")) {
 		tick_id = p_dict["tick_id"];
+	}
 }
 
 // === ASEventTagHistoricalEntry Implementation ===
@@ -164,10 +182,12 @@ Dictionary ASEventTagHistoricalEntry::to_dict() const {
 }
 
 void ASEventTagHistoricalEntry::from_dict(const Dictionary &p_dict) {
-	if (p_dict.has("data"))
+	if (p_dict.has("data")) {
 		data.from_dict(p_dict["data"]);
-	if (p_dict.has("tick"))
+	}
+	if (p_dict.has("tick")) {
 		tick = p_dict["tick"];
+	}
 }
 
 // === ASNameTagHistoricalEntry Implementation ===
@@ -183,16 +203,21 @@ Dictionary ASNameTagHistoricalEntry::to_dict() const {
 }
 
 void ASNameTagHistoricalEntry::from_dict(const Dictionary &p_dict) {
-	if (p_dict.has("tag_name"))
+	if (p_dict.has("tag_name")) {
 		tag_name = p_dict["tag_name"];
-	if (p_dict.has("target_id"))
+	}
+	if (p_dict.has("target_id")) {
 		target_id = ObjectID((uint64_t)p_dict["target_id"]);
-	if (p_dict.has("timestamp"))
+	}
+	if (p_dict.has("timestamp")) {
 		timestamp = p_dict["timestamp"];
-	if (p_dict.has("tick_id"))
+	}
+	if (p_dict.has("tick_id")) {
 		tick_id = p_dict["tick_id"];
-	if (p_dict.has("added"))
+	}
+	if (p_dict.has("added")) {
 		added = p_dict["added"];
+	}
 }
 
 // === ASConditionalTagHistoricalEntry Implementation ===
@@ -208,16 +233,21 @@ Dictionary ASConditionalTagHistoricalEntry::to_dict() const {
 }
 
 void ASConditionalTagHistoricalEntry::from_dict(const Dictionary &p_dict) {
-	if (p_dict.has("tag_name"))
+	if (p_dict.has("tag_name")) {
 		tag_name = p_dict["tag_name"];
-	if (p_dict.has("target_id"))
+	}
+	if (p_dict.has("target_id")) {
 		target_id = ObjectID((uint64_t)p_dict["target_id"]);
-	if (p_dict.has("timestamp"))
+	}
+	if (p_dict.has("timestamp")) {
 		timestamp = p_dict["timestamp"];
-	if (p_dict.has("tick_id"))
+	}
+	if (p_dict.has("tick_id")) {
 		tick_id = p_dict["tick_id"];
-	if (p_dict.has("added"))
+	}
+	if (p_dict.has("added")) {
 		added = p_dict["added"];
+	}
 }
 
 // === ASStateCacheEntry Implementation ===
@@ -303,16 +333,21 @@ Dictionary ASEffectState::to_dict() const {
 }
 
 void ASEffectState::from_dict(const Dictionary &p_dict) {
-	if (p_dict.has("tag"))
+	if (p_dict.has("tag")) {
 		tag = p_dict["tag"];
-	if (p_dict.has("remaining_time"))
+	}
+	if (p_dict.has("remaining_time")) {
 		remaining_time = p_dict["remaining_time"];
-	if (p_dict.has("period_timer"))
+	}
+	if (p_dict.has("period_timer")) {
 		period_timer = p_dict["period_timer"];
-	if (p_dict.has("stack_count"))
+	}
+	if (p_dict.has("stack_count")) {
 		stack_count = p_dict["stack_count"];
-	if (p_dict.has("level"))
+	}
+	if (p_dict.has("level")) {
 		level = p_dict["level"];
+	}
 }
 
 // === ASCooldownData Implementation ===
@@ -325,10 +360,12 @@ Dictionary ASCooldownData::to_dict() const {
 }
 
 void ASCooldownData::from_dict(const Dictionary &p_dict) {
-	if (p_dict.has("remaining"))
+	if (p_dict.has("remaining")) {
 		remaining = p_dict["remaining"];
-	if (p_dict.has("tags"))
+	}
+	if (p_dict.has("tags")) {
 		tags = Array(p_dict["tags"]);
+	}
 }
 
 void ASStateCache::_bind_methods() {
@@ -381,8 +418,9 @@ void ASStateCache::capture_state(ASComponent *p_component) {
 	TypedArray<ASAttributeSet> sets = p_component->get_attribute_sets();
 	for (int i = 0; i < sets.size(); i++) {
 		Ref<ASAttributeSet> s = sets[i];
-		if (s.is_null())
+		if (s.is_null()) {
 			continue;
+		}
 
 		TypedArray<StringName> attrs = s->get_attribute_list();
 		for (int j = 0; j < attrs.size(); j++) {
@@ -400,11 +438,13 @@ void ASStateCache::capture_state(ASComponent *p_component) {
 	// Capture effects
 	for (int i = 0; i < p_component->active_effects.size(); i++) {
 		Ref<ASEffectSpec> spec = p_component->active_effects[i];
-		if (spec.is_null())
+		if (spec.is_null()) {
 			continue;
+		}
 		Ref<ASEffect> effect = spec->get_effect();
-		if (effect.is_null())
+		if (effect.is_null()) {
 			continue;
+		}
 
 		ASEffectState effect_state;
 		effect_state.tag = effect->get_effect_tag();
@@ -470,8 +510,9 @@ void ASStateCache::clear() {
 }
 
 void ASStateCache::set_buffer_size(uint32_t p_size) {
-	if (p_size == buffer_size)
+	if (p_size == buffer_size) {
 		return;
+	}
 
 	clear();
 	buffer_size = p_size;
@@ -620,8 +661,9 @@ Dictionary ASComponentState::to_dict() const {
 void ASComponentState::from_dict(const Dictionary &p_dict) {
 	clear();
 
-	if (p_dict.has("tick"))
+	if (p_dict.has("tick")) {
 		tick = p_dict["tick"];
+	}
 
 	// Load attributes
 	if (p_dict.has("attributes")) {
@@ -648,8 +690,9 @@ void ASComponentState::capture_from_component(ASComponent *p_component) {
 	TypedArray<ASAttributeSet> sets = p_component->get_attribute_sets();
 	for (int i = 0; i < sets.size(); i++) {
 		Ref<ASAttributeSet> s = sets[i];
-		if (s.is_null())
+		if (s.is_null()) {
 			continue;
+		}
 
 		TypedArray<StringName> attrs = s->get_attribute_list();
 		for (int j = 0; j < attrs.size(); j++) {
@@ -667,11 +710,13 @@ void ASComponentState::capture_from_component(ASComponent *p_component) {
 	// Capture effects
 	for (int i = 0; i < p_component->active_effects.size(); i++) {
 		Ref<ASEffectSpec> spec = p_component->active_effects[i];
-		if (spec.is_null())
+		if (spec.is_null()) {
 			continue;
+		}
 		Ref<ASEffect> effect = spec->get_effect();
-		if (effect.is_null())
+		if (effect.is_null()) {
 			continue;
+		}
 
 		ASEffectState effect_state;
 		effect_state.tag = effect->get_effect_tag();
@@ -741,12 +786,15 @@ void ASComponentState::apply_to_component(ASComponent *p_component) const {
 }
 
 bool ASComponentState::equals(const ASComponentState &p_other) const {
-	if (tick != p_other.tick)
+	if (tick != p_other.tick) {
 		return false;
-	if (attributes.size() != p_other.attributes.size())
+	}
+	if (attributes.size() != p_other.attributes.size()) {
 		return false;
-	if (tags.size() != p_other.tags.size())
+	}
+	if (tags.size() != p_other.tags.size()) {
 		return false;
+	}
 	// ... detailed comparison
 	return true;
 }
@@ -783,8 +831,9 @@ void ASStateUtils::_bind_methods() {
 }
 
 bool ASStateUtils::compare_states(const Ref<ASStateSnapshot> &p_a, const Ref<ASStateSnapshot> &p_b) {
-	if (p_a.is_null() || p_b.is_null())
+	if (p_a.is_null() || p_b.is_null()) {
 		return p_a == p_b;
+	}
 	return p_a->get_tick() == p_b->get_tick() && p_a->get_attributes() == p_b->get_attributes() && p_a->get_tags() == p_b->get_tags();
 }
 
@@ -794,8 +843,9 @@ float ASStateUtils::compute_state_difference(const Ref<ASStateSnapshot> &p_a, co
 }
 
 PackedByteArray ASStateUtils::serialize_state(const Ref<ASStateSnapshot> &p_state) {
-	if (p_state.is_null())
+	if (p_state.is_null()) {
 		return PackedByteArray();
+	}
 	return p_state->serialize_binary();
 }
 
@@ -838,7 +888,8 @@ void ASStateUtils::dump_state(const Ref<ASStateSnapshot> &p_state) {
 }
 
 String ASStateUtils::state_to_string(const Ref<ASStateSnapshot> &p_state) {
-	if (p_state.is_null())
+	if (p_state.is_null()) {
 		return "ASComponentState(<null>)";
+	}
 	return String("ASComponentState(tick=") + String::num(p_state->get_tick()) + ")";
 }

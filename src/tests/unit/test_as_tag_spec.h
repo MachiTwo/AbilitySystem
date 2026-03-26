@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_AS_TAG_SPEC_H
-#define TEST_AS_TAG_SPEC_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/as_tag_spec.h"
@@ -168,5 +167,3 @@ TEST_CASE("[ASTagSpec] get_all_tags and clear") {
 		CHECK(spec->get_all_tags().size() == 0);
 	}
 }
-
-#endif // TEST_AS_TAG_SPEC_H

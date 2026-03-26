@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef AS_TAG_TYPES_H
-#define AS_TAG_TYPES_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/as_utils.h"
@@ -235,5 +234,3 @@ public:
 	static void history_dump(Node *p_target, float p_lookback_sec = 5.0f);
 	static int history_get_total_size(Node *p_target);
 };
-
-#endif // AS_TAG_TYPES_H

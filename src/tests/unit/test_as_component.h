@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_AS_COMPONENT_H
-#define TEST_AS_COMPONENT_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/as_effect_spec.h"
@@ -341,5 +340,3 @@ TEST_CASE("[ASComponent] Node Registry") {
 
 	memdelete(asc);
 }
-
-#endif // TEST_AS_COMPONENT_H

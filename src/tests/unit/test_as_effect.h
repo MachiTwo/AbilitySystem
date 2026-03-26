@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_AS_EFFECT_H
-#define TEST_AS_EFFECT_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/resources/as_effect.h"
@@ -169,5 +168,3 @@ TEST_CASE("[ASEffect] Modifier Definition API") {
 		CHECK(fx->get_execute_periodic_tick_on_application() == true);
 	}
 }
-
-#endif // TEST_AS_EFFECT_H

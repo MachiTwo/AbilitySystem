@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef AS_UTILS_H
-#define AS_UTILS_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include <godot_cpp/classes/node.hpp>
@@ -371,5 +370,3 @@ using namespace godot;
 
 VARIANT_ENUM_CAST(::ASTagType);
 VARIANT_ENUM_CAST(::ModifierOp);
-
-#endif // AS_UTILS_H

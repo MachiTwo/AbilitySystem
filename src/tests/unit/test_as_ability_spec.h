@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_AS_ABILITY_SPEC_H
-#define TEST_AS_ABILITY_SPEC_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/as_ability_spec.h"
@@ -254,5 +253,3 @@ TEST_CASE("[ASAbilitySpec] sub-spec hierarchy") {
 		CHECK(parent_spec->get_sub_specs().size() == 0);
 	}
 }
-
-#endif // TEST_AS_ABILITY_SPEC_H

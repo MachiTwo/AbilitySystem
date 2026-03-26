@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_AS_TAG_UTILS_H
-#define TEST_AS_TAG_UTILS_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/ability_system.h"
@@ -235,5 +234,3 @@ TEST_CASE("[AbilitySystem] Tag Registry (Singleton API)") {
 		as->remove_tag_branch(StringName("New.State"));
 	}
 }
-
-#endif // TEST_AS_TAG_UTILS_H

@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef AS_BRIDGE_H
-#define AS_BRIDGE_H
+#pragma once
 
 #define AS_BRIDGE_LIMBOAI_AVAILABLE 1
 
@@ -115,5 +114,3 @@ public:
 	ASBridge();
 	~ASBridge();
 };
-
-#endif // AS_BRIDGE_H

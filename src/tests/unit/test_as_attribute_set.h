@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_AS_ATTRIBUTE_SET_H
-#define TEST_AS_ATTRIBUTE_SET_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/ability_system.h"
@@ -131,5 +130,3 @@ TEST_CASE("[ASAttributeSet] Core Value and Bounds Logic") {
 		CHECK(attr_set->has_attribute(StringName("Mana")));
 	}
 }
-
-#endif // TEST_AS_ATTRIBUTE_SET_H

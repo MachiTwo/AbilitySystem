@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_AS_BASE_H
-#define TEST_AS_BASE_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/tests/doctest.h"
@@ -60,5 +59,3 @@ TEST_CASE("[AbilitySystem] Base Setup Validation") {
 		CHECK_FALSE(err_detector.has_error);
 	}
 }
-
-#endif // TEST_AS_BASE_H

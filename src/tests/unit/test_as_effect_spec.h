@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_AS_EFFECT_SPEC_H
-#define TEST_AS_EFFECT_SPEC_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/core/as_effect_spec.h"
@@ -166,5 +165,3 @@ TEST_CASE("[ASEffectSpec] Stack count and period timer") {
 		CHECK(spec->get_period_timer() == doctest::Approx(1.0f));
 	}
 }
-
-#endif // TEST_AS_EFFECT_SPEC_H

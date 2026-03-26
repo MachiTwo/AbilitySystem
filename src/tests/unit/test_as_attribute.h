@@ -28,8 +28,7 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-#ifndef TEST_AS_ATTRIBUTE_H
-#define TEST_AS_ATTRIBUTE_H
+#pragma once
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "src/resources/as_attribute.h"
@@ -135,5 +134,3 @@ TEST_CASE("[ASAttribute] clamp_value and is_valid_value") {
 		CHECK_FALSE(attr->is_valid_value(-1.0f));
 	}
 }
-
-#endif // TEST_AS_ATTRIBUTE_H
