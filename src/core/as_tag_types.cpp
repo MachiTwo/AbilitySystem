@@ -871,7 +871,11 @@ void ASTagUtils::history_dump(Node *p_target, float p_lookback_sec) {
 
 	Array changes = history_get_all_changes(p_target, p_lookback_sec);
 
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 	UtilityFunctions::print("=== AS Tag History Dump for ", p_target->get_name(), " (last ", String::num(p_lookback_sec), "s) ===");
+#else
+	print_line(vformat("=== AS Tag History Dump for %s (last %f s) ===", p_target->get_name(), p_lookback_sec));
+#endif
 
 	for (int i = 0; i < changes.size(); i++) {
 		Dictionary change = changes[i];
@@ -881,14 +885,26 @@ void ASTagUtils::history_dump(Node *p_target, float p_lookback_sec) {
 
 		if (type == "EVENT") {
 			float magnitude = change["magnitude"];
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 			UtilityFunctions::print("[", type, "] ", tag, " (mag:", String::num(magnitude), ") @ ", String::num(timestamp, 3));
+#else
+			print_line(vformat("[%s] %s (mag:%f) @ %f", type, tag, magnitude, timestamp));
+#endif
 		} else {
 			bool added = change["added"];
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 			UtilityFunctions::print("[", type, "] ", tag, " ", added ? "ADDED" : "REMOVED", " @ ", String::num(timestamp, 3));
+#else
+			print_line(vformat("[%s] %s %s @ %f", type, tag, added ? "ADDED" : "REMOVED", timestamp));
+#endif
 		}
 	}
 
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 	UtilityFunctions::print("=== End History Dump ===");
+#else
+	print_line("=== End History Dump ===");
+#endif
 }
 
 int ASTagUtils::history_get_total_size(Node *p_target) {

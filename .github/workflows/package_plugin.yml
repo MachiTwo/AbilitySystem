@@ -229,7 +229,6 @@ jobs:
         with:
           branch: ${{ github.ref_name }}
           commit_message: "build: update compiled plugin binaries [skip ci]"
-          file_pattern: "addons/"
 
       - name: Upload Final Plugin Artifact
         uses: actions/upload-artifact@v4.6.1

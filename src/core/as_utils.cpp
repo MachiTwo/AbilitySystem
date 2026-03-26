@@ -393,7 +393,7 @@ void ASStateCache::_bind_methods() {
 ASStateCache::ASStateCache() {
 	cache_buffer.resize(buffer_size);
 	ASStateCacheEntry *ptr = cache_buffer.ptrw();
-	for (int i = 0; i < buffer_size; i++) {
+	for (uint32_t i = 0; i < buffer_size; i++) {
 		ptr[i].tick = 0; // Mark as empty
 	}
 }
@@ -505,7 +505,7 @@ bool ASStateCache::restore_state(ASComponent *p_component, uint32_t p_tick) {
 
 void ASStateCache::clear() {
 	ASStateCacheEntry *ptr = cache_buffer.ptrw();
-	for (int i = 0; i < buffer_size; i++) {
+	for (uint32_t i = 0; i < buffer_size; i++) {
 		ptr[i].clear();
 	}
 	current_index = 0;
@@ -521,7 +521,7 @@ void ASStateCache::set_buffer_size(uint32_t p_size) {
 	buffer_size = p_size;
 	cache_buffer.resize(buffer_size);
 	ASStateCacheEntry *ptr = cache_buffer.ptrw();
-	for (int i = 0; i < buffer_size; i++) {
+	for (uint32_t i = 0; i < buffer_size; i++) {
 		ptr[i].tick = 0; // Mark as empty
 	}
 }
@@ -567,7 +567,7 @@ Array ASStateCache::serialize() const {
 void ASStateCache::deserialize(const Array &p_data) {
 	clear();
 	ASStateCacheEntry *ptr = cache_buffer.ptrw();
-	for (int i = 0; i < p_data.size() && i < buffer_size; i++) {
+	for (int i = 0; i < p_data.size() && (uint32_t)i < buffer_size; i++) {
 		ptr[i].from_dict(p_data[i]);
 	}
 }
