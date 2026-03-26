@@ -10,7 +10,7 @@
 ASBridgeState
 =============
 
-**Inherits:** ``LimboState``
+**Inherits:** ``RefCounted``
 
 LimboState with integrated Ability System support.
 

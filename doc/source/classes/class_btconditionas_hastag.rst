@@ -10,7 +10,7 @@
 BTConditionAS_HasTag
 ====================
 
-**Inherits:** ``BTCondition``
+**Inherits:** ``RefCounted``
 
 BTCondition that checks if the agent has a specific Ability System tag.
 
@@ -19,7 +19,7 @@ BTCondition that checks if the agent has a specific Ability System tag.
 Description
 -----------
 
-A Behavior Tree condition that checks if the actor's :ref:`ASComponent<class_ASComponent>` has a specific tag. Returns :ref:`BT.SUCCESS<class_BT_constant_SUCCESS>` if tag present, :ref:`BT.FAILURE<class_BT_constant_FAILURE>` otherwise.
+A Behavior Tree condition that checks if the actor's :ref:`ASComponent<class_ASComponent>` has a specific tag. Returns ``BT.SUCCESS`` if tag present, ``BT.FAILURE`` otherwise.
 
 Supports hierarchical matching (e.g., checking ``State`` matches ``State.Stunned``).
 

@@ -10,7 +10,7 @@
 BTConditionAS_CanActivate
 =========================
 
-**Inherits:** ``BTCondition``
+**Inherits:** ``RefCounted``
 
 BTCondition that checks if an ability can be activated.
 
@@ -21,7 +21,7 @@ Description
 
 A Behavior Tree condition that checks if an ability can be activated (requirements met, cooldown ready, costs affordable) without actually activating it.
 
-Uses :ref:`ASComponent.can_activate_ability_by_tag()<class_ASComponent_method_can_activate_ability_by_tag>`. Returns :ref:`BT.SUCCESS<class_BT_constant_SUCCESS>` if can activate, :ref:`BT.FAILURE<class_BT_constant_FAILURE>` otherwise.
+Uses :ref:`ASComponent.can_activate_ability_by_tag()<class_ASComponent_method_can_activate_ability_by_tag>`. Returns ``BT.SUCCESS`` if can activate, ``BT.FAILURE`` otherwise.
 
 .. rst-class:: classref-reftable-group
 

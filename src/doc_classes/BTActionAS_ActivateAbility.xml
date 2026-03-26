@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<class name="BTActionAS_ActivateAbility" inherits="BTAction" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../doc/class.xsd">
+<class name="BTActionAS_ActivateAbility" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../doc/class.xsd">
 	<brief_description>
 		BTAction that activates an Ability System ability by tag.
 	</brief_description>
 	<description>
-		A Behavior Tree action that attempts to activate an ability via [ASComponent] using the ability's tag. Returns [constant BT.SUCCESS] if activation succeeds, [constant BT.FAILURE] otherwise.
+		A Behavior Tree action that attempts to activate an ability via [ASComponent] using the ability's tag. Returns [code]BT.SUCCESS[/code] if activation succeeds, [code]BT.FAILURE[/code] otherwise.
 		This task respects all ability requirements: tags, cooldowns, costs, and level restrictions.
 	</description>
 	<tutorials>

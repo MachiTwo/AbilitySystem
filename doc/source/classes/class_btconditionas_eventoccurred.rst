@@ -10,7 +10,7 @@
 BTConditionAS_EventOccurred
 ===========================
 
-**Inherits:** ``BTCondition``
+**Inherits:** ``RefCounted``
 
 BTCondition that checks if an Ability System event occurred recently.
 
@@ -21,7 +21,7 @@ Description
 
 A Behavior Tree condition that checks if an :ref:`ASEventTag<class_ASEventTag>` occurred within a time window using the Events Historical buffer.
 
-Returns :ref:`BT.SUCCESS<class_BT_constant_SUCCESS>` if event found, :ref:`BT.FAILURE<class_BT_constant_FAILURE>` otherwise.
+Returns ``BT.SUCCESS`` if event found, ``BT.FAILURE`` otherwise.
 
 .. rst-class:: classref-reftable-group
 

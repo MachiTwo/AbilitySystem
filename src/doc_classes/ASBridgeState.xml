@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<class name="ASBridgeState" inherits="LimboState" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
+<class name="ASBridgeState" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
 	<brief_description>
 		LimboState with integrated Ability System support.
 	</brief_description>
 	<description>
-		A [LimboState] that integrates with Ability System. Provides automatic event dispatching on state transitions and event listening for automatic transitions.
+		A [code]LimboState[/code] that integrates with Ability System. Provides automatic event dispatching on state transitions and event listening for automatic transitions.
 		Can require specific tags to be present before entering, and dispatches AS events on [code]_enter[/code], [code]_exit[/code], and [code]_update[/code].
 	</description>
 	<tutorials>

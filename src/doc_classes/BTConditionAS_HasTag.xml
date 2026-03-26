@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<class name="BTConditionAS_HasTag" inherits="BTCondition" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../doc/class.xsd">
+<class name="BTConditionAS_HasTag" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../doc/class.xsd">
 	<brief_description>
 		BTCondition that checks if the agent has a specific Ability System tag.
 	</brief_description>
 	<description>
-		A Behavior Tree condition that checks if the actor's [ASComponent] has a specific tag. Returns [constant BT.SUCCESS] if tag present, [constant BT.FAILURE] otherwise.
+		A Behavior Tree condition that checks if the actor's [ASComponent] has a specific tag. Returns [code]BT.SUCCESS[/code] if tag present, [code]BT.FAILURE[/code] otherwise.
 		Supports hierarchical matching (e.g., checking [code]State[/code] matches [code]State.Stunned[/code]).
 	</description>
 	<tutorials>
