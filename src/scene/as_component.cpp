@@ -284,15 +284,24 @@ void ASComponent::_notification(int p_what) {
 		case NOTIFICATION_READY: {
 			// Validate parent is CharacterBody2D or CharacterBody3D
 			Node *parent = get_parent();
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 			if (!parent || (!Object::cast_to<godot::CharacterBody2D>(parent) && !Object::cast_to<godot::CharacterBody3D>(parent))) {
+#else
+			if (!parent || (!Object::cast_to<::CharacterBody2D>(parent) && !Object::cast_to<::CharacterBody3D>(parent))) {
+#endif
 				ERR_PRINT("ASComponent FATAL: Can only be child of CharacterBody2D or CharacterBody3D. Disabling component.");
 				set_physics_process(false);
 				return;
 			}
 
 			// Cache the validated CharacterBody parent
-			character_body_2d = (::CharacterBody2D *)Object::cast_to<godot::CharacterBody2D>(parent);
-			character_body_3d = (::CharacterBody3D *)Object::cast_to<godot::CharacterBody3D>(parent);
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+			character_body_2d = Object::cast_to<godot::CharacterBody2D>(parent);
+			character_body_3d = Object::cast_to<godot::CharacterBody3D>(parent);
+#else
+			character_body_2d = Object::cast_to<::CharacterBody2D>(parent);
+			character_body_3d = Object::cast_to<::CharacterBody3D>(parent);
+#endif
 
 			if (container.is_valid()) {
 				apply_container(container);
@@ -2233,31 +2242,31 @@ void ASComponent::dispatch_event(const StringName &p_tag, Node *p_instigator, fl
 		return;
 	}
 
-	ASEventTagData data;
-	data.event_tag = p_tag;
-	data.set_instigator(p_instigator);
-	data.set_target(this);
-	data.magnitude = p_magnitude;
-	data.custom_payload = p_custom_payload;
+	ASEventTagData event_data;
+	event_data.event_tag = p_tag;
+	event_data.set_instigator(p_instigator);
+	event_data.set_target(this);
+	event_data.magnitude = p_magnitude;
+	event_data.custom_payload = p_custom_payload;
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
-	data.timestamp = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+	double current_time = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
 #else
-	data.timestamp = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
+	double current_time = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
 #endif
 
-	data.tick_id = current_tick;
-
 	ASEventTagHistoricalEntry entry;
-	entry.data = data;
-	entry.tick = current_tick;
-
+	entry.tag_name = p_tag;
+	entry.set_target(this);
+	entry.timestamp = current_time;
+	entry.tick_id = current_tick;
+	entry.magnitude = p_magnitude;
 	_event_history.push_back(entry);
 	if (_event_history.size() > _event_history_max_size) {
 		_event_history.remove_at(0);
 	}
 
-	// Trigger abilities waiting for this event
+	AbilitySystem::get_singleton()->broadcast_event(p_tag, event_data); // Trigger abilities waiting for this event
 	_handle_ability_triggers(p_tag, ASAbility::TRIGGER_ON_EVENT);
 
 	emit_signal("event_received", p_tag, p_instigator, p_magnitude, p_custom_payload);
