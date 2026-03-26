@@ -1,27 +1,28 @@
 name: Bug report
-description: Report a bug with the godot-cpp template
+description: Report a bug with the Ability System
 body:
 
 - type: markdown
   attributes:
     value: |
       - Write a descriptive issue title above.
-      - Search [open](https://github.com/godotengine/godot-cpp-template/issues) and [closed](https://github.com/godotengine/godot-cpp-template/issues?q=is%3Aissue+is%3Aclosed) issues to ensure it has not already been reported.
+      - Search [open](https://github.com/MachiTwo/AbilitySystem/issues) and [closed](https://github.com/MachiTwo/AbilitySystem/issues?q=is%3Aissue+is%3Aclosed) issues to ensure it has not already been reported.
+
 - type: input
   attributes:
-    label: Zyris version
+    label: Zyris Engine version
     description: >
-      Specify the Git commit hash of your Zyris build.
-    placeholder: v4.0.stable.official [92bee43ad]
+      Specify the Git commit hash or exact version of your Zyris Engine build.
+    placeholder: v4.x.stable [92bee43ad]
   validations:
     required: true
 
 - type: input
   attributes:
-    label: godot-cpp version
+    label: Ability System version
     description: >
-      Specify the Git commit hash of the godot-cpp submodule in your demo. You can run `git status` inside the folder to check it.
-    placeholder: v4.0.stable.official [9d1c396c5]
+      Specify the version or Git commit hash of the Ability System plugin you are using.
+    placeholder: v0.1.0-stable [9d1c396c5]
   validations:
     required: true
 
@@ -29,8 +30,8 @@ body:
   attributes:
     label: System information
     description: |
-      Specify the OS version.
-    placeholder: Windows 10
+      Specify your Operating System and architecture.
+    placeholder: Windows 11 x86_64
   validations:
     required: true
 

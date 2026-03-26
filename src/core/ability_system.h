@@ -96,6 +96,8 @@ public:
 	void unregister_resource_name(const String &p_name);
 	uint64_t get_resource_name_owner(const String &p_name) const;
 
+	int run_tests();
+
 	// Helper to check if a tag matches another (hierarchical)
 	static bool tag_matches(const StringName &p_tag, const StringName &p_match_against, bool p_exact = false);
 

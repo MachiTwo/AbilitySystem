@@ -183,6 +183,11 @@ sources += Glob("src/bin/editor/*.cpp")
 sources += Glob("src/bin/compat/*.cpp")
 sources += Glob("src/bin/bridge/*.cpp")
 
+tests_arg = ARGUMENTS.get("tests", env.get("tests", "no"))
+if tests_arg in ["unit", "yes"]:
+    env.VariantDir("src/bin/tests", "src/tests", duplicate=0)
+    sources += Glob("src/bin/tests/*.cpp")
+
 # Collect LimboAI sources if available
 if os.path.isdir("limboai"):
     env.VariantDir("src/bin/limboai", "limboai", duplicate=0)

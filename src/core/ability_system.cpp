@@ -53,6 +53,7 @@ using namespace godot;
 AbilitySystem *AbilitySystem::singleton = nullptr;
 
 void AbilitySystem::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("run_tests"), &AbilitySystem::run_tests);
 	ClassDB::bind_method(D_METHOD("register_tag", "tag", "type", "owner_id"), &AbilitySystem::register_tag, DEFVAL(ASTagType::NAME), DEFVAL(0));
 	ClassDB::bind_method(D_METHOD("rename_tag", "old_tag", "new_tag"), &AbilitySystem::rename_tag);
 	ClassDB::bind_method(D_METHOD("is_tag_registered", "tag"), &AbilitySystem::is_tag_registered);
@@ -337,6 +338,19 @@ bool AbilitySystem::tag_matches(const StringName &p_tag, const StringName &p_mat
 	}
 
 	return false;
+}
+
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+extern int run_gdextension_tests();
+#endif
+
+int AbilitySystem::run_tests() {
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	return run_gdextension_tests();
+#else
+	// In Module mode, tests are executed natively by Godot Engine via --test flag.
+	return 0;
+#endif
 }
 
 AbilitySystem::AbilitySystem() {

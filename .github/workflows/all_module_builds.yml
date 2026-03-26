@@ -117,10 +117,7 @@ jobs:
       matrix:
         target: [editor, template_release, template_debug]
         arch: [arm64]
-        module: [standard, mono]
-        exclude:
-          - target: editor
-            module: mono
+        module: [standard]
     uses: ./.github/workflows/android_module_builds.yml
     with:
       target: ${{ matrix.target }}

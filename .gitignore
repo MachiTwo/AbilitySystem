@@ -114,3 +114,4 @@ CMakeUserPresets.json
 /tmp-integration-dl
 /limboai
 *.tmp
+/godot

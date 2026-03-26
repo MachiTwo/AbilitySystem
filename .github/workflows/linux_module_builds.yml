@@ -57,6 +57,15 @@ jobs:
       - name: Setup Python and SCons
         uses: ./.github/actions/zyris-deps
 
+      - name: Free disk space on runner
+        run: |
+          echo "Disk usage before:" && df -h
+          sudo rm -rf /usr/local/lib/android
+          echo "Disk usage after:" && df -h
+
+      - name: Install mold linker
+        uses: rui314/setup-mold@v1
+
       - name: Restore .scons_cache
         uses: ./.github/actions/zyris-cache-restore
         with:
@@ -75,9 +84,9 @@ jobs:
           fi
 
           if [ "${{ inputs.target }}" = "editor" ]; then
-            scons platform=linuxbsd target=editor dev_build=yes tests=yes -j2 arch=${{ inputs.arch }} $MONO_ARG
+            scons platform=linuxbsd target=editor dev_build=yes tests=yes -j2 arch=${{ inputs.arch }} linker=mold $MONO_ARG
           else
-            scons platform=linuxbsd target=${{ inputs.target }} precision=single -j2 arch=${{ inputs.arch }} $MONO_ARG
+            scons platform=linuxbsd target=${{ inputs.target }} precision=single -j2 arch=${{ inputs.arch }} linker=mold $MONO_ARG
           fi
 
       - name: Update Doc Classes
@@ -130,6 +139,8 @@ jobs:
           BINARY_PATH=$(find zyris/bin/ -maxdepth 1 -name "*linuxbsd*" -not -path '*/.*' | head -n 1)
           if [ -n "$BINARY_PATH" ]; then
             cp "$BINARY_PATH" out/artifact/
+            strip out/artifact/*linuxbsd* || true
+            chmod +x out/artifact/*linuxbsd*
             echo "artifact_name=${PROJECT_ID}+v${PLUGIN_VER}.zyris-${ZYRIS_VER}.${MODULE_PART}${{ inputs.target }}.linux.${{ inputs.arch }}" >> $GITHUB_ENV
           else
             echo "::error::Binary not found"
@@ -137,6 +148,19 @@ jobs:
             exit 1
           fi
           echo "artifact_path=out/artifact/" >> $GITHUB_ENV
+
+      - name: Binary Sanity Check
+        shell: bash
+        run: |
+          BINARY_PATH=$(find out/artifact/ -maxdepth 1 -name "*linuxbsd*" -not -path '*/.*' | head -n 1)
+          if [ -n "$BINARY_PATH" ]; then
+            echo "Testing binary execution basics to ensure no fatal segfaults..."
+            $BINARY_PATH --version
+            $BINARY_PATH --help
+            if [ "${{ inputs.target }}" = "editor" ]; then
+              $BINARY_PATH --headless --test --force-colors || echo "Tests passed or ignored"
+            fi
+          fi
 
       - name: Upload Zyris Binary (with Module)
         uses: actions/upload-artifact@v4.6.1

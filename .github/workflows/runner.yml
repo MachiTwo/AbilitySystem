@@ -26,55 +26,153 @@ permissions:
   contents: write
   actions: read
 
-
 jobs:
-  check-all:
-    name: ✅ Checks & Versioning
-    uses: ./.github/workflows/check_all.yml
+  pre-commit:
+    name: ⚙️ Pre-commit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      - name: Code style checks
+        uses: pre-commit/action@v3.0.1
+        with:
+          extra_args: --all-files
+
+  init-version:
+    name: 🏁 Init Version
+    runs-on: ubuntu-latest
+    outputs:
+      name-prefix: ${{ steps.init.outputs.name-prefix }}
+      plugin-version: ${{ steps.init.outputs.plugin-version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          fetch-depth: 0
+      - name: Init version vars
+        id: init
+        uses: ./.github/actions/init-version
 
   module-builds:
     name: 🏗️ Module Builds
     if: |
       (github.event_name != 'workflow_dispatch' || inputs.build_modules == true) &&
       !contains(github.event.head_commit.message, '[module skip]')
-    needs: [check-all]
+    needs: [pre-commit, init-version]
     uses: ./.github/workflows/all_module_builds.yml
     with:
-      plugin-version: ${{ needs.check-all.outputs.plugin-version }}
+      plugin-version: ${{ needs.init-version.outputs.plugin-version }}
 
   gdextension-builds:
     name: 🧩 GDExtension Builds
     if: |
       (github.event_name != 'workflow_dispatch' || inputs.build_gdextension == true) &&
       !contains(github.event.head_commit.message, '[gdextension skip]')
-    needs: [check-all]
+    needs: [pre-commit, init-version]
     uses: ./.github/workflows/all_gdextension_builds.yml
     with:
-      plugin-version: ${{ needs.check-all.outputs.plugin-version }}
+      plugin-version: ${{ needs.init-version.outputs.plugin-version }}
 
   package-plugin:
     name: 📦 Package Plugin
     if: |
       always() &&
-      needs.check-all.result == 'success' &&
+      needs.init-version.result == 'success' &&
       needs.gdextension-builds.result == 'success'
-    needs: [check-all, gdextension-builds]
+    needs: [init-version, gdextension-builds]
     uses: ./.github/workflows/package_plugin.yml
     with:
       tag_name: ${{ github.ref_name }}
-      plugin_version: ${{ needs.check-all.outputs.plugin-version }}
+      plugin_version: ${{ needs.init-version.outputs.plugin-version }}
       is_release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
   post-release:
-    name: 🚀 Post Release (Final Delivery)
+    name: 🚀 Final Delivery (GitHub Release)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: read
     if: |
       always() &&
-      needs.check-all.result == 'success' &&
+      needs.init-version.result == 'success' &&
       needs.package-plugin.result == 'success' &&
       needs.module-builds.result == 'success'
-    needs: [check-all, module-builds, package-plugin]
-    uses: ./.github/workflows/post_release.yml
-    with:
-      tag_name: ${{ github.ref_name }}
-      plugin_version: ${{ needs.check-all.outputs.plugin-version }}
-      is_release: ${{ startsWith(github.ref, 'refs/tags/v') }}
+    needs: [init-version, module-builds, package-plugin]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Download all matching Artifacts
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p out
+          mkdir -p temp
+          # Fetch all artifacts for the current run
+          ARTIFACTS=$(gh api repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)
+
+          # Download all matching artifacts
+          echo $ARTIFACTS | jq -c '.artifacts[]' | while read i; do
+            NAME=$(echo $i | jq -r '.name')
+            ID=$(echo $i | jq -r '.id')
+
+            # Filter by project prefix
+            if [[ "$NAME" == "${{ env.PROJECT_ID }}+v"* ]]; then
+              # Group templates
+              if [[ "$NAME" == *"template_debug"* ]] || [[ "$NAME" == *"template_release"* ]]; then
+                GROUP_NAME="${NAME/template_debug/templates}"
+                GROUP_NAME="${GROUP_NAME/template_release/templates}"
+
+                echo "Downloading template artifact: $NAME into $GROUP_NAME"
+                mkdir -p "temp/$GROUP_NAME"
+                gh api repos/${{ github.repository }}/actions/artifacts/$ID/zip > "temp_zip.zip"
+                unzip -q -o temp_zip.zip -d "temp/$GROUP_NAME/"
+                rm temp_zip.zip
+              else
+                FILENAME="$NAME"
+                if [[ "$FILENAME" != *.zip ]]; then
+                  FILENAME="$FILENAME.zip"
+                fi
+                echo "Downloading artifact: $NAME as $FILENAME"
+                gh api repos/${{ github.repository }}/actions/artifacts/$ID/zip > "out/$FILENAME"
+              fi
+            else
+              echo "Skipping artifact: $NAME"
+            fi
+          done
+
+      - name: Package Grouped Templates
+        shell: bash
+        run: |
+          for d in temp/*; do
+            if [ -d "$d" ]; then
+              cd "$d"
+              zip -r "../../out/$(basename "$d").zip" *
+              cd ../..
+            fi
+          done
+          rm -rf temp
+
+      - name: List Artifacts for Verification
+        shell: bash
+        run: |
+          echo "Files ready for delivery:"
+          ls -R out/
+
+      - name: Create GitHub Release
+        if: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        uses: softprops/action-gh-release@v2.2.1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: ${{ env.PROJECT_ID }} v${{ needs.init-version.outputs.plugin-version }}
+          body_path: release_note.md
+          draft: false
+          prerelease: false
+          files: |
+            out/*.zip

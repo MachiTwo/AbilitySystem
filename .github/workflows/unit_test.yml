@@ -1,0 +1,65 @@
+name: 🧪 Unit Tests (Linux GDExtension)
+
+on:
+  workflow_call:
+    inputs:
+      godot-bin-name:
+        required: true
+        type: string
+  workflow_dispatch:
+
+jobs:
+  test-unit-gdextension:
+    name: 🧩 Pure AbilitySystem (Unit)
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Ability System
+        uses: actions/checkout@v4.2.2
+
+      - name: Checkout godot-cpp
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: godotengine/godot-cpp
+          ref: '4.2' # Or extract from deps.env
+          path: godot-cpp
+          submodules: recursive
+
+      - name: Setup godot-cpp
+        uses: ./godot-cpp/.github/actions/setup-godot-cpp
+        with:
+          platform: linux
+
+      # DO NOT checkout LimboAI! This guarantees pure AbilitySystem testing.
+      - name: Build GDExtension (Without LimboAI)
+        shell: bash
+        run: |
+          # SCons automatically disables LimboAI and ASBridge if the 'limboai' folder is missing!
+          scons target=template_debug platform=linux arch=x86_64 tests=unit
+
+      - name: Download Godot Engine
+        # Here we would download the matching Godot Engine headless executable
+        # using the inputs.godot-bin-name from the infrastructure job, or fallback to an official release.
+        run: |
+          wget https://github.com/godotengine/godot-builds/releases/download/4.2.2-stable/Godot_v4.2.2-stable_linux.x86_64.zip
+          unzip Godot_v4.2.2-stable_linux.x86_64.zip
+          mv Godot_v4.2.2-stable_linux.x86_64 godot_headless
+          chmod +x godot_headless
+
+      - name: Run GDExtension Test Runner
+        run: |
+          # Creates a mock Godot project and a GDScript test runner
+          mkdir -p test_project
+          cp -r addons test_project/
+          echo 'config_version=5' > test_project/project.godot
+
+          # GDScript runner that hooks into the C++ `AbilitySystem::run_tests()`
+          echo '
+          extends SceneTree
+          func _init():
+              print("Firing AS Unit Tests...")
+              var result = AbilitySystem.run_tests()
+              quit(result)
+          ' > test_project/run_tests.gd
+
+          # Run headless tests using the standalone engine loading the GDExtension DLL
+          ./godot_headless --path test_project --headless -s run_tests.gd
