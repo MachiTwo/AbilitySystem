@@ -204,7 +204,6 @@ public:
 	virtual void reset();
 
 	LimboHSM() = default;
-	~LimboHSM() = default;
 };
 
 #endif // !LIMBOAI_MODULE
