@@ -125,8 +125,10 @@ static ASBridge *as_bridge = nullptr;
 
 void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 #endif
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 	// Initialize LimboAI module for every level (it handles internally)
 	initialize_limboai_module(p_level);
+#endif
 
 	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
 		GDREGISTER_CLASS(AbilitySystem);
@@ -210,8 +212,10 @@ void uninitialize_ability_system_module(ModuleInitializationLevel p_level) {
 		}
 	}
 
+#ifdef ABILITY_SYSTEM_GDEXTENSION
 	// Uninitialize LimboAI module (it handles internally)
 	uninitialize_limboai_module(p_level);
+#endif
 }
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
