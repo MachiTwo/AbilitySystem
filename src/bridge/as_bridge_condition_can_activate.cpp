@@ -32,8 +32,6 @@
 
 #include "as_bridge.h"
 
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
-
 void BTConditionAS_CanActivate::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_ability_tag", "tag"), &BTConditionAS_CanActivate::set_ability_tag);
 	ClassDB::bind_method(D_METHOD("get_ability_tag"), &BTConditionAS_CanActivate::get_ability_tag);
@@ -65,5 +63,3 @@ BT::Status BTConditionAS_CanActivate::_tick(double p_delta) {
 	bool can_activate = asc->can_activate_ability_by_tag(ability_tag);
 	return can_activate ? BT::SUCCESS : BT::FAILURE;
 }
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

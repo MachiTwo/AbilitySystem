@@ -41,6 +41,24 @@ using namespace godot;
 // BBVariable Implementation
 // ============================================================================
 
+void BBVariable::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("set_value", "value"), &BBVariable::set_value);
+	ClassDB::bind_method(D_METHOD("get_value"), &BBVariable::get_value);
+
+	ClassDB::bind_method(D_METHOD("set_type", "type"), &BBVariable::set_type);
+	ClassDB::bind_method(D_METHOD("get_type"), &BBVariable::get_type);
+
+	ClassDB::bind_method(D_METHOD("set_hint", "hint"), &BBVariable::set_hint);
+	ClassDB::bind_method(D_METHOD("get_hint"), &BBVariable::get_hint);
+
+	ClassDB::bind_method(D_METHOD("set_hint_string", "hint_string"), &BBVariable::set_hint_string);
+	ClassDB::bind_method(D_METHOD("get_hint_string"), &BBVariable::get_hint_string);
+
+	ClassDB::bind_method(D_METHOD("bind_to_property", "object", "property"), &BBVariable::bind_to_property);
+	ClassDB::bind_method(D_METHOD("unbind"), &BBVariable::unbind);
+	ClassDB::bind_method(D_METHOD("is_bound_to_property"), &BBVariable::is_bound_to_property);
+}
+
 BBVariable::BBVariable(const Variant &p_value) {
 	value = p_value;
 	type = value.get_type();
@@ -110,15 +128,16 @@ void Blackboard::_bind_methods() {
 }
 
 void Blackboard::set_var(const StringName &p_name, const Variant &p_value) {
-	BBVariable var(p_value);
+	Ref<BBVariable> var;
+	var.instantiate();
+	var->set_value(p_value);
 	variables[p_name] = var;
 }
 
 Variant Blackboard::get_var(const StringName &p_name, const Variant &p_default) const {
 	// Check local variables first
-	const BBVariable *local_var = variables.getptr(p_name);
-	if (local_var) {
-		return local_var->get_value();
+	if (variables.has(p_name)) {
+		return variables[p_name]->get_value();
 	}
 
 	// Check parent blackboard (hierarchical scoping)
@@ -146,9 +165,8 @@ void Blackboard::erase_var(const StringName &p_name) {
 }
 
 void Blackboard::bind_var_to_property(const StringName &p_var_name, Object *p_object, const StringName &p_property) {
-	BBVariable *var = variables.getptr(p_var_name);
-	if (var) {
-		var->bind_to_property(p_object, p_property);
+	if (variables.has(p_var_name)) {
+		variables[p_var_name]->bind_to_property(p_object, p_property);
 	}
 }
 
@@ -192,10 +210,12 @@ void BlackboardPlan::_bind_methods() {
 
 void BlackboardPlan::add_variable(const StringName &p_name, const Variant &p_default_value,
 		Variant::Type p_type, PropertyHint p_hint, const String &p_hint_string) {
-	BBVariable var(p_default_value);
-	var.set_type(p_type);
-	var.set_hint(p_hint);
-	var.set_hint_string(p_hint_string);
+	Ref<BBVariable> var;
+	var.instantiate();
+	var->set_value(p_default_value);
+	var->set_type(p_type);
+	var->set_hint(p_hint);
+	var->set_hint_string(p_hint_string);
 	variables[p_name] = var;
 }
 
@@ -207,12 +227,11 @@ bool BlackboardPlan::has_variable(const StringName &p_name) const {
 	return variables.has(p_name);
 }
 
-BBVariable BlackboardPlan::get_variable_definition(const StringName &p_name) const {
-	const BBVariable *var = variables.getptr(p_name);
-	if (var) {
-		return *var;
+Ref<BBVariable> BlackboardPlan::get_variable_definition(const StringName &p_name) const {
+	if (variables.has(p_name)) {
+		return variables[p_name];
 	}
-	return BBVariable();
+	return Ref<BBVariable>();
 }
 
 Array BlackboardPlan::get_variable_names() const {
@@ -259,7 +278,7 @@ Ref<Blackboard> BlackboardPlan::create_blackboard(Node *p_agent) {
 
 	// Initialize variables with default values
 	for (const auto &E : variables) {
-		blackboard->set_var(E.key, E.value.get_value());
+		blackboard->set_var(E.key, E.value->get_value());
 	}
 
 	return blackboard;

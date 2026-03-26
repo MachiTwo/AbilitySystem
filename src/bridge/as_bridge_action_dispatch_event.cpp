@@ -32,8 +32,6 @@
 
 #include "as_bridge.h"
 
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
-
 void BTActionAS_DispatchEvent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_event_tag", "tag"), &BTActionAS_DispatchEvent::set_event_tag);
 	ClassDB::bind_method(D_METHOD("get_event_tag"), &BTActionAS_DispatchEvent::get_event_tag);
@@ -83,5 +81,3 @@ BT::Status BTActionAS_DispatchEvent::_tick(double p_delta) {
 
 	return BT::SUCCESS; // Dispatch is always immediate
 }
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

@@ -41,13 +41,13 @@ using namespace godot;
 LimboTaskDB *LimboTaskDB::singleton = nullptr;
 
 void LimboTaskDB::_bind_methods() {
-	ClassDB::bind_method(D_METHOD("register_task", "class_name"), &LimboTaskDB::register_task);
+	ClassDB::bind_method(D_METHOD("register_task_name", "class_name"), &LimboTaskDB::register_task_name);
 	ClassDB::bind_method(D_METHOD("is_task_registered", "class_name"), &LimboTaskDB::is_task_registered);
 	ClassDB::bind_method(D_METHOD("get_registered_tasks"), &LimboTaskDB::get_registered_tasks);
 	ClassDB::bind_method(D_METHOD("is_available"), &LimboTaskDB::is_available);
 }
 
-void LimboTaskDB::register_task(const StringName &p_class_name) {
+void LimboTaskDB::register_task_name(const StringName &p_class_name) {
 #ifdef LIMBOAI_MODULE
 	// Real implementation when LimboAI module is available
 	// This would call the actual LimboAI TaskDB registration

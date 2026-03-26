@@ -32,8 +32,6 @@
 
 #include "as_bridge.h"
 
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
-
 void BTActionAS_ActivateAbility::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_ability_tag", "tag"), &BTActionAS_ActivateAbility::set_ability_tag);
 	ClassDB::bind_method(D_METHOD("get_ability_tag"), &BTActionAS_ActivateAbility::get_ability_tag);
@@ -86,5 +84,3 @@ BT::Status BTActionAS_ActivateAbility::_tick(double p_delta) {
 		return BT::FAILURE;
 	}
 }
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

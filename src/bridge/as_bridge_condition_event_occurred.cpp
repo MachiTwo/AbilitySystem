@@ -32,8 +32,6 @@
 
 #include "as_bridge.h"
 
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
-
 void BTConditionAS_EventOccurred::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_event_tag", "tag"), &BTConditionAS_EventOccurred::set_event_tag);
 	ClassDB::bind_method(D_METHOD("get_event_tag"), &BTConditionAS_EventOccurred::get_event_tag);
@@ -69,5 +67,3 @@ BT::Status BTConditionAS_EventOccurred::_tick(double p_delta) {
 	bool occurred = asc->has_event_occurred(event_tag, time_window);
 	return occurred ? BT::SUCCESS : BT::FAILURE;
 }
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

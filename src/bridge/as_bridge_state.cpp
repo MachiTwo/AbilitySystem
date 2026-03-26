@@ -32,8 +32,6 @@
 
 #include "as_bridge.h"
 
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
-
 void ASBridgeState::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_asc_node_path", "path"), &ASBridgeState::set_asc_node_path);
 	ClassDB::bind_method(D_METHOD("get_asc_node_path"), &ASBridgeState::get_asc_node_path);
@@ -184,5 +182,3 @@ void ASBridgeState::dispatch_event(const StringName &p_event) {
 
 	asc->dispatch_event(p_event, agent, 1.0f, Dictionary());
 }
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

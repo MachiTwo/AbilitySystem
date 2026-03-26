@@ -32,6 +32,7 @@
 #include "../compat/limboai_blackboard.h"
 #include "../compat/limboai_bt.h"
 #include "../compat/limboai_hsm.h"
+#include "../compat/limboai_macros.h"
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include <godot_cpp/classes/engine.hpp>
@@ -106,34 +107,19 @@ void ASBridge::shutdown() {
 }
 
 void ASBridge::_register_bt_actions() {
-#if defined(LIMBOAI_MODULE) || defined(LIMBOAI_GDEXTENSION)
 	LIMBO_REGISTER_TASK(BTActionAS_ActivateAbility);
 	LIMBO_REGISTER_TASK(BTActionAS_DispatchEvent);
 	LIMBO_REGISTER_TASK(BTActionAS_WaitForEvent);
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-	UtilityFunctions::print("ASBridge: Registered BTAction tasks");
-#endif
-#endif
 }
 
 void ASBridge::_register_bt_conditions() {
-#if defined(LIMBOAI_MODULE) || defined(LIMBOAI_GDEXTENSION)
 	LIMBO_REGISTER_TASK(BTConditionAS_HasTag);
 	LIMBO_REGISTER_TASK(BTConditionAS_CanActivate);
 	LIMBO_REGISTER_TASK(BTConditionAS_EventOccurred);
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-	UtilityFunctions::print("ASBridge: Registered BTCondition tasks");
-#endif
-#endif
 }
 
 void ASBridge::_register_limbo_states() {
-#if defined(LIMBOAI_MODULE) || defined(LIMBOAI_GDEXTENSION)
 	GDREGISTER_CLASS(ASBridgeState);
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-	UtilityFunctions::print("ASBridge: Registered ASBridgeState");
-#endif
-#endif
 }
 
 ASComponent *ASBridge::resolve_asc(Node *p_agent, const NodePath &p_asc_path) {

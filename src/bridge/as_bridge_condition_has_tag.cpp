@@ -32,8 +32,6 @@
 
 #include "as_bridge.h"
 
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
-
 void BTConditionAS_HasTag::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_tag", "tag"), &BTConditionAS_HasTag::set_tag);
 	ClassDB::bind_method(D_METHOD("get_tag"), &BTConditionAS_HasTag::get_tag);
@@ -69,5 +67,3 @@ BT::Status BTConditionAS_HasTag::_tick(double p_delta) {
 	bool result = asc->has_tag(tag);
 	return result ? BT::SUCCESS : BT::FAILURE;
 }
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

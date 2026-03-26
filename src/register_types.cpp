@@ -67,6 +67,9 @@
 #include "src/bridge/as_bridge_condition_event_occurred.h"
 #include "src/bridge/as_bridge_condition_has_tag.h"
 #include "src/bridge/as_bridge_state.h"
+#include "src/compat/limboai_blackboard.h"
+#include "src/compat/limboai_string_names.h"
+#include "src/compat/limboai_utility.h"
 
 #ifdef TOOLS_ENABLED
 #include "src/editor/as_editor_plugin.h"
@@ -153,6 +156,15 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 		GDREGISTER_CLASS(ASComponent);
 		GDREGISTER_CLASS(ASDelivery);
 
+		// Register LimboAI compat classes (only functional if real LimboAI absent)
+#if !defined(LIMBOAI_MODULE) && !defined(LIMBOAI_GDEXTENSION)
+		GDREGISTER_CLASS(BBVariable);
+		GDREGISTER_CLASS(Blackboard);
+		GDREGISTER_CLASS(BlackboardPlan);
+		GDREGISTER_CLASS(LimboUtility);
+		LimboStringNames::create();
+#endif
+
 		// Register AS Bridge classes (only functional if LimboAI present)
 		GDREGISTER_CLASS(ASBridge);
 		GDREGISTER_CLASS(BTActionAS_ActivateAbility);
@@ -195,6 +207,9 @@ void uninitialize_as_module(ModuleInitializationLevel p_level) {
 void uninitialize_ability_system_module(ModuleInitializationLevel p_level) {
 #endif
 	if (p_level == MODULE_INITIALIZATION_LEVEL_SCENE) {
+#if !defined(LIMBOAI_MODULE) && !defined(LIMBOAI_GDEXTENSION)
+		LimboStringNames::free();
+#endif
 		if (as_bridge) {
 			as_bridge->shutdown();
 			memdelete(as_bridge);

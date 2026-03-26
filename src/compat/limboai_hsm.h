@@ -62,6 +62,7 @@
 #include <godot_cpp/templates/hash_map.hpp>
 #include <godot_cpp/templates/vector.hpp>
 #include <godot_cpp/variant/string_name.hpp>
+#include <godot_cpp/variant/typed_array.hpp>
 #include <godot_cpp/variant/variant.hpp>
 using namespace godot;
 #else
@@ -69,6 +70,7 @@ using namespace godot;
 #include "core/string/string_name.h"
 #include "core/templates/hash_map.h"
 #include "core/templates/vector.h"
+#include "core/variant/typed_array.h"
 #include "core/variant/variant.h"
 #include "scene/main/node.h"
 #endif
@@ -76,15 +78,22 @@ using namespace godot;
 // Forward declarations
 class LimboState;
 class LimboHSM;
+class Blackboard;
 
 /**
  * Update modes for LimboState execution
  */
-enum class UpdateMode {
-	IDLE, // Use _process
-	PHYSICS, // Use _physics_process
-	MANUAL // Manual tick calls
+namespace LimboHSM_Compat {
+enum UpdateMode {
+	UPDATE_IDLE, // Use _process
+	UPDATE_PHYSICS, // Use _physics_process
+	UPDATE_MANUAL // Manual tick calls
 };
+}
+
+using UpdateMode = LimboHSM_Compat::UpdateMode;
+
+VARIANT_ENUM_CAST(LimboHSM_Compat::UpdateMode)
 
 /**
  * LimboState - Base class for Hierarchical State Machine states
@@ -97,9 +106,10 @@ class LimboState : public RefCounted {
 
 private:
 	String state_name;
-	UpdateMode update_mode = UpdateMode::IDLE;
+	UpdateMode update_mode = LimboHSM_Compat::UPDATE_IDLE;
 	bool active = false;
 	Node *agent = nullptr;
+	Ref<Blackboard> blackboard;
 	Vector<Ref<LimboState>> substates;
 	Ref<LimboState> current_substate;
 	Ref<LimboState> parent_state;
@@ -124,10 +134,14 @@ public:
 	virtual void set_agent(Node *p_agent) { agent = p_agent; }
 	virtual Node *get_agent() const { return agent; }
 
+	// Blackboard
+	virtual void set_blackboard(const Ref<Blackboard> &p_blackboard) { blackboard = p_blackboard; }
+	virtual Ref<Blackboard> get_blackboard() const { return blackboard; }
+
 	// Substate management (for composite states)
 	virtual void add_substate(const Ref<LimboState> &p_substate);
 	virtual void remove_substate(const Ref<LimboState> &p_substate);
-	virtual Vector<Ref<LimboState>> get_substates() const { return substates; }
+	virtual TypedArray<LimboState> get_substates() const;
 
 	// Transitions
 	virtual void transition_to(const Ref<LimboState> &p_state);
@@ -137,8 +151,8 @@ public:
 	virtual void set_state_name(const String &p_name) { state_name = p_name; }
 	virtual String get_state_name() const { return state_name; }
 
-	virtual void set_update_mode(UpdateMode p_mode) { update_mode = p_mode; }
-	virtual UpdateMode get_update_mode() const { return update_mode; }
+	virtual void set_update_mode(LimboHSM_Compat::UpdateMode p_mode) { update_mode = p_mode; }
+	virtual LimboHSM_Compat::UpdateMode get_update_mode() const { return update_mode; }
 
 	// Hierarchy
 	virtual void set_parent_state(const Ref<LimboState> &p_parent) { parent_state = p_parent; }
@@ -159,7 +173,8 @@ private:
 	Ref<LimboState> current_state;
 	Ref<LimboState> initial_state;
 	Node *agent = nullptr;
-	UpdateMode update_mode = UpdateMode::IDLE;
+	Ref<Blackboard> blackboard;
+	UpdateMode update_mode = LimboHSM_Compat::UPDATE_IDLE;
 	bool active = false;
 
 protected:
@@ -173,13 +188,17 @@ public:
 	virtual void set_active(bool p_active);
 	virtual bool is_active() const { return active; }
 
+	// Blackboard
+	virtual void set_blackboard(const Ref<Blackboard> &p_blackboard) { blackboard = p_blackboard; }
+	virtual Ref<Blackboard> get_blackboard() const { return blackboard; }
+
 	// Tick/update
 	virtual void tick(double p_delta);
 
 	// State management
 	virtual void add_state(const Ref<LimboState> &p_state);
 	virtual void remove_state(const Ref<LimboState> &p_state);
-	virtual Vector<Ref<LimboState>> get_states() const { return states; }
+	virtual TypedArray<LimboState> get_states() const;
 
 	// Transitions
 	virtual void transition_to(const Ref<LimboState> &p_state);
@@ -192,8 +211,8 @@ public:
 	virtual Ref<LimboState> get_current_state() const { return current_state; }
 	virtual String get_current_state_name() const;
 
-	virtual void set_update_mode(UpdateMode p_mode) { update_mode = p_mode; }
-	virtual UpdateMode get_update_mode() const { return update_mode; }
+	virtual void set_update_mode(LimboHSM_Compat::UpdateMode p_mode) { update_mode = p_mode; }
+	virtual LimboHSM_Compat::UpdateMode get_update_mode() const { return update_mode; }
 
 	// Agent
 	virtual void set_agent(Node *p_agent) { agent = p_agent; }

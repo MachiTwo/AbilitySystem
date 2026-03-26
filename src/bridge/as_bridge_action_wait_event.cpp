@@ -32,8 +32,6 @@
 
 #include "as_bridge.h"
 
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
-
 void BTActionAS_WaitForEvent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_event_tag", "tag"), &BTActionAS_WaitForEvent::set_event_tag);
 	ClassDB::bind_method(D_METHOD("get_event_tag"), &BTActionAS_WaitForEvent::get_event_tag);
@@ -86,5 +84,3 @@ void BTActionAS_WaitForEvent::_exit() {
 	// Cleanup if needed
 	triggered = false;
 }
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

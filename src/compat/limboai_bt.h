@@ -67,6 +67,7 @@
 #include <godot_cpp/templates/vector.hpp>
 #include <godot_cpp/variant/dictionary.hpp>
 #include <godot_cpp/variant/string_name.hpp>
+#include <godot_cpp/variant/typed_array.hpp>
 #include <godot_cpp/variant/variant.hpp>
 using namespace godot;
 
@@ -74,6 +75,7 @@ using namespace godot;
 #include "core/object/ref_counted.h"
 #include "core/string/string_name.h"
 #include "core/templates/vector.h"
+#include "core/variant/typed_array.h"
 #include "core/variant/variant.h"
 #include "scene/main/node.h"
 #endif
@@ -82,8 +84,12 @@ using namespace godot;
 class BTTask;
 class BTAction;
 class BTCondition;
+class BTComposite;
+class BTDecorator;
+class BTLeaf;
 class BehaviorTree;
 class BTInstance;
+class Blackboard;
 
 // LimboAI Task Macros
 #ifndef TASK_CATEGORY
@@ -129,10 +135,16 @@ public:
 	virtual void set_agent(Node *p_agent) { agent = p_agent; }
 	virtual Node *get_agent() const { return agent; }
 
+	// Blackboard management
+	virtual void set_blackboard(const Ref<Blackboard> &p_blackboard) { blackboard = p_blackboard; }
+	virtual Ref<Blackboard> get_blackboard() const { return blackboard; }
+
 	// Child management (for composite nodes)
 	virtual void add_child(const Ref<BTTask> &p_child) {}
 	virtual void remove_child(const Ref<BTTask> &p_child) {}
-	virtual Vector<Ref<BTTask>> get_children() const { return Vector<Ref<BTTask>>(); }
+	virtual TypedArray<BTTask> get_children() const { return TypedArray<BTTask>(); }
+	virtual int get_child_count() const { return 0; }
+	virtual Ref<BTTask> get_child(int p_idx) const { return Ref<BTTask>(); }
 
 	// Utility methods
 	virtual String get_task_name() const { return "BTTask"; }
@@ -140,6 +152,60 @@ public:
 
 protected:
 	Node *agent = nullptr;
+	Ref<Blackboard> blackboard;
+};
+
+/**
+ * BTLeaf - Base class for tasks with no children
+ */
+class BTLeaf : public BTTask {
+	GDCLASS(BTLeaf, BTTask)
+protected:
+	static void _bind_methods() {}
+
+public:
+	virtual BT::Status _tick(double p_delta) override { return BT::SUCCESS; }
+};
+
+/**
+ * BTComposite - Base class for tasks with multiple children
+ */
+class BTComposite : public BTTask {
+	GDCLASS(BTComposite, BTTask)
+private:
+	Vector<Ref<BTTask>> children;
+
+protected:
+	static void _bind_methods();
+
+public:
+	virtual void add_child(const Ref<BTTask> &p_child) override { children.push_back(p_child); }
+	virtual void remove_child(const Ref<BTTask> &p_child) override { children.erase(p_child); }
+	virtual TypedArray<BTTask> get_children() const override;
+	virtual int get_child_count() const override { return children.size(); }
+	virtual Ref<BTTask> get_child(int p_idx) const override { return children[p_idx]; }
+};
+
+/**
+ * BTDecorator - Base class for tasks with exactly one child
+ */
+class BTDecorator : public BTTask {
+	GDCLASS(BTDecorator, BTTask)
+private:
+	Ref<BTTask> child;
+
+protected:
+	static void _bind_methods();
+
+public:
+	virtual void add_child(const Ref<BTTask> &p_child) override { child = p_child; }
+	virtual void remove_child(const Ref<BTTask> &p_child) override {
+		if (child == p_child)
+			child = Ref<BTTask>();
+	}
+	virtual TypedArray<BTTask> get_children() const override;
+	virtual int get_child_count() const override { return child.is_valid() ? 1 : 0; }
+	virtual Ref<BTTask> get_child(int p_idx) const override { return child; }
 };
 
 /**
@@ -148,19 +214,14 @@ protected:
  * Compatibility wrapper for LimboAI's BTAction.
  * Actions are leaf nodes that perform specific behaviors.
  */
-class BTAction : public BTTask {
-	GDCLASS(BTAction, BTTask)
+class BTAction : public BTLeaf {
+	GDCLASS(BTAction, BTLeaf)
 
 protected:
 	static void _bind_methods();
 
 public:
 	virtual ~BTAction() = default;
-
-	// Actions typically don't have children
-	virtual void add_child(const Ref<BTTask> &p_child) override {}
-	virtual void remove_child(const Ref<BTTask> &p_child) override {}
-	virtual Vector<Ref<BTTask>> get_children() const override { return Vector<Ref<BTTask>>(); }
 };
 
 /**
@@ -169,19 +230,14 @@ public:
  * Compatibility wrapper for LimboAI's BTCondition.
  * Conditions are leaf nodes that test specific states.
  */
-class BTCondition : public BTTask {
-	GDCLASS(BTCondition, BTTask)
+class BTCondition : public BTLeaf {
+	GDCLASS(BTCondition, BTLeaf)
 
 protected:
 	static void _bind_methods();
 
 public:
 	virtual ~BTCondition() = default;
-
-	// Conditions typically don't have children
-	virtual void add_child(const Ref<BTTask> &p_child) override {}
-	virtual void remove_child(const Ref<BTTask> &p_child) override {}
-	virtual Vector<Ref<BTTask>> get_children() const override { return Vector<Ref<BTTask>>(); }
 };
 
 /**

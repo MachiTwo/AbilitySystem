@@ -30,8 +30,6 @@
 
 #pragma once
 
-#define AS_BRIDGE_LIMBOAI_AVAILABLE 1
-
 #include "../compat/limboai_task_db.h"
 #include "../scene/as_component.h"
 

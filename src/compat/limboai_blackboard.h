@@ -87,7 +87,8 @@ using namespace godot;
  * When LimboAI is available, uses the actual implementation.
  * When not available, provides a simplified version for AS integration.
  */
-class BBVariable {
+class BBVariable : public RefCounted {
+	GDCLASS(BBVariable, RefCounted)
 private:
 	Variant value;
 	Variant::Type type = Variant::NIL;
@@ -98,6 +99,9 @@ private:
 	ObjectID bound_object_id;
 	StringName bound_property;
 	bool is_bound = false;
+
+protected:
+	static void _bind_methods();
 
 public:
 	BBVariable() = default;
@@ -133,7 +137,7 @@ class Blackboard : public RefCounted {
 	GDCLASS(Blackboard, RefCounted)
 
 private:
-	HashMap<StringName, BBVariable> variables;
+	HashMap<StringName, Ref<BBVariable>> variables;
 	Ref<Blackboard> parent_blackboard; // Hierarchical scoping
 
 	// Auto-binding support
@@ -178,7 +182,7 @@ class BlackboardPlan : public Resource {
 	GDCLASS(BlackboardPlan, Resource)
 
 private:
-	HashMap<StringName, BBVariable> variables;
+	HashMap<StringName, Ref<BBVariable>> variables;
 	Array parent_plans; // Inheritance
 	HashMap<StringName, StringName> variable_mappings; // Map to parent scopes
 
@@ -195,7 +199,7 @@ public:
 
 	// Variable queries
 	bool has_variable(const StringName &p_name) const;
-	BBVariable get_variable_definition(const StringName &p_name) const;
+	Ref<BBVariable> get_variable_definition(const StringName &p_name) const;
 	Array get_variable_names() const;
 
 	// Inheritance
