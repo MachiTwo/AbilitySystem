@@ -42,7 +42,9 @@ using namespace godot;
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include <limboai/hsm/limbo_state.h>
 #else
+#ifdef LIMBOAI_MODULE
 #include "modules/limboai/hsm/limbo_state.h"
+#endif
 #endif
 
 /**
