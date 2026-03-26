@@ -30,21 +30,35 @@
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 
-// We only implement DOCTEST in GDExtension mode.
-// In Module mode, Godot core already implements doctest and runs everything automatically.
+// Only define DOCTEST_CONFIG_IMPLEMENT once, in this single translation unit.
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "src/tests/doctest.h"
 
-// Include all test headers here to register them for GDExtension's test runner
+// --- Unit: Data Resources ---
+#include "src/tests/unit/test_as_ability.h"
+#include "src/tests/unit/test_as_attribute.h"
 #include "src/tests/unit/test_as_attribute_set.h"
+#include "src/tests/unit/test_as_container_package.h"
+#include "src/tests/unit/test_as_effect.h"
+
+// --- Unit: Runtime Specs & Tag System ---
+#include "src/tests/unit/test_as_ability_spec.h"
+#include "src/tests/unit/test_as_effect_spec.h"
+#include "src/tests/unit/test_as_tag_spec.h"
+#include "src/tests/unit/test_as_tag_utils.h"
+
+// --- Unit: Core Component Hub ---
+#include "src/tests/unit/test_as_component.h"
+
+// --- Unit: Base infrastructure ---
 #include "src/tests/unit/test_as_base.h"
+
+// --- Integration: Gameplay Scenarios ---
 #include "src/tests/unit/test_gameplay_scenarios.h"
 
 int run_gdextension_tests() {
 	doctest::Context context;
-	// Turn off colors if running in environments that don't support it, but GHA supports it.
 	context.setOption("force-colors", true);
-
 	int res = context.run();
 	return res;
 }

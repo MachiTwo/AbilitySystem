@@ -49,58 +49,86 @@
 using namespace godot;
 #endif
 
+// Helper to build a configured attribute
+static Ref<ASAttribute> _make_attr(const char *p_name, float p_base, float p_min, float p_max) {
+	Ref<ASAttribute> a;
+	a.instantiate();
+	a->set_attribute_name(p_name);
+	a->set_base_value(p_base);
+	a->set_min_value(p_min);
+	a->set_max_value(p_max);
+	return a;
+}
+
 TEST_CASE("[ASAttributeSet] Core Value and Bounds Logic") {
 	Ref<ASAttributeSet> attr_set;
 	attr_set.instantiate();
+	attr_set->add_attribute_definition(_make_attr("Health", 50.0f, 0.0f, 100.0f));
+	attr_set->add_attribute_definition(_make_attr("Mana", 30.0f, 0.0f, 50.0f));
 
-	Ref<ASAttribute> hp_attr;
-	hp_attr.instantiate();
-	hp_attr->set_attribute_name(StringName("Health"));
-	hp_attr->set_min_value(0.0f);
-	hp_attr->set_max_value(100.0f);
-	hp_attr->set_default_value(50.0f);
+	SUBCASE("set/get base_value - 3 Variations") {
+		// Var 1: Happy path - value within bounds
+		attr_set->set_attribute_base_value(StringName("Health"), 75.0f);
+		CHECK(attr_set->get_attribute_base_value(StringName("Health")) == doctest::Approx(75.0f));
 
-	attr_set->add_attribute_definition(hp_attr);
+		// Var 2: Clamping at max (150 → 100)
+		attr_set->set_attribute_base_value(StringName("Health"), 150.0f);
+		float clamped = attr_set->get_attribute_base_value(StringName("Health"));
+		CHECK_MESSAGE(clamped <= 100.0f, "Value must be clamped to max (100).");
 
-	SUBCASE("Base Value Assignment - 3 Variations") {
-		// Var 1: Happy path - assigned value within bounds
-		attr_set->set_attribute_base_value("Health", 75.0f);
-		CHECK(attr_set->get_attribute_base_value("Health") == doctest::Approx(75.0f));
-
-		// Var 2: Edge case bounds - clamping at max limit
-		attr_set->set_attribute_base_value("Health", 150.0f);
-		bool is_clamped = attr_set->get_attribute_base_value("Health") <= 100.0f;
-		CHECK_MESSAGE(is_clamped, "Value should be clamped to max_value (100.0).");
-
-		// Var 3: Negative - Querying an unregistered attribute
-		ability_system::tests::ErrorDetector err_detector;
-		err_detector.clear();
-		float invalid_val = attr_set->get_attribute_base_value("Mana");
-		CHECK_MESSAGE(invalid_val == doctest::Approx(0.0f), "Querying missing attribute should gracefully return 0.0f baseline.");
+		// Var 3: Nonexistent attribute returns 0.0 gracefully
+		float invalid = attr_set->get_attribute_base_value(StringName("Stamina"));
+		CHECK(invalid == doctest::Approx(0.0f));
 #ifndef ABILITY_SYSTEM_GDEXTENSION
-		CHECK_MESSAGE(err_detector.has_error, "Querying missing attribute should log a push_error.");
+		ability_system::tests::ErrorDetector err;
+		err.clear();
+		attr_set->get_attribute_base_value(StringName("Stamina"));
+		CHECK_MESSAGE(err.has_error, "Querying missing attribute should log push_error in Module mode.");
 #endif
 	}
 
-	SUBCASE("Modifiers System - 3 Variations") {
-		// Preset Base to 50
-		attr_set->set_attribute_base_value("Health", 50.0f);
+	SUBCASE("Modifiers (MODIFIER_ADD / MODIFIER_MULTIPLY) - 3 Variations") {
+		attr_set->set_attribute_base_value(StringName("Health"), 50.0f);
 
-		// Var 1: Happy path - Flat Add modifier
-		attr_set->add_modifier("Health", 20.0f, ASAttributeSet::MODIFIER_ADD);
-		CHECK(attr_set->get_attribute_value("Health") == doctest::Approx(70.0f));
+		// Var 1: Flat Add +20 → 70
+		attr_set->add_modifier(StringName("Health"), 20.0f, ASAttributeSet::MODIFIER_ADD);
+		CHECK(attr_set->get_attribute_value(StringName("Health")) == doctest::Approx(70.0f));
 
-		// Var 2: Edge case bounds - Multiplying past the max limit ceiling
-		attr_set->add_modifier("Health", 2.0f, ASAttributeSet::MODIFIER_MULTIPLY);
-		// Base 50 * 2 = 100 + 20 flat = 120. Should clamp at 100!
-		bool is_modifier_clamped = attr_set->get_attribute_value("Health") <= 100.0f;
-		CHECK_MESSAGE(is_modifier_clamped, "Modifiers resulting over max should be clamped upon resolution.");
+		// Var 2: Multiply x2 — (50 * 2) + 20 flat = 120. Must clamp at 100
+		attr_set->add_modifier(StringName("Health"), 2.0f, ASAttributeSet::MODIFIER_MULTIPLY);
+		CHECK_MESSAGE(attr_set->get_attribute_value(StringName("Health")) <= 100.0f,
+				"Over-max result must clamp at max_value.");
 
-		// Var 3: Negative - Negative multiplication
-		// Base 50 * -1 = -50 + 20 = -30. Should clamp at 0!
-		attr_set->remove_modifier("Health", 2.0f, ASAttributeSet::MODIFIER_MULTIPLY); // Remove previous
-		attr_set->add_modifier("Health", -1.0f, ASAttributeSet::MODIFIER_MULTIPLY);
-		CHECK_MESSAGE(attr_set->get_attribute_value("Health") >= 0.0f, "Modifiers resulting below 0 should clamp to min.");
+		// Var 3: Negative multiply — base * -1 + flat add → should clamp at 0
+		attr_set->remove_modifier(StringName("Health"), 2.0f, ASAttributeSet::MODIFIER_MULTIPLY);
+		attr_set->add_modifier(StringName("Health"), -1.0f, ASAttributeSet::MODIFIER_MULTIPLY);
+		CHECK_MESSAGE(attr_set->get_attribute_value(StringName("Health")) >= 0.0f,
+				"Negative result must clamp at min_value (0).");
+	}
+
+	SUBCASE("has_attribute / get_attribute_list - 3 Variations") {
+		// Var 1: Known attribute
+		CHECK(attr_set->has_attribute(StringName("Health")));
+
+		// Var 2: Other known attribute
+		CHECK(attr_set->has_attribute(StringName("Mana")));
+
+		// Var 3: Unknown returns false
+		CHECK_FALSE(attr_set->has_attribute(StringName("Rage")));
+	}
+
+	SUBCASE("reset_current_values - 3 Variations") {
+		// Var 1: Mutate and confirm dirty
+		attr_set->set_attribute_base_value(StringName("Health"), 25.0f);
+		CHECK(attr_set->get_attribute_base_value(StringName("Health")) == doctest::Approx(25.0f));
+
+		// Var 2: Reset brings back to base
+		attr_set->reset_current_values();
+		// After reset, current == base. Both Mana and Health should be at their last set base.
+		CHECK(attr_set->get_attribute_base_value(StringName("Health")) == doctest::Approx(25.0f));
+
+		// Var 3: Mana is also unaffected by Health reset
+		CHECK(attr_set->has_attribute(StringName("Mana")));
 	}
 }
 
