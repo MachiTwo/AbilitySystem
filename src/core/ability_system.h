@@ -89,7 +89,7 @@ public:
 	void remove_tag_branch(const StringName &p_tag);
 	uint64_t get_tag_owner(const StringName &p_tag) const;
 	ASTagType get_tag_type(const StringName &p_tag) const;
-	TypedArray<StringName> get_registered_tags() const;
+	TypedArray<StringName> get_all_registered_tags() const;
 	TypedArray<StringName> get_registered_tags_of_type(ASTagType p_type) const;
 
 	bool register_resource_name(const String &p_name, uint64_t p_owner_id);

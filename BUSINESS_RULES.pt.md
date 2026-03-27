@@ -32,22 +32,29 @@ Nenhuma lógica de negócio existe sem um teste que a justifique.
 
 Tags não são classes; são **Identificadores Hierárquicos Superpoderosos** baseados em `StringName`. Representam a verdade absoluta sobre o estado presente de um Ator.
 
-### 2.1 Regras de Ouro das Tags (O que eu SOU)
+### 2.1 Regras de Ouro das Tags (Segurança v0.2.0)
 
-- **Papel:** Representar estados contínuos, características e bloqueios (ex: `State.Dead`, `Status.Stunned`).
-- **Natureza:** Persistentes. Requerem adição formal (`add_tag`) e remoção formal (`remove_tag`). Consomem tempo de CPU no cálculo de RefCounts no `ASTagSpec`.
-- **Pergunta que responde:** _"Neste exato microssegundo, este ator está sob a condição X?"_
-- **Proibição Absoluta (Anti-Padrão):** NUNCA usar tags para representar ocorrências instantâneas (ex: NÃO usar `State.JustGotHit`). Se a condição dura apenas 1 frame ou serve para alertar outros sistemas, DEVE ser um Evento, nunca uma Tag.
+- **Tipo CONDITIONAL (Requisito de Lógica):** Apenas tags marcadas como `CONDITIONAL` podem ser usadas em listas de requisitos (`Required/Blocked`) de Habilidades, Efeitos ou Cues. Tentar usar uma tag de Nome ou Evento para bloqueio lógico é uma violação de segurança.
+- **Tipo NAME (Identidade de Recurso):** Apenas as tags do tipo `NAME` podem ser usadas para identificar e nomear recursos de `ASAbility` ou `ASEffect`. Isto garante que um estado (ex: `state.stunned`) nunca seja confundido com uma habilidade (ex: `ability.warrior.powerhit`).
+- **Tipo EVENT (Ocorrência de Frame):** Tags do tipo `EVENT` são transitórias e usadas exclusivamente para despacho de ocorrências através de `ASTagUtils`. Elas não persistem no RefCount do Singleton.
 
-### 2.2 Os 3 Tipos Canônicos de Tag (Tag Types)
+### 2.2 Os 3 Tipos Canônicos de Tag (Tag Types / ASTagTypes)
 
-O `Tag Type` define o **papel semântico** que uma tag possui. Determina como o Singleton e o Editor tratam esse identificador.
+| Tipo          | Papel Semântico                                | Restrição de Uso                                                        |
+| ------------- | ---------------------------------------------- | ----------------------------------------------------------------------- |
+| `NAME`        | Identidade estática (Quem eu Sou/O que isto é) | **EXCLUSIVO** para Identificação de Resources (`ASAbility`/`ASEffect`). |
+| `CONDITIONAL` | Estado de gameplay persistente (Como eu Estou) | **EXCLUSIVO** para Requisitos Lógicos (`Required`/`Blocked`).           |
+| `EVENT`       | Ocorrência instantânea (O que Aconteceu)       | **EXCLUSIVO** para despacho de eventos via `ASTagUtils` e `ASBridge`.   |
 
-| Tipo          | Prefixo Convencional | Papel                                                                                                    | Exemplo                                     |
-| ------------- | -------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
-| `NAME`        | `Char.` / `Team.`    | Identidade estática e categorização do ator                                                              | `Char.Warrior`, `Team.Blue`                 |
-| `CONDITIONAL` | `State.` / `Status.` | Estado de gameplay persistente que pode ser adicionado/removido do ator                                  | `State.Stunned`, `Status.Poisoned`          |
-| `EVENT`       | `Event.`             | Identificadores de ocorrência. Registrados para autocomplete, mas **o payload nunca chega ao Singleton** | `Event.Weapon.Hit`, `Event.Damage.Critical` |
+---
+
+## 3. O SINGLETON: ABILITY SYSTEM & ASUTILS
+
+- **Papel:** É a **API de Configuração Global** e o repositório de lógica estática atómica.
+- **ASUtils:** Namespace C++ que centraliza funções de utilidade de alta performance para manipulação de tags e cálculos de atributos.
+- **Regras de Negócio:**
+  - O Singleton é o único que pode persistir a lista de tags no `project.godot`.
+  - Atua como um **Validador de Tipagem**: Impede em tempo de edição (via Inspector) que tags do tipo errado sejam usadas em campos restritos.
 
 ### 2.3 Estruturas de Tipos de Tag e Implementação
 
@@ -70,14 +77,14 @@ struct ASNameTag : public ASTagBase {
     static ASNameTag create(const StringName &p_name);
 
     // Tags Comuns Predefinidas
-    static ASNameTag STUNNED();        // "State.Stunned"
-    static ASNameTag DEAD();           // "State.Dead"
-    static ASNameTag INVISIBLE();      // "State.Invisible"
-    static ASNameTag WARRIOR();        // "Class.Warrior"
-    static ASNameTag MAGE();           // "Class.Mage"
-    static ASNameTag ARCHER();         // "Class.Archer"
-    static ASNameTag TEAM_BLUE();      // "Team.Blue"
-    static ASNameTag TEAM_RED();       // "Team.Red"
+    static ASNameTag STUNNED();        // "state.stunned"
+    static ASNameTag DEAD();           // "state.dead"
+    static ASNameTag INVISIBLE();      // "state.invisible"
+    static ASNameTag WARRIOR();        // "class.warrior"
+    static ASNameTag MAGE();           // "class.mage"
+    static ASNameTag ARCHER();         // "class.archer"
+    static ASNameTag TEAM_BLUE();      // "team.blue"
+    static ASNameTag TEAM_RED();       // "team.red"
 };
 ```
 
@@ -105,19 +112,19 @@ struct ASConditionalTag : public ASTagBase {
     static ASConditionalTag create(const StringName &p_name);
 
     // Tags de Permissão Predefinidas
-    static ASConditionalTag CAN_PARRY();      // "Can.Parried"
-    static ASConditionalTag CAN_DODGE();       // "Can.Dodged"
-    static ASConditionalTag CAN_INTERRUPT();   // "Can.Interrupted"
+    static ASConditionalTag CAN_PARRY();      // "can.parried"
+    static ASConditionalTag CAN_DODGE();       // "can.dodged"
+    static ASConditionalTag CAN_INTERRUPT();   // "can.interrupted"
 
     // Tags de Imunidade Predefinidas
-    static ASConditionalTag IMMUNE_FIRE();     // "Immune.Fire"
-    static ASConditionalTag IMMUNE_POISON();   // "Immune.Poison"
-    static ASConditionalTag IMMUNE_PHYSICAL(); // "Immune.Physical"
+    static ASConditionalTag IMMUNE_FIRE();     // "immune.fire"
+    static ASConditionalTag IMMUNE_POISON();   // "immune.poison"
+    static ASConditionalTag IMMUNE_PHYSICAL(); // "immune.physical"
 
     // Tags de Condição de Estado Predefinidas
-    static ASConditionalTag GROUNDED();        // "State.Grounded"
-    static ASConditionalTag FLYING();          // "State.Flying"
-    static ASConditionalTag STEALTHED();       // "State.Stealthed"
+    static ASConditionalTag GROUNDED();        // "state.grounded"
+    static ASConditionalTag FLYING();          // "state.flying"
+    static ASConditionalTag STEALTHED();       // "state.stealthed"
 };
 ```
 
@@ -145,27 +152,27 @@ struct ASEventTagTag : public ASTagBase {
     static ASEventTagTag create(const StringName &p_name);
 
     // Tags de Evento de Combate
-    static ASEventTagTag DAMAGE_DEALT();        // "Event.Damage.Dealt"
-    static ASEventTagTag DAMAGE_TAKEN();        // "Event.Damage.Taken"
-    static ASEventTagTag DAMAGE_BLOCKED();      // "Event.Damage.Blocked"
-    static ASEventTagTag HEAL_RECEIVED();       // "Event.Heal.Received"
+    static ASEventTagTag DAMAGE_DEALT();        // "event.damage.dealt"
+    static ASEventTagTag DAMAGE_TAKEN();        // "event.damage.taken"
+    static ASEventTagTag DAMAGE_BLOCKED();      // "event.damage.blocked"
+    static ASEventTagTag HEAL_RECEIVED();       // "event.heal.received"
 
     // Tags de Evento de Habilidade
-    static ASEventTagTag ABILITY_ACTIVATED();   // "Event.Ability.Activated"
-    static ASEventTagTag ABILITY_FAILED();      // "Event.Ability.Failed"
-    static ASEventTagTag ABILITY_COOLDOWN_END(); // "Event.Ability.CooldownEnd"
-    static ASEventTagTag ABILITY_INTERRUPTED(); // "Event.Ability.Interrupted"
+    static ASEventTagTag ABILITY_ACTIVATED();   // "event.ability.activated"
+    static ASEventTagTag ABILITY_FAILED();      // "event.ability.failed"
+    static ASEventTagTag ABILITY_COOLDOWN_END(); // "event.ability.cooldown_end"
+    static ASEventTagTag ABILITY_INTERRUPTED(); // "event.ability.interrupted"
 
     // Tags de Evento de Estado
-    static ASEventTagTag STUN_BEGIN();          // "Event.Stun.Begin"
-    static ASEventTagTag STUN_END();            // "Event.Stun.End"
-    static ASEventTagTag DEATH();               // "Event.Death"
-    static ASEventTagTag RESPAWN();             // "Event.Respawn"
+    static ASEventTagTag STUN_BEGIN();          // "event.stun.begin"
+    static ASEventTagTag STUN_END();            // "event.stun.end"
+    static ASEventTagTag DEATH();               // "event.death"
+    static ASEventTagTag RESPAWN();             // "event.respawn"
 
     // Tags de Evento de Arma
-    static ASEventTagTag WEAPON_HIT();          // "Event.Weapon.Hit"
-    static ASEventTagTag WEAPON_MISS();         // "Event.Weapon.Miss"
-    static ASEventTagTag WEAPON_CRITICAL();     // "Event.Weapon.Critical"
+    static ASEventTagTag WEAPON_HIT();          // "event.weapon.hit"
+    static ASEventTagTag WEAPON_MISS();         // "event.weapon.miss"
+    static ASEventTagTag WEAPON_CRITICAL();     // "event.weapon.critical"
 
     // Métodos Helper
     void dispatch(Node *p_instigator, float p_magnitude = 0.0f,
@@ -195,20 +202,20 @@ namespace ASTagUtils {
     ASTagBase create_tag(const StringName &p_tag);
 
     // Funções de Reconhecimento de Padrão
-    bool is_state_tag(const StringName &p_tag);     // "State.*"
-    bool is_class_tag(const StringName &p_tag);     // "Class.*"
-    bool is_team_tag(const StringName &p_tag);      // "Team.*"
-    bool is_event_tag(const StringName &p_tag);     // "Event.*"
-    bool is_immune_tag(const StringName &p_tag);    // "Immune.*"
-    bool is_can_tag(const StringName &p_tag);       // "Can.*"
+    bool is_state_tag(const StringName &p_tag);     // "state.*"
+    bool is_class_tag(const StringName &p_tag);     // "class.*"
+    bool is_team_tag(const StringName &p_tag);      // "team.*"
+    bool is_event_tag(const StringName &p_tag);     // "event.*"
+    bool is_immune_tag(const StringName &p_tag);    // "immune.*"
+    bool is_can_tag(const StringName &p_tag);       // "can.*"
 }
 ```
 
 **Algoritmo de Detecção de Tipo:**
 
-1. **Event Tags**: Começam com "Event." → `ASTagType::EVENT`
-2. **Conditional Tags**: Começam com "Can.", "Immune.", "State.Grounded", "State.Flying", "State.Stealthed" → `ASTagType::CONDITIONAL`
-3. **Name Tags**: Todos os outros padrões (State._, Class._, Team.\*, etc.) → `ASTagType::NAME`
+1. **Event Tags**: Começam com "event." → `ASTagType::EVENT`
+2. **Conditional Tags**: Começam com "can.", "immune.", "state.grounded", "state.flying", "state.stealthed" → `ASTagType::CONDITIONAL`
+3. **Name Tags**: Todos os outros padrões (state._, class._, team.\*, etc.) → `ASTagType::NAME`
 
 #### 2.4.2 Estruturas de Rastreamento Histórico
 
@@ -245,9 +252,9 @@ struct ASEventTagHistoricalEntry {
 
 ```cpp
 // Consultas Básicas
-ASTagUtils::name_was_tag_added("State.Stunned", target, 1.0f);
-ASTagUtils::name_was_tag_removed("State.Stunned", target, 1.0f);
-ASTagUtils::name_had_tag("State.Stunned", target, 1.0f);
+ASTagUtils::name_was_tag_added("state.stunned", target, 1.0f);
+ASTagUtils::name_was_tag_removed("state.stunned", target, 1.0f);
+ASTagUtils::name_had_tag("state.stunned", target, 1.0f);
 
 // Recuperação de Dados
 ASTagUtils::name_get_recent_additions(target, 1.0f);
@@ -255,42 +262,42 @@ ASTagUtils::name_get_recent_removals(target, 1.0f);
 ASTagUtils::name_get_recent_changes(target, 1.0f);
 
 // Operações de Contagem
-ASTagUtils::name_count_additions("State.Stunned", target, 1.0f);
-ASTagUtils::name_count_removals("State.Stunned", target, 1.0f);
+ASTagUtils::name_count_additions("state.stunned", target, 1.0f);
+ASTagUtils::name_count_removals("state.stunned", target, 1.0f);
 ```
 
 **API de Consulta Histórica ASConditionalTag:**
 
 ```cpp
 // Especializada para mudanças de tags CONDITIONAL
-ASTagUtils::cond_was_tag_added("Immune.Fire", target, 1.0f);
-ASTagUtils::cond_was_tag_removed("Immune.Fire", target, 1.0f);
-ASTagUtils::cond_had_tag("Immune.Fire", target, 1.0f);
+ASTagUtils::cond_was_tag_added("immune.fire", target, 1.0f);
+ASTagUtils::cond_was_tag_removed("immune.fire", target, 1.0f);
+ASTagUtils::cond_had_tag("immune.fire", target, 1.0f);
 ```
 
 **API de Consulta Histórica ASEventTag:**
 
 ```cpp
 // Consultas Específicas de Evento
-ASTagUtils::event_did_occur("Event.Damage", target, 1.0f);
-ASTagUtils::event_get_recent_events("Event.Damage", target, 1.0f);
+ASTagUtils::event_did_occur("event.damage", target, 1.0f);
+ASTagUtils::event_get_recent_events("event.damage", target, 1.0f);
 ASTagUtils::event_get_all_recent_events(target, 1.0f);
 
 // Acesso a Dados de Evento
-ASTagUtils::event_get_last_data("Event.Damage", target);
-ASTagUtils::event_get_last_magnitude("Event.Damage", target);
-ASTagUtils::event_get_last_instigator("Event.Damage", target);
+ASTagUtils::event_get_last_data("event.damage", target);
+ASTagUtils::event_get_last_magnitude("event.damage", target);
+ASTagUtils::event_get_last_instigator("event.damage", target);
 
 // Operações de Contagem
-ASTagUtils::event_count_occurrences("Event.Damage", target, 1.0f);
+ASTagUtils::event_count_occurrences("event.damage", target, 1.0f);
 ```
 
 **API de Consulta Histórica Unificada:**
 
 ```cpp
 // Consultas Cross-Type
-ASTagUtils::history_was_tag_present("State.Stunned", target, 1.0f);
-ASTagUtils::history_get_tag_history("State.Stunned", target, 1.0f);
+ASTagUtils::history_was_tag_present("state.stunned", target, 1.0f);
+ASTagUtils::history_get_tag_history("state.stunned", target, 1.0f);
 ASTagUtils::history_get_all_changes(target, 1.0f);
 
 // Utilitários de Debug
@@ -306,7 +313,7 @@ ASTagUtils::history_get_total_size(target);
 
 Events usam o struct `ASEventTagData` em `ASUtils` para informações completas de payload:
 
-- `event_tag`: Identificador exato da ocorrência (ex: `Event.Interrupt`)
+- `event_tag`: Identificador exato da ocorrência (ex: `event.interrupt`)
 - `instigator`: O Node que causou (ofensor)
 - `target`: O Node afetado (vítima)
 - `magnitude`: Intensidade base do evento (Poder do impacto)
@@ -319,7 +326,7 @@ Events usam o struct `ASEventTagData` em `ASUtils` para informações completas 
 ```gdscript
 # Assinatura: dispatch_event(event_tag, instigator, magnitude, custom_payload)
 var asc: ASComponent = target.get_node("ASComponent")
-asc.dispatch_event(&"Event.Weapon.Hit", self, 35.0, {})
+asc.dispatch_event(&"event.weapon.hit", self, 35.0, {})
 ```
 
 #### 2.5.3 Memória de Curto Prazo (Events Historical)
@@ -327,33 +334,33 @@ asc.dispatch_event(&"Event.Weapon.Hit", self, 35.0, {})
 Events morrem em 1 tick, mas sua _"memória"_ persiste de forma levíssima:
 
 - O `ASComponent` mantém um `_event_history` (buffer circular C++ super otimizado de até 128 entradas).
-- **Como utilizar na prática:** Componentes reativos (como _Parry_ ou _Counter-Attack_) não precisam estar no estado eterno de "parrying". Podem checar o passado recente: `has_event_occurred(&"Event.Damage.Block", 0.4)`. Se o bloqueio aconteceu no último 0.4s, autorize a habilidade de contra-ataque.
+- **Como utilizar na prática:** Componentes reativos (como _Parry_ ou _Counter-Attack_) não precisam estar no estado eterno de "parrying". Podem checar o passado recente: `has_event_occurred(&"event.damage.block", 0.4)`. Se o bloqueio aconteceu no último 0.4s, autorize a habilidade de contra-ataque.
 - **Regra:** Nunca usar este cache para persistir história (missões, quests). Use exclusivamente para frames de reatividade temporal.
 
 #### 2.5.4 Rastreamento Histórico Individual
 
 Todos os três tipos de tags mantêm buffers históricos individuais no `ASComponent`:
 
-- **NAME History**: Rastreia mudanças de estado persistente (`State.Stunned`, `Class.Warrior`)
-- **CONDITIONAL History**: Rastreia mudanças de permissão/imunidade (`Can.Parried`, `Immune.Fire`)
+- **NAME History**: Rastreia mudanças de estado persistente (`state.stunned`, `class.warrior`)
+- **CONDITIONAL History**: Rastreia mudanças de permissão/imunidade (`can.parried`, `immune.fire`)
 - **EVENT History**: Rastreia ocorrências de eventos com dados completos do payload
 
 Cada buffer mantém 128 entradas com gerenciamento automático de overflow. As APIs históricas fornecem consultas especializadas:
 
 ```cpp
 // Consultas de tags NAME
-ASTagUtils::name_was_tag_added("State.Stunned", target, 2.0f);
-ASTagUtils::name_count_additions("State.Stunned", target, 10.0f);
+ASTagUtils::name_was_tag_added("state.stunned", target, 2.0f);
+ASTagUtils::name_count_additions("state.stunned", target, 10.0f);
 
 // Consultas de tags CONDITIONAL
-ASTagUtils::cond_had_tag("Immune.Fire", enemy, 5.0f);
+ASTagUtils::cond_had_tag("immune.fire", enemy, 5.0f);
 
 // Consultas de tags EVENT
-ASTagUtils::event_did_occur("Event.Damage", target, 1.0f);
-ASTagUtils::event_get_last_magnitude("Event.Damage", target);
+ASTagUtils::event_did_occur("event.damage", target, 1.0f);
+ASTagUtils::event_get_last_magnitude("event.damage", target);
 
 // Consultas unificadas
-ASTagUtils::history_was_tag_present("State.Stunned", target, 2.0f);
+ASTagUtils::history_was_tag_present("state.stunned", target, 2.0f);
 ```
 
 ### 2.6 Grupos de Tags (Organização Visual)
@@ -361,7 +368,7 @@ ASTagUtils::history_was_tag_present("State.Stunned", target, 2.0f);
 **Grupos de Tags não são entidades de código.** São uma convenção editorial que emerge automaticamente da hierarquia de pontos (`.`) nos identificadores de tags.
 
 - `ASTagsPanel` renderiza tags como uma **árvore**, usando cada segmento separado por ponto como um nó pai.
-- `State.Stunned`, `State.Dead` agrupam automaticamente sob o nó visual `State`.
+- `state.stunned`, `state.dead` agrupam automaticamente sob o nó visual `state`.
 - Não existe um objeto `TagGroup` C++ — o "grupo" é apenas o prefixo compartilhado.
 - **Convenção Obrigatória:** O prefixo raiz DEVE refletir seu `Tag Type` (ex: tags `Event.*` são sempre `ASTagType::EVENT`).
 
@@ -379,11 +386,11 @@ O sistema suporta 4 estados lógicos em Blueprints (Ability, Effect, Cue) na hor
 
 ### 2.8 O Padrão de Registro Dividido (Split Registry)
 
-Os identificadores de Evento (ex: `Event.Weapon.Hit`) **são registrados no Singleton** como qualquer outra tag — para funcionar no autocompletar do editor, no `ASTagsPanel` e evitar erros de digitação dos designers. A diferença está no tipo: eles são cadastrados como `Tag Type = EVENT`.
+Os identificadores de Evento (ex: `event.weapon.hit`) **são registrados no Singleton** como qualquer outra tag — para funcionar no autocompletar do editor, no `ASTagsPanel` e evitar erros de digitação dos designers. A diferença está no tipo: eles são cadastrados como `Tag Type = EVENT`.
 
 O que **nunca** sobe ao Singleton é a **instância de dados** — o struct `ASEventTagData`. Essa separação configura o padrão de **Registro Dividido**:
 
-- **Singleton (Registro):** Conhece o _nome_ `Event.Weapon.Hit`. Garante que existe, que tem o tipo certo e aparece no autocomplete.
+- **Singleton (Registro):** Conhece o _nome_ `event.weapon.hit`. Garante que existe, que tem o tipo certo e aparece no autocomplete.
 - **ASComponent (Ocorrência):** Conhece o _acontecimento_. Sabe quem bateu, em quem, com qual força e em qual tick. O Singleton não precisa — nem deve — saber disso.
 
 > [!IMPORTANT]
@@ -698,16 +705,16 @@ Para evitar que a arquitetura decline e se torne um emaranhado caótico onde tod
 
 ### 11.1 A Ordem Natural
 
-1. **INPUT/AÇÃO:** Uma interação, término temporizador ou impacto físico emite um **AS Event** (`Event.Damage`).
+1. **INPUT/AÇÃO:** Uma interação, término temporizador ou impacto físico emite um **AS Event** (`event.damage`).
 2. **ESCUTA/PROCESSAMENTO:** Uma Entidade escuta via Triggers (`ON_EVENT`).
 3. **MUTAÇÃO:** A habilidade reativa acerta os requisitos, invoca e aplica o mutador (`ASEffect`).
-4. **ESTADO (Fim do Ciclo):** O Effect mutou os atributos ou adicionou permanentemente a **AS Tag** (`State.Stunned`).
+4. **ESTADO (Fim do Ciclo):** O Effect mutou os atributos ou adicionou permanentemente a **AS Tag** (`state.stunned`).
 
 > [!CAUTION]
 > **Erros Fatais punidos com refatoração profunda:**
 >
 > - Esperar que uma habilidade inicie baseada em "perda de tag". (Isso é sintoma de acoplamento de estado; dispare um Evento avisando o fim).
-> - Se uma Habilidade falhar num requisito de Tag ou Custo, NUNCA gerencie estado (aplicar tags temporárias). Emita o gatilho `Event.Ability.Failed` relatando por qual motivo (Dicionário Payload), para loggers ou UI reagirem.
+> - Se uma Habilidade falhar num requisito de Tag ou Custo, NUNCA gerencie estado (aplicar tags temporárias). Emita o gatilho `event.ability.failed` relatando por qual motivo (Dicionário Payload), para loggers ou UI reagirem.
 
 ### 11.2 Triggers na Era Híbrida
 
@@ -727,13 +734,14 @@ O componente `ASDelivery` (ex: um míssil ou aura rastreado) carrega o envelope 
 
 ---
 
-## 12. INTEGRAÇÃO DE IA & BEHAVIOR TREES (ASBridge)
+## 12. INTEGRAÇÃO ATÓMICA DE IA (ASBridge & HSM)
 
-Para interagir com o framework LimboAI para Árvores de Comportamento (Behavior Trees) e Máquinas de Estado, o Ability System fornece um componente explícito de "ponte", evitando a inclusão de conceitos de IA no núcleo do gameplay.
+Para interagir com o framework LimboAI de forma atómica, o Ability System fornece a `ASBridge` como uma biblioteca interna nativa.
 
-- **Papel:** Expõe consultas do Ability System (ex: `has_tag`, avaliação de requisitos) diretamente em variáveis Blackboard do LimboAI e aciona ações através de `BTNode` customizados.
-- **Regra:** O `ASBridge` avalia estados usando estritamente as APIs do `ASComponent`. ELE NUNCA ignora regras padrão, custos ou cooldowns.
-- **Desacoplamento Rigoroso:** Tarefas da Árvore de Comportamento NUNCA chamam `try_activate_ability` diretamente em seu próprio contexto. Eles despacham comandos através da ponte (ou disparam Eventos), forçando o uso do **Protocolo de Reatividade**. Este isolamento absoluto garante que a lógica core do Ability System seja 100% agnóstica a qualquer nó de BT/HSM.
+- **Status v0.2.0:** A infraestrutura de IA é parte do mesmo binário do Ability System, garantindo latência zero e registro unificado.
+- **Papel da ASBridge:** Expõe estados (tags/atributos) diretamente na Blackboard e gerencia o despacho de comandos de habilidades.
+- **Compatibilidade HSM:** O `ASComponent` é nativamente compatível com **LimboHSM**. Isso permite que o estado da máquina de estados hierárquica do personagem seja conduzido pelos identificadores de Tags e Eventos do Ability System.
+- **Desacoplamento Rigoroso:** Embora integrem o mesmo binário, as Tarefas da BT/HSM nunca chamam o core da habilidade diretamente. Elas devem usar a Ponte, preservando o **Protocolo de Reatividade**.
 
 ---
 

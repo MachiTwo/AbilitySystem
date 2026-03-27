@@ -354,11 +354,16 @@ LimboAI includes a visual debugger to inspect tree states during runtime.
 
 ---
 
-## 15. TESTING PARADIGMS FOR AI
+## 16. ABILITY SYSTEM INTEGRATION (ASBridge v0.2.0)
 
-### 15.1 Component Isolation
+### 16.1 Official AI Nodes (Bridge Tasks)
 
-When developing Custom BTTasks in C++, unit testing must:
+- **`ASActivateAbility` (Action)**: The formal command for AI to trigger an ability. Validates costs and cooldowns before acting.
+- **`ASWaitEvent` (Action)**: Sets the tree branch to `RUNNING` until a specific **Event Tag** occurs on the `ASComponent` (e.g., `Event.Animation.Hit`).
+- **`ASCanActivateAbility` (Condition)**: Readiness sensor. Use to decide tree branches based on ability availability.
+- **`ASEventOccurred` (Condition)**: Checks if an event (transient tag) occurred within the last frames.
 
-- Mock the Blackboard explicitly without initializing full game Worlds.
-- Test `_enter()`, `_tick(0.016)`, and `_exit()` manually in testing loops to verify expected internal state cleansing.
+### 16.2 Golden Rule of Combat Decoupling
+
+- **Direct Write Prohibition**: AI is authorized to **READ** from the Blackboard but should never attempt to write directly to the `ASComponent`. All combat state mutation must occur via Ability dispatching (`ASActivateAbility`) or Effect Injection (`ASEffect`).
+- **HSM/ASC Synchrony**: The `ASComponent` is the "muscle". `LimboHSM` is the "nervous system". Use AS `CONDITIONAL` tags to lock or permit state transitions in the HSM reactively.

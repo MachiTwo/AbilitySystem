@@ -25,6 +25,7 @@ jobs:
         uses: actions/checkout@v4.2.2
         with:
           ref: ${{ github.head_ref || github.ref_name }}
+          submodules: recursive
 
       - name: Import dependency versions
         shell: bash
@@ -201,17 +202,10 @@ jobs:
           # Copy structure from repo (e.g., plugin.cfg if not in gdextension)
           cp -r addons/${{ env.MODULE_NAME }}/* out/addons/${{ env.MODULE_NAME }}/ 2>/dev/null || true
 
-          # Copy compiled binaries from the SCons build output
+          # Copy all compiled binaries from the SCons build output
           # The SCons SConstruct places binaries in addons/<module_name>/bin/
-          # Find the actual compiled library name (e.g., libability_system.so)
-          compiled_lib=$(ls addons/${{ env.MODULE_NAME }}/bin/lib${{ env.MODULE_NAME }}*so 2>/dev/null | head -n 1)
-
-          if [ -z "$compiled_lib" ]; then
-            echo "Error: Compiled library not found in addons/${{ env.MODULE_NAME }}/bin/"
-            exit 1
-          fi
-          cp "$compiled_lib" out/addons/${{ env.MODULE_NAME }}/bin/
-          echo "Copied compiled library '$compiled_lib' to out/addons/${{ env.MODULE_NAME }}/bin/"
+          cp -r tmp-builds/out/addons/${{ env.MODULE_NAME }}/bin/* out/addons/${{ env.MODULE_NAME }}/bin/ 2>/dev/null || true
+          echo "Copied all compiled libraries to out/addons/${{ env.MODULE_NAME }}/bin/"
 
           touch out/project.godot
           ./godot.x86_64 --headless --editor --path out/ --quit || true
@@ -230,12 +224,6 @@ jobs:
           # Ensure binaries are force-added to bypass .gitignore if they are new or modified
           git add -f addons/${{ env.MODULE_NAME }}/bin/*
 
-      - name: Cleanup Before Commit
-        run: |
-          rm -f godot.x86_64
-          rm -f godot.zip
-          rm -rf out
-          rm -rf tmp-builds
 
       - name: Auto-Commit Plugin Addons
         if: github.event_name != 'pull_request' && !startsWith(github.ref, 'refs/tags/')

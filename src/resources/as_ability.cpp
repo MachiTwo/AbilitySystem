@@ -83,10 +83,12 @@ void ASAbility::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_cues", "cues"), &ASAbility::set_cues);
 	ClassDB::bind_method(D_METHOD("get_cues"), &ASAbility::get_cues);
 
+	ClassDB::bind_method(D_METHOD("set_sub_abilities", "abilities"), &ASAbility::set_sub_abilities);
 	ClassDB::bind_method(D_METHOD("get_sub_abilities"), &ASAbility::get_sub_abilities);
 	ClassDB::bind_method(D_METHOD("set_sub_abilities_auto_activate", "tags"), &ASAbility::set_sub_abilities_auto_activate);
 	ClassDB::bind_method(D_METHOD("get_sub_abilities_auto_activate"), &ASAbility::get_sub_abilities_auto_activate);
 	ClassDB::bind_method(D_METHOD("set_phases", "phases"), &ASAbility::set_phases);
+	ClassDB::bind_method(D_METHOD("get_phases"), &ASAbility::get_phases);
 
 	ClassDB::bind_method(D_METHOD("set_events_on_activate", "events"), &ASAbility::set_events_on_activate);
 	ClassDB::bind_method(D_METHOD("get_events_on_activate"), &ASAbility::get_events_on_activate);

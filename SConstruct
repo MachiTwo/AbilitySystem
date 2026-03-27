@@ -106,18 +106,56 @@ env = SConscript("godot-cpp/SConstruct", {"env": env.Clone(), "customs": customs
 env.Append(CPPPATH=[".", "src"])
 env.Append(CPPDEFINES=["ABILITY_SYSTEM_GDEXTENSION"])
 
-# Configure LimboAI Integration if available
+# --- Target Collection ---
+sources = []
+
+# Collect LimboAI sources if available
 if os.path.isdir("limboai"):
-    print("[SCONSTRUCT] LimboAI detected. Integrating sources...")
-    env.Append(CPPPATH=["limboai"])
+    print(
+        "[SCONSTRUCT] LimboAI detected. Integrating as linked dependency (godot-cpp style)..."
+    )
+
+    # Still call SConscript to build LimboAI's own standalone DLL for addons/limboai
+    Export(["env", "customs"])
+    SConscript("src/limboai/SConstruct")
+
+    # Integrated sources into AS binary using the new internal submodule path
+    env.VariantDir("src/bin/limboai", "src/limboai", duplicate=0)
+    limbo_sources = Glob("src/bin/limboai/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/blackboard/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/blackboard/bb_param/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/bt/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/bt/tasks/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/bt/tasks/blackboard/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/bt/tasks/composites/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/bt/tasks/decorators/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/bt/tasks/misc/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/bt/tasks/scene/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/bt/tasks/utility/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/compat/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/hsm/*.cpp")
+    if env["target"] != "template_release":
+        limbo_sources += Glob("src/bin/limboai/editor/*.cpp")
+        limbo_sources += Glob("src/bin/limboai/editor/debugger/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/util/*.cpp")
+
+    # CRITICAL: Include ALL sources (including register_types) but define
+    # LIMBOAI_SUBMODULE_BUILD to disable the redundant GDExtension entry point.
+    sources += limbo_sources
+    env.Append(CPPDEFINES=["LIMBOAI_SUBMODULE_BUILD"])
+
+    # Still need includes and defines for the ASBridge logic to compile
+    env.Append(CPPPATH=["src/limboai"])
     env.Append(CPPDEFINES=["LIMBOAI_GDEXTENSION"])
+    env.Append(CPPDEFINES=["LIMBOAI_SUBMODULE_BUILD"])
+    env.Append(CPPDEFINES=[("limboai_init", "limboai_init_unused")])
 
     # --- LimboAI Automatic Patching (CI Resilience) ---
     # Patch limboai/compat/variant.cpp to fix include-order bug:
     # variant.h transitively includes variant.hpp -> hashfuncs.hpp which
     # forward-declares Ref<>, shadowing the full template from ref.hpp.
     # We insert ref.hpp + ref_counted.hpp BEFORE variant.h to fix this.
-    limboai_variant_cpp = os.path.join("limboai", "compat", "variant.cpp")
+    limboai_variant_cpp = os.path.join("src", "limboai", "compat", "variant.cpp")
     if os.path.exists(limboai_variant_cpp):
         with open(limboai_variant_cpp, "r") as f:
             variant_content = f.read()
@@ -175,7 +213,7 @@ if os.path.isdir("limboai"):
 env.VariantDir("src/bin", "src", duplicate=0)
 
 # Collect all source files
-sources = Glob("src/bin/*.cpp")
+sources += Glob("src/bin/*.cpp")
 sources += Glob("src/bin/core/*.cpp")
 sources += Glob("src/bin/resources/*.cpp")
 sources += Glob("src/bin/scene/*.cpp")
@@ -189,25 +227,6 @@ if tests_arg in ["unit", "yes"]:
     sources += Glob("src/bin/tests/*.cpp")
     env.Append(CPPDEFINES=["AS_TESTS_ENABLED"])
 
-# Collect LimboAI sources if available
-if os.path.isdir("limboai"):
-    env.VariantDir("src/bin/limboai", "limboai", duplicate=0)
-    sources += Glob("src/bin/limboai/*.cpp")
-    sources += Glob("src/bin/limboai/blackboard/*.cpp")
-    sources += Glob("src/bin/limboai/blackboard/bb_param/*.cpp")
-    sources += Glob("src/bin/limboai/bt/*.cpp")
-    sources += Glob("src/bin/limboai/bt/tasks/*.cpp")
-    sources += Glob("src/bin/limboai/bt/tasks/blackboard/*.cpp")
-    sources += Glob("src/bin/limboai/bt/tasks/composites/*.cpp")
-    sources += Glob("src/bin/limboai/bt/tasks/decorators/*.cpp")
-    sources += Glob("src/bin/limboai/bt/tasks/misc/*.cpp")
-    sources += Glob("src/bin/limboai/bt/tasks/scene/*.cpp")
-    sources += Glob("src/bin/limboai/bt/tasks/utility/*.cpp")
-    sources += Glob("src/bin/limboai/compat/*.cpp")
-    sources += Glob("src/bin/limboai/hsm/*.cpp")
-    sources += Glob("src/bin/limboai/util/*.cpp")
-    sources += Glob("src/bin/limboai/editor/debugger/*.cpp")
-    sources += Glob("src/bin/limboai/editor/*.cpp")
 
 if env["target"] in ["editor"]:
     try:

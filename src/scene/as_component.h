@@ -164,6 +164,7 @@ public:
 	void lock_ability_by_tag(const StringName &p_tag);
 	void lock_ability_by_resource(const Ref<ASAbility> &p_ability);
 	bool is_ability_unlocked(const StringName &p_tag) const;
+	TypedArray<ASAbilitySpec> get_unlocked_abilities() const;
 
 	// --- Ability Activation API (Transient execution) ---
 	bool can_activate_ability_by_tag(const StringName &p_tag);

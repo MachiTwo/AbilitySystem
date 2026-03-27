@@ -71,12 +71,14 @@
 #include <godot_cpp/classes/audio_stream_player3d.hpp>
 #include <godot_cpp/classes/character_body2d.hpp>
 #include <godot_cpp/classes/character_body3d.hpp>
+#include <godot_cpp/classes/engine.hpp>
 #include <godot_cpp/classes/multiplayer_api.hpp>
 #include <godot_cpp/classes/project_settings.hpp>
 #include <godot_cpp/classes/sprite3d.hpp>
 #include <godot_cpp/classes/time.hpp>
 #include <godot_cpp/variant/utility_functions.hpp>
 #else
+#include "core/config/engine.h"
 #include "core/config/project_settings.h"
 #include "scene/2d/animated_sprite_2d.h"
 #include "scene/2d/audio_stream_player_2d.h"
@@ -196,8 +198,8 @@ void ASComponent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("remove_all_tags"), &ASComponent::remove_all_tags);
 	ClassDB::bind_method(D_METHOD("has_tag", "tag"), &ASComponent::has_tag);
 	ClassDB::bind_method(D_METHOD("get_tags"), &ASComponent::get_tags);
-	ClassDB::bind_method(D_METHOD("get_owned_tags"), &ASComponent::get_owned_tags);
 	ClassDB::bind_method(D_METHOD("get_attribute_sets"), &ASComponent::get_attribute_sets);
+	ClassDB::bind_method(D_METHOD("get_unlocked_abilities"), &ASComponent::get_unlocked_abilities);
 
 	// --- Multiplayer & Prediction ---
 	ClassDB::bind_method(D_METHOD("capture_snapshot"), &ASComponent::capture_snapshot);
@@ -282,6 +284,12 @@ void ASComponent::_bind_methods() {
 void ASComponent::_notification(int p_what) {
 	switch (p_what) {
 		case NOTIFICATION_READY: {
+			if (Engine::get_singleton()->is_editor_hint()) {
+				set_physics_process(false);
+				set_process(false);
+				return;
+			}
+
 			// Validate parent is CharacterBody2D or CharacterBody3D
 			Node *parent = get_parent();
 			if (!parent || (!Object::cast_to<CharacterBody2D>(parent) && !Object::cast_to<CharacterBody3D>(parent))) {
@@ -303,6 +311,10 @@ void ASComponent::_notification(int p_what) {
 			set_physics_process(true);
 		} break;
 		case NOTIFICATION_PHYSICS_PROCESS: {
+			if (Engine::get_singleton()->is_editor_hint()) {
+				return;
+			}
+
 			if (_is_local_authority()) {
 				tick(get_physics_process_delta_time());
 			} else {
@@ -535,6 +547,14 @@ TypedArray<StringName> ASComponent::get_tags() const {
 
 Ref<ASTagSpec> ASComponent::get_owned_tags() const {
 	return owned_tags;
+}
+
+TypedArray<ASAbilitySpec> ASComponent::get_unlocked_abilities() const {
+	TypedArray<ASAbilitySpec> ret;
+	for (int i = 0; i < unlocked_abilities.size(); i++) {
+		ret.push_back(unlocked_abilities[i]);
+	}
+	return ret;
 }
 
 void ASComponent::tick(float p_delta) {
@@ -2157,6 +2177,10 @@ bool ASComponent::_is_local_authority() const {
 }
 
 void ASComponent::capture_snapshot() {
+	if (Engine::get_singleton()->is_editor_hint()) {
+		return;
+	}
+
 	// 1. Capture to Light Cache (In-memory circular buffer)
 	state_cache.capture_state(this);
 

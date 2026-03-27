@@ -349,6 +349,16 @@ A API Visual exige Dogma nominal forte para gerar ícones nativos na Godot.
 
 ---
 
-## 15. PARADIGMAS DE TESTE DE IA
+## 16. INTEGRAÇÃO ABILITY SYSTEM (ASBridge v0.2.0)
 
-- Teste TDD AI focado no status (SUCCESS/FAIL/RUNNING). Mocar uma BT custom com Mock_Blackboard injetado no doctest header testa o loop perfeitamente isolado!
+### 16.1 Nós Oficiais de IA (Bridge Tasks)
+
+- **`ASActivateAbility` (Action)**: O comando formal para a IA disparar uma habilidade. Valida custos e cooldowns antes de agir.
+- **`ASWaitEvent` (Action)**: Coloca a árvore em `RUNNING` até que uma **Event Tag** específica ocorra no `ASComponent` (ex: `Event.Animation.Hit`).
+- **`ASCanActivateAbility` (Condition)**: Sensor de prontidão. Use para decidir ramos da árvore baseando-se na disponibilidade de habilidades.
+- **`ASEventOccurred` (Condition)**: Verifica se um evento (tag transitória) aconteceu nos últimos frames.
+
+### 16.2 Regra de Ouro do Desacoplamento de Combate
+
+- **Proibição de Escrita Direta**: A IA tem permissão para **LER** o Blackboard, mas nunca deve tentar escrever diretamente no `ASComponent`. Toda mutação de estado de combate deve ocorrer via despacho de Habilidades (`ASActivateAbility`) ou Injeção de Efeitos (`ASEffect`).
+- **Sincronia HSM/ASC**: O `ASComponent` é o "músculo". O `LimboHSM` é o "sistema nervoso". Use as tags `CONDITIONAL` do AS para trancar ou permitir transições de estado na HSM de forma reativa.

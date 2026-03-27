@@ -291,6 +291,12 @@
 				Returns the current value of the attribute identified by the tag.
 			</description>
 		</method>
+		<method name="get_unlocked_abilities" qualifiers="const">
+			<return type="ASAbilitySpec[]" />
+			<description>
+				Returns a list of all abilities currently unlocked for this actor.
+			</description>
+		</method>
 		<method name="get_audio_player" qualifiers="const">
 			<return type="Node" />
 			<description>

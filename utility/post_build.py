@@ -34,12 +34,22 @@ def sync_addons():
             shutil.copy2(src_file, addons_dir)
 
     # 3. Copy icons from source to addons/ability_system/icons/
-    icons_dir = os.path.join(project_root, "src", "icons")
+    # Collect from both Ability System and LimboAI
+    as_icons_dir = os.path.join(project_root, "src", "icons")
+    limbo_icons_dir = os.path.join(project_root, "src", "limboai", "icons")
     addons_icons_dir = os.path.join(addons_dir, "icons")
     os.makedirs(addons_icons_dir, exist_ok=True)
-    if os.path.exists(icons_dir):
-        for svg_file in glob.glob(os.path.join(icons_dir, "*.svg")):
+
+    # Sync AS icons
+    if os.path.exists(as_icons_dir):
+        for svg_file in glob.glob(os.path.join(as_icons_dir, "*.svg")):
             shutil.copy2(svg_file, addons_icons_dir)
+
+    # Sync LimboAI icons
+    if os.path.exists(limbo_icons_dir):
+        for svg_file in glob.glob(os.path.join(limbo_icons_dir, "*.svg")):
+            shutil.copy2(svg_file, addons_icons_dir)
+        print("[POST-BUILD] Synced LimboAI icons to addons/ability_system/icons/")
 
     # 4. Copy entire addons folder into the main demo project if it exists
     proj_path = os.path.join(project_root, "demo")

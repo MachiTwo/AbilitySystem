@@ -59,7 +59,7 @@ void AbilitySystem::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("is_tag_registered", "tag"), &AbilitySystem::is_tag_registered);
 	ClassDB::bind_method(D_METHOD("unregister_tag", "tag"), &AbilitySystem::unregister_tag);
 	ClassDB::bind_method(D_METHOD("remove_tag_branch", "tag"), &AbilitySystem::remove_tag_branch);
-	ClassDB::bind_method(D_METHOD("get_registered_tags"), &AbilitySystem::get_registered_tags);
+	ClassDB::bind_method(D_METHOD("get_all_registered_tags"), &AbilitySystem::get_all_registered_tags);
 	ClassDB::bind_method(D_METHOD("get_registered_tags_of_type", "type"), &AbilitySystem::get_registered_tags_of_type);
 	ClassDB::bind_method(D_METHOD("get_tag_type", "tag"), &AbilitySystem::get_tag_type);
 
@@ -276,7 +276,7 @@ ASTagType AbilitySystem::get_tag_type(const StringName &p_tag) const {
 	return (ASTagType)ASTagType::NAME;
 }
 
-TypedArray<StringName> AbilitySystem::get_registered_tags() const {
+TypedArray<StringName> AbilitySystem::get_all_registered_tags() const {
 	TypedArray<StringName> res;
 	for (const KeyValue<StringName, ASTagType> &E : registered_tags) {
 		res.push_back(E.key);

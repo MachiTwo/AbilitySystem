@@ -122,6 +122,8 @@ Methods
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``float``                                                                | :ref:`get_attribute_value_by_tag<class_ASComponent_method_get_attribute_value_by_tag>`\ (\ tag\: ``StringName``\ ) |const|                                                                                      |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[:ref:`ASAbilitySpec<class_ASAbilitySpec>`\]   | :ref:`get_unlocked_abilities<class_ASComponent_method_get_unlocked_abilities>`\ (\ ) |const|                                                                                                                    |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Node``                                                                 | :ref:`get_audio_player<class_ASComponent_method_get_audio_player>`\ (\ ) |const|                                                                                                                                |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``float``                                                                | :ref:`get_cooldown_remaining<class_ASComponent_method_get_cooldown_remaining>`\ (\ ability_tag\: ``StringName``\ ) |const|                                                                                      |
@@ -889,6 +891,18 @@ Returns the current value of the specified attribute resource.
 ``float`` **get_attribute_value_by_tag**\ (\ tag\: ``StringName``\ ) |const| :ref:`🔗<class_ASComponent_method_get_attribute_value_by_tag>`
 
 Returns the current value of the attribute identified by the tag.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_unlocked_abilities:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[:ref:`ASAbilitySpec<class_ASAbilitySpec>`\] **get_unlocked_abilities**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_unlocked_abilities>`
+
+Returns a list of all abilities currently unlocked for this actor.
 
 .. rst-class:: classref-item-separator
 

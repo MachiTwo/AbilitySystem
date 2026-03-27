@@ -8,14 +8,38 @@ module_env = env.Clone()
 if "ABILITY_SYSTEM_GDEXTENSION" not in env["CPPDEFINES"]:
     module_env.Append(CPPDEFINES=["ABILITY_SYSTEM_MODULE"])
 
-# Collect source files (now relative to src/)
+# Collect core source files (now relative to src/)
 sources = []
 sources += Glob("*.cpp")
 sources += Glob("core/*.cpp")
 sources += Glob("resources/*.cpp")
 sources += Glob("scene/*.cpp")
 sources += Glob("editor/*.cpp")
+sources += Glob("bridge/*.cpp")
 sources += Glob("compat/*.cpp")
+
+# --- Integrated LimboAI Sources (Atomic Module Build) ---
+sources += Glob("limboai/*.cpp")
+sources += Glob("limboai/blackboard/*.cpp")
+sources += Glob("limboai/blackboard/bb_param/*.cpp")
+sources += Glob("limboai/bt/*.cpp")
+sources += Glob("limboai/bt/tasks/*.cpp")
+sources += Glob("limboai/bt/tasks/blackboard/*.cpp")
+sources += Glob("limboai/bt/tasks/composites/*.cpp")
+sources += Glob("limboai/bt/tasks/decorators/*.cpp")
+sources += Glob("limboai/bt/tasks/misc/*.cpp")
+sources += Glob("limboai/bt/tasks/scene/*.cpp")
+sources += Glob("limboai/bt/tasks/utility/*.cpp")
+sources += Glob("limboai/compat/*.cpp")
+sources += Glob("limboai/hsm/*.cpp")
+sources += Glob("limboai/util/*.cpp")
+
+if env.get("target") != "template_release":
+    sources += Glob("limboai/editor/*.cpp")
+    sources += Glob("limboai/editor/debugger/*.cpp")
+
+module_env.Append(CPPDEFINES=["LIMBOAI_SUBMODULE_BUILD"])
+module_env.Append(CPPPATH=["#modules/ability_system/limboai", "#modules/ability_system"])
 
 # Add collected files to Godot's module environment
 module_env.add_source_files(env.modules_sources, sources)

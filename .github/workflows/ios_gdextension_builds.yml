@@ -19,12 +19,14 @@ jobs:
       fail-fast: false
       matrix:
         target: [editor, template_release]
-        arch: [arm64, universal]
+        arch: [arm64]
         float-precision: [single]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
+        with:
+          submodules: recursive
 
       - name: Import dependency versions
         shell: bash
@@ -39,12 +41,6 @@ jobs:
           path: godot-cpp
           submodules: recursive
 
-      - name: Fetch LimboAI
-        uses: actions/checkout@v4.2.2
-        with:
-          repository: ${{ env.PROJECT_INTEGRATION_GITHUB }}
-          ref: ${{ env.PROJECT_INTEGRATION_BRANCH }}
-          path: limboai
 
       - name: Setup godot-cpp
         uses: ./godot-cpp/.github/actions/setup-godot-cpp
@@ -78,7 +74,7 @@ jobs:
           cp gdextension/* tmp-builds/out/addons/${{ env.MODULE_NAME }}/ 2>/dev/null || true
           cp README.md README.pt.md release_note.md release_note.pt.md tmp-builds/out/addons/${{ env.MODULE_NAME }}/ 2>/dev/null || true
           cp src/icons/*.svg tmp-builds/out/addons/${{ env.MODULE_NAME }}/icons/ 2>/dev/null || true
-          find addons/${{ env.MODULE_NAME }}/bin/ -maxdepth 1 -name "*.a" -exec cp {} tmp-builds/out/addons/${{ env.MODULE_NAME }}/bin/ \;
+          find addons/${{ env.MODULE_NAME }}/bin/ -maxdepth 1 -name "*.dylib" -exec cp {} tmp-builds/out/addons/${{ env.MODULE_NAME }}/bin/ \;
 
       - name: Cache Build for Packaging
         uses: actions/cache/save@v4.2.2

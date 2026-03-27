@@ -4,7 +4,7 @@ default_language_version:
 exclude: |
   (?x)^(
     .*godot-cpp/.*|
-    .*reverse-engineering/.*|
+    .*src/limboai/.*|
     .*demo/.*|
     .*src/tests/doctest.h|
     .*doc/source/classes/.*

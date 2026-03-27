@@ -24,6 +24,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
+        with:
+          submodules: recursive
 
       - name: Import dependency versions
         shell: bash
@@ -38,12 +40,6 @@ jobs:
           path: godot-cpp
           submodules: recursive
 
-      - name: Fetch LimboAI
-        uses: actions/checkout@v4.2.2
-        with:
-          repository: ${{ env.PROJECT_INTEGRATION_GITHUB }}
-          ref: ${{ env.PROJECT_INTEGRATION_BRANCH }}
-          path: limboai
 
       - name: Setup Emscripten
         uses: mymindstorm/setup-emsdk@v14

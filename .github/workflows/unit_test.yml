@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Checkout Ability System
         uses: actions/checkout@v4.2.2
+        with:
+          submodules: recursive
 
       - name: Checkout godot-cpp
         uses: actions/checkout@v4.2.2

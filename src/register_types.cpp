@@ -58,7 +58,6 @@
 #include "src/scene/as_delivery.h"
 
 // AS Bridge for LimboAI integration
-#include "limboai/register_types.h"
 #include "src/bridge/as_bridge.h"
 #include "src/bridge/as_bridge_action_activate.h"
 #include "src/bridge/as_bridge_action_dispatch_event.h"
@@ -70,6 +69,7 @@
 #include "src/compat/limboai_blackboard.h"
 #include "src/compat/limboai_string_names.h"
 #include "src/compat/limboai_utility.h"
+#include "src/limboai/register_types.h"
 
 #ifdef TOOLS_ENABLED
 #include "src/editor/as_editor_plugin.h"
