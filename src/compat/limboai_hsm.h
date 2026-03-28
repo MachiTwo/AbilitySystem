@@ -104,7 +104,7 @@ VARIANT_ENUM_CAST(LimboHSM_Compat::UpdateMode)
 class LimboState : public RefCounted {
 	GDCLASS(LimboState, RefCounted)
 
-private:
+protected:
 	String state_name;
 	UpdateMode update_mode = LimboHSM_Compat::UPDATE_IDLE;
 	bool active = false;
@@ -114,7 +114,6 @@ private:
 	Ref<LimboState> current_substate;
 	Ref<LimboState> parent_state;
 
-protected:
 	static void _bind_methods();
 
 public:
@@ -168,7 +167,7 @@ public:
 class LimboHSM : public RefCounted {
 	GDCLASS(LimboHSM, RefCounted)
 
-private:
+protected:
 	Vector<Ref<LimboState>> states;
 	Ref<LimboState> current_state;
 	Ref<LimboState> initial_state;
@@ -177,7 +176,6 @@ private:
 	UpdateMode update_mode = LimboHSM_Compat::UPDATE_IDLE;
 	bool active = false;
 
-protected:
 	static void _bind_methods();
 
 public:
