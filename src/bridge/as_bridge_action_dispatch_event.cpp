@@ -52,12 +52,13 @@ void BTActionAS_DispatchEvent::_bind_methods() {
 }
 
 BT::Status BTActionAS_DispatchEvent::_tick(double p_delta) {
-	if (!agent) {
+	Node *p_agent = get_agent();
+	if (!p_agent) {
 		WARN_PRINT("BTActionAS_DispatchEvent: No agent assigned");
 		return BT::FAILURE;
 	}
 
-	ASComponent *asc = resolve_asc(agent, asc_node_path);
+	ASComponent *asc = resolve_asc(p_agent, asc_node_path);
 	if (!asc) {
 		WARN_PRINT("BTActionAS_DispatchEvent: No ASComponent found on agent");
 		return BT::FAILURE;
@@ -76,7 +77,7 @@ BT::Status BTActionAS_DispatchEvent::_tick(double p_delta) {
 
 	// Dispatch event using AS Event system
 	// See BUSINESS_RULES.md section 2.6 - Events are imperative
-	asc->dispatch_event(event_tag, agent, magnitude, custom_payload);
+	asc->dispatch_event(event_tag, p_agent, magnitude, custom_payload);
 
 	return BT::SUCCESS; // Dispatch is always immediate
 }

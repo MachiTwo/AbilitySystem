@@ -44,11 +44,12 @@ void BTConditionAS_CanActivate::_bind_methods() {
 }
 
 BT::Status BTConditionAS_CanActivate::_tick(double p_delta) {
-	if (!agent) {
+	Node *p_agent = get_agent();
+	if (!p_agent) {
 		return BT::FAILURE;
 	}
 
-	ASComponent *asc = resolve_asc(agent, asc_node_path);
+	ASComponent *asc = resolve_asc(p_agent, asc_node_path);
 	if (!asc) {
 		return BT::FAILURE;
 	}

@@ -48,12 +48,13 @@ void BTActionAS_ActivateAbility::_bind_methods() {
 }
 
 BT::Status BTActionAS_ActivateAbility::_tick(double p_delta) {
-	if (!agent) {
+	Node *p_agent = get_agent();
+	if (!p_agent) {
 		WARN_PRINT("BTActionAS_ActivateAbility: No agent assigned");
 		return BT::FAILURE;
 	}
 
-	ASComponent *asc = resolve_asc(agent, asc_node_path);
+	ASComponent *asc = resolve_asc(p_agent, asc_node_path);
 	if (!asc) {
 		WARN_PRINT("BTActionAS_ActivateAbility: No ASComponent found on agent");
 		return BT::FAILURE;

@@ -88,7 +88,7 @@ The `BlackboardPlan` is not a simple dictionary; it is the **Strong Typing Signa
 
 ### 3.2 Property Bindings (Optimized Active Bridge)
 
-**The Problem (Anti-Pattern):** A junior developer writes an Action called `BTCondition_HealthLow` which, every tick, executes `blackboard->set_var("hp", agent->get_health())`. This wastes 1 processing frame just for useless scope transport.
+**The Problem (Anti-Pattern):** A junior developer writes an Action called `BTCondition_HealthLow` which, every tick, executes `blackboard->set_var("hp", p_agent->get_health())`. This wastes 1 processing frame just for useless scope transport.
 
 **The Hybrid Solution (Bindings):** The Blackboard does not hold the float. The Blackboard becomes a _C++ Pointer_ directly to the Actor's variable.
 

@@ -74,11 +74,11 @@ void ASBridgeState::_setup() {
 }
 
 void ASBridgeState::_enter() {
-	if (!agent) {
+	if (!get_agent()) {
 		return;
 	}
 
-	ASComponent *asc = ASBridge::resolve_asc(agent, asc_node_path);
+	ASComponent *asc = ASBridge::resolve_asc(get_agent(), asc_node_path);
 	if (!asc) {
 		return;
 	}
@@ -87,17 +87,17 @@ void ASBridgeState::_enter() {
 	for (int i = 0; i < enter_events.size(); i++) {
 		StringName event = enter_events[i];
 		if (!event.is_empty()) {
-			asc->dispatch_event(event, agent, 1.0f, Dictionary());
+			asc->dispatch_event(event, get_agent(), 1.0f, Dictionary());
 		}
 	}
 }
 
 void ASBridgeState::_exit() {
-	if (!agent) {
+	if (!get_agent()) {
 		return;
 	}
 
-	ASComponent *asc = ASBridge::resolve_asc(agent, asc_node_path);
+	ASComponent *asc = ASBridge::resolve_asc(get_agent(), asc_node_path);
 	if (!asc) {
 		return;
 	}
@@ -106,17 +106,17 @@ void ASBridgeState::_exit() {
 	for (int i = 0; i < exit_events.size(); i++) {
 		StringName event = exit_events[i];
 		if (!event.is_empty()) {
-			asc->dispatch_event(event, agent, 1.0f, Dictionary());
+			asc->dispatch_event(event, get_agent(), 1.0f, Dictionary());
 		}
 	}
 }
 
 void ASBridgeState::_update(double p_delta) {
-	if (!agent) {
+	if (!get_agent()) {
 		return;
 	}
 
-	ASComponent *asc = ASBridge::resolve_asc(agent, asc_node_path);
+	ASComponent *asc = ASBridge::resolve_asc(get_agent(), asc_node_path);
 	if (!asc) {
 		return;
 	}
@@ -167,14 +167,14 @@ bool ASBridgeState::can_enter_state(Node *p_agent) const {
 }
 
 void ASBridgeState::dispatch_event(const StringName &p_event) {
-	if (!agent) {
+	if (!get_agent()) {
 		return;
 	}
 
-	ASComponent *asc = ASBridge::resolve_asc(agent, asc_node_path);
+	ASComponent *asc = ASBridge::resolve_asc(get_agent(), asc_node_path);
 	if (!asc) {
 		return;
 	}
 
-	asc->dispatch_event(p_event, agent, 1.0f, Dictionary());
+	asc->dispatch_event(p_event, get_agent(), 1.0f, Dictionary());
 }

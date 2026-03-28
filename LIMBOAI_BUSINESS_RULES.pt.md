@@ -88,7 +88,7 @@ O `BlackboardPlan` não é um dicionário; é a **Assinatura de Tipagem Forte** 
 
 ### 3.2 Property Bindings (Ponte Ativa Otimizada)
 
-**O Problema (Anti-Padrão):** O desenvolvedor "junior" escreve uma Action chamada `BTCondition_HealthLow` que, a cada tick, executa `blackboard->set_var("hp", agent->get_health())`. Isso gasta 1 frame de processamento só para transporte inútil de escopo.
+**O Problema (Anti-Padrão):** O desenvolvedor "junior" escreve uma Action chamada `BTCondition_HealthLow` que, a cada tick, executa `blackboard->set_var("hp", p_agent->get_health())`. Isso gasta 1 frame de processamento só para transporte inútil de escopo.
 
 **A Solução Híbrida (Bindings):** O Blackboard não guarda o float. O Blackboard se torna um _Ponteiro C++_ para a variável do Ator.
 
