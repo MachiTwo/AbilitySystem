@@ -5,7 +5,7 @@
 	</brief_description>
 	<description>
 		A Behavior Tree condition that checks if an ability can be activated (requirements met, cooldown ready, costs affordable) without actually activating it.
-		Uses [method ASComponent.can_activate_ability_by_tag]. Returns [code]BT.SUCCESS[/code] if can activate, [code]BT.FAILURE[/code] otherwise.
+		Uses [method ASComponent.can_activate_ability_by_tag]. Returns [constant BT.SUCCESS] if can activate, [constant BT.FAILURE] otherwise.
 	</description>
 	<tutorials>
 	</tutorials>

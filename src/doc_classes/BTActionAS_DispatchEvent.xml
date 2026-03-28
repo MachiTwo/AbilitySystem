@@ -5,7 +5,7 @@
 	</brief_description>
 	<description>
 		A Behavior Tree action that dispatches an [ASEventTag] via [method ASComponent.dispatch_event]. Uses the native AS Event system (Split Registry Pattern).
-		Returns [code]BT.SUCCESS[/code] immediately after dispatch.
+		Returns [constant BT.SUCCESS] immediately after dispatch.
 	</description>
 	<tutorials>
 	</tutorials>

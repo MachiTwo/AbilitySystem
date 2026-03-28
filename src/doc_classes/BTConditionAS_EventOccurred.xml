@@ -5,7 +5,7 @@
 	</brief_description>
 	<description>
 		A Behavior Tree condition that checks if an [ASEventTag] occurred within a time window using the Events Historical buffer.
-		Returns [code]BT.SUCCESS[/code] if event found, [code]BT.FAILURE[/code] otherwise.
+		Returns [constant BT.SUCCESS] if event found, [constant BT.FAILURE] otherwise.
 	</description>
 	<tutorials>
 	</tutorials>

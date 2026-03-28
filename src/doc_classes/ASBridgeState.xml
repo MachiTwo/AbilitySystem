@@ -4,7 +4,7 @@
 		LimboState with integrated Ability System support.
 	</brief_description>
 	<description>
-		A [code]LimboState[/code] that integrates with Ability System. Provides automatic event dispatching on state transitions and event listening for automatic transitions.
+		A [LimboState] that integrates with Ability System. Provides automatic event dispatching on state transitions and event listening for automatic transitions.
 		Can require specific tags to be present before entering, and dispatches AS events on [code]_enter[/code], [code]_exit[/code], and [code]_update[/code].
 	</description>
 	<tutorials>

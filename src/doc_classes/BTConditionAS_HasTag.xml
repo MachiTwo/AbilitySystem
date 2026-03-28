@@ -4,7 +4,7 @@
 		BTCondition that checks if the agent has a specific Ability System tag.
 	</brief_description>
 	<description>
-		A Behavior Tree condition that checks if the actor's [ASComponent] has a specific tag. Returns [code]BT.SUCCESS[/code] if tag present, [code]BT.FAILURE[/code] otherwise.
+		A Behavior Tree condition that checks if the actor's [ASComponent] has a specific tag. Returns [constant BT.SUCCESS] if tag present, [constant BT.FAILURE] otherwise.
 		Supports hierarchical matching (e.g., checking [code]State[/code] matches [code]State.Stunned[/code]).
 	</description>
 	<tutorials>

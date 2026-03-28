@@ -21,7 +21,7 @@ Description
 
 A Behavior Tree action that dispatches an :ref:`ASEventTag<class_ASEventTag>` via :ref:`ASComponent.dispatch_event()<class_ASComponent_method_dispatch_event>`. Uses the native AS Event system (Split Registry Pattern).
 
-Returns ``BT.SUCCESS`` immediately after dispatch.
+Returns :ref:`BT.SUCCESS<class_BT_constant_SUCCESS>` immediately after dispatch.
 
 .. rst-class:: classref-reftable-group
 

@@ -19,7 +19,7 @@ BTAction that activates an Ability System ability by tag.
 Description
 -----------
 
-A Behavior Tree action that attempts to activate an ability via :ref:`ASComponent<class_ASComponent>` using the ability's tag. Returns ``BT.SUCCESS`` if activation succeeds, ``BT.FAILURE`` otherwise.
+A Behavior Tree action that attempts to activate an ability via :ref:`ASComponent<class_ASComponent>` using the ability's tag. Returns :ref:`BT.SUCCESS<class_BT_constant_SUCCESS>` if activation succeeds, :ref:`BT.FAILURE<class_BT_constant_FAILURE>` otherwise.
 
 This task respects all ability requirements: tags, cooldowns, costs, and level restrictions.
 
