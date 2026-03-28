@@ -180,6 +180,7 @@ protected:
 	static void _bind_methods();
 
 public:
+	virtual BT::Status _tick(double p_delta) override { return BT::SUCCESS; }
 	virtual void add_child(const Ref<BTTask> &p_child) override { children.push_back(p_child); }
 	virtual void remove_child(const Ref<BTTask> &p_child) override { children.erase(p_child); }
 	virtual TypedArray<BTTask> get_children() const override;
@@ -199,6 +200,7 @@ protected:
 	static void _bind_methods();
 
 public:
+	virtual BT::Status _tick(double p_delta) override { return BT::SUCCESS; }
 	virtual void add_child(const Ref<BTTask> &p_child) override { child = p_child; }
 	virtual void remove_child(const Ref<BTTask> &p_child) override {
 		if (child == p_child)
