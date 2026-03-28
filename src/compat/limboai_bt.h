@@ -46,20 +46,21 @@
 #if defined(LIMBOAI_MODULE) || defined(LIMBOAI_GDEXTENSION)
 // Real LimboAI available — use actual headers
 #ifdef LIMBOAI_GDEXTENSION
-#include "bt/behavior_tree.h"
-#include "bt/tasks/bt_action.h"
-#include "bt/tasks/bt_condition.h"
-#include "bt/tasks/bt_task.h"
+#include "src/limboai/bt/behavior_tree.h"
+#include "src/limboai/bt/tasks/bt_action.h"
+#include "src/limboai/bt/tasks/bt_condition.h"
+#include "src/limboai/bt/tasks/bt_task.h"
 #else
-#include "modules/limboai/bt/behavior_tree.h"
-#include "modules/limboai/bt/tasks/bt_action.h"
-#include "modules/limboai/bt/tasks/bt_condition.h"
-#include "modules/limboai/bt/tasks/bt_task.h"
+#include "modules/ability_system/limboai/bt/behavior_tree.h"
+#include "modules/ability_system/limboai/bt/tasks/bt_action.h"
+#include "modules/ability_system/limboai/bt/tasks/bt_condition.h"
+#include "modules/ability_system/limboai/bt/tasks/bt_task.h"
 #endif
 #else
 // Stub implementations follow
 
 #include "../scene/as_component.h"
+#include "limboai_blackboard.h"
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include <godot_cpp/classes/node.hpp>

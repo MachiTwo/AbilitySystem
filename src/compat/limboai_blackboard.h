@@ -46,13 +46,13 @@
 #if defined(LIMBOAI_MODULE) || defined(LIMBOAI_GDEXTENSION)
 // Real LimboAI available — use actual headers
 #ifdef LIMBOAI_GDEXTENSION
-#include "blackboard/bb_variable.h"
-#include "blackboard/blackboard.h"
-#include "blackboard/blackboard_plan.h"
+#include "src/limboai/blackboard/bb_variable.h"
+#include "src/limboai/blackboard/blackboard.h"
+#include "src/limboai/blackboard/blackboard_plan.h"
 #else
-#include "modules/limboai/blackboard/bb_variable.h"
-#include "modules/limboai/blackboard/blackboard.h"
-#include "modules/limboai/blackboard/blackboard_plan.h"
+#include "modules/ability_system/limboai/blackboard/bb_variable.h"
+#include "modules/ability_system/limboai/blackboard/blackboard.h"
+#include "modules/ability_system/limboai/blackboard/blackboard_plan.h"
 #endif
 #else
 // Stub implementations follow

@@ -101,11 +101,16 @@ void BBVariable::update_from_bound_property() {
 		return;
 	}
 
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	Variant bound_value = object->get(bound_property);
+	set_value(bound_value);
+#else
 	bool valid = false;
 	Variant bound_value = object->get(bound_property, &valid);
 	if (valid) {
 		set_value(bound_value);
 	}
+#endif
 }
 
 // ============================================================================

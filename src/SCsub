@@ -33,10 +33,10 @@ sources += Glob("limboai/bt/tasks/utility/*.cpp")
 sources += Glob("limboai/compat/*.cpp")
 sources += Glob("limboai/hsm/*.cpp")
 sources += Glob("limboai/util/*.cpp")
+sources += Glob("limboai/editor/debugger/*.cpp")
 
 if env.get("target") != "template_release":
     sources += Glob("limboai/editor/*.cpp")
-    sources += Glob("limboai/editor/debugger/*.cpp")
 
 module_env.Append(CPPDEFINES=["LIMBOAI_SUBMODULE_BUILD"])
 module_env.Append(CPPPATH=["#modules/ability_system/limboai", "#modules/ability_system"])

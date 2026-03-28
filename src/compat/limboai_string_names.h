@@ -45,7 +45,7 @@
 #ifdef LIMBOAI_GDEXTENSION
 #include "util/limbo_string_names.h"
 #else
-#include "modules/limboai/util/limbo_string_names.h"
+#include "modules/ability_system/limboai/util/limbo_string_names.h"
 #endif
 #else
 

@@ -45,7 +45,7 @@
 #ifdef LIMBOAI_GDEXTENSION
 #include "util/limbo_utility.h"
 #else
-#include "modules/limboai/util/limbo_utility.h"
+#include "modules/ability_system/limboai/util/limbo_utility.h"
 #endif
 #else
 

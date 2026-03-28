@@ -49,8 +49,8 @@
 #include "hsm/limbo_hsm.h"
 #include "hsm/limbo_state.h"
 #else
-#include "modules/limboai/hsm/limbo_hsm.h"
-#include "modules/limboai/hsm/limbo_state.h"
+#include "modules/ability_system/limboai/hsm/limbo_hsm.h"
+#include "modules/ability_system/limboai/hsm/limbo_state.h"
 #endif
 #else
 // Stub implementations follow

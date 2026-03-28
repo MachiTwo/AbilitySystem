@@ -48,16 +48,16 @@ void LimboStringNames::free() {
 }
 
 LimboStringNames::LimboStringNames() {
-	_setup = StaticCString::create("_setup");
-	_enter = StaticCString::create("_enter");
-	_exit = StaticCString::create("_exit");
-	_update = StaticCString::create("_update");
-	_tick = StaticCString::create("_tick");
-	_on_as_event_received = StaticCString::create("_on_as_event_received");
-	agent = StaticCString::create("agent");
-	blackboard = StaticCString::create("blackboard");
-	blackboard_plan = StaticCString::create("blackboard_plan");
-	LimboAI = StaticCString::create("LimboAI");
+	_setup = StringName("_setup");
+	_enter = StringName("_enter");
+	_exit = StringName("_exit");
+	_update = StringName("_update");
+	_tick = StringName("_tick");
+	_on_as_event_received = StringName("_on_as_event_received");
+	agent = StringName("agent");
+	blackboard = StringName("blackboard");
+	blackboard_plan = StringName("blackboard_plan");
+	LimboAI = StringName("LimboAI");
 }
 
 #endif // !LIMBOAI_MODULE && !LIMBOAI_GDEXTENSION

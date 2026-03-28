@@ -110,14 +110,10 @@ env.Append(CPPDEFINES=["ABILITY_SYSTEM_GDEXTENSION"])
 sources = []
 
 # Collect LimboAI sources if available
-if os.path.isdir("limboai"):
+if os.path.isdir("src/limboai"):
     print(
         "[SCONSTRUCT] LimboAI detected. Integrating as linked dependency (godot-cpp style)..."
     )
-
-    # Still call SConscript to build LimboAI's own standalone DLL for addons/limboai
-    Export(["env", "customs"])
-    SConscript("src/limboai/SConstruct")
 
     # Integrated sources into AS binary using the new internal submodule path
     env.VariantDir("src/bin/limboai", "src/limboai", duplicate=0)
@@ -136,7 +132,7 @@ if os.path.isdir("limboai"):
     limbo_sources += Glob("src/bin/limboai/hsm/*.cpp")
     if env["target"] != "template_release":
         limbo_sources += Glob("src/bin/limboai/editor/*.cpp")
-        limbo_sources += Glob("src/bin/limboai/editor/debugger/*.cpp")
+    limbo_sources += Glob("src/bin/limboai/editor/debugger/*.cpp")
     limbo_sources += Glob("src/bin/limboai/util/*.cpp")
 
     # CRITICAL: Include ALL sources (including register_types) but define
@@ -176,7 +172,7 @@ if os.path.isdir("limboai"):
                     f.write(patched)
 
     # Patch limboai/compat/variant.h to also activate under ABILITY_SYSTEM_GDEXTENSION
-    limboai_variant_h = os.path.join("limboai", "compat", "variant.h")
+    limboai_variant_h = os.path.join("src", "limboai", "compat", "variant.h")
     if os.path.exists(limboai_variant_h):
         with open(limboai_variant_h, "r") as f:
             variant_h_content = f.read()
@@ -194,13 +190,13 @@ if os.path.isdir("limboai"):
                     f.write(patched_h)
 
     # Generate LimboAI version header (required for compilation)
-    sys.path.append("limboai")
+    sys.path.append("src/limboai")
     try:
         import limboai_version
 
         # We need to be in the limboai directory for the script to find its 'util' folder
         curr_dir = os.getcwd()
-        os.chdir("limboai")
+        os.chdir("src/limboai")
         try:
             limboai_version.generate_module_version_header()
             print("[SCONSTRUCT] Generated LimboAI version header.")
