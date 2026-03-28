@@ -89,6 +89,7 @@ jobs:
           MONO_ARG=""
           if [ "${{ inputs.module }}" = "mono" ]; then
             MONO_ARG="module_mono_enabled=yes"
+          fi
           ANDROID_HOME=$ANDROID_HOME ANDROID_NDK_ROOT=$ANDROID_NDK_ROOT scons platform=android target=${{ inputs.target }} arch=${{ inputs.arch }} precision=single -j2 $MONO_ARG
 
       - name: Save .scons_cache
