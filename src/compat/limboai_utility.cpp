@@ -37,7 +37,9 @@
 #include <godot_cpp/variant/dictionary.hpp>
 #else
 #include "core/config/project_settings.h"
+#include "core/object/class_db.h"
 #include "core/variant/dictionary.h"
+#include "core/variant/typed_array.h"
 #endif
 
 LimboUtility *LimboUtility::singleton = nullptr;

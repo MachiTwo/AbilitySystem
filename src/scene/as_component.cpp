@@ -688,7 +688,6 @@ void ASComponent::_process_abilities(float p_delta) {
 				}
 
 				bool phase_started = true;
-				ObjectID current_sub_id = ObjectID(spec->get_instance_id());
 
 				// Loop to handle multiple sequential instant phases in the same frame
 				while (phase_started) {

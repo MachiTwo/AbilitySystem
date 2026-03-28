@@ -48,22 +48,8 @@ void LimboTaskDB::_bind_methods() {
 }
 
 void LimboTaskDB::register_task_name(const StringName &p_class_name) {
-#ifdef LIMBOAI_MODULE
-	// Real implementation when LimboAI module is available
-	// This would call the actual LimboAI TaskDB registration
-	// using Godot core print_line
-#elif defined(LIMBOAI_GDEXTENSION)
-	// GDExtension implementation
-	if (Engine::get_singleton()->has_singleton("LimboAI")) {
-		// Call LimboAI GDExtension registration
-		godot::UtilityFunctions::print(vformat("LimboTaskDB: Registering task '%s' (GDExtension)", p_class_name));
-	} else {
-		godot::UtilityFunctions::print(vformat("LimboTaskDB: Cannot register '%s' - LimboAI not available", p_class_name));
-	}
-#else
-	// Stub implementation - just log
-	godot::UtilityFunctions::print(vformat("LimboTaskDB: Stub registration for '%s'", p_class_name));
-#endif
+	// Stub implementation — just log
+	WARN_PRINT(vformat("LimboTaskDB: Stub registration for '%s'", p_class_name));
 }
 
 bool LimboTaskDB::is_task_registered(const StringName &p_class_name) const {

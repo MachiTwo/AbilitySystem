@@ -74,7 +74,6 @@ void ASBridgeState::_setup() {
 }
 
 void ASBridgeState::_enter() {
-	Node *agent = get_agent();
 	if (!agent) {
 		return;
 	}
@@ -94,7 +93,6 @@ void ASBridgeState::_enter() {
 }
 
 void ASBridgeState::_exit() {
-	Node *agent = get_agent();
 	if (!agent) {
 		return;
 	}
@@ -114,7 +112,6 @@ void ASBridgeState::_exit() {
 }
 
 void ASBridgeState::_update(double p_delta) {
-	Node *agent = get_agent();
 	if (!agent) {
 		return;
 	}
@@ -170,7 +167,6 @@ bool ASBridgeState::can_enter_state(Node *p_agent) const {
 }
 
 void ASBridgeState::dispatch_event(const StringName &p_event) {
-	Node *agent = get_agent();
 	if (!agent) {
 		return;
 	}

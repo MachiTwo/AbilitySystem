@@ -48,7 +48,6 @@ void BTConditionAS_EventOccurred::_bind_methods() {
 }
 
 BT::Status BTConditionAS_EventOccurred::_tick(double p_delta) {
-	Node *agent = get_agent();
 	if (!agent) {
 		return BT::FAILURE;
 	}

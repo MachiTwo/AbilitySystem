@@ -48,7 +48,6 @@ void BTConditionAS_HasTag::_bind_methods() {
 }
 
 BT::Status BTConditionAS_HasTag::_tick(double p_delta) {
-	Node *agent = get_agent();
 	if (!agent) {
 		return BT::FAILURE;
 	}

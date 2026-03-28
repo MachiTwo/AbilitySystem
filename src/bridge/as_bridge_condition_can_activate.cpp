@@ -44,7 +44,6 @@ void BTConditionAS_CanActivate::_bind_methods() {
 }
 
 BT::Status BTConditionAS_CanActivate::_tick(double p_delta) {
-	Node *agent = get_agent();
 	if (!agent) {
 		return BT::FAILURE;
 	}

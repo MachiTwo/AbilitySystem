@@ -48,7 +48,6 @@ void BTActionAS_ActivateAbility::_bind_methods() {
 }
 
 BT::Status BTActionAS_ActivateAbility::_tick(double p_delta) {
-	Node *agent = get_agent();
 	if (!agent) {
 		WARN_PRINT("BTActionAS_ActivateAbility: No agent assigned");
 		return BT::FAILURE;

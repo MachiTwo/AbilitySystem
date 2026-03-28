@@ -56,7 +56,6 @@ BT::Status BTActionAS_WaitForEvent::_tick(double p_delta) {
 		return BT::SUCCESS;
 	}
 
-	Node *agent = get_agent();
 	if (!agent) {
 		return BT::FAILURE;
 	}

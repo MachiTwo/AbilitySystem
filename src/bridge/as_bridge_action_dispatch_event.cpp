@@ -52,7 +52,6 @@ void BTActionAS_DispatchEvent::_bind_methods() {
 }
 
 BT::Status BTActionAS_DispatchEvent::_tick(double p_delta) {
-	Node *agent = get_agent();
 	if (!agent) {
 		WARN_PRINT("BTActionAS_DispatchEvent: No agent assigned");
 		return BT::FAILURE;
