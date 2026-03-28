@@ -67,7 +67,10 @@
 #include "src/bridge/as_bridge_condition_has_tag.h"
 #include "src/bridge/as_bridge_state.h"
 #include "src/compat/limboai_blackboard.h"
+#include "src/compat/limboai_bt.h"
+#include "src/compat/limboai_hsm.h"
 #include "src/compat/limboai_string_names.h"
+#include "src/compat/limboai_task_db.h"
 #include "src/compat/limboai_utility.h"
 #include "src/limboai/register_types.h"
 
@@ -107,6 +110,12 @@
 #include "modules/ability_system/bridge/as_bridge_condition_event_occurred.h"
 #include "modules/ability_system/bridge/as_bridge_condition_has_tag.h"
 #include "modules/ability_system/bridge/as_bridge_state.h"
+#include "modules/ability_system/compat/limboai_blackboard.h"
+#include "modules/ability_system/compat/limboai_bt.h"
+#include "modules/ability_system/compat/limboai_hsm.h"
+#include "modules/ability_system/compat/limboai_string_names.h"
+#include "modules/ability_system/compat/limboai_task_db.h"
+#include "modules/ability_system/compat/limboai_utility.h"
 
 #ifdef TOOLS_ENABLED
 #include "modules/ability_system/editor/as_editor_plugin.h"
@@ -162,6 +171,17 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 		GDREGISTER_CLASS(Blackboard);
 		GDREGISTER_CLASS(BlackboardPlan);
 		GDREGISTER_CLASS(LimboUtility);
+		GDREGISTER_CLASS(LimboState);
+		GDREGISTER_CLASS(LimboHSM);
+		GDREGISTER_CLASS(BTTask);
+		GDREGISTER_CLASS(BTLeaf);
+		GDREGISTER_CLASS(BTComposite);
+		GDREGISTER_CLASS(BTDecorator);
+		GDREGISTER_CLASS(BTAction);
+		GDREGISTER_CLASS(BTCondition);
+		GDREGISTER_CLASS(BehaviorTree);
+		GDREGISTER_CLASS(BTInstance);
+		GDREGISTER_CLASS(LimboTaskDB);
 		LimboStringNames::create();
 #endif
 

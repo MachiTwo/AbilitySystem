@@ -5,6 +5,7 @@ exclude: |
   (?x)^(
     .*godot-cpp/.*|
     .*src/limboai/.*|
+    .*icons/.*|
     .*demo/.*|
     .*src/tests/doctest.h|
     .*doc/source/classes/.*
