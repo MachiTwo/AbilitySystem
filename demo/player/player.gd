@@ -26,6 +26,22 @@ var _attack_timer: float = 0.0
 var _is_attacking: bool = false
 
 # Logic State
+const TAG_COLORS := {
+	&"motion.idle": Color(0.785, 0.786, 0.761),
+	&"motion.walk": Color(0.5, 0.5, 0.5),
+	&"motion.run": Color(0.25, 0.5, 1.0),
+	&"motion.dash": Color(0.4, 0.4, 0.8),
+	&"jump.high": Color(0.5, 1.0, 0.5),
+	&"jump.fall": Color(1.0, 1.0, 0.0),
+	&"status.hurt": Color(1.0, 0.5, 0.0),
+	&"status.dead": Color(1.0, 0.0, 0.0),
+	&"attack.fast": Color(1.0, 0.0, 0.0),
+	&"attack.normal": Color(1.0, 0.27, 0.0),
+	&"attack.special": Color(1.0, 0.0, 0.27),
+	&"attack.charged": Color(0.8, 0.0, 0.0),
+	&"attack.dash_attack": Color(0.53, 0.0, 0.8),
+}
+
 var facing_direction: float = 1.0:
 	set(value):
 		if value != 0:
@@ -121,8 +137,6 @@ func _ready() -> void:
 					asc.unlock_ability_by_resource(ability)
 		
 		asc.tag_changed.connect(_on_tag_changed)
-		if _anim_player:
-			asc.set_animation_player(_anim_player)
 		if _sprite:
 			asc.register_node(&"ColorRect", _sprite)
 		if _hitbox:
@@ -399,5 +413,15 @@ func _update_context_tags() -> void:
 			asc.add_tag(&"physics.air")
 
 func _on_tag_changed(_tag: StringName, _added: bool) -> void:
-	# Hook para lógica reativa a tags (opcional)
-	pass
+	if not asc: return
+	
+	var current_tags = asc.get_tags()
+	var best_color = TAG_COLORS[&"motion.idle"]
+	
+	# Encontra a tag ativa com maior prioridade (última na lista de TAG_COLORS)
+	for t in current_tags:
+		if t in TAG_COLORS:
+			best_color = TAG_COLORS[t]
+	
+	if _sprite:
+		_sprite.modulate = best_color

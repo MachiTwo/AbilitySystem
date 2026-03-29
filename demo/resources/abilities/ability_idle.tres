@@ -1,5 +1,4 @@
-[gd_resource type="ASAbility" load_steps=2 format=3]
-[ext_resource type="ASCue" path="res://resources/as/cues/cue_idle.tres" id="1"]
+[gd_resource type="ASAbility" format=3]
 [resource]
 ability_name = "idle"
 ability_tag = &"motion.idle"
@@ -8,4 +7,3 @@ activation_required_all_tags = PackedStringArray("physics.ground")
 activation_blocked_any_tags = PackedStringArray("status.dead")
 activation_cancel_tags = PackedStringArray("motion.walk", "motion.run", "motion.dash", "jump.high", "jump.fall", "status.hurt")
 duration_policy = 2
-cues = [ExtResource("1")]

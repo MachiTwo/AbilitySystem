@@ -1,5 +1,5 @@
 [gd_resource type="ASAbilityPhase" load_steps=2 format=3]
-[ext_resource type="ASCue" path="res://resources/as/cues/cue_combo1.tres" id="1"]
+[ext_resource type="ASCue" path="res://resources/cues/cue_combo1.tres" id="1"]
 [resource]
 ability_name = "Combo1"
 ability_tag = &"attack.fast"
