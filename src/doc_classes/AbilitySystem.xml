@@ -9,15 +9,14 @@
 	<tutorials>
 	</tutorials>
 	<methods>
-		<method name="get_registered_tags" qualifiers="const">
+		<method name="get_all_registered_tags" qualifiers="const">
 			<return type="StringName[]" />
 			<description>
-				Returns all tags registered in the system.
 			</description>
 		</method>
 		<method name="get_registered_tags_of_type" qualifiers="const">
 			<return type="StringName[]" />
-			<param index="0" name="type" type="int" enum="AbilitySystem.TagType" />
+			<param index="0" name="type" type="int" enum="ASTagType" />
 			<description>
 				Returns all tags registered in the system of a specific type.
 			</description>
@@ -30,7 +29,7 @@
 			</description>
 		</method>
 		<method name="get_tag_type" qualifiers="const">
-			<return type="int" enum="AbilitySystem.TagType" />
+			<return type="int" enum="ASTagType" />
 			<param index="0" name="tag" type="StringName" />
 			<description>
 				Returns the type classification of the given tag.
@@ -54,7 +53,7 @@
 		<method name="register_tag">
 			<return type="void" />
 			<param index="0" name="tag" type="StringName" />
-			<param index="1" name="type" type="int" enum="AbilitySystem.TagType" default="0" />
+			<param index="1" name="type" type="int" enum="ASTagType" default="0" />
 			<param index="2" name="owner_id" type="int" default="0" />
 			<description>
 				Registers a new tag globally with a specific type.
@@ -73,6 +72,11 @@
 			<param index="1" name="new_tag" type="StringName" />
 			<description>
 				Renames an existing tag and automatically updates all its hierarchical sub-tags to the new prefix.
+			</description>
+		</method>
+		<method name="run_tests">
+			<return type="int" />
+			<description>
 			</description>
 		</method>
 		<method name="tag_matches" qualifiers="static">
@@ -107,13 +111,13 @@
 		</signal>
 	</signals>
 	<constants>
-		<constant name="ASTagType::NAME" value="0" enum="TagType">
+		<constant name="ASTagType::NAME" value="0" enum="ASTagType">
 			Identity tags (Ability, Effect, Cue, Attribute).
 		</constant>
-		<constant name="ASTagType::CONDITIONAL" value="1" enum="TagType">
+		<constant name="ASTagType::CONDITIONAL" value="1" enum="ASTagType">
 			Status/State tags (on_fire, stunned, moving).
 		</constant>
-		<constant name="ASTagType::EVENT" value="2" enum="TagType">
+		<constant name="ASTagType::EVENT" value="2" enum="ASTagType">
 			Transient signals/events tags (Hit, Impact, Death).
 		</constant>
 	</constants>

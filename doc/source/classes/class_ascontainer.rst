@@ -38,6 +38,8 @@ Properties
    +----------------------------------------------------------------+----------------------------------------------------------------+--------+
    | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\]   | :ref:`effects<class_ASContainer_property_effects>`             | ``[]`` |
    +----------------------------------------------------------------+----------------------------------------------------------------+--------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                    | :ref:`events<class_ASContainer_property_events>`               | ``[]`` |
+   +----------------------------------------------------------------+----------------------------------------------------------------+--------+
 
 .. rst-class:: classref-reftable-group
 
@@ -135,6 +137,25 @@ Audiovisual cues for this archetype.
 - :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\] **get_effects**\ (\ )
 
 Initial effects applied on startup.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASContainer_property_events:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[``StringName``\] **events** = ``[]`` :ref:`🔗<class_ASContainer_property_events>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_events**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_events**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
 
 .. rst-class:: classref-section-separator
 

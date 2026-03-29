@@ -78,7 +78,6 @@ Variant types
     class_array
     class_asabilityspec
     class_asattributevalue
-    class_asbridge
     class_asbridgestate
     class_ascomponentstate
     class_asconditionaltag

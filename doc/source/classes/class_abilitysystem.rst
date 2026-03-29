@@ -29,31 +29,33 @@ Methods
 .. table::
    :widths: auto
 
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`Array<class_Array>`\[``StringName``\] | :ref:`get_registered_tags<class_AbilitySystem_method_get_registered_tags>`\ (\ ) |const|                                                                                |
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`Array<class_Array>`\[``StringName``\] | :ref:`get_registered_tags_of_type<class_AbilitySystem_method_get_registered_tags_of_type>`\ (\ type\: :ref:`TagType<enum_AbilitySystem_TagType>`\ ) |const|             |
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``int``                                     | :ref:`get_resource_name_owner<class_AbilitySystem_method_get_resource_name_owner>`\ (\ name\: ``String``\ ) |const|                                                     |
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`TagType<enum_AbilitySystem_TagType>`  | :ref:`get_tag_type<class_AbilitySystem_method_get_tag_type>`\ (\ tag\: ``StringName``\ ) |const|                                                                        |
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                    | :ref:`is_tag_registered<class_AbilitySystem_method_is_tag_registered>`\ (\ tag\: ``StringName``\ ) |const|                                                              |
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                    | :ref:`register_resource_name<class_AbilitySystem_method_register_resource_name>`\ (\ name\: ``String``, owner_id\: ``int``\ )                                           |
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                      | :ref:`register_tag<class_AbilitySystem_method_register_tag>`\ (\ tag\: ``StringName``, type\: :ref:`TagType<enum_AbilitySystem_TagType>` = 0, owner_id\: ``int`` = 0\ ) |
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                      | :ref:`remove_tag_branch<class_AbilitySystem_method_remove_tag_branch>`\ (\ tag\: ``StringName``\ )                                                                      |
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                      | :ref:`rename_tag<class_AbilitySystem_method_rename_tag>`\ (\ old_tag\: ``StringName``, new_tag\: ``StringName``\ )                                                      |
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                    | :ref:`tag_matches<class_AbilitySystem_method_tag_matches>`\ (\ tag\: ``StringName``, match_against\: ``StringName``, exact\: ``bool`` = false\ ) |static|               |
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                      | :ref:`unregister_resource_name<class_AbilitySystem_method_unregister_resource_name>`\ (\ name\: ``String``\ )                                                           |
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                      | :ref:`unregister_tag<class_AbilitySystem_method_unregister_tag>`\ (\ tag\: ``StringName``\ )                                                                            |
-   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[``StringName``\]    | :ref:`get_all_registered_tags<class_AbilitySystem_method_get_all_registered_tags>`\ (\ ) |const|                                                                            |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[``StringName``\]    | :ref:`get_registered_tags_of_type<class_AbilitySystem_method_get_registered_tags_of_type>`\ (\ type\: :ref:`ASTagType<enum_AbilitySystem_ASTagType>`\ ) |const|             |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                        | :ref:`get_resource_name_owner<class_AbilitySystem_method_get_resource_name_owner>`\ (\ name\: ``String``\ ) |const|                                                         |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ASTagType<enum_AbilitySystem_ASTagType>` | :ref:`get_tag_type<class_AbilitySystem_method_get_tag_type>`\ (\ tag\: ``StringName``\ ) |const|                                                                            |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                       | :ref:`is_tag_registered<class_AbilitySystem_method_is_tag_registered>`\ (\ tag\: ``StringName``\ ) |const|                                                                  |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                       | :ref:`register_resource_name<class_AbilitySystem_method_register_resource_name>`\ (\ name\: ``String``, owner_id\: ``int``\ )                                               |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                         | :ref:`register_tag<class_AbilitySystem_method_register_tag>`\ (\ tag\: ``StringName``, type\: :ref:`ASTagType<enum_AbilitySystem_ASTagType>` = 0, owner_id\: ``int`` = 0\ ) |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                         | :ref:`remove_tag_branch<class_AbilitySystem_method_remove_tag_branch>`\ (\ tag\: ``StringName``\ )                                                                          |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                         | :ref:`rename_tag<class_AbilitySystem_method_rename_tag>`\ (\ old_tag\: ``StringName``, new_tag\: ``StringName``\ )                                                          |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                        | :ref:`run_tests<class_AbilitySystem_method_run_tests>`\ (\ )                                                                                                                |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                       | :ref:`tag_matches<class_AbilitySystem_method_tag_matches>`\ (\ tag\: ``StringName``, match_against\: ``StringName``, exact\: ``bool`` = false\ ) |static|                   |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                         | :ref:`unregister_resource_name<class_AbilitySystem_method_unregister_resource_name>`\ (\ name\: ``String``\ )                                                               |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                         | :ref:`unregister_tag<class_AbilitySystem_method_unregister_tag>`\ (\ tag\: ``StringName``\ )                                                                                |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -81,17 +83,17 @@ Emitted when the registered tags are changed.
 Enumerations
 ------------
 
-.. _enum_AbilitySystem_TagType:
+.. _enum_AbilitySystem_ASTagType:
 
 .. rst-class:: classref-enumeration
 
-enum **TagType**: :ref:`🔗<enum_AbilitySystem_TagType>`
+enum **ASTagType**: :ref:`🔗<enum_AbilitySystem_ASTagType>`
 
 .. _class_AbilitySystem_constant_ASTagType::NAME:
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`TagType<enum_AbilitySystem_TagType>` **ASTagType::NAME** = ``0``
+:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **ASTagType::NAME** = ``0``
 
 Identity tags (Ability, Effect, Cue, Attribute).
 
@@ -99,7 +101,7 @@ Identity tags (Ability, Effect, Cue, Attribute).
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`TagType<enum_AbilitySystem_TagType>` **ASTagType::CONDITIONAL** = ``1``
+:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **ASTagType::CONDITIONAL** = ``1``
 
 Status/State tags (on_fire, stunned, moving).
 
@@ -107,7 +109,7 @@ Status/State tags (on_fire, stunned, moving).
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`TagType<enum_AbilitySystem_TagType>` **ASTagType::EVENT** = ``2``
+:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **ASTagType::EVENT** = ``2``
 
 Transient signals/events tags (Hit, Impact, Death).
 
@@ -120,13 +122,15 @@ Transient signals/events tags (Hit, Impact, Death).
 Method Descriptions
 -------------------
 
-.. _class_AbilitySystem_method_get_registered_tags:
+.. _class_AbilitySystem_method_get_all_registered_tags:
 
 .. rst-class:: classref-method
 
-:ref:`Array<class_Array>`\[``StringName``\] **get_registered_tags**\ (\ ) |const| :ref:`🔗<class_AbilitySystem_method_get_registered_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **get_all_registered_tags**\ (\ ) |const| :ref:`🔗<class_AbilitySystem_method_get_all_registered_tags>`
 
-Returns all tags registered in the system.
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
 
 .. rst-class:: classref-item-separator
 
@@ -136,7 +140,7 @@ Returns all tags registered in the system.
 
 .. rst-class:: classref-method
 
-:ref:`Array<class_Array>`\[``StringName``\] **get_registered_tags_of_type**\ (\ type\: :ref:`TagType<enum_AbilitySystem_TagType>`\ ) |const| :ref:`🔗<class_AbilitySystem_method_get_registered_tags_of_type>`
+:ref:`Array<class_Array>`\[``StringName``\] **get_registered_tags_of_type**\ (\ type\: :ref:`ASTagType<enum_AbilitySystem_ASTagType>`\ ) |const| :ref:`🔗<class_AbilitySystem_method_get_registered_tags_of_type>`
 
 Returns all tags registered in the system of a specific type.
 
@@ -160,7 +164,7 @@ Returns the instance ID of the resource that owns the given name.
 
 .. rst-class:: classref-method
 
-:ref:`TagType<enum_AbilitySystem_TagType>` **get_tag_type**\ (\ tag\: ``StringName``\ ) |const| :ref:`🔗<class_AbilitySystem_method_get_tag_type>`
+:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **get_tag_type**\ (\ tag\: ``StringName``\ ) |const| :ref:`🔗<class_AbilitySystem_method_get_tag_type>`
 
 Returns the type classification of the given tag.
 
@@ -196,7 +200,7 @@ Registers a unique name for a resource.
 
 .. rst-class:: classref-method
 
-|void| **register_tag**\ (\ tag\: ``StringName``, type\: :ref:`TagType<enum_AbilitySystem_TagType>` = 0, owner_id\: ``int`` = 0\ ) :ref:`🔗<class_AbilitySystem_method_register_tag>`
+|void| **register_tag**\ (\ tag\: ``StringName``, type\: :ref:`ASTagType<enum_AbilitySystem_ASTagType>` = 0, owner_id\: ``int`` = 0\ ) :ref:`🔗<class_AbilitySystem_method_register_tag>`
 
 Registers a new tag globally with a specific type.
 
@@ -223,6 +227,20 @@ Unregisters the specified tag and all its hierarchical sub-tags (e.g. removing "
 |void| **rename_tag**\ (\ old_tag\: ``StringName``, new_tag\: ``StringName``\ ) :ref:`🔗<class_AbilitySystem_method_rename_tag>`
 
 Renames an existing tag and automatically updates all its hierarchical sub-tags to the new prefix.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_AbilitySystem_method_run_tests:
+
+.. rst-class:: classref-method
+
+``int`` **run_tests**\ (\ ) :ref:`🔗<class_AbilitySystem_method_run_tests>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
 
 .. rst-class:: classref-item-separator
 

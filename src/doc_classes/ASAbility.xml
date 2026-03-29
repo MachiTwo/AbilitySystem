@@ -159,12 +159,6 @@
 		<member name="ability_use_custom_duration" type="bool" setter="set_use_custom_duration" getter="get_use_custom_duration" default="false">
 			If true, triggers custom magnitude calculation for duration.
 		</member>
-		<member name="events_on_activate" type="StringName[]" setter="set_events_on_activate" getter="get_events_on_activate" default="[]">
-			Events dispatched when the ability is successfully activated.
-		</member>
-		<member name="events_on_end" type="StringName[]" setter="set_events_on_end" getter="get_events_on_end" default="[]">
-			Events dispatched when the ability ends (regardless of whether it was canceled or finished naturally).
-		</member>
 		<member name="activation_blocked_all_tags" type="StringName[]" setter="set_activation_blocked_all_tags" getter="get_activation_blocked_all_tags" default="[]">
 			Ability cannot activate if owner has [b]all[/b] of these tags simultaneously (AND logic).
 		</member>
@@ -204,17 +198,23 @@
 		<member name="effects" type="ASEffect[]" setter="set_effects" getter="get_effects" default="[]">
 			List of effects applied by this ability.
 		</member>
+		<member name="events_on_activate" type="StringName[]" setter="set_events_on_activate" getter="get_events_on_activate" default="[]">
+			Events dispatched when the ability is successfully activated.
+		</member>
+		<member name="events_on_end" type="StringName[]" setter="set_events_on_end" getter="get_events_on_end" default="[]">
+			Events dispatched when the ability ends (regardless of whether it was canceled or finished naturally).
+		</member>
+		<member name="phases" type="ASAbility[]" setter="set_phases" getter="get_phases" default="[]">
+			Sequential phases that this ability will execute in order.
+		</member>
+		<member name="requirements" type="Dictionary[]" setter="set_requirements" getter="get_requirements" default="[]">
+			Attribute requirements needed to activate the ability.
+		</member>
 		<member name="sub_abilities" type="ASAbility[]" setter="set_sub_abilities" getter="get_sub_abilities" default="[]">
 			Hierarchical sub-abilities that are unlocked alongside this parent ability.
 		</member>
 		<member name="sub_abilities_auto_activate" type="StringName[]" setter="set_sub_abilities_auto_activate" getter="get_sub_abilities_auto_activate" default="[]">
 			Tags of sub-abilities that should automatically activate when the parent ability starts.
-		</member>
-		<member name="phases" type="ASAbilityPhase[]" setter="set_phases" getter="get_phases" default="[]">
-			Sequential phases that this ability will execute in order.
-		</member>
-		<member name="requirements" type="Dictionary[]" setter="set_requirements" getter="get_requirements" default="[]">
-			Attribute requirements needed to activate the ability.
 		</member>
 		<member name="triggers" type="Dictionary[]" setter="set_triggers" getter="get_triggers" default="[]">
 			Automatic triggers for this ability (e.g. activate when a tag is added).
