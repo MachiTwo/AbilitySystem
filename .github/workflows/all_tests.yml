@@ -18,17 +18,17 @@ jobs:
     if: |
       always() &&
       needs.infrastructure.result == 'success'
-    uses: ./.github/workflows/test_unit.yml
+    uses: ./.github/workflows/unit_test.yml
     with:
       godot-bin-name: ${{ needs.infrastructure.outputs.godot-bin-name }}
 
-  unit-integration:
-    name: 🧪 C++ Integration
+  bridge:
+    name: 🧪 Bridge (Integration)
     needs: [infrastructure]
     if: |
       always() &&
       needs.infrastructure.result == 'success'
-    uses: ./.github/workflows/test_unit_integration.yml
+    uses: ./.github/workflows/bridge_test.yml
     with:
       godot-bin-name: ${{ needs.infrastructure.outputs.godot-bin-name }}
 

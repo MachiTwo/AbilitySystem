@@ -1,0 +1,61 @@
+name: 🧪 Bridge Tests (AbilitySystem + LimboAI)
+
+on:
+  workflow_call:
+    inputs:
+      godot-bin-name:
+        required: true
+        type: string
+  workflow_dispatch:
+
+jobs:
+  test-bridge-gdextension:
+    name: 🧩 Integrated Bridge
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Ability System
+        uses: actions/checkout@v4.2.2
+        with:
+          submodules: recursive
+
+      - name: Checkout godot-cpp
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: godotengine/godot-cpp
+          ref: '4.2'
+          path: godot-cpp
+          submodules: recursive
+
+      - name: Setup godot-cpp
+        uses: ./godot-cpp/.github/actions/setup-godot-cpp
+        with:
+          platform: linux
+
+      # EXPLICITLY checkout LimboAI for Bridge tests!
+      - name: Build GDExtension (With LimboAI/Bridge)
+        shell: bash
+        run: |
+          scons target=template_debug platform=linux arch=x86_64 tests=bridge
+
+      - name: Download Godot Engine
+        run: |
+          wget https://github.com/godotengine/godot-builds/releases/download/4.2.2-stable/Godot_v4.2.2-stable_linux.x86_64.zip
+          unzip Godot_v4.2.2-stable_linux.x86_64.zip
+          mv Godot_v4.2.2-stable_linux.x86_64 godot_headless
+          chmod +x godot_headless
+
+      - name: Run GDExtension Integrated Test Runner
+        run: |
+          mkdir -p test_project
+          cp -r addons test_project/
+          echo 'config_version=5' > test_project/project.godot
+
+          echo '
+          extends SceneTree
+          func _init():
+              print("Firing AS+LimboAI Integrated Tests...")
+              var result = AbilitySystem.run_tests()
+              quit(result)
+          ' > test_project/run_tests.gd
+
+          ./godot_headless --path test_project --headless -s run_tests.gd

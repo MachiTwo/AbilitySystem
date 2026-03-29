@@ -153,9 +153,7 @@ Initial effects applied on startup.
 - |void| **set_events**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
 - :ref:`Array<class_Array>`\[``StringName``\] **get_events**\ (\ )
 
-.. container:: contribute
-
-	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+List of events associated with this container that can be dispatched or heard.
 
 .. rst-class:: classref-section-separator
 
@@ -232,9 +230,7 @@ Returns true if a cue with the specified tag exists in the container.
 
 ``bool`` **has_cue_resource**\ (\ cue\: :ref:`ASCue<class_ASCue>`\ ) |const| :ref:`🔗<class_ASContainer_method_has_cue_resource>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Check if the container's catalog includes the specific :ref:`ASCue<class_ASCue>` resource reference.
 
 .. rst-class:: classref-item-separator
 

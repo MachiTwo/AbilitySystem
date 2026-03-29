@@ -154,10 +154,10 @@ struct ASEventTagData {
 };
 
 /**
- * ASEventTagHistoricalEntry
+ * ASEventTagHistorical
  * Historical entry for event occurrences.
  */
-struct ASEventTagHistoricalEntry {
+struct ASEventTagHistorical {
 	ASEventTagData data;
 	uint64_t tick = 0;
 
@@ -167,10 +167,10 @@ struct ASEventTagHistoricalEntry {
 };
 
 /**
- * ASNameTagHistoricalEntry
+ * ASNameTagHistorical
  * Historical entry for NAME tag changes.
  */
-struct ASNameTagHistoricalEntry {
+struct ASNameTagHistorical {
 	StringName tag_name;
 	ObjectID target_id;
 	double timestamp = 0.0;
@@ -185,10 +185,10 @@ struct ASNameTagHistoricalEntry {
 };
 
 /**
- * ASConditionalTagHistoricalEntry
+ * ASConditionalTagHistorical
  * Historical entry for CONDITIONAL tag changes.
  */
-struct ASConditionalTagHistoricalEntry {
+struct ASConditionalTagHistorical {
 	StringName tag_name;
 	ObjectID target_id;
 	double timestamp = 0.0;
@@ -198,6 +198,83 @@ struct ASConditionalTagHistoricalEntry {
 	// Helper methods
 	Node *get_target() const { return Object::cast_to<Node>(ObjectDB::get_instance(target_id)); }
 	void set_target(Node *p_node) { target_id = p_node ? p_node->get_instance_id() : ObjectID(); }
+	Dictionary to_dict() const;
+	void from_dict(const Dictionary &p_dict);
+};
+
+/**
+ * ASAttributeHistorical
+ * Chronological entry for attribute modifications.
+ */
+struct ASAttributeHistorical {
+	StringName attribute;
+	float old_value = 0.0f;
+	float new_value = 0.0f;
+	float delta = 0.0f;
+	ObjectID instigator_id;
+	double timestamp = 0.0;
+	uint64_t tick_id = 0;
+	ModifierOp operation = ADD;
+
+	// Helper methods
+	Node *get_instigator() const { return Object::cast_to<Node>(ObjectDB::get_instance(instigator_id)); }
+	void set_instigator(Node *p_node) { instigator_id = p_node ? p_node->get_instance_id() : ObjectID(); }
+	Dictionary to_dict() const;
+	void from_dict(const Dictionary &p_dict);
+};
+
+/**
+ * ASAbilityHistorical
+ * Chronological entry for ability lifecycle events.
+ */
+struct ASAbilityHistorical {
+	StringName ability_tag;
+	StringName status; // Started, Finished, Failed, Canceled
+	ObjectID instigator_id;
+	double timestamp = 0.0;
+	uint64_t tick_id = 0;
+	int level = 1;
+
+	// Helper methods
+	Node *get_instigator() const { return Object::cast_to<Node>(ObjectDB::get_instance(instigator_id)); }
+	void set_instigator(Node *p_node) { instigator_id = p_node ? p_node->get_instance_id() : ObjectID(); }
+	Dictionary to_dict() const;
+	void from_dict(const Dictionary &p_dict);
+};
+
+/**
+ * ASEffectHistorical
+ * Chronological entry for effect lifecycle events.
+ */
+struct ASEffectHistorical {
+	StringName effect_tag;
+	StringName status; // Applied, Removed, Expired, Stacked
+	ObjectID instigator_id;
+	double timestamp = 0.0;
+	uint64_t tick_id = 0;
+	int stack_count = 1;
+
+	// Helper methods
+	Node *get_instigator() const { return Object::cast_to<Node>(ObjectDB::get_instance(instigator_id)); }
+	void set_instigator(Node *p_node) { instigator_id = p_node ? p_node->get_instance_id() : ObjectID(); }
+	Dictionary to_dict() const;
+	void from_dict(const Dictionary &p_dict);
+};
+
+/**
+ * ASCueHistorical
+ * Chronological entry for visual cue events.
+ */
+struct ASCueHistorical {
+	StringName cue_tag;
+	StringName status; // Played, Stopped, Interrupted
+	ObjectID instigator_id;
+	double timestamp = 0.0;
+	uint64_t tick_id = 0;
+
+	// Helper methods
+	Node *get_instigator() const { return Object::cast_to<Node>(ObjectDB::get_instance(instigator_id)); }
+	void set_instigator(Node *p_node) { instigator_id = p_node ? p_node->get_instance_id() : ObjectID(); }
 	Dictionary to_dict() const;
 	void from_dict(const Dictionary &p_dict);
 };
@@ -245,6 +322,7 @@ struct ASStateCacheEntry {
  */
 struct ASCooldownData {
 	float remaining = 0.0f;
+	float initial_duration = 0.0f;
 	TypedArray<StringName> tags;
 
 	// Helper methods
@@ -312,9 +390,13 @@ struct ASComponentState {
 	HashMap<StringName, ASCooldownData> cooldowns;
 
 	// Historical data (optional for full serialization)
-	Vector<ASNameTagHistoricalEntry> name_history;
-	Vector<ASConditionalTagHistoricalEntry> conditional_history;
-	Vector<ASEventTagHistoricalEntry> event_history;
+	Vector<ASNameTagHistorical> name_history;
+	Vector<ASConditionalTagHistorical> conditional_history;
+	Vector<ASEventTagHistorical> event_history;
+	Vector<ASAttributeHistorical> attribute_history;
+	Vector<ASAbilityHistorical> ability_history;
+	Vector<ASEffectHistorical> effect_history;
+	Vector<ASCueHistorical> cue_history;
 
 	// Helper methods
 	void clear();

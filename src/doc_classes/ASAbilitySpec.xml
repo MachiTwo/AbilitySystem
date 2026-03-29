@@ -25,6 +25,7 @@
 		<method name="get_active_effects" qualifiers="const">
 			<return type="ASEffectSpec[]" />
 			<description>
+				Returns all active effect instances created and managed by this specific ability execution.
 			</description>
 		</method>
 		<method name="get_cooldown_duration" qualifiers="const">
@@ -55,6 +56,7 @@
 		<method name="get_duration_remaining" qualifiers="const">
 			<return type="float" />
 			<description>
+				Returns the time remaining in seconds for the current phase or ability duration.
 			</description>
 		</method>
 		<method name="get_effects_for_target" qualifiers="const">
@@ -91,6 +93,7 @@
 		<method name="get_total_duration" qualifiers="const">
 			<return type="float" />
 			<description>
+				Returns the initial total duration of the ability instance as calculated at activation.
 			</description>
 		</method>
 		<method name="init">
@@ -118,6 +121,7 @@
 			<return type="void" />
 			<param index="0" name="duration" type="float" />
 			<description>
+				Manually modifies the remaining duration. Can be used for duration extensions or reductions.
 			</description>
 		</method>
 		<method name="set_is_active">
@@ -138,12 +142,14 @@
 			<return type="void" />
 			<param index="0" name="duration" type="float" />
 			<description>
+				Sets the total expected duration for this instance. This value is used as the reference for progress calculations.
 			</description>
 		</method>
 		<method name="tick">
 			<return type="bool" />
 			<param index="0" name="delta" type="float" />
 			<description>
+				Advances the internal timers of the spec. Returns true if the duration has expired or the ability logic has signaled completion.
 			</description>
 		</method>
 	</methods>

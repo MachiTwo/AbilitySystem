@@ -56,195 +56,42 @@ Tags não são classes; são **Identificadores Hierárquicos Superpoderosos** ba
   - O Singleton é o único que pode persistir a lista de tags no `project.godot`.
   - Atua como um **Validador de Tipagem**: Impede em tempo de edição (via Inspector) que tags do tipo errado sejam usadas em campos restritos.
 
-### 2.3 Estruturas de Tipos de Tag e Implementação
+### 2.3 Implementação dos Tipos de Tag (Visão Semântica)
 
-O sistema unificado de tags é implementado através de três estruturas principais em `as_tag_types.h`, cada uma fornecendo manipulação de tags type-safe com validação integrada e métodos de conveniência.
+O sistema unificado de tags fornece manipulação type-safe em três categorias primárias. A implementação detalhada reside em `as_tag_types.h`.
 
-#### 2.3.1 ASNameTag - Tags de Identidade Persistente
+| Categoria            | Propósito                                           | Tempo de Vida Típico                  |
+| :------------------- | :-------------------------------------------------- | :------------------------------------ |
+| **ASNameTag**        | Identidade persistente (Classe, Time, Traços).      | Indefinido (Até remoção manual).      |
+| **ASConditionalTag** | Portões lógicos (Imunidade, Requisitos, Estados).   | Transiente ou Ligado a Efeitos.       |
+| **ASEventTag**       | Ocorrências instantâneas (Dano, Morte, Conjuração). | 1 Tick (Registro histórico persiste). |
 
-**Propósito**: Identificadores de estado de longa duração que persistem até serem removidos explicitamente
-**Duração**: Até remoção manual via `remove_tag()`
-**Uso**: Classes de personagem, estados persistentes, afiliações de equipe
+### 2.4 Infraestrutura de Rastreamento Histórico
 
-**Definição da Estrutura:**
+O `ASComponent` mantém **buffers circulares de alta performance de 128 entradas** para cada categoria de tag, suportando reatividade e reconciliação multiplayer.
 
-```cpp
-struct ASNameTag : public ASTagBase {
-    // Construtor
-    ASNameTag(const StringName &p_name);
+- **NAME History**: Rastreia quando estados persistentes foram adicionados/removidos.
+- **CONDITIONAL History**: Rastreia mudanças em permissões e imunidades.
+- **EVENT History**: Armazena o payload completo `ASEventTagData` (Instigador, Magnitude, Tick) de ocorrências recentes.
 
-    // Métodos Factory
-    static ASNameTag create(const StringName &p_name);
+#### APIs de Consulta Histórica
 
-    // Tags Comuns Predefinidas
-    static ASNameTag STUNNED();        // "state.stunned"
-    static ASNameTag DEAD();           // "state.dead"
-    static ASNameTag INVISIBLE();      // "state.invisible"
-    static ASNameTag WARRIOR();        // "class.warrior"
-    static ASNameTag MAGE();           // "class.mage"
-    static ASNameTag ARCHER();         // "class.archer"
-    static ASNameTag TEAM_BLUE();      // "team.blue"
-    static ASNameTag TEAM_RED();       // "team.red"
-};
-```
+O namespace `ASTagUtils` fornece métodos otimizados para consultar estes buffers:
 
-**Características Chave:**
+- `was_tag_added/removed(tag, lookback_sec)`: Verifica transições de estado.
+- `did_occur(event_tag, lookback_sec)`: Verifica eventos de combate/gameplay recentes.
+- `get_last_magnitude/instigator(event_tag)`: Recupera dados específicos da ocorrência mais recente.
 
-- **Type Safety**: Garantia em tempo de compilação do tipo da tag
-- **Validação**: Validação automática contra o registro AbilitySystem
-- **Conveniência**: Tags comuns predefinidas para uso frequente
-- **Herança**: Estende `ASTagBase` com funcionalidade comum
+      // Usada para mudanças de tags CONDITIONAL
 
-#### 2.3.2 ASConditionalTag - Tags de Requisito/Bloqueio
+  };
 
-**Propósito**: Requisitos e bloqueadores de habilidade/efeito que controlam permissões
-**Duração**: Tipicamente curto prazo, ligado a condições ou efeitos específicos
-**Uso**: Pré-requisitos de habilidade, imunidade a dano, verificações de permissão
-
-**Definição da Estrutura:**
-
-```cpp
-struct ASConditionalTag : public ASTagBase {
-    // Construtor
-    ASConditionalTag(const StringName &p_name);
-
-    // Métodos Factory
-    static ASConditionalTag create(const StringName &p_name);
-
-    // Tags de Permissão Predefinidas
-    static ASConditionalTag CAN_PARRY();      // "can.parried"
-    static ASConditionalTag CAN_DODGE();       // "can.dodged"
-    static ASConditionalTag CAN_INTERRUPT();   // "can.interrupted"
-
-    // Tags de Imunidade Predefinidas
-    static ASConditionalTag IMMUNE_FIRE();     // "immune.fire"
-    static ASConditionalTag IMMUNE_POISON();   // "immune.poison"
-    static ASConditionalTag IMMUNE_PHYSICAL(); // "immune.physical"
-
-    // Tags de Condição de Estado Predefinidas
-    static ASConditionalTag GROUNDED();        // "state.grounded"
-    static ASConditionalTag FLYING();          // "state.flying"
-    static ASConditionalTag STEALTHED();       // "state.stealthed"
-};
-```
-
-**Características Chave:**
-
-- **Controle de Permissão**: Controle refinado de ativação de habilidades
-- **Sistema de Imunidade**: Manipulação centralizada de imunidade a tipos de dano
-- **Condições de Estado**: Rastreamento de estado ambiental e posicional
-- **Validação Runtime**: Verificação automática contra estado atual do ator
-
-#### 2.3.3 ASEventTagTag - Tags de Dispatch de Eventos
-
-**Propósito**: Identificadores de evento para o sistema de dispatch com métodos helper integrados
-**Duração**: Instantânea (eventos são transitórios, mas o histórico persiste brevemente)
-**Uso**: Eventos de combate, ciclo de vida de habilidades, transições de estado, interações de armas
-
-**Definição da Estrutura:**
-
-```cpp
-struct ASEventTagTag : public ASTagBase {
-    // Construtor
-    ASEventTagTag(const StringName &p_name);
-
-    // Métodos Factory
-    static ASEventTagTag create(const StringName &p_name);
-
-    // Tags de Evento de Combate
-    static ASEventTagTag DAMAGE_DEALT();        // "event.damage.dealt"
-    static ASEventTagTag DAMAGE_TAKEN();        // "event.damage.taken"
-    static ASEventTagTag DAMAGE_BLOCKED();      // "event.damage.blocked"
-    static ASEventTagTag HEAL_RECEIVED();       // "event.heal.received"
-
-    // Tags de Evento de Habilidade
-    static ASEventTagTag ABILITY_ACTIVATED();   // "event.ability.activated"
-    static ASEventTagTag ABILITY_FAILED();      // "event.ability.failed"
-    static ASEventTagTag ABILITY_COOLDOWN_END(); // "event.ability.cooldown_end"
-    static ASEventTagTag ABILITY_INTERRUPTED(); // "event.ability.interrupted"
-
-    // Tags de Evento de Estado
-    static ASEventTagTag STUN_BEGIN();          // "event.stun.begin"
-    static ASEventTagTag STUN_END();            // "event.stun.end"
-    static ASEventTagTag DEATH();               // "event.death"
-    static ASEventTagTag RESPAWN();             // "event.respawn"
-
-    // Tags de Evento de Arma
-    static ASEventTagTag WEAPON_HIT();          // "event.weapon.hit"
-    static ASEventTagTag WEAPON_MISS();         // "event.weapon.miss"
-    static ASEventTagTag WEAPON_CRITICAL();     // "event.weapon.critical"
-
-    // Métodos Helper
-    void dispatch(Node *p_instigator, float p_magnitude = 0.0f,
-                  const Dictionary &p_payload = Dictionary()) const;
-    bool occurred_recently(Node *p_target, float p_lookback_sec = 1.0f) const;
-};
-```
-
-**Características Chave:**
-
-- **Integração Dispatch**: Capacidade integrada de dispatch de eventos
-- **Consultas Históricas**: Acesso direto a ocorrências recentes de eventos
-- **Cobertura Abrangente**: Tags predefinidas para todos os eventos comuns de jogo
-- **Type Safety**: Validação de tipo de evento em tempo de compilação
-
-### 2.4 ASTagUtils - Utilitários e Validação de Tipos de Tag
-
-O namespace `ASTagUtils` em `as_tag_types.cpp` fornece validação abrangente de tags, detecção de tipo e capacidades de consulta histórica.
-
-#### 2.4.1 Validação e Detecção de Tipo
-
-```cpp
-namespace ASTagUtils {
-    // Funções Principais de Validação
-    bool validate_tag_type(const StringName &p_tag, ASTagType p_expected_type);
-    ASTagType detect_tag_type(const StringName &p_tag);
-    ASTagBase create_tag(const StringName &p_tag);
-
-    // Funções de Reconhecimento de Padrão
-    bool is_state_tag(const StringName &p_tag);     // "state.*"
-    bool is_class_tag(const StringName &p_tag);     // "class.*"
-    bool is_team_tag(const StringName &p_tag);      // "team.*"
-    bool is_event_tag(const StringName &p_tag);     // "event.*"
-    bool is_immune_tag(const StringName &p_tag);    // "immune.*"
-    bool is_can_tag(const StringName &p_tag);       // "can.*"
-}
-```
-
-**Algoritmo de Detecção de Tipo:**
-
-1. **Event Tags**: Começam com "event." → `ASTagType::EVENT`
-2. **Conditional Tags**: Começam com "can.", "immune.", "state.grounded", "state.flying", "state.stealthed" → `ASTagType::CONDITIONAL`
-3. **Name Tags**: Todos os outros padrões (state._, class._, team.\*, etc.) → `ASTagType::NAME`
-
-#### 2.4.2 Estruturas de Rastreamento Histórico
-
-Cada tipo de tag mantém seu próprio buffer histórico com buffers circulares de 128 entradas:
-
-```cpp
-// Estruturas de Entrada Histórica
-struct ASNameTagHistoricalEntry {
-    StringName tag_name;
-    ObjectID target_id;
-    double timestamp = 0.0;
-    uint64_t tick_id = 0;
-    bool added = true; // true para adicionar, false para remover
-
-    // Métodos Helper
-    Node *get_target() const;
-    void set_target(Node *p_node);
+struct ASEventTagHistorical {
+ASEventTagData data; // Payload completo do evento
+uint64_t tick_id = 0;
 };
 
-struct ASConditionalTagHistoricalEntry {
-    // Mesma estrutura de ASNameTagHistoricalEntry
-    // Usada para mudanças de tags CONDITIONAL
-};
-
-struct ASEventTagHistoricalEntry {
-    ASEventTagData data;  // Payload completo do evento
-    uint64_t tick_id = 0;
-};
-```
+````
 
 #### 2.4.3 APIs de Consulta Histórica
 
@@ -264,7 +111,7 @@ ASTagUtils::name_get_recent_changes(target, 1.0f);
 // Operações de Contagem
 ASTagUtils::name_count_additions("state.stunned", target, 1.0f);
 ASTagUtils::name_count_removals("state.stunned", target, 1.0f);
-```
+````
 
 **API de Consulta Histórica ASConditionalTag:**
 
@@ -398,107 +245,27 @@ O que **nunca** sobe ao Singleton é a **instância de dados** — o struct `ASE
 
 ---
 
-## 3. Registro de Estruturas ASUtils (Dados Centralizados)
+## 3. Registro de Estruturas ASUtils (Visão Semântica)
 
-Todas as estruturas internas são centralizadas em `ASUtils` com API própria, documentação e suporte de serialização. Isso substitui structs internos espalhados por um sistema unificado e documentado.
+Todas as estruturas de dados internas são centralizadas em `as_utils.h` com suporte dedicado a serialização e validação.
 
-### 3.1 Estruturas de Gerenciamento de Estado
+| Estrutura            | Propósito                                           | Dados Primários                                        |
+| :------------------- | :-------------------------------------------------- | :----------------------------------------------------- |
+| **ASStateCache**     | Buffer circular de alta performance (128 ticks).    | Coleção de `ASStateCacheEntry`.                        |
+| **ASComponentState** | Representação completa de estado para Persistência. | Atributos, Tags, Efeitos Ativos, Cooldowns, Histórico. |
+| **ASAttributeValue** | Container atômico de estatísticas.                  | Valor Base, Valor Atual, Modificadores.                |
+| **ASEffectState**    | Dados de instância de efeito em runtime.            | Tag, Tempo restante, Stacks, Nível.                    |
+| **ASEventTagData**   | Payload de evento para despacho.                    | Tag, Instigador, Magnitude, Custom Payload, Tick.      |
+| **AS\*Historical**   | Entradas individuais de log histórico.              | Tag, Contexto, Timestamp, Tick ID.                     |
 
-- **ASStateCache:**
-  - **Propósito**: Buffer circular de alta performance para rollback
-  - **Recursos**: Captura/restauração O(1), tamanho configurável (padrão: 128), utilidades de debug
-  - **Uso**: Predição multiplayer e restauração rápida de estado
+### 3.1 Recursos Padronizados
 
-- **ASStateCacheEntry:**
-  - **Propósito**: Entrada de cache leve para único tick
-  - **Dados**:
-    - tick
-    - attributes
-    - tags
-    - active_effects
-  - **Métodos**:
-    - to_dict()
-    - from_dict()
-    - validação
+Cada estrutura em `ASUtils` segue o **Padrão de Implementação Universal**:
 
-- **ASComponentState:**
-  - **Propósito**: Estado completo do componente para save/load
-  - **Recursos**:
-    - Buffers históricos completos
-    - cooldowns
-    - computação de diff
-  - **Uso**:
-    - Save games
-    - serialização completa
-    - transferência de rede
-
-### 3.2 Estruturas do Sistema de Efeitos
-
-- **ASEffectState:**
-  - **Propósito**: Representação de estado de efeito ativo
-  - **Dados**: tag, remaining_time, period_timer, stack_count, level
-  - **Métodos**: is_expired(), is_period_ready(), serialização
-
-- **ASEffectModifier:**
-  - **Propósito**: Definição de modificador de atributo único
-  - **Dados**: attribute, operation, magnitude
-  - **Uso**: Definições de recursos de efeito
-
-- **ASEffectModifierData:**
-  - **Propósito**: Modificador runtime com valores customizados
-  - **Recursos**: Suporte a override de magnitude customizada
-  - **Uso**: Cálculos runtime de ASEffectSpec
-
-- **ASEffectRequirement:**
-  - **Propósito**: Requisito de atributo para ativação
-  - **Dados**: attribute, amount
-  - **Uso**: Condições de ativação de efeito
-
-### 3.3 Estruturas do Sistema de Atributos
-
-- **ASAttributeValue:**
-  - **Propósito**: Valores base e atual de atributos
-  - **Recursos**: Cálculo de diferença, gerenciamento de valores
-  - **Métodos**: set_base(), set_current(), get_difference()
-
-### 3.4 Estruturas do Sistema de Cooldown
-
-- **ASCooldownData:**
-  - **Propósito**: Timing de cooldown e tags associadas
-  - **Recursos**: Atualização automática, suporte a group cooldown
-  - **Métodos**: is_expired(), update(), serialização
-
-### 3.5 Estruturas do Sistema de Tags
-
-- **ASEventTagData:**
-  - **Propósito**: Dados completos de dispatch de eventos
-  - **Recursos**: Referências de nodes, payload, timing
-  - **Métodos**: get*instigator(), get_target(), set*\*()
-
-- **ASEventTagHistoricalEntry:**
-  - **Propósito**: Entrada de histórico de ocorrência de eventos
-  - **Dados**: ASEventTagData completo + tick
-  - **Uso**: Buffer histórico de eventos
-
-- **ASNameTagHistoricalEntry:**
-  - **Propósito**: Entrada de histórico de mudanças de tags NAME
-  - **Dados**: tag_name, target_id, timestamp, tick_id, flag added
-  - **Uso**: Buffer histórico de tags NAME
-
-- **ASConditionalTagHistoricalEntry:**
-  - **Propósito**: Entrada de histórico de mudanças de tags CONDITIONAL
-  - **Dados**: tag_name, target_id, timestamp, tick_id, flag added
-  - **Uso**: Buffer histórico de tags CONDITIONAL
-
-### 3.6 Recursos Universais das Estruturas
-
-Todas as estruturas ASUtils implementam:
-
-- **Serialização**: Métodos `to_dict()` / `from_dict()`
-- **Validação**: `is_valid()` e verificações de integridade
-- **Métodos Helper**: Funções de conveniência específicas do tipo
-- **Documentação**: Documentação XML completa para integração Godot
-- **Consistência**: Padrões de API padronizados em todas as estruturas
+- **Serialização**: `to_dict()` e `from_dict()` para armazenamento nativo Godot.
+- **Validação**: `is_valid()` verifica a integridade arquitetural.
+- **Consciência de Tick**: Suporte nativo para `tick_id` para sincronização multiplayer.
+- **Consistência de API**: Getters e setters simétricos para todos os campos internos.
 
 ---
 
@@ -670,32 +437,41 @@ O `ASComponent` (ASC).
 
 ---
 
-## 10. REPLICAÇÃO E PERSISTÊNCIA (DETERMINISMO)
+## 10. ARQUITETURA MULTIPLAYER: PREDIÇÃO E ROLLBACK
 
-O Ability System é projetado para multiplayer autoritativo com suporte a Predição e Rollback. O estado de um Ator em um determinado momento (Tick) é gerido por dois mecanismos sincronizados:
+O Ability System é construído nativamente para multiplayer autoritativo usando um modelo de **Predição no Cliente (CSP)** e **Reconciliação pelo Servidor**.
 
-- **Fonte de Verdade (Physics Only):** O `tick` é o único identificador temporal válido. O `ASComponent` opera **exclusivamente** via `physics_process`. O uso de `_process` (Idle/Frame) é terminantemente proibido para lógica de gameplay para garantir determinismo entre instâncias e suporte a Rollback.
+### 10.1 Consciência Temporal de Estado (O Buffer de 128 Ticks)
 
-### 10.1 ASStateSnapshot (O Recurso Pesado)
+Cada `ASComponent` mantém um **`ASStateCache`**—um buffer circular leve e de alta performance que armazena o estado dos últimos 128 ticks.
 
-- **Papel:** Persistência de longo prazo (Save/Load) e sincronização externa de "Diferencial de Estado".
-- **Natureza:** É um **Godot Resource** (`.tres`). Alocado na Heap, suporta serialização nativa.
-- **Regra de Uso:** Reservado exclusivamente para **Players** (Playable Characters) ou estados que precisam sobreviver a reinicializações de cena.
-- **SSOT:** É o único recurso autorizado a ser mutável em runtime para fins de captura de estado completo.
+- **Captura**: A cada `physics_tick` (60Hz), o cliente e o servidor registram um snapshot de atributos, tags e efeitos ativos no cache.
+- **Afinidade de Tick**: Cada evento, aplicação de efeito e entrada histórica é marcada com um `tick_id`, permitindo o cruzamento temporal preciso.
 
-### 10.2 ASStateCache (A Estrutura Leve)
+### 10.2 Predição no Cliente (Latência Zero)
 
-- **Papel:** Memória de curto prazo para Predição, Reconciliação e NPCs.
-- **Natureza:** **Struct C++ pura**. Alocada em stack/inline dentro de um buffer circular (`Vector`).
-- **Regra de Uso:** Deve ser usado para manter o histórico recente de ticks (ex: últimos 64-128 ticks) para cálculos de rede.
-- **Vantagem:** Zero overhead de alocação de Resource. Ideal para sincronização rápida de entidades não-jogáveis (NPCs/Inimigos).
+Quando um jogador inicia uma ação (ex: `try_activate_ability`):
 
-### 10.3 Fluxo de Ativação em Rede e Determinismo
+1. **Execução Preditiva**: O cliente aplica imediatamente a lógica localmente (reduz atributos, dispara cues, adiciona tags previstas).
+2. **Bufferização**: O resultado é armazenado no `ASStateCache` local.
+3. **Transmissão**: A intenção é enviada ao servidor via `request_activate_ability`.
 
-1. **Request:** O cliente solicita a ativação chamando `request_activate_ability(tag)`.
-2. **Predict:** O cliente executa localmente a ação para latência zero e gera uma entrada no `cache_buffer` via `capture_snapshot()`. Se for um Player, o `ASStateSnapshot` também é atualizado.
-3. **Confirm/Correct:** O servidor valida o request e responde. Se houver divergência, o servidor envia o estado autoritativo. O cliente então realiza o **Rollback** buscando o tick correspondente no `cache_buffer` para restaurar atributos e tags instantaneamente.
-4. **Determinismo:** Lógicas de gameplay (Magnitude de dano, custos) devem ser puras e basear-se exclusivamente nos dados contidos no ASC e seus Specs para garantir que o mesmo input gere o mesmo output em todas as instâncias.
+### 10.3 Reconciliação e Rollback do Servidor
+
+O servidor processa o request e envia de volta o **Estado Autoritativo** para aquele tick específico.
+
+1. **Comparação**: O cliente compara o estado recebido do servidor com seu estado em cache para o mesmo `tick_id`.
+2. **Detecção**: Se houver divergência (ex: o dano previsto foi mitigado de forma diferente no servidor), um **Rollback** é disparado.
+3. **Reversão**: O cliente usa `ASComponentState::from_dict()` para sobrescrever instantaneamente seu estado atual com os dados autoritativos do servidor.
+4. **Re-predição**: O cliente re-simula todos os inputs locais desde o tick autoritativo até o frame atual para manter a continuidade visual.
+
+### 10.4 Regras de Determinismo de Gameplay
+
+Para minimizar rollbacks, toda a lógica de simulação DEVE ser determinística:
+
+- **Physics Only**: Toda a lógica de gameplay DEVE residir em `_physics_process`. Usar `_process` para mutação de estado é uma violação do protocolo de rede.
+- **Prioridade de Atributos**: A ordem de cálculo determinística (Drivers -> Base -> Modificadores) garante resultados idênticos em diferentes arquiteturas.
+- **Recálculo Histórico**: Durante o rollback, os logs históricos (`ASAttributeHistorical`, etc.) são fundamentais para re-sincronizar feedbacks visuais (Cues) que podem ter sido pulados no reset.
 
 ---
 

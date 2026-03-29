@@ -44,6 +44,10 @@ Methods
    :widths: auto
 
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                                                 | :ref:`_is_local_authority<class_ASComponent_private_method__is_local_authority>`\ (\ ) |const|                                                                                                                  |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                                                 | :ref:`_is_server<class_ASComponent_private_method__is_server>`\ (\ ) |const|                                                                                                                                    |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``float``                                                                | :ref:`_on_calculate_custom_magnitude<class_ASComponent_private_method__on_calculate_custom_magnitude>`\ (\ effect_spec\: :ref:`ASEffectSpec<class_ASEffectSpec>`, modifier_index\: ``int``\ ) |virtual| |const| |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                   | :ref:`add_attribute_set<class_ASComponent_method_add_attribute_set>`\ (\ set\: :ref:`ASAttributeSet<class_ASAttributeSet>`\ )                                                                                   |
@@ -98,6 +102,10 @@ Methods
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                   | :ref:`clear_conditional_history<class_ASComponent_method_clear_conditional_history>`\ (\ )                                                                                                                      |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                   | :ref:`clear_cue_history<class_ASComponent_method_clear_cue_history>`\ (\ )                                                                                                                                      |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                   | :ref:`clear_effect_history<class_ASComponent_method_clear_effect_history>`\ (\ )                                                                                                                                |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                   | :ref:`clear_effects<class_ASComponent_method_clear_effects>`\ (\ )                                                                                                                                              |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                   | :ref:`clear_event_history<class_ASComponent_method_clear_event_history>`\ (\ )                                                                                                                                  |
@@ -106,9 +114,31 @@ Methods
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                   | :ref:`clear_tag_history<class_ASComponent_method_clear_tag_history>`\ (\ )                                                                                                                                      |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                   | :ref:`clear_ability_history<class_ASComponent_method_clear_ability_history>`\ (\ )                                                                                                                              |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                   | :ref:`clear_all_history<class_ASComponent_method_clear_all_history>`\ (\ )                                                                                                                                      |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                   | :ref:`clear_attribute_history<class_ASComponent_method_clear_attribute_history>`\ (\ )                                                                                                                          |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                   | :ref:`confirm_ability_activation<class_ASComponent_method_confirm_ability_activation>`\ (\ tag\: ``StringName``\ )                                                                                              |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                   | :ref:`dispatch_event<class_ASComponent_method_dispatch_event>`\ (\ tag\: ``StringName``, instigator\: ``Node`` = null, magnitude\: ``float`` = 0.0, custom_payload\: ``Dictionary`` = {}\ )                     |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ASEffect<class_ASEffect>`                                          | :ref:`find_effect_by_tag<class_ASComponent_method_find_effect_by_tag>`\ (\ tag\: ``StringName``\ ) |const|                                                                                                      |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[:ref:`ASAbilitySpec<class_ASAbilitySpec>`\]   | :ref:`get_active_abilities<class_ASComponent_method_get_active_abilities>`\ (\ ) |const|                                                                                                                        |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[``Dictionary``\]                              | :ref:`get_ability_history<class_ASComponent_method_get_ability_history>`\ (\ lookback_sec\: ``float`` = 1.0\ ) |const|                                                                                          |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                                                  | :ref:`get_ability_history_size<class_ASComponent_method_get_ability_history_size>`\ (\ ) |const|                                                                                                                |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[:ref:`ASCueSpec<class_ASCueSpec>`\]           | :ref:`get_active_cues<class_ASComponent_method_get_active_cues>`\ (\ ) |const|                                                                                                                                  |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[:ref:`ASEffectSpec<class_ASEffectSpec>`\]     | :ref:`get_active_effects<class_ASComponent_method_get_active_effects>`\ (\ ) |const|                                                                                                                            |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[``Dictionary``\]                              | :ref:`get_effect_history<class_ASComponent_method_get_effect_history>`\ (\ lookback_sec\: ``float`` = 1.0\ ) |const|                                                                                            |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                                                  | :ref:`get_effect_history_size<class_ASComponent_method_get_effect_history_size>`\ (\ ) |const|                                                                                                                  |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``float``                                                                | :ref:`get_ability_cooldown_preview<class_ASComponent_method_get_ability_cooldown_preview>`\ (\ tag\: ``StringName``\ ) |const|                                                                                  |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -122,6 +152,16 @@ Methods
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``float``                                                                | :ref:`get_attribute_base_value_by_tag<class_ASComponent_method_get_attribute_base_value_by_tag>`\ (\ tag\: ``StringName``\ ) |const|                                                                            |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[``Dictionary``\]                              | :ref:`get_attribute_history<class_ASComponent_method_get_attribute_history>`\ (\ lookback_sec\: ``float`` = 1.0\ ) |const|                                                                                      |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                                                  | :ref:`get_attribute_history_size<class_ASComponent_method_get_attribute_history_size>`\ (\ ) |const|                                                                                                            |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                                | :ref:`get_attribute_last_delta<class_ASComponent_method_get_attribute_last_delta>`\ (\ attribute\: ``StringName``\ ) |const|                                                                                    |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                                | :ref:`get_attribute_max_value<class_ASComponent_method_get_attribute_max_value>`\ (\ tag\: ``StringName``\ ) |const|                                                                                            |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                                | :ref:`get_attribute_percent<class_ASComponent_method_get_attribute_percent>`\ (\ tag\: ``StringName``\ ) |const|                                                                                                |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`Array<class_Array>`\[:ref:`ASAttributeSet<class_ASAttributeSet>`\] | :ref:`get_attribute_sets<class_ASComponent_method_get_attribute_sets>`\ (\ ) |const|                                                                                                                            |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``float``                                                                | :ref:`get_attribute_value_by_resource<class_ASComponent_method_get_attribute_value_by_resource>`\ (\ attribute\: :ref:`ASAttribute<class_ASAttribute>`\ ) |const|                                               |
@@ -134,6 +174,12 @@ Methods
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``float``                                                                | :ref:`get_cooldown_remaining<class_ASComponent_method_get_cooldown_remaining>`\ (\ ability_tag\: ``StringName``\ ) |const|                                                                                      |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                                | :ref:`get_cooldown_percent<class_ASComponent_method_get_cooldown_percent>`\ (\ ability_tag\: ``StringName``\ ) |const|                                                                                          |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[``Dictionary``\]                              | :ref:`get_cue_history<class_ASComponent_method_get_cue_history>`\ (\ lookback_sec\: ``float`` = 1.0\ ) |const|                                                                                                  |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                                                  | :ref:`get_cue_history_size<class_ASComponent_method_get_cue_history_size>`\ (\ ) |const|                                                                                                                        |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`ASCue<class_ASCue>`                                                | :ref:`get_cue_resource<class_ASComponent_method_get_cue_resource>`\ (\ tag\: ``StringName``\ ) |const|                                                                                                          |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                                  | :ref:`get_event_history_size<class_ASComponent_method_get_event_history_size>`\ (\ ) |const|                                                                                                                    |
@@ -141,6 +187,10 @@ Methods
    | ``int``                                                                  | :ref:`get_name_history_size<class_ASComponent_method_get_name_history_size>`\ (\ ) |const|                                                                                                                      |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Node``                                                                 | :ref:`get_node_ptr<class_ASComponent_method_get_node_ptr>`\ (\ name\: ``StringName``\ ) |const|                                                                                                                 |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ASTagSpec<class_ASTagSpec>`                                        | :ref:`get_owned_tags<class_ASComponent_method_get_owned_tags>`\ (\ ) |const|                                                                                                                                    |
+   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\]                   | :ref:`get_registered_cues<class_ASComponent_method_get_registered_cues>`\ (\ ) |const|                                                                                                                          |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`Array<class_Array>`\[``StringName``\]                              | :ref:`get_tags<class_ASComponent_method_get_tags>`\ (\ ) |const|                                                                                                                                                |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -384,9 +434,7 @@ Emitted when persistent tags (states) are added or removed.
 
 **tag_event_received**\ (\ event_tag\: ``StringName``, data\: ``Dictionary``\ ) :ref:`🔗<class_ASComponent_signal_tag_event_received>`
 
-.. container:: contribute
-
-	There is currently no description for this signal. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Emitted when a tag-based event containing a data payload is received. Similar to :ref:`event_received<class_ASComponent_signal_event_received>` but optimized for logic requiring specific data dictionaries without instigator or magnitude metadata.
 
 .. rst-class:: classref-section-separator
 
@@ -435,6 +483,30 @@ The resource used for capturing and restoring the component's state. Primarily u
 
 Method Descriptions
 -------------------
+
+.. _class_ASComponent_private_method__is_local_authority:
+
+.. rst-class:: classref-method
+
+``bool`` **_is_local_authority**\ (\ ) |const| :ref:`🔗<class_ASComponent_private_method__is_local_authority>`
+
+Check if this component is running on the local authority (client or server).
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_private_method__is_server:
+
+.. rst-class:: classref-method
+
+``bool`` **_is_server**\ (\ ) |const| :ref:`🔗<class_ASComponent_private_method__is_server>`
+
+Check if this component is running on the server.
+
+.. rst-class:: classref-item-separator
+
+----
 
 .. _class_ASComponent_private_method__on_calculate_custom_magnitude:
 
@@ -764,9 +836,31 @@ If :ref:`snapshot_state<class_ASComponent_property_snapshot_state>` is assigned,
 
 |void| **clear_conditional_history**\ (\ ) :ref:`🔗<class_ASComponent_method_clear_conditional_history>`
 
-.. container:: contribute
+Clears the short-term historical buffer for :ref:`AbilitySystem.CONDITIONAL<class_AbilitySystem_constant_CONDITIONAL>` tags on this component.
 
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_clear_cue_history:
+
+.. rst-class:: classref-method
+
+|void| **clear_cue_history**\ (\ ) :ref:`🔗<class_ASComponent_method_clear_cue_history>`
+
+Clears the chronological buffer of visual cue events on this component.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_clear_effect_history:
+
+.. rst-class:: classref-method
+
+|void| **clear_effect_history**\ (\ ) :ref:`🔗<class_ASComponent_method_clear_effect_history>`
+
+Clears the chronological buffer of effect application and removal events on this component.
 
 .. rst-class:: classref-item-separator
 
@@ -778,9 +872,7 @@ If :ref:`snapshot_state<class_ASComponent_property_snapshot_state>` is assigned,
 
 |void| **clear_effects**\ (\ ) :ref:`🔗<class_ASComponent_method_clear_effects>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Removes all active effects from the actor immediately.
 
 .. rst-class:: classref-item-separator
 
@@ -804,9 +896,7 @@ Clears all events from the historical buffer.
 
 |void| **clear_name_history**\ (\ ) :ref:`🔗<class_ASComponent_method_clear_name_history>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Clears the short-term historical buffer for :ref:`AbilitySystem.NAME<class_AbilitySystem_constant_NAME>` tags on this component.
 
 .. rst-class:: classref-item-separator
 
@@ -818,9 +908,43 @@ Clears all events from the historical buffer.
 
 |void| **clear_tag_history**\ (\ ) :ref:`🔗<class_ASComponent_method_clear_tag_history>`
 
-.. container:: contribute
+Clears all short-term tag history buffers (NAME and CONDITIONAL) on the component.
 
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_clear_ability_history:
+
+.. rst-class:: classref-method
+
+|void| **clear_ability_history**\ (\ ) :ref:`🔗<class_ASComponent_method_clear_ability_history>`
+
+Clears the chronological buffer of ability activation events on this component.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_clear_all_history:
+
+.. rst-class:: classref-method
+
+|void| **clear_all_history**\ (\ ) :ref:`🔗<class_ASComponent_method_clear_all_history>`
+
+Clears every chronological and historical buffer on this component (Tags, Attributes, Abilities, Effects, Cues, and Events).
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_clear_attribute_history:
+
+.. rst-class:: classref-method
+
+|void| **clear_attribute_history**\ (\ ) :ref:`🔗<class_ASComponent_method_clear_attribute_history>`
+
+Clears the chronological buffer of attribute changes on this component.
 
 .. rst-class:: classref-item-separator
 
@@ -850,15 +974,109 @@ Dispatches a transient ASEventTag to this component. The event is broadcast to a
 
 ----
 
+.. _class_ASComponent_method_find_effect_by_tag:
+
+.. rst-class:: classref-method
+
+:ref:`ASEffect<class_ASEffect>` **find_effect_by_tag**\ (\ tag\: ``StringName``\ ) |const| :ref:`🔗<class_ASComponent_method_find_effect_by_tag>`
+
+Searches the archetype container and all currently unlocked abilities to find the :ref:`ASEffect<class_ASEffect>` resource associated with the given tag.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_active_abilities:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[:ref:`ASAbilitySpec<class_ASAbilitySpec>`\] **get_active_abilities**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_active_abilities>`
+
+Returns a list of all abilities currently executing on this actor.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_ability_history:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[``Dictionary``\] **get_ability_history**\ (\ lookback_sec\: ``float`` = 1.0\ ) |const| :ref:`🔗<class_ASComponent_method_get_ability_history>`
+
+Retrieves the buffer of ability lifecycle events (Started, Finished, etc.) within the requested timeframe. Each entry is a ``Dictionary`` representing an ASAbilityHistorical record.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_ability_history_size:
+
+.. rst-class:: classref-method
+
+``int`` **get_ability_history_size**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_ability_history_size>`
+
+Returns the current size of the ability history buffer.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_active_cues:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[:ref:`ASCueSpec<class_ASCueSpec>`\] **get_active_cues**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_active_cues>`
+
+Returns a list of all active feedback cues (VFX/SFX) currently running on this actor.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_active_effects:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[:ref:`ASEffectSpec<class_ASEffectSpec>`\] **get_active_effects**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_active_effects>`
+
+Returns a list of all active effect instances (buffs, debuffs, etc.) applied to this actor.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_effect_history:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[``Dictionary``\] **get_effect_history**\ (\ lookback_sec\: ``float`` = 1.0\ ) |const| :ref:`🔗<class_ASComponent_method_get_effect_history>`
+
+Retrieves the buffer of effect lifecycle events within the requested timeframe. Each entry is a ``Dictionary`` representing an ASEffectHistorical record.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_effect_history_size:
+
+.. rst-class:: classref-method
+
+``int`` **get_effect_history_size**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_effect_history_size>`
+
+Returns the current size of the effect history buffer.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_ASComponent_method_get_ability_cooldown_preview:
 
 .. rst-class:: classref-method
 
 ``float`` **get_ability_cooldown_preview**\ (\ tag\: ``StringName``\ ) |const| :ref:`🔗<class_ASComponent_method_get_ability_cooldown_preview>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Retrieves the base cooldown defined in the ability resource catalog for preview purposes.
 
 .. rst-class:: classref-item-separator
 
@@ -870,9 +1088,7 @@ Dispatches a transient ASEventTag to this component. The event is broadcast to a
 
 ``float`` **get_ability_cost_preview**\ (\ tag\: ``StringName``, attribute\: ``StringName``\ ) |const| :ref:`🔗<class_ASComponent_method_get_ability_cost_preview>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Retrieves the base cost for a specific attribute of an ability from the catalog. Useful for UI tooltips.
 
 .. rst-class:: classref-item-separator
 
@@ -884,9 +1100,7 @@ Dispatches a transient ASEventTag to this component. The event is broadcast to a
 
 ``float`` **get_ability_duration_preview**\ (\ tag\: ``StringName``\ ) |const| :ref:`🔗<class_ASComponent_method_get_ability_duration_preview>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Retrieves the base duration defined in the ability resource catalog.
 
 .. rst-class:: classref-item-separator
 
@@ -923,6 +1137,66 @@ Returns the unmodified base value of the specified attribute resource.
 ``float`` **get_attribute_base_value_by_tag**\ (\ tag\: ``StringName``\ ) |const| :ref:`🔗<class_ASComponent_method_get_attribute_base_value_by_tag>`
 
 Returns the unmodified base value of the attribute identified by the tag.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_attribute_history:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[``Dictionary``\] **get_attribute_history**\ (\ lookback_sec\: ``float`` = 1.0\ ) |const| :ref:`🔗<class_ASComponent_method_get_attribute_history>`
+
+Retrieves chronological entries of attribute modifications within the requested timeframe. Each entry is a ``Dictionary`` representing an ASAttributeHistorical record.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_attribute_history_size:
+
+.. rst-class:: classref-method
+
+``int`` **get_attribute_history_size**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_attribute_history_size>`
+
+Returns the current size of the attribute history buffer.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_attribute_last_delta:
+
+.. rst-class:: classref-method
+
+``float`` **get_attribute_last_delta**\ (\ attribute\: ``StringName``\ ) |const| :ref:`🔗<class_ASComponent_method_get_attribute_last_delta>`
+
+Retrieves the final delta (change amount) for the specified attribute from the last historical entry. Returns 0.0 if no history exists for that attribute.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_attribute_max_value:
+
+.. rst-class:: classref-method
+
+``float`` **get_attribute_max_value**\ (\ tag\: ``StringName``\ ) |const| :ref:`🔗<class_ASComponent_method_get_attribute_max_value>`
+
+Retrieves the maximum value (ceiling) defined for the attribute resource.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_attribute_percent:
+
+.. rst-class:: classref-method
+
+``float`` **get_attribute_percent**\ (\ tag\: ``StringName``\ ) |const| :ref:`🔗<class_ASComponent_method_get_attribute_percent>`
+
+Returns the ratio of :ref:`get_attribute_value_by_tag()<class_ASComponent_method_get_attribute_value_by_tag>` to :ref:`get_attribute_max_value()<class_ASComponent_method_get_attribute_max_value>`. Useful for health bars and resource gauges.
 
 .. rst-class:: classref-item-separator
 
@@ -982,9 +1256,7 @@ Returns the registered AudioStreamPlayer node.
 
 ``int`` **get_conditional_history_size**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_conditional_history_size>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns the number of entries currently stored in the conditional history buffer.
 
 .. rst-class:: classref-item-separator
 
@@ -997,6 +1269,42 @@ Returns the registered AudioStreamPlayer node.
 ``float`` **get_cooldown_remaining**\ (\ ability_tag\: ``StringName``\ ) |const| :ref:`🔗<class_ASComponent_method_get_cooldown_remaining>`
 
 Returns the time remaining for a specific cooldown tag.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_cooldown_percent:
+
+.. rst-class:: classref-method
+
+``float`` **get_cooldown_percent**\ (\ ability_tag\: ``StringName``\ ) |const| :ref:`🔗<class_ASComponent_method_get_cooldown_percent>`
+
+Returns the completion ratio of the cooldown (remaining / initial duration). Returns 0.0 if not on cooldown.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_cue_history:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[``Dictionary``\] **get_cue_history**\ (\ lookback_sec\: ``float`` = 1.0\ ) |const| :ref:`🔗<class_ASComponent_method_get_cue_history>`
+
+Retrieves the buffer of visual cue events occurred within the last ``lookback_sec`` seconds. Each entry is a ``Dictionary`` representing an ASCueHistorical record.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_cue_history_size:
+
+.. rst-class:: classref-method
+
+``int`` **get_cue_history_size**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_cue_history_size>`
+
+Returns the current size of the cue history buffer.
 
 .. rst-class:: classref-item-separator
 
@@ -1020,9 +1328,7 @@ Returns the cue resource associated with the specified tag.
 
 ``int`` **get_event_history_size**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_event_history_size>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns the number of entries currently stored in the event history buffer.
 
 .. rst-class:: classref-item-separator
 
@@ -1034,9 +1340,7 @@ Returns the cue resource associated with the specified tag.
 
 ``int`` **get_name_history_size**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_name_history_size>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns the number of entries currently stored in the name history buffer.
 
 .. rst-class:: classref-item-separator
 
@@ -1049,6 +1353,30 @@ Returns the cue resource associated with the specified tag.
 ``Node`` **get_node_ptr**\ (\ name\: ``StringName``\ ) |const| :ref:`🔗<class_ASComponent_method_get_node_ptr>`
 
 Returns a registered node by its alias.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_owned_tags:
+
+.. rst-class:: classref-method
+
+:ref:`ASTagSpec<class_ASTagSpec>` **get_owned_tags**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_owned_tags>`
+
+Exposes the internal tag manager :ref:`ASTagSpec<class_ASTagSpec>` for detailed inspections. Use this to bypass the high-level API and access refcounts or recursive hierarchy queries directly.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASComponent_method_get_registered_cues:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\] **get_registered_cues**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_registered_cues>`
+
+Returns the list of all cue resources currently registered with this component.
 
 .. rst-class:: classref-item-separator
 

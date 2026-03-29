@@ -1,9 +1,9 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://covor50ks235b"]
 
-[ext_resource type="Script" path="res://scenes/level.gd" id="1_g0gct"]
+[ext_resource type="Script" uid="uid://cj638kd8m5hd0" path="res://scenes/level.gd" id="1_g0gct"]
 [ext_resource type="PackedScene" path="res://player/player.tscn" id="2_70hee"]
 [ext_resource type="PackedScene" path="res://ui/hud.tscn" id="3_4ffrk"]
-[ext_resource type="Script" path="res://camera/camera.gd" id="4_70hee"]
+[ext_resource type="Script" uid="uid://bgxkhg4nhtfw6" path="res://camera/camera.gd" id="4_70hee"]
 [ext_resource type="PhysicsMaterial" path="res://resources/physics_material.tres" id="5_4ffrk"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g0gct"]

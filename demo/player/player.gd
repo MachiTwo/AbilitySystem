@@ -27,19 +27,20 @@ var _is_attacking: bool = false
 
 # Logic State
 const TAG_COLORS := {
-	&"motion.idle": Color(0.785, 0.786, 0.761),
-	&"motion.walk": Color(0.5, 0.5, 0.5),
-	&"motion.run": Color(0.25, 0.5, 1.0),
-	&"motion.dash": Color(0.4, 0.4, 0.8),
-	&"jump.high": Color(0.5, 1.0, 0.5),
-	&"jump.fall": Color(1.0, 1.0, 0.0),
-	&"status.hurt": Color(1.0, 0.5, 0.0),
-	&"status.dead": Color(1.0, 0.0, 0.0),
-	&"attack.fast": Color(1.0, 0.0, 0.0),
-	&"attack.normal": Color(1.0, 0.27, 0.0),
-	&"attack.special": Color(1.0, 0.0, 0.27),
-	&"attack.charged": Color(0.8, 0.0, 0.0),
-	&"attack.dash_attack": Color(0.53, 0.0, 0.8),
+	&"motion.idle": Color(0.785, 0.786, 0.761), # Light Grey
+	&"motion.walk": Color(0.5, 0.5, 0.5),      # Grey
+	&"motion.run": Color(0.2, 0.2, 0.9),       # Dark Blue
+	&"motion.dash": Color(0.4, 0.4, 1.0),      # Medium Blue
+	&"state.hyperdash": Color(0.6, 0.6, 1.0),  # Light Blue
+	&"jump.high": Color(0.0, 0.5, 1.0),        # Sky Blue
+	&"jump.fall": Color(1.0, 1.0, 0.0),        # Yellow
+	&"status.hurt": Color(1.0, 0.5, 0.0),      # Orange
+	&"status.dead": Color(1.0, 0.0, 0.0),      # Red
+	&"attack.fast": Color(1.0, 0.2, 0.2),      # Soft Red (Attacks)
+	&"attack.normal": Color(1.0, 0.27, 0.0),   # Orange-Red
+	&"attack.special": Color(1.0, 0.0, 0.27),  # Pink-Red
+	&"attack.charged": Color(0.8, 0.0, 0.0),   # Dark Red
+	&"attack.dash_attack": Color(0.53, 0.0, 0.8), # Purple
 }
 
 var facing_direction: float = 1.0:
@@ -425,3 +426,55 @@ func _on_tag_changed(_tag: StringName, _added: bool) -> void:
 	
 	if _sprite:
 		_sprite.modulate = best_color
+
+
+func _on_as_component_ability_activated(ability_spec: Object) -> void:
+	pass # Replace with function body.
+
+
+func _on_as_component_attribute_changed(attribute_name: StringName, old_value: float, new_value: float) -> void:
+	pass # Replace with function body.
+
+
+func _on_as_component_effect_applied(effect_spec: Object) -> void:
+	pass # Replace with function body.
+
+
+func _on_as_component_tag_changed(tag_name: StringName, is_present: bool) -> void:
+	pass # Replace with function body.
+
+
+func _on_as_component_tag_event_received(event_tag: StringName, data: Dictionary) -> void:
+	pass # Replace with function body.
+
+
+func _on_as_component_ability_ended(ability_spec: Object, was_cancelled: bool) -> void:
+	pass # Replace with function body.
+
+
+func _on_as_component_ability_failed(ability_name: StringName, reason: String) -> void:
+	pass # Replace with function body.
+
+
+func _on_as_component_cooldown_ended(ability_tag: StringName) -> void:
+	pass # Replace with function body.
+
+
+func _on_as_component_cooldown_started(ability_tag: StringName, duration: float) -> void:
+	pass # Replace with function body.
+
+
+func _on_as_component_cue_failed(cue_name: StringName, reason: String) -> void:
+	pass # Replace with function body.
+
+
+func _on_as_component_effect_failed(effect_name: StringName, reason: String) -> void:
+	pass # Replace with function body.
+
+
+func _on_as_component_effect_removed(effect_spec: Object) -> void:
+	pass # Replace with function body.
+
+
+func _on_as_component_event_received(tag: StringName, instigator: Object, magnitude: float, custom_payload: Dictionary) -> void:
+	pass # Replace with function body.

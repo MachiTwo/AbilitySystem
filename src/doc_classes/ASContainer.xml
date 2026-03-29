@@ -48,6 +48,7 @@
 			<return type="bool" />
 			<param index="0" name="cue" type="ASCue" />
 			<description>
+				Check if the container's catalog includes the specific [ASCue] resource reference.
 			</description>
 		</method>
 		<method name="has_effect" qualifiers="const">
@@ -72,6 +73,7 @@
 			Initial effects applied on startup.
 		</member>
 		<member name="events" type="StringName[]" setter="set_events" getter="get_events" default="[]">
+			List of events associated with this container that can be dispatched or heard.
 		</member>
 	</members>
 </class>

@@ -87,12 +87,21 @@ class ASComponent : public Node {
 
 public:
 	// Events Historical - Using structs from as_utils.h
-	Vector<ASEventTagHistoricalEntry> _event_history;
-	Vector<ASNameTagHistoricalEntry> _name_history;
-	Vector<ASConditionalTagHistoricalEntry> _cond_history;
-	uint32_t _event_history_max_size = 128;
+	Vector<ASNameTagHistorical> _name_history;
+	Vector<ASConditionalTagHistorical> _cond_history;
+	Vector<ASEventTagHistorical> _event_history;
+	Vector<ASAttributeHistorical> _attribute_history;
+	Vector<ASAbilityHistorical> _ability_history;
+	Vector<ASEffectHistorical> _effect_history;
+	Vector<ASCueHistorical> _cue_history;
+
 	uint32_t _name_history_max_size = 128;
 	uint32_t _cond_history_max_size = 128;
+	uint32_t _event_history_max_size = 128;
+	uint32_t _attr_history_max_size = 128;
+	uint32_t _ability_history_max_size = 128;
+	uint32_t _effect_history_max_size = 128;
+	uint32_t _cue_history_max_size = 128;
 
 	CharacterBody2D *character_body_2d = nullptr;
 	CharacterBody3D *character_body_3d = nullptr;
@@ -107,6 +116,7 @@ public:
 	Vector<Ref<ASEffectSpec>> active_effects;
 	Ref<ASTagSpec> owned_tags;
 	Vector<Ref<ASCue>> registered_cues;
+	Vector<Ref<ASCueSpec>> active_cues;
 	Ref<ASContainer> container;
 	Ref<ASStateSnapshot> snapshot_state;
 
@@ -130,6 +140,12 @@ protected:
 	void _process_abilities(float p_delta);
 	void _process_cooldowns(float p_delta);
 	void _remove_effect_at_index(int p_idx);
+	void _record_ability_event(const StringName &p_ability_tag, const StringName &p_status, Node *p_instigator, int p_level = 1);
+	void _record_effect_event(const StringName &p_effect_tag, const StringName &p_status, Node *p_instigator, int p_stacks = 1);
+	void _record_cue_event(const StringName &p_cue_tag, const StringName &p_status, Node *p_instigator);
+	void _record_name_tag_event(const StringName &p_tag, bool p_added);
+	void _record_conditional_tag_event(const StringName &p_tag, bool p_added);
+	void _record_event_tag_event(const StringName &p_tag, Node *p_instigator);
 
 public:
 	// --- Cooldown API ---
@@ -148,6 +164,7 @@ public:
 
 	void capture_snapshot();
 	void apply_snapshot(uint32_t p_tick);
+	void rollback_to_tick(uint32_t p_tick);
 
 	void request_activate_ability(const StringName &p_tag);
 	void confirm_ability_activation(const StringName &p_tag);
@@ -163,6 +180,8 @@ public:
 	void lock_ability_by_resource(const Ref<ASAbility> &p_ability);
 	bool is_ability_unlocked(const StringName &p_tag) const;
 	TypedArray<ASAbilitySpec> get_unlocked_abilities() const;
+	TypedArray<ASAbilitySpec> get_active_abilities() const;
+	TypedArray<ASEffectSpec> get_active_effects() const;
 
 	// --- Ability Activation API (Transient execution) ---
 	bool can_activate_ability_by_tag(const StringName &p_tag);
@@ -213,6 +232,10 @@ public:
 	void set_attribute_base_value_by_resource(const Ref<ASAttribute> &p_attribute, float p_value);
 	bool has_attribute_by_resource(const Ref<ASAttribute> &p_attribute) const;
 
+	float get_attribute_max_value(const StringName &p_tag) const;
+	float get_attribute_percent(const StringName &p_tag) const;
+	float get_cooldown_percent(const StringName &p_tag) const;
+
 	// --- Tag Management ---
 	void add_tag(const StringName &p_tag);
 	void remove_tag(const StringName &p_tag);
@@ -235,6 +258,8 @@ public:
 	void register_cue_resource(Ref<ASCue> p_cue);
 	void unregister_cue_resource(const StringName &p_tag);
 	Ref<ASCue> get_cue_resource(const StringName &p_tag) const;
+	TypedArray<ASCue> get_registered_cues() const;
+	TypedArray<ASCueSpec> get_active_cues() const;
 
 	// --- AS Events API ---
 	void dispatch_event(const StringName &p_tag, Node *p_instigator = nullptr, float p_magnitude = 0.0f, const Dictionary &p_custom_payload = Dictionary());
@@ -245,9 +270,26 @@ public:
 	void clear_tag_history();
 	void clear_name_history();
 	void clear_conditional_history();
+	void clear_attribute_history();
+	void clear_ability_history();
+	void clear_effect_history();
+	void clear_cue_history();
+	void clear_all_history();
+
 	int get_name_history_size() const { return _name_history.size(); }
 	int get_conditional_history_size() const { return _cond_history.size(); }
 	int get_event_history_size() const { return _event_history.size(); }
+	int get_attribute_history_size() const { return _attribute_history.size(); }
+	int get_ability_history_size() const { return _ability_history.size(); }
+	int get_effect_history_size() const { return _effect_history.size(); }
+	int get_cue_history_size() const { return _cue_history.size(); }
+
+	// --- Historical Query API ---
+	TypedArray<Dictionary> get_attribute_history(float p_lookback_sec = 1.0f) const;
+	TypedArray<Dictionary> get_ability_history(float p_lookback_sec = 1.0f) const;
+	TypedArray<Dictionary> get_effect_history(float p_lookback_sec = 1.0f) const;
+	TypedArray<Dictionary> get_cue_history(float p_lookback_sec = 1.0f) const;
+	float get_attribute_last_delta(const StringName &p_attribute) const;
 
 	// --- Montage API ---
 	void play_montage(const StringName &p_name, Node *p_target = nullptr);

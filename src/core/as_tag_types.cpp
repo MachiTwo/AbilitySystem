@@ -221,7 +221,7 @@ bool ASTagUtils::name_was_tag_added(const StringName &p_tag, Node *p_target, flo
 
 	double current_time = _get_current_time();
 	for (int i = asc->_name_history.size() - 1; i >= 0; i--) {
-		const ASNameTagHistoricalEntry &entry = asc->_name_history[i];
+		const ASNameTagHistorical &entry = asc->_name_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -246,7 +246,7 @@ bool ASTagUtils::name_was_tag_removed(const StringName &p_tag, Node *p_target, f
 
 	double current_time = _get_current_time();
 	for (int i = asc->_name_history.size() - 1; i >= 0; i--) {
-		const ASNameTagHistoricalEntry &entry = asc->_name_history[i];
+		const ASNameTagHistorical &entry = asc->_name_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -276,7 +276,7 @@ Array ASTagUtils::name_get_recent_additions(Node *p_target, float p_lookback_sec
 
 	double current_time = _get_current_time();
 	for (int i = asc->_name_history.size() - 1; i >= 0; i--) {
-		const ASNameTagHistoricalEntry &entry = asc->_name_history[i];
+		const ASNameTagHistorical &entry = asc->_name_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -306,7 +306,7 @@ Array ASTagUtils::name_get_recent_removals(Node *p_target, float p_lookback_sec)
 
 	double current_time = _get_current_time();
 	for (int i = asc->_name_history.size() - 1; i >= 0; i--) {
-		const ASNameTagHistoricalEntry &entry = asc->_name_history[i];
+		const ASNameTagHistorical &entry = asc->_name_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -336,7 +336,7 @@ Array ASTagUtils::name_get_recent_changes(Node *p_target, float p_lookback_sec) 
 
 	double current_time = _get_current_time();
 	for (int i = asc->_name_history.size() - 1; i >= 0; i--) {
-		const ASNameTagHistoricalEntry &entry = asc->_name_history[i];
+		const ASNameTagHistorical &entry = asc->_name_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -365,7 +365,7 @@ int ASTagUtils::name_count_additions(const StringName &p_tag, Node *p_target, fl
 	int count = 0;
 	double current_time = _get_current_time();
 	for (int i = asc->_name_history.size() - 1; i >= 0; i--) {
-		const ASNameTagHistoricalEntry &entry = asc->_name_history[i];
+		const ASNameTagHistorical &entry = asc->_name_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -391,7 +391,7 @@ int ASTagUtils::name_count_removals(const StringName &p_tag, Node *p_target, flo
 	int count = 0;
 	double current_time = _get_current_time();
 	for (int i = asc->_name_history.size() - 1; i >= 0; i--) {
-		const ASNameTagHistoricalEntry &entry = asc->_name_history[i];
+		const ASNameTagHistorical &entry = asc->_name_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -416,7 +416,7 @@ bool ASTagUtils::cond_was_tag_added(const StringName &p_tag, Node *p_target, flo
 
 	double current_time = _get_current_time();
 	for (int i = asc->_cond_history.size() - 1; i >= 0; i--) {
-		const ASConditionalTagHistoricalEntry &entry = asc->_cond_history[i];
+		const ASConditionalTagHistorical &entry = asc->_cond_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -441,7 +441,7 @@ bool ASTagUtils::cond_was_tag_removed(const StringName &p_tag, Node *p_target, f
 
 	double current_time = _get_current_time();
 	for (int i = asc->_cond_history.size() - 1; i >= 0; i--) {
-		const ASConditionalTagHistoricalEntry &entry = asc->_cond_history[i];
+		const ASConditionalTagHistorical &entry = asc->_cond_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -471,7 +471,7 @@ Array ASTagUtils::cond_get_recent_additions(Node *p_target, float p_lookback_sec
 
 	double current_time = _get_current_time();
 	for (int i = asc->_cond_history.size() - 1; i >= 0; i--) {
-		const ASConditionalTagHistoricalEntry &entry = asc->_cond_history[i];
+		const ASConditionalTagHistorical &entry = asc->_cond_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -501,7 +501,7 @@ Array ASTagUtils::cond_get_recent_removals(Node *p_target, float p_lookback_sec)
 
 	double current_time = _get_current_time();
 	for (int i = asc->_cond_history.size() - 1; i >= 0; i--) {
-		const ASConditionalTagHistoricalEntry &entry = asc->_cond_history[i];
+		const ASConditionalTagHistorical &entry = asc->_cond_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -531,7 +531,7 @@ Array ASTagUtils::cond_get_recent_changes(Node *p_target, float p_lookback_sec) 
 
 	double current_time = _get_current_time();
 	for (int i = asc->_cond_history.size() - 1; i >= 0; i--) {
-		const ASConditionalTagHistoricalEntry &entry = asc->_cond_history[i];
+		const ASConditionalTagHistorical &entry = asc->_cond_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -560,7 +560,7 @@ int ASTagUtils::cond_count_additions(const StringName &p_tag, Node *p_target, fl
 	int count = 0;
 	double current_time = _get_current_time();
 	for (int i = asc->_cond_history.size() - 1; i >= 0; i--) {
-		const ASConditionalTagHistoricalEntry &entry = asc->_cond_history[i];
+		const ASConditionalTagHistorical &entry = asc->_cond_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -586,7 +586,7 @@ int ASTagUtils::cond_count_removals(const StringName &p_tag, Node *p_target, flo
 	int count = 0;
 	double current_time = _get_current_time();
 	for (int i = asc->_cond_history.size() - 1; i >= 0; i--) {
-		const ASConditionalTagHistoricalEntry &entry = asc->_cond_history[i];
+		const ASConditionalTagHistorical &entry = asc->_cond_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -625,7 +625,7 @@ Array ASTagUtils::event_get_recent_events(const StringName &p_tag, Node *p_targe
 
 	double current_time = _get_current_time();
 	for (int i = asc->_event_history.size() - 1; i >= 0; i--) {
-		const ASEventTagHistoricalEntry &entry = asc->_event_history[i];
+		const ASEventTagHistorical &entry = asc->_event_history[i];
 
 		if (current_time - entry.data.timestamp > (double)p_lookback_sec) {
 			break;
@@ -659,7 +659,7 @@ Array ASTagUtils::event_get_all_recent_events(Node *p_target, float p_lookback_s
 
 	double current_time = _get_current_time();
 	for (int i = asc->_event_history.size() - 1; i >= 0; i--) {
-		const ASEventTagHistoricalEntry &entry = asc->_event_history[i];
+		const ASEventTagHistorical &entry = asc->_event_history[i];
 
 		if (current_time - entry.data.timestamp > (double)p_lookback_sec) {
 			break;
@@ -691,7 +691,7 @@ int ASTagUtils::event_count_occurrences(const StringName &p_tag, Node *p_target,
 	int count = 0;
 	double current_time = _get_current_time();
 	for (int i = asc->_event_history.size() - 1; i >= 0; i--) {
-		const ASEventTagHistoricalEntry &entry = asc->_event_history[i];
+		const ASEventTagHistorical &entry = asc->_event_history[i];
 
 		if (current_time - entry.data.timestamp > (double)p_lookback_sec) {
 			break;
@@ -716,7 +716,7 @@ Dictionary ASTagUtils::event_get_last_data(const StringName &p_tag, Node *p_targ
 	}
 
 	for (int i = asc->_event_history.size() - 1; i >= 0; i--) {
-		const ASEventTagHistoricalEntry &entry = asc->_event_history[i];
+		const ASEventTagHistorical &entry = asc->_event_history[i];
 
 		if (entry.data.event_tag == p_tag) {
 			result = entry.data.custom_payload;
@@ -737,7 +737,7 @@ float ASTagUtils::event_get_last_magnitude(const StringName &p_tag, Node *p_targ
 	}
 
 	for (int i = asc->_event_history.size() - 1; i >= 0; i--) {
-		const ASEventTagHistoricalEntry &entry = asc->_event_history[i];
+		const ASEventTagHistorical &entry = asc->_event_history[i];
 
 		if (entry.data.event_tag == p_tag) {
 			return entry.data.magnitude;
@@ -757,7 +757,7 @@ Node *ASTagUtils::event_get_last_instigator(const StringName &p_tag, Node *p_tar
 	}
 
 	for (int i = asc->_event_history.size() - 1; i >= 0; i--) {
-		const ASEventTagHistoricalEntry &entry = asc->_event_history[i];
+		const ASEventTagHistorical &entry = asc->_event_history[i];
 
 		if (entry.data.event_tag == p_tag) {
 			return Object::cast_to<Node>(ObjectDB::get_instance(entry.data.instigator_id));
@@ -811,7 +811,7 @@ Array ASTagUtils::history_get_all_changes(Node *p_target, float p_lookback_sec) 
 
 	// Add ASNameTag Changes
 	for (int i = asc->_name_history.size() - 1; i >= 0; i--) {
-		const ASNameTagHistoricalEntry &entry = asc->_name_history[i];
+		const ASNameTagHistorical &entry = asc->_name_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -828,7 +828,7 @@ Array ASTagUtils::history_get_all_changes(Node *p_target, float p_lookback_sec) 
 
 	// Add ASConditionalTag Changes
 	for (int i = asc->_cond_history.size() - 1; i >= 0; i--) {
-		const ASConditionalTagHistoricalEntry &entry = asc->_cond_history[i];
+		const ASConditionalTagHistorical &entry = asc->_cond_history[i];
 
 		if (current_time - entry.timestamp > (double)p_lookback_sec) {
 			break;
@@ -845,7 +845,7 @@ Array ASTagUtils::history_get_all_changes(Node *p_target, float p_lookback_sec) 
 
 	// Add ASEventTag Changes
 	for (int i = asc->_event_history.size() - 1; i >= 0; i--) {
-		const ASEventTagHistoricalEntry &entry = asc->_event_history[i];
+		const ASEventTagHistorical &entry = asc->_event_history[i];
 
 		if (current_time - entry.data.timestamp > (double)p_lookback_sec) {
 			break;

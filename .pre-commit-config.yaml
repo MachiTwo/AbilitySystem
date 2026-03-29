@@ -4,7 +4,6 @@ default_language_version:
 exclude: |
   (?x)^(
     .*godot-cpp/.*|
-    .*src/limboai/.*|
     .*icons/.*|
     .*addons/ability_system/icons/.*|
     .*demo/.*|

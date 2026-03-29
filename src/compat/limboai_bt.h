@@ -147,6 +147,11 @@ public:
 	virtual int get_child_count() const { return 0; }
 	virtual Ref<BTTask> get_child(int p_idx) const { return Ref<BTTask>(); }
 
+	virtual void set_status(int p_status) {}
+	_FORCE_INLINE_ int get_status() const { return 0; }
+	virtual void set_elapsed_time(double p_elapsed) {}
+	_FORCE_INLINE_ double get_elapsed_time() const { return 0.0; }
+
 	// Utility methods
 	virtual String get_task_name() const { return "BTTask"; }
 	virtual String get_category() const { return ""; }
@@ -300,6 +305,9 @@ public:
 	Node *get_agent() const { return agent; }
 	Ref<BehaviorTree> get_behavior_tree() const { return behavior_tree; }
 	BT::Status get_last_status() const { return last_status; }
+
+	Dictionary capture_state() const { return Dictionary(); }
+	void restore_state(const Dictionary &p_dict) {}
 
 	BTInstance() = default;
 	~BTInstance() = default;
