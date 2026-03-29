@@ -4,7 +4,7 @@
 		BTAction that dispatches an Ability System event.
 	</brief_description>
 	<description>
-		A Behavior Tree action that dispatches an [ASEventTag] via [method ASComponent.dispatch_event]. Uses the native AS Event system (Split Registry Pattern).
+		A Behavior Tree action that dispatches an ASEventTag via [method ASComponent.dispatch_event]. Uses the native AS Event system (Split Registry Pattern).
 		Returns [constant BT.SUCCESS] immediately after dispatch.
 	</description>
 	<tutorials>

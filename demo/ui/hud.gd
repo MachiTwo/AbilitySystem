@@ -46,6 +46,7 @@ func _process(delta: float) -> void:
 	_update_bars()
 	_update_timer()
 	_update_status_list()
+	_update_labels()
 
 func _update_status_list() -> void:
 	if not is_instance_valid(asc) or not label_compose: return
@@ -101,11 +102,18 @@ func _update_labels() -> void:
 
 	var display_state = "none"
 	var tags = asc.get_tags()
+	var context_list = []
+
 	for tag in tags:
 		if tag in TAG_COLORS:
 			display_state = String(tag)
-			break
+		else:
+			context_list.append(String(tag))
+	
 	label_state.text = "HUD State: %s" % display_state
+	if label_context:
+		var context_str = ", ".join(context_list)
+		label_context.text = "Context: %s" % (context_str if not context_str.is_empty() else "none")
 
 func _update_bars() -> void:
 	if not is_instance_valid(asc): return

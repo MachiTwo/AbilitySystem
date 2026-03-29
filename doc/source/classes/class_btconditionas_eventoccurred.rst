@@ -19,7 +19,7 @@ BTCondition that checks if an Ability System event occurred recently.
 Description
 -----------
 
-A Behavior Tree condition that checks if an ``ASEventTag`` occurred within a time window using the Events Historical buffer.
+A Behavior Tree condition that checks if an ASEventTag occurred within a time window using the Events Historical buffer.
 
 Returns :ref:`BT.SUCCESS<class_BT_constant_SUCCESS>` if event found, :ref:`BT.FAILURE<class_BT_constant_FAILURE>` otherwise.
 

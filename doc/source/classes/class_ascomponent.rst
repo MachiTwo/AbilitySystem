@@ -360,7 +360,7 @@ Emitted when an active effect is removed.
 
 **event_received**\ (\ tag\: ``StringName``, instigator\: ``Object``, magnitude\: ``float``, custom_payload\: ``Dictionary``\ ) :ref:`🔗<class_ASComponent_signal_event_received>`
 
-Emitted when an ``ASEventTag`` is dispatched to this component. Used for transient signals.
+Emitted when an ASEventTag is dispatched to this component. Used for transient signals.
 
 .. rst-class:: classref-item-separator
 
@@ -844,7 +844,7 @@ Confirms a previously predicted ability activation (Server-side confirmation).
 
 |void| **dispatch_event**\ (\ tag\: ``StringName``, instigator\: ``Node`` = null, magnitude\: ``float`` = 0.0, custom_payload\: ``Dictionary`` = {}\ ) :ref:`🔗<class_ASComponent_method_dispatch_event>`
 
-Dispatches a transient ``ASEventTag`` to this component. The event is broadcast to all listeners and stored in the short-term historical buffer (:ref:`has_event_occurred()<class_ASComponent_method_has_event_occurred>`). This is the preferred way to signal non-persistent occurrences (e.g. Impact, Hit, Achievement).
+Dispatches a transient ASEventTag to this component. The event is broadcast to all listeners and stored in the short-term historical buffer (:ref:`has_event_occurred()<class_ASComponent_method_has_event_occurred>`). This is the preferred way to signal non-persistent occurrences (e.g. Impact, Hit, Achievement).
 
 .. rst-class:: classref-item-separator
 

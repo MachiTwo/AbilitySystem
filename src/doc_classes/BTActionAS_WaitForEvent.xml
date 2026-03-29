@@ -4,7 +4,7 @@
 		BTAction that waits for an Ability System event to occur.
 	</brief_description>
 	<description>
-		A Behavior Tree action that enters [constant BT.RUNNING] state and waits for a specific [ASEventTag] to occur. Uses [method ASComponent.has_event_occurred] to check the Events Historical buffer.
+		A Behavior Tree action that enters [constant BT.RUNNING] state and waits for a specific ASEventTag to occur. Uses [method ASComponent.has_event_occurred] to check the Events Historical buffer.
 		Returns [constant BT.SUCCESS] when event is detected within the time window, continues [constant BT.RUNNING] while waiting.
 	</description>
 	<tutorials>

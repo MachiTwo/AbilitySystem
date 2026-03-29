@@ -244,7 +244,7 @@
 			<param index="2" name="magnitude" type="float" default="0.0" />
 			<param index="3" name="custom_payload" type="Dictionary" default="{}" />
 			<description>
-				Dispatches a transient [ASEventTag] to this component. The event is broadcast to all listeners and stored in the short-term historical buffer ([method has_event_occurred]). This is the preferred way to signal non-persistent occurrences (e.g. Impact, Hit, Achievement).
+				Dispatches a transient ASEventTag to this component. The event is broadcast to all listeners and stored in the short-term historical buffer ([method has_event_occurred]). This is the preferred way to signal non-persistent occurrences (e.g. Impact, Hit, Achievement).
 			</description>
 		</method>
 		<method name="get_ability_cooldown_preview" qualifiers="const">
@@ -737,7 +737,7 @@
 			<param index="2" name="magnitude" type="float" />
 			<param index="3" name="custom_payload" type="Dictionary" />
 			<description>
-				Emitted when an [ASEventTag] is dispatched to this component. Used for transient signals.
+				Emitted when an ASEventTag is dispatched to this component. Used for transient signals.
 			</description>
 		</signal>
 		<signal name="tag_changed">

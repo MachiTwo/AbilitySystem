@@ -237,7 +237,7 @@
 			Ability attempts to activate when a specific Tag is removed from the owner.
 		</constant>
 		<constant name="TRIGGER_ON_EVENT" value="2" enum="TriggerType">
-			Ability attempts to activate when a specific [ASEventTag] is dispatched to the owner. This is the preferred way for reactive triggers like "Counter-attack on Hit".
+			Ability attempts to activate when a specific ASEventTag is dispatched to the owner. This is the preferred way for reactive triggers like "Counter-attack on Hit".
 		</constant>
 	</constants>
 </class>

@@ -117,6 +117,10 @@ func _ready() -> void:
 	if asc:
 		if asc.container:
 			asc.apply_container(asc.container)
+			# Destrava o catálogo de habilidades do container para o player
+			for ability in asc.container.get_abilities():
+				if ability:
+					asc.unlock_ability_by_resource(ability)
 		
 		asc.tag_changed.connect(_on_tag_changed)
 		if _anim_player:

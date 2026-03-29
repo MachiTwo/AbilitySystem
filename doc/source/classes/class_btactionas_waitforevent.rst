@@ -19,7 +19,7 @@ BTAction that waits for an Ability System event to occur.
 Description
 -----------
 
-A Behavior Tree action that enters :ref:`BT.RUNNING<class_BT_constant_RUNNING>` state and waits for a specific ``ASEventTag`` to occur. Uses :ref:`ASComponent.has_event_occurred()<class_ASComponent_method_has_event_occurred>` to check the Events Historical buffer.
+A Behavior Tree action that enters :ref:`BT.RUNNING<class_BT_constant_RUNNING>` state and waits for a specific ASEventTag to occur. Uses :ref:`ASComponent.has_event_occurred()<class_ASComponent_method_has_event_occurred>` to check the Events Historical buffer.
 
 Returns :ref:`BT.SUCCESS<class_BT_constant_SUCCESS>` when event is detected within the time window, continues :ref:`BT.RUNNING<class_BT_constant_RUNNING>` while waiting.
 
