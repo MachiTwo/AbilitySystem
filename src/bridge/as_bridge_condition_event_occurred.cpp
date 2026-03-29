@@ -30,7 +30,7 @@
 
 #include "as_bridge_condition_event_occurred.h"
 
-#include "as_bridge.h"
+#include "../core/ability_system.h"
 
 void BTConditionAS_EventOccurred::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_event_tag", "tag"), &BTConditionAS_EventOccurred::set_event_tag);

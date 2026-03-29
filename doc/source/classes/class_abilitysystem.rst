@@ -32,6 +32,8 @@ Methods
    +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`Array<class_Array>`\[``StringName``\]    | :ref:`get_all_registered_tags<class_AbilitySystem_method_get_all_registered_tags>`\ (\ ) |const|                                                                            |
    +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ASComponent<class_ASComponent>`          | :ref:`get_component_from_node<class_AbilitySystem_method_get_component_from_node>`\ (\ node\: ``Node``\ ) |static|                                                          |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`Array<class_Array>`\[``StringName``\]    | :ref:`get_registered_tags_of_type<class_AbilitySystem_method_get_registered_tags_of_type>`\ (\ type\: :ref:`ASTagType<enum_AbilitySystem_ASTagType>`\ ) |const|             |
    +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                        | :ref:`get_resource_name_owner<class_AbilitySystem_method_get_resource_name_owner>`\ (\ name\: ``String``\ ) |const|                                                         |
@@ -47,6 +49,8 @@ Methods
    | |void|                                         | :ref:`remove_tag_branch<class_AbilitySystem_method_remove_tag_branch>`\ (\ tag\: ``StringName``\ )                                                                          |
    +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                         | :ref:`rename_tag<class_AbilitySystem_method_rename_tag>`\ (\ old_tag\: ``StringName``, new_tag\: ``StringName``\ )                                                          |
+   +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ASComponent<class_ASComponent>`          | :ref:`resolve_component<class_AbilitySystem_method_resolve_component>`\ (\ agent\: ``Node``, path\: ``NodePath`` = NodePath("")\ ) |static|                                 |
    +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                        | :ref:`run_tests<class_AbilitySystem_method_run_tests>`\ (\ )                                                                                                                |
    +------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -131,6 +135,18 @@ Method Descriptions
 .. container:: contribute
 
 	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_AbilitySystem_method_get_component_from_node:
+
+.. rst-class:: classref-method
+
+:ref:`ASComponent<class_ASComponent>` **get_component_from_node**\ (\ node\: ``Node``\ ) |static| :ref:`🔗<class_AbilitySystem_method_get_component_from_node>`
+
+Utility for retrieving an :ref:`ASComponent<class_ASComponent>` from a node. Checks if the node is an ASC or if it has an ASC child.
 
 .. rst-class:: classref-item-separator
 
@@ -227,6 +243,30 @@ Unregisters the specified tag and all its hierarchical sub-tags (e.g. removing "
 |void| **rename_tag**\ (\ old_tag\: ``StringName``, new_tag\: ``StringName``\ ) :ref:`🔗<class_AbilitySystem_method_rename_tag>`
 
 Renames an existing tag and automatically updates all its hierarchical sub-tags to the new prefix.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_AbilitySystem_method_resolve_component:
+
+.. rst-class:: classref-method
+
+:ref:`ASComponent<class_ASComponent>` **resolve_component**\ (\ agent\: ``Node``, path\: ``NodePath`` = NodePath("")\ ) |static| :ref:`🔗<class_AbilitySystem_method_resolve_component>`
+
+Advanced utility for locating an :ref:`ASComponent<class_ASComponent>` from an agent node.
+
+Priority order:
+
+1. If ``path`` is provided, attempts to resolve that specific path relative to the agent.
+
+2. If the agent node itself is an :ref:`ASComponent<class_ASComponent>`, returns it.
+
+3. Searches the immediate children of the agent for an :ref:`ASComponent<class_ASComponent>`.
+
+4. Searches the parent of the agent and its children.
+
+5. Searches the owner of the agent and its children.
 
 .. rst-class:: classref-item-separator
 

@@ -72,13 +72,6 @@
 				Returns true if the cache contains an entry for the specified tick.
 			</description>
 		</method>
-		<method name="get_entry" qualifiers="const">
-			<return type="ASStateCacheEntry" />
-			<param index="0" name="tick" type="int" />
-			<description>
-				Returns the cache entry for the specified tick, or empty entry if not found.
-			</description>
-		</method>
 		<method name="get_available_ticks" qualifiers="const">
 			<return type="PackedInt32Array" />
 			<description>

@@ -56,8 +56,6 @@ Methods
    +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`ASTagType<enum_ASTagUtils_ASTagType>` | :ref:`detect_tag_type<class_ASTagUtils_method_detect_tag_type>`\ (\ tag\: ``StringName``\ ) |static|                                                                  |
    +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASTagBase<class_ASTagBase>`           | :ref:`create_tag<class_ASTagUtils_method_create_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                            |
-   +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``bool``                                    | :ref:`is_state_tag<class_ASTagUtils_method_is_state_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                        |
    +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``bool``                                    | :ref:`is_class_tag<class_ASTagUtils_method_is_class_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                        |
@@ -142,20 +140,6 @@ Returns false if tag doesn't exist or type doesn't match.
 Detects tag type from naming convention.
 
 Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASTagUtils_method_create_tag:
-
-.. rst-class:: classref-method
-
-:ref:`ASTagBase<class_ASTagBase>` **create_tag**\ (\ tag\: ``StringName``\ ) |static| :ref:`🔗<class_ASTagUtils_method_create_tag>`
-
-Creates appropriate tag instance based on naming convention.
-
-Returns ASNameTag, ASConditionalTag, or ASEventTag as appropriate.
 
 .. rst-class:: classref-item-separator
 

@@ -30,7 +30,7 @@
 
 #include "as_bridge_condition_has_tag.h"
 
-#include "as_bridge.h"
+#include "../core/ability_system.h"
 
 void BTConditionAS_HasTag::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_tag", "tag"), &BTConditionAS_HasTag::set_tag);

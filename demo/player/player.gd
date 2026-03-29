@@ -204,7 +204,7 @@ func _handle_gravity(delta: float) -> void:
 		return
 
 	if not is_on_floor():
-		var gs = "gravity_scale" if gravity_scale > 0 else 1.0
+		var gs = gravity_scale if gravity_scale > 0 else 1.0
 		var g = 980.0 * gs
 		velocity.y += g * delta
 
@@ -221,7 +221,7 @@ func _handle_input() -> void:
 	# Jump Input
 	if _jump_buffer_timer > 0 and _coyote_timer > 0 and not _is_attacking:
 		if _try_activate(&"state.jump"):
-			var jf = "jump_force" if jump_force > 0 else 500.0
+			var jf = jump_force if jump_force > 0 else 500.0
 			velocity.y = -jf
 			_jump_buffer_timer = 0
 			_coyote_timer = 0
@@ -269,7 +269,7 @@ func _start_dash() -> void:
 	facing_direction = dash_dir
 
 func _handle_movement(delta: float) -> void:
-	var spd = "max_speed" if max_speed > 0 else 230.0
+	var spd = max_speed if max_speed > 0 else 230.0
 	var accel = default_acceleration if default_acceleration > 0 else 1200.0
 	var fric = default_friction if default_friction > 0 else 1000.0
 	var air_res = default_air_resistance if default_air_resistance > 0 else 200.0

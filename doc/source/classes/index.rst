@@ -81,28 +81,20 @@ Variant types
     class_asbridgestate
     class_ascomponentstate
     class_asconditionaltag
-    class_asconditionaltaghistoricalentry
     class_ascooldowndata
     class_ascuespec
     class_aseditorplugin
     class_aseditorpropertyname
     class_aseditorpropertyselector
     class_aseditorpropertytagselector
-    class_aseffectmodifier
-    class_aseffectmodifierdata
-    class_aseffectrequirement
     class_aseffectspec
     class_aseffectstate
     class_aseventtag
     class_aseventtagdata
-    class_aseventtaghistoricalentry
     class_asinspectorplugin
     class_asnametag
-    class_asnametaghistoricalentry
     class_asstatecache
-    class_asstatecacheentry
     class_asstateutils
-    class_astagbase
     class_astagspanel
     class_astagspec
     class_astagutils

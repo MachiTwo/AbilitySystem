@@ -14,6 +14,7 @@
 			<param index="0" name="effect_spec" type="ASEffectSpec" />
 			<param index="1" name="modifier_index" type="int" />
 			<description>
+				Virtual callback for computing custom magnitude values for effect modifiers.
 			</description>
 		</method>
 		<method name="add_attribute_set">
@@ -335,12 +336,6 @@
 			<description>
 			</description>
 		</method>
-		<method name="get_from_node" qualifiers="static">
-			<return type="ASComponent" />
-			<param index="0" name="node" type="Node" />
-			<description>
-			</description>
-		</method>
 		<method name="get_name_history_size" qualifiers="const">
 			<return type="int" />
 			<description>
@@ -581,8 +576,8 @@
 		<method name="try_activate_ability_by_resource">
 			<return type="bool" />
 			<param index="0" name="ability" type="ASAbility" />
-			<param index="1" name="_unnamed_arg1" type="Object" />
-			<param index="2" name="_unnamed_arg2" type="int" />
+			<param index="1" name="target_node" type="Object" />
+			<param index="2" name="parent_id" type="int" />
 			<description>
 				Attempts to activate an ability using its resource reference. Supports hierarchical linking via [param parent_id].
 			</description>

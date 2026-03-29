@@ -734,14 +734,15 @@ O componente `ASDelivery` (ex: um míssil ou aura rastreado) carrega o envelope 
 
 ---
 
-## 12. INTEGRAÇÃO ATÓMICA DE IA (ASBridge & HSM)
+## 12. INTEGRAÇÃO ATÔMICA DE IA (A Camada ASBridge & HSM)
 
-Para interagir com o framework LimboAI de forma atómica, o Ability System fornece a `ASBridge` como uma biblioteca interna nativa.
+Para interagir com o framework LimboAI de forma atômica, o Ability System fornece o conceito de **ASBridge** — não mais como uma classe abstrata ou Singleton, mas como uma **camada arquitetural de integração nativa** (localizada na pasta `src/bridge/`).
 
-- **Status v0.2.0:** A infraestrutura de IA é parte do mesmo binário do Ability System, garantindo latência zero e registro unificado.
-- **Papel da ASBridge:** Expõe estados (tags/atributos) diretamente na Blackboard e gerencia o despacho de comandos de habilidades.
-- **Compatibilidade HSM:** O `ASComponent` é nativamente compatível com **LimboHSM**. Isso permite que o estado da máquina de estados hierárquica do personagem seja conduzido pelos identificadores de Tags e Eventos do Ability System.
-- **Desacoplamento Rigoroso:** Embora integrem o mesmo binário, as Tarefas da BT/HSM nunca chamam o core da habilidade diretamente. Elas devem usar a Ponte, preservando o **Protocolo de Reatividade**.
+- **Status v0.2.0:** A infraestrutura de IA faz parte do mesmo binário do Ability System. O antigo Singleton `ASBridge` foi totalmente descomissionado e explodido.
+- **Papel da Camada ASBridge:** O termo refere-se estritamente à coleção de Tarefas e Estados nativos (`BTAction`, `BTCondition`, `LimboState`) que traduzem os comandos do LimboAI para a linguagem do `ASComponent`.
+- **A Autoridade de Resolução (AbilitySystem Singleton):** A responsabilidade de encontrar e validar Componentes na árvore (o `resolve_component()`) foi transferida de forma definitiva para o **Singleton `AbilitySystem`**. Todas as tarefas de IA e eventos externos consultam a Engine central via `AbilitySystem::get_singleton()->resolve_component(agente, caminho_ou_alias)`. O Singleton atua como o **Juiz de Referências**, resolvendo caminhos de cena com segurança (evitando travamentos em nós mortos) e lidando com dependências virtuais, de forma que as Behaviour Trees não demandem do Designer saber onde o componente está fisicamente montado.
+- **Sinergia HSM:** O `ASComponent` interage intimamente com **LimboHSM**. O estado da máquina de estados hierárquica do personagem pode ser conduzido de forma reativa através dos Eventos e Tags do Ability System.
+- **Desacoplamento Rigoroso:** As Tarefas de Behavior Tree e Sub-Estados nunca chamam o motor da habilidade ou os Specs diretamente; a camada Bridge existe para encorajar a separação e o respeito ao **Protocolo de Reatividade**.
 
 ---
 

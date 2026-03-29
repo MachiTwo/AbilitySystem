@@ -736,12 +736,13 @@ O componente `ASDelivery` (ex: um míssil ou aura rastreado) carrega o envelope 
 
 ## 12. ATOMIC AI INTEGRATION (ASBridge & HSM)
 
-Para interagir com o framework LimboAI de forma atómica, o Ability System fornece a `ASBridge` como uma biblioteca interna nativa.
+To interact with the LimboAI framework atomically, the Ability System provides **ASBridge** — not as a class or Singleton, but as an architectural native integration layer (located at `src/bridge/`).
 
-- **Status v0.2.0:** A infraestrutura de IA é parte do mesmo binário do Ability System, garantindo latência zero e registro unificado.
-- **ASBridge Role:** Expõe estados (tags/attributes) diretamente na Blackboard e gerencia o despacho de comandos de habilidades.
-- **HSM Synergy:** O `ASComponent` é nativamente compatível com **LimboHSM**. Isso permite que o estado da máquina de estados hierárquica do personagem seja conduzido pelos identificadores de Tags e Eventos do Ability System.
-- **Desacoplamento Rigoroso:** Embora integrem o mesmo binário, as Tarefas da BT/HSM nunca chamam o core da habilidade diretamente. Elas devem usar a Ponte, preservando o **Protocolo de Reatividade**.
+- **Status v0.2.0:** The AI infrastructure is part of the same binary as the Ability System, guaranteeing zero latency. Support for the obsolete `ASBridge` Singleton has been completely decommissioned.
+- **The Integrator Layer Role:** `ASBridge` acts simply as the collection of Behavior Tree Tasks and States (`BTAction`, `BTCondition`, `LimboState`) that connect LimboAI directly to the `ASComponent`.
+- **Centralized Resolution:** The global `AbilitySystem` Singleton is the absolute authority responsible for `resolve_component()`. When an AI agent needs to find its `ASComponent`, the Bridge Tasks query `AbilitySystem::get_singleton()->resolve_component(agent, path)`. The Singleton acts as the **Reference Judge**, maintaining a secure node search and resolving string aliases efficiently so AI nodes do not need to hardcode absolute scene paths.
+- **HSM Synergy:** `ASComponent` is natively compatible with **LimboHSM**. The character's hierarchical state machine is driven by Ability System's Tag identifiers and Events.
+- **Rigorous Decoupling:** Even though they are in the same binary, BT/HSM tasks never call ability cores directly. They use the Bridge layer to preserve the **Reactivity Protocol**.
 
 ---
 

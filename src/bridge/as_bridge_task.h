@@ -31,7 +31,7 @@
 #pragma once
 
 #include "../compat/limboai_bt.h"
-#include "as_bridge.h"
+#include "../scene/as_component.h"
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;

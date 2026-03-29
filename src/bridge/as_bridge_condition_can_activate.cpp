@@ -30,7 +30,7 @@
 
 #include "as_bridge_condition_can_activate.h"
 
-#include "as_bridge.h"
+#include "../core/ability_system.h"
 
 void BTConditionAS_CanActivate::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_ability_tag", "tag"), &BTConditionAS_CanActivate::set_ability_tag);

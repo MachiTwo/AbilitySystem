@@ -32,6 +32,7 @@
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 #include "as_utils.h"
+#include <godot_cpp/classes/node.hpp>
 #include <godot_cpp/core/class_db.hpp>
 #include <godot_cpp/core/object.hpp>
 #include <godot_cpp/templates/hash_map.hpp>
@@ -45,11 +46,14 @@
 #include "core/templates/hash_set.h"
 #include "core/variant/typed_array.h"
 #include "modules/ability_system/core/as_utils.h"
+#include "scene/main/node.h"
 #endif
 
 #ifdef ABILITY_SYSTEM_GDEXTENSION
 using namespace godot;
 #endif
+
+class ASComponent;
 
 /**
  * AbilitySystem
@@ -100,6 +104,10 @@ public:
 
 	// Helper to check if a tag matches another (hierarchical)
 	static bool tag_matches(const StringName &p_tag, const StringName &p_match_against, bool p_exact = false);
+
+	// --- Component Resolution API (migrated from ASBridge) ---
+	static ASComponent *resolve_component(Node *p_agent, const NodePath &p_path = NodePath());
+	static ASComponent *get_component_from_node(Node *p_node);
 
 	AbilitySystem();
 	~AbilitySystem();

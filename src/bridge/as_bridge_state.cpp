@@ -30,7 +30,8 @@
 
 #include "as_bridge_state.h"
 
-#include "as_bridge.h"
+#include "../core/ability_system.h"
+#include "../scene/as_component.h"
 
 void ASBridgeState::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_asc_node_path", "path"), &ASBridgeState::set_asc_node_path);
@@ -78,7 +79,7 @@ void ASBridgeState::_enter() {
 		return;
 	}
 
-	ASComponent *asc = ASBridge::resolve_asc(get_agent(), asc_node_path);
+	ASComponent *asc = AbilitySystem::get_singleton()->resolve_component(get_agent(), asc_node_path);
 	if (!asc) {
 		return;
 	}
@@ -97,7 +98,7 @@ void ASBridgeState::_exit() {
 		return;
 	}
 
-	ASComponent *asc = ASBridge::resolve_asc(get_agent(), asc_node_path);
+	ASComponent *asc = AbilitySystem::get_singleton()->resolve_component(get_agent(), asc_node_path);
 	if (!asc) {
 		return;
 	}
@@ -116,7 +117,7 @@ void ASBridgeState::_update(double p_delta) {
 		return;
 	}
 
-	ASComponent *asc = ASBridge::resolve_asc(get_agent(), asc_node_path);
+	ASComponent *asc = AbilitySystem::get_singleton()->resolve_component(get_agent(), asc_node_path);
 	if (!asc) {
 		return;
 	}
@@ -149,7 +150,7 @@ bool ASBridgeState::can_enter_state(Node *p_agent) const {
 		return true;
 	}
 
-	ASComponent *asc = ASBridge::resolve_asc(p_agent, asc_node_path);
+	ASComponent *asc = AbilitySystem::get_singleton()->resolve_component(p_agent, asc_node_path);
 	if (!asc) {
 		return false;
 	}
@@ -171,7 +172,7 @@ void ASBridgeState::dispatch_event(const StringName &p_event) {
 		return;
 	}
 
-	ASComponent *asc = ASBridge::resolve_asc(get_agent(), asc_node_path);
+	ASComponent *asc = AbilitySystem::get_singleton()->resolve_component(get_agent(), asc_node_path);
 	if (!asc) {
 		return;
 	}

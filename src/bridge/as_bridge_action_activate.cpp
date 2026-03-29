@@ -30,7 +30,7 @@
 
 #include "as_bridge_action_activate.h"
 
-#include "as_bridge.h"
+#include "../core/ability_system.h"
 
 void BTActionAS_ActivateAbility::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_ability_tag", "tag"), &BTActionAS_ActivateAbility::set_ability_tag);

@@ -30,7 +30,7 @@
 
 #include "as_bridge_action_dispatch_event.h"
 
-#include "as_bridge.h"
+#include "../core/ability_system.h"
 
 void BTActionAS_DispatchEvent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_event_tag", "tag"), &BTActionAS_DispatchEvent::set_event_tag);

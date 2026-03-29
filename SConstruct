@@ -73,7 +73,6 @@ if os.path.exists(gcpp_tool_path):
         "env.NoCache(bindings)", "# env.NoCache(bindings)"
     )
     if new_content != content:
-        print("[SCONSTRUCT] Patching godot-cpp/tools/godotcpp.py to enable caching...")
         with open(gcpp_tool_path, "w") as f:
             f.write(new_content)
 
@@ -82,7 +81,6 @@ if os.path.exists(gcpp_sconstruct_path):
     with open(gcpp_sconstruct_path, "r") as f:
         content = f.read()
     if 'Decider("MD5")' not in content:
-        print("[SCONSTRUCT] Patching godot-cpp/SConstruct to enforce MD5 decider...")
         lines = content.splitlines()
         insert_idx = 0
         for i, line in enumerate(lines):
@@ -111,10 +109,6 @@ sources = []
 
 # Collect LimboAI sources if available
 if os.path.isdir("src/limboai"):
-    print(
-        "[SCONSTRUCT] LimboAI detected. Integrating as linked dependency (godot-cpp style)..."
-    )
-
     # Integrated sources into AS binary using the new internal submodule path
     env.VariantDir("src/bin/limboai", "src/limboai", duplicate=0)
     limbo_sources = Glob("src/bin/limboai/*.cpp")
@@ -165,9 +159,6 @@ if os.path.isdir("src/limboai"):
                 '#include "variant.h"',
             )
             if patched != variant_content:
-                print(
-                    "[SCONSTRUCT] Patching limboai/compat/variant.cpp for GDExtension compatibility..."
-                )
                 with open(limboai_variant_cpp, "w") as f:
                     f.write(patched)
 
@@ -183,9 +174,6 @@ if os.path.isdir("src/limboai"):
                 1,  # Only first occurrence (the include/using block)
             )
             if patched_h != variant_h_content:
-                print(
-                    "[SCONSTRUCT] Patching limboai/compat/variant.h for GDExtension compatibility..."
-                )
                 with open(limboai_variant_h, "w") as f:
                     f.write(patched_h)
 
@@ -199,7 +187,6 @@ if os.path.isdir("src/limboai"):
         os.chdir("src/limboai")
         try:
             limboai_version.generate_module_version_header()
-            print("[SCONSTRUCT] Generated LimboAI version header.")
         finally:
             os.chdir(curr_dir)
     except Exception as e:

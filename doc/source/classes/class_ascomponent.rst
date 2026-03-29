@@ -138,8 +138,6 @@ Methods
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                                  | :ref:`get_event_history_size<class_ASComponent_method_get_event_history_size>`\ (\ ) |const|                                                                                                                    |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASComponent<class_ASComponent>`                                    | :ref:`get_from_node<class_ASComponent_method_get_from_node>`\ (\ node\: ``Node``\ ) |static|                                                                                                                    |
-   +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``int``                                                                  | :ref:`get_name_history_size<class_ASComponent_method_get_name_history_size>`\ (\ ) |const|                                                                                                                      |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``Node``                                                                 | :ref:`get_node_ptr<class_ASComponent_method_get_node_ptr>`\ (\ name\: ``StringName``\ ) |const|                                                                                                                 |
@@ -206,7 +204,7 @@ Methods
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                   | :ref:`tick<class_ASComponent_method_tick>`\ (\ delta\: ``float``\ )                                                                                                                                             |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                                                 | :ref:`try_activate_ability_by_resource<class_ASComponent_method_try_activate_ability_by_resource>`\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, _unnamed_arg1\: ``Object``, _unnamed_arg2\: ``int``\ )      |
+   | ``bool``                                                                 | :ref:`try_activate_ability_by_resource<class_ASComponent_method_try_activate_ability_by_resource>`\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, target_node\: ``Object``, parent_id\: ``int``\ )            |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``bool``                                                                 | :ref:`try_activate_ability_by_tag<class_ASComponent_method_try_activate_ability_by_tag>`\ (\ tag\: ``StringName``, target_node\: ``Object`` = null\ )                                                           |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -362,7 +360,7 @@ Emitted when an active effect is removed.
 
 **event_received**\ (\ tag\: ``StringName``, instigator\: ``Object``, magnitude\: ``float``, custom_payload\: ``Dictionary``\ ) :ref:`🔗<class_ASComponent_signal_event_received>`
 
-Emitted when an :ref:`ASEventTag<class_ASEventTag>` is dispatched to this component. Used for transient signals.
+Emitted when an ``ASEventTag`` is dispatched to this component. Used for transient signals.
 
 .. rst-class:: classref-item-separator
 
@@ -444,9 +442,7 @@ Method Descriptions
 
 ``float`` **_on_calculate_custom_magnitude**\ (\ effect_spec\: :ref:`ASEffectSpec<class_ASEffectSpec>`, modifier_index\: ``int``\ ) |virtual| |const| :ref:`🔗<class_ASComponent_private_method__on_calculate_custom_magnitude>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Virtual callback for computing custom magnitude values for effect modifiers.
 
 .. rst-class:: classref-item-separator
 
@@ -848,7 +844,7 @@ Confirms a previously predicted ability activation (Server-side confirmation).
 
 |void| **dispatch_event**\ (\ tag\: ``StringName``, instigator\: ``Node`` = null, magnitude\: ``float`` = 0.0, custom_payload\: ``Dictionary`` = {}\ ) :ref:`🔗<class_ASComponent_method_dispatch_event>`
 
-Dispatches a transient :ref:`ASEventTag<class_ASEventTag>` to this component. The event is broadcast to all listeners and stored in the short-term historical buffer (:ref:`has_event_occurred()<class_ASComponent_method_has_event_occurred>`). This is the preferred way to signal non-persistent occurrences (e.g. Impact, Hit, Achievement).
+Dispatches a transient ``ASEventTag`` to this component. The event is broadcast to all listeners and stored in the short-term historical buffer (:ref:`has_event_occurred()<class_ASComponent_method_has_event_occurred>`). This is the preferred way to signal non-persistent occurrences (e.g. Impact, Hit, Achievement).
 
 .. rst-class:: classref-item-separator
 
@@ -1023,20 +1019,6 @@ Returns the cue resource associated with the specified tag.
 .. rst-class:: classref-method
 
 ``int`` **get_event_history_size**\ (\ ) |const| :ref:`🔗<class_ASComponent_method_get_event_history_size>`
-
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASComponent_method_get_from_node:
-
-.. rst-class:: classref-method
-
-:ref:`ASComponent<class_ASComponent>` **get_from_node**\ (\ node\: ``Node``\ ) |static| :ref:`🔗<class_ASComponent_method_get_from_node>`
 
 .. container:: contribute
 
@@ -1448,7 +1430,7 @@ Manually advances the component's internal simulation by ``delta`` seconds. This
 
 .. rst-class:: classref-method
 
-``bool`` **try_activate_ability_by_resource**\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, _unnamed_arg1\: ``Object``, _unnamed_arg2\: ``int``\ ) :ref:`🔗<class_ASComponent_method_try_activate_ability_by_resource>`
+``bool`` **try_activate_ability_by_resource**\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, target_node\: ``Object``, parent_id\: ``int``\ ) :ref:`🔗<class_ASComponent_method_try_activate_ability_by_resource>`
 
 Attempts to activate an ability using its resource reference. Supports hierarchical linking via ``parent_id``.
 

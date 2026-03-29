@@ -49,27 +49,27 @@ Methods
 .. table::
    :widths: auto
 
-   +-------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                        | :ref:`compare_states<class_ASStateUtils_method_compare_states>`\ (\ a\: :ref:`ASComponentState<class_ASComponentState>`, b\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static|                     |
-   +-------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``float``                                       | :ref:`compute_state_difference<class_ASStateUtils_method_compute_state_difference>`\ (\ a\: :ref:`ASComponentState<class_ASComponentState>`, b\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static| |
-   +-------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``PackedByteArray``                             | :ref:`serialize_state<class_ASStateUtils_method_serialize_state>`\ (\ state\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static|                                                                    |
-   +-------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASComponentState<class_ASComponentState>` | :ref:`deserialize_state<class_ASStateUtils_method_deserialize_state>`\ (\ data\: ``PackedByteArray``\ ) |static|                                                                                             |
-   +-------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``PackedByteArray``                             | :ref:`compress_state<class_ASStateUtils_method_compress_state>`\ (\ state\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static|                                                                      |
-   +-------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASComponentState<class_ASComponentState>` | :ref:`decompress_state<class_ASStateUtils_method_decompress_state>`\ (\ data\: ``PackedByteArray``\ ) |static|                                                                                               |
-   +-------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                        | :ref:`validate_state<class_ASStateUtils_method_validate_state>`\ (\ state\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static|                                                                      |
-   +-------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``Array``                                       | :ref:`get_validation_errors<class_ASStateUtils_method_get_validation_errors>`\ (\ state\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static|                                                        |
-   +-------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                          | :ref:`dump_state<class_ASStateUtils_method_dump_state>`\ (\ state\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static|                                                                              |
-   +-------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``String``                                      | :ref:`state_to_string<class_ASStateUtils_method_state_to_string>`\ (\ state\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static|                                                                    |
-   +-------------------------------------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``             | :ref:`compare_states<class_ASStateUtils_method_compare_states>`\ (\ a\: ``ASComponentState``, b\: ``ASComponentState``\ ) |static|                     |
+   +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``            | :ref:`compute_state_difference<class_ASStateUtils_method_compute_state_difference>`\ (\ a\: ``ASComponentState``, b\: ``ASComponentState``\ ) |static| |
+   +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``PackedByteArray``  | :ref:`serialize_state<class_ASStateUtils_method_serialize_state>`\ (\ state\: ``ASComponentState``\ ) |static|                                         |
+   +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``ASComponentState`` | :ref:`deserialize_state<class_ASStateUtils_method_deserialize_state>`\ (\ data\: ``PackedByteArray``\ ) |static|                                       |
+   +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``PackedByteArray``  | :ref:`compress_state<class_ASStateUtils_method_compress_state>`\ (\ state\: ``ASComponentState``\ ) |static|                                           |
+   +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``ASComponentState`` | :ref:`decompress_state<class_ASStateUtils_method_decompress_state>`\ (\ data\: ``PackedByteArray``\ ) |static|                                         |
+   +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``             | :ref:`validate_state<class_ASStateUtils_method_validate_state>`\ (\ state\: ``ASComponentState``\ ) |static|                                           |
+   +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array``            | :ref:`get_validation_errors<class_ASStateUtils_method_get_validation_errors>`\ (\ state\: ``ASComponentState``\ ) |static|                             |
+   +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|               | :ref:`dump_state<class_ASStateUtils_method_dump_state>`\ (\ state\: ``ASComponentState``\ ) |static|                                                   |
+   +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``String``           | :ref:`state_to_string<class_ASStateUtils_method_state_to_string>`\ (\ state\: ``ASComponentState``\ ) |static|                                         |
+   +----------------------+--------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -84,7 +84,7 @@ Method Descriptions
 
 .. rst-class:: classref-method
 
-``bool`` **compare_states**\ (\ a\: :ref:`ASComponentState<class_ASComponentState>`, b\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_compare_states>`
+``bool`` **compare_states**\ (\ a\: ``ASComponentState``, b\: ``ASComponentState``\ ) |static| :ref:`🔗<class_ASStateUtils_method_compare_states>`
 
 Performs deep equality comparison between two component states.
 
@@ -98,7 +98,7 @@ Uses the equals() method internally for consistency.
 
 .. rst-class:: classref-method
 
-``float`` **compute_state_difference**\ (\ a\: :ref:`ASComponentState<class_ASComponentState>`, b\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_compute_state_difference>`
+``float`` **compute_state_difference**\ (\ a\: ``ASComponentState``, b\: ``ASComponentState``\ ) |static| :ref:`🔗<class_ASStateUtils_method_compute_state_difference>`
 
 Computes a numerical difference score between two states.
 
@@ -112,7 +112,7 @@ Higher values indicate greater differences. Useful for state change detection.
 
 .. rst-class:: classref-method
 
-``PackedByteArray`` **serialize_state**\ (\ state\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_serialize_state>`
+``PackedByteArray`` **serialize_state**\ (\ state\: ``ASComponentState``\ ) |static| :ref:`🔗<class_ASStateUtils_method_serialize_state>`
 
 Serializes a component state to compact binary format.
 
@@ -126,7 +126,7 @@ Optimized for network transmission and file storage.
 
 .. rst-class:: classref-method
 
-:ref:`ASComponentState<class_ASComponentState>` **deserialize_state**\ (\ data\: ``PackedByteArray``\ ) |static| :ref:`🔗<class_ASStateUtils_method_deserialize_state>`
+``ASComponentState`` **deserialize_state**\ (\ data\: ``PackedByteArray``\ ) |static| :ref:`🔗<class_ASStateUtils_method_deserialize_state>`
 
 Deserializes a component state from binary data created by serialize_state().
 
@@ -140,7 +140,7 @@ Returns empty state if data is invalid.
 
 .. rst-class:: classref-method
 
-``PackedByteArray`` **compress_state**\ (\ state\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_compress_state>`
+``PackedByteArray`` **compress_state**\ (\ state\: ``ASComponentState``\ ) |static| :ref:`🔗<class_ASStateUtils_method_compress_state>`
 
 Compresses a component state using compression algorithms.
 
@@ -154,7 +154,7 @@ Significantly reduces data size for network bandwidth optimization.
 
 .. rst-class:: classref-method
 
-:ref:`ASComponentState<class_ASComponentState>` **decompress_state**\ (\ data\: ``PackedByteArray``\ ) |static| :ref:`🔗<class_ASStateUtils_method_decompress_state>`
+``ASComponentState`` **decompress_state**\ (\ data\: ``PackedByteArray``\ ) |static| :ref:`🔗<class_ASStateUtils_method_decompress_state>`
 
 Decompresses state data created by compress_state().
 
@@ -168,7 +168,7 @@ Returns original state object.
 
 .. rst-class:: classref-method
 
-``bool`` **validate_state**\ (\ state\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_validate_state>`
+``bool`` **validate_state**\ (\ state\: ``ASComponentState``\ ) |static| :ref:`🔗<class_ASStateUtils_method_validate_state>`
 
 Validates the integrity and consistency of a component state.
 
@@ -182,7 +182,7 @@ Checks for invalid data, corrupted values, and logical inconsistencies.
 
 .. rst-class:: classref-method
 
-``Array`` **get_validation_errors**\ (\ state\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_get_validation_errors>`
+``Array`` **get_validation_errors**\ (\ state\: ``ASComponentState``\ ) |static| :ref:`🔗<class_ASStateUtils_method_get_validation_errors>`
 
 Returns an array of validation error messages for a component state.
 
@@ -196,7 +196,7 @@ Empty array indicates no validation errors found.
 
 .. rst-class:: classref-method
 
-|void| **dump_state**\ (\ state\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_dump_state>`
+|void| **dump_state**\ (\ state\: ``ASComponentState``\ ) |static| :ref:`🔗<class_ASStateUtils_method_dump_state>`
 
 Prints detailed state information to the console for debugging.
 
@@ -210,7 +210,7 @@ Shows all data including historical buffers and statistics.
 
 .. rst-class:: classref-method
 
-``String`` **state_to_string**\ (\ state\: :ref:`ASComponentState<class_ASComponentState>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_state_to_string>`
+``String`` **state_to_string**\ (\ state\: ``ASComponentState``\ ) |static| :ref:`🔗<class_ASStateUtils_method_state_to_string>`
 
 Returns a compact string representation of the state.
 

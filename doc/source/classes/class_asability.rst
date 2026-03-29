@@ -200,7 +200,7 @@ Ability attempts to activate when a specific Tag is removed from the owner.
 
 :ref:`TriggerType<enum_ASAbility_TriggerType>` **TRIGGER_ON_EVENT** = ``2``
 
-Ability attempts to activate when a specific :ref:`ASEventTag<class_ASEventTag>` is dispatched to the owner. This is the preferred way for reactive triggers like "Counter-attack on Hit".
+Ability attempts to activate when a specific ``ASEventTag`` is dispatched to the owner. This is the preferred way for reactive triggers like "Counter-attack on Hit".
 
 .. rst-class:: classref-section-separator
 

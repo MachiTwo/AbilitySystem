@@ -37,14 +37,6 @@
 				Event.* -> EVENT, Can.* or Immune.* -> CONDITIONAL, others -> NAME.
 			</description>
 		</method>
-		<method name="create_tag" qualifiers="static">
-			<return type="ASTagBase" />
-			<param index="0" name="tag" type="StringName" />
-			<description>
-				Creates appropriate tag instance based on naming convention.
-				Returns ASNameTag, ASConditionalTag, or ASEventTag as appropriate.
-			</description>
-		</method>
 		<method name="is_state_tag" qualifiers="static">
 			<return type="bool" />
 			<param index="0" name="tag" type="StringName" />

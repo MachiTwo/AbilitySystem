@@ -2,6 +2,8 @@
 *.gen.*
 .godot/
 */Godot/
+*.import
+*.uid
 
 # Ignore library files but not the gdextension file
 addons/ability_system/bin/*
@@ -92,8 +94,6 @@ compile_commands.json
 # Cmake
 cmake-build*
 CMakeUserPresets.json
-*.import
-*.uid
 *.exp
 *.lib
 /reverse-engineering
