@@ -397,3 +397,7 @@ func _update_context_tags() -> void:
 			asc.add_tag(&"physics.water")
 		2, _: # AIR
 			asc.add_tag(&"physics.air")
+
+func _on_tag_changed(_tag: StringName, _added: bool) -> void:
+	# Hook para lógica reativa a tags (opcional)
+	pass
