@@ -68,12 +68,6 @@ jobs:
       - name: Setup Python and SCons
         uses: ./.github/actions/zyris-deps
 
-      - name: Free disk space on runner
-        run: |
-          echo "Disk usage before:" && df -h
-          sudo rm -rf /usr/local/lib/android || true
-          echo "Disk usage after:" && df -h
-
       - name: Restore .scons_cache
         uses: ./.github/actions/zyris-cache-restore
         with:
