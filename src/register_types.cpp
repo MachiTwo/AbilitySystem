@@ -64,6 +64,7 @@
 #include "src/bridge/as_bridge_condition_can_activate.h"
 #include "src/bridge/as_bridge_condition_event_occurred.h"
 #include "src/bridge/as_bridge_condition_has_tag.h"
+#include "src/bridge/as_bridge_prediction.h"
 #include "src/bridge/as_bridge_state.h"
 #include "src/compat/limboai_blackboard.h"
 #include "src/compat/limboai_bt.h"
@@ -107,6 +108,7 @@
 #include "modules/ability_system/bridge/as_bridge_condition_can_activate.h"
 #include "modules/ability_system/bridge/as_bridge_condition_event_occurred.h"
 #include "modules/ability_system/bridge/as_bridge_condition_has_tag.h"
+#include "modules/ability_system/bridge/as_bridge_prediction.h"
 #include "modules/ability_system/bridge/as_bridge_state.h"
 #include "modules/ability_system/compat/limboai_blackboard.h"
 #include "modules/ability_system/compat/limboai_bt.h"
@@ -164,6 +166,7 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 
 		// Register Bridge State and Tasks (Always registered since LimboAI is submodule)
 		GDREGISTER_CLASS(ASBridgeState);
+		GDREGISTER_CLASS(ASBridgePrediction);
 		LIMBO_REGISTER_TASK(BTActionAS_ActivateAbility);
 		LIMBO_REGISTER_TASK(BTActionAS_DispatchEvent);
 		LIMBO_REGISTER_TASK(BTActionAS_WaitForEvent);

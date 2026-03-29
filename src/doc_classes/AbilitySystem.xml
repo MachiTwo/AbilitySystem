@@ -12,6 +12,7 @@
 		<method name="get_all_registered_tags" qualifiers="const">
 			<return type="StringName[]" />
 			<description>
+				Returns an array of all tags currently registered in the global system. This includes Name, Conditional, and Event tags from the project settings and runtime registrations.
 			</description>
 		</method>
 		<method name="get_component_from_node" qualifiers="static">
@@ -98,6 +99,7 @@
 		<method name="run_tests">
 			<return type="int" />
 			<description>
+				Executes the internal unit test suite for the Ability System. Returns 0 on success or the number of failed test cases. This is primarily used for CI/CD validation and development integrity checks.
 			</description>
 		</method>
 		<method name="tag_matches" qualifiers="static">
@@ -132,13 +134,13 @@
 		</signal>
 	</signals>
 	<constants>
-		<constant name="ASTagType::NAME" value="0" enum="ASTagType">
+		<constant name="NAME" value="0" enum="ASTagType">
 			Identity tags (Ability, Effect, Cue, Attribute).
 		</constant>
-		<constant name="ASTagType::CONDITIONAL" value="1" enum="ASTagType">
+		<constant name="CONDITIONAL" value="1" enum="ASTagType">
 			Status/State tags (on_fire, stunned, moving).
 		</constant>
-		<constant name="ASTagType::EVENT" value="2" enum="ASTagType">
+		<constant name="EVENT" value="2" enum="ASTagType">
 			Transient signals/events tags (Hit, Impact, Death).
 		</constant>
 	</constants>

@@ -80,6 +80,8 @@
 #else
 #include "core/config/engine.h"
 #include "core/config/project_settings.h"
+#include "core/os/os.h"
+#include "core/os/time.h"
 #include "scene/2d/animated_sprite_2d.h"
 #include "scene/2d/audio_stream_player_2d.h"
 #include "scene/2d/physics/character_body_2d.h"
@@ -168,10 +170,13 @@ void ASComponent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_attribute_base_value_by_resource", "attribute", "value"), &ASComponent::set_attribute_base_value_by_resource);
 	ClassDB::bind_method(D_METHOD("has_attribute_by_resource", "attribute"), &ASComponent::has_attribute_by_resource);
 
-	// --- Cooldown API ---
+	ClassDB::bind_method(D_METHOD("get_attribute_max_value", "tag"), &ASComponent::get_attribute_max_value);
+	ClassDB::bind_method(D_METHOD("get_attribute_percent", "tag"), &ASComponent::get_attribute_percent);
+
 	ClassDB::bind_method(D_METHOD("start_cooldown", "ability_tag", "duration", "tags"), &ASComponent::start_cooldown);
 	ClassDB::bind_method(D_METHOD("is_on_cooldown", "ability_tag"), &ASComponent::is_on_cooldown);
 	ClassDB::bind_method(D_METHOD("get_cooldown_remaining", "ability_tag"), &ASComponent::get_cooldown_remaining);
+	ClassDB::bind_method(D_METHOD("get_cooldown_percent", "ability_tag"), &ASComponent::get_cooldown_percent);
 	ClassDB::bind_method(D_METHOD("tick", "delta"), &ASComponent::tick);
 
 	// --- Tag Management ---
@@ -182,12 +187,20 @@ void ASComponent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("get_tags"), &ASComponent::get_tags);
 	ClassDB::bind_method(D_METHOD("get_attribute_sets"), &ASComponent::get_attribute_sets);
 	ClassDB::bind_method(D_METHOD("get_unlocked_abilities"), &ASComponent::get_unlocked_abilities);
+	ClassDB::bind_method(D_METHOD("get_active_abilities"), &ASComponent::get_active_abilities);
+	ClassDB::bind_method(D_METHOD("get_active_effects"), &ASComponent::get_active_effects);
+	ClassDB::bind_method(D_METHOD("get_registered_cues"), &ASComponent::get_registered_cues);
+	ClassDB::bind_method(D_METHOD("get_active_cues"), &ASComponent::get_active_cues);
+	ClassDB::bind_method(D_METHOD("get_owned_tags"), &ASComponent::get_owned_tags);
+	ClassDB::bind_method(D_METHOD("find_effect_by_tag", "tag"), &ASComponent::find_effect_by_tag);
 
 	// --- Multiplayer & Prediction ---
 	ClassDB::bind_method(D_METHOD("capture_snapshot"), &ASComponent::capture_snapshot);
 	ClassDB::bind_method(D_METHOD("apply_snapshot", "tick"), &ASComponent::apply_snapshot);
+	ClassDB::bind_method(D_METHOD("rollback_to_tick", "tick"), &ASComponent::rollback_to_tick);
 	ClassDB::bind_method(D_METHOD("_is_server"), &ASComponent::_is_server);
 	ClassDB::bind_method(D_METHOD("_is_local_authority"), &ASComponent::_is_local_authority);
+
 	ClassDB::bind_method(D_METHOD("request_activate_ability", "tag"), &ASComponent::request_activate_ability);
 	ClassDB::bind_method(D_METHOD("confirm_ability_activation", "tag"), &ASComponent::confirm_ability_activation);
 
@@ -256,11 +269,52 @@ void ASComponent::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("clear_tag_history"), &ASComponent::clear_tag_history);
 	ClassDB::bind_method(D_METHOD("clear_name_history"), &ASComponent::clear_name_history);
 	ClassDB::bind_method(D_METHOD("clear_conditional_history"), &ASComponent::clear_conditional_history);
+	ClassDB::bind_method(D_METHOD("clear_attribute_history"), &ASComponent::clear_attribute_history);
+	ClassDB::bind_method(D_METHOD("clear_ability_history"), &ASComponent::clear_ability_history);
+	ClassDB::bind_method(D_METHOD("clear_effect_history"), &ASComponent::clear_effect_history);
+	ClassDB::bind_method(D_METHOD("clear_cue_history"), &ASComponent::clear_cue_history);
+	ClassDB::bind_method(D_METHOD("clear_all_history"), &ASComponent::clear_all_history);
+
 	ClassDB::bind_method(D_METHOD("get_name_history_size"), &ASComponent::get_name_history_size);
 	ClassDB::bind_method(D_METHOD("get_conditional_history_size"), &ASComponent::get_conditional_history_size);
 	ClassDB::bind_method(D_METHOD("get_event_history_size"), &ASComponent::get_event_history_size);
+	ClassDB::bind_method(D_METHOD("get_attribute_history_size"), &ASComponent::get_attribute_history_size);
+	ClassDB::bind_method(D_METHOD("get_ability_history_size"), &ASComponent::get_ability_history_size);
+	ClassDB::bind_method(D_METHOD("get_effect_history_size"), &ASComponent::get_effect_history_size);
+	ClassDB::bind_method(D_METHOD("get_cue_history_size"), &ASComponent::get_cue_history_size);
+
+	ClassDB::bind_method(D_METHOD("get_attribute_history", "lookback_sec"), &ASComponent::get_attribute_history, DEFVAL(1.0f));
+	ClassDB::bind_method(D_METHOD("get_ability_history", "lookback_sec"), &ASComponent::get_ability_history, DEFVAL(1.0f));
+	ClassDB::bind_method(D_METHOD("get_effect_history", "lookback_sec"), &ASComponent::get_effect_history, DEFVAL(1.0f));
+	ClassDB::bind_method(D_METHOD("get_cue_history", "lookback_sec"), &ASComponent::get_cue_history, DEFVAL(1.0f));
+	ClassDB::bind_method(D_METHOD("get_attribute_last_delta", "attribute"), &ASComponent::get_attribute_last_delta);
 
 	ADD_SIGNAL(MethodInfo("event_received", PropertyInfo(Variant::STRING_NAME, "tag"), PropertyInfo(Variant::OBJECT, "instigator", PROPERTY_HINT_NODE_TYPE, "Node"), PropertyInfo(Variant::FLOAT, "magnitude"), PropertyInfo(Variant::DICTIONARY, "custom_payload")));
+}
+
+ASComponent *ASComponent::resolve(Node *p_node, const StringName &p_alias) {
+	if (!p_node) {
+		return nullptr;
+	}
+
+	// 1. Direct check: the node itself
+	ASComponent *asc = Object::cast_to<ASComponent>(p_node);
+	if (asc) {
+		return asc;
+	}
+
+	// 2. Child check: first ASComponent child
+	if (p_node != nullptr) {
+		for (int i = 0; i < p_node->get_child_count(); i++) {
+			Node *child = p_node->get_child(i);
+			asc = Object::cast_to<ASComponent>(child);
+			if (asc) {
+				return asc;
+			}
+		}
+	}
+
+	return nullptr;
 }
 
 void ASComponent::_notification(int p_what) {
@@ -354,6 +408,7 @@ void ASComponent::start_cooldown(const StringName &p_ability_tag, float p_durati
 
 	ASCooldownData cd;
 	cd.remaining = p_duration;
+	cd.initial_duration = p_duration;
 	cd.tags = p_cooldown_tags;
 	active_cooldowns[p_ability_tag] = cd;
 
@@ -375,13 +430,65 @@ float ASComponent::get_cooldown_remaining(const StringName &p_ability_tag) const
 	return 0.0f;
 }
 
+float ASComponent::get_cooldown_percent(const StringName &p_ability_tag) const {
+	if (active_cooldowns.has(p_ability_tag)) {
+		const ASCooldownData &cd = active_cooldowns[p_ability_tag];
+		if (cd.initial_duration > 0.0f) {
+			return cd.remaining / cd.initial_duration;
+		}
+	}
+	return 0.0f;
+}
+
+float ASComponent::get_attribute_max_value(const StringName &p_tag) const {
+	for (int i = 0; i < attribute_sets.size(); i++) {
+		if (attribute_sets[i].is_valid() && attribute_sets[i]->has_attribute(p_tag)) {
+			// Get attribute resource to find max value
+			Ref<ASAttribute> attr_res = attribute_sets[i]->get_attribute_definition(p_tag);
+			if (attr_res.is_valid()) {
+				return attr_res->get_max_value();
+			}
+			return 100.0f; // Fallback
+		}
+	}
+	return 0.0f;
+}
+
+float ASComponent::get_attribute_percent(const StringName &p_tag) const {
+	float current = get_attribute_value_by_tag(p_tag);
+	float max = get_attribute_max_value(p_tag);
+	if (max > 0.0f) {
+		return current / max;
+	}
+	return 0.0f;
+}
+
 void ASComponent::set_attribute_base_value_by_tag(const StringName &p_tag, float p_value) {
 	if (is_inside_tree() && !is_multiplayer_authority() && !_is_predicting) {
 		return;
 	}
 	for (int i = 0; i < attribute_sets.size(); i++) {
 		if (attribute_sets[i].is_valid() && attribute_sets[i]->has_attribute(p_tag)) {
+			float old_val = attribute_sets[i]->get_attribute_base_value(p_tag);
 			attribute_sets[i]->set_attribute_base_value(p_tag, p_value);
+
+			// Record history
+			ASAttributeHistorical entry;
+			entry.attribute = p_tag;
+			entry.old_value = old_val;
+			entry.new_value = p_value;
+			entry.delta = p_value - old_val;
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+			entry.timestamp = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+#else
+			entry.timestamp = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
+#endif
+			entry.tick_id = current_tick;
+			_attribute_history.push_back(entry);
+			if (_attribute_history.size() > _attr_history_max_size) {
+				_attribute_history.remove_at(0);
+			}
+
 			_update_attribute_current_values();
 			return;
 		}
@@ -405,29 +512,11 @@ void ASComponent::add_tag(const StringName &p_tag) {
 
 			switch (tag_type) {
 				case ASTagType::NAME: {
-					ASNameTagHistoricalEntry entry;
-					entry.tag_name = p_tag;
-					entry.set_target(this);
-					entry.timestamp = current_time;
-					entry.tick_id = current_tick;
-					entry.added = true;
-					_name_history.push_back(entry);
-					if (_name_history.size() > _name_history_max_size) {
-						_name_history.remove_at(0);
-					}
+					_record_name_tag_event(p_tag, true);
 					break;
 				}
 				case ASTagType::CONDITIONAL: {
-					ASConditionalTagHistoricalEntry entry;
-					entry.tag_name = p_tag;
-					entry.set_target(this);
-					entry.timestamp = current_time;
-					entry.tick_id = current_tick;
-					entry.added = true;
-					_cond_history.push_back(entry);
-					if (_cond_history.size() > _cond_history_max_size) {
-						_cond_history.remove_at(0);
-					}
+					_record_conditional_tag_event(p_tag, true);
 					break;
 				}
 				case ASTagType::EVENT:
@@ -460,29 +549,11 @@ void ASComponent::remove_tag(const StringName &p_tag) {
 
 			switch (tag_type) {
 				case ASTagType::NAME: {
-					ASNameTagHistoricalEntry entry;
-					entry.tag_name = p_tag;
-					entry.set_target(this);
-					entry.timestamp = current_time;
-					entry.tick_id = current_tick;
-					entry.added = false; // Removed
-					_name_history.push_back(entry);
-					if (_name_history.size() > _name_history_max_size) {
-						_name_history.remove_at(0);
-					}
+					_record_name_tag_event(p_tag, false);
 					break;
 				}
 				case ASTagType::CONDITIONAL: {
-					ASConditionalTagHistoricalEntry entry;
-					entry.tag_name = p_tag;
-					entry.set_target(this);
-					entry.timestamp = current_time;
-					entry.tick_id = current_tick;
-					entry.added = false; // Removed
-					_cond_history.push_back(entry);
-					if (_cond_history.size() > _cond_history_max_size) {
-						_cond_history.remove_at(0);
-					}
+					_record_conditional_tag_event(p_tag, false);
 					break;
 				}
 				case ASTagType::EVENT:
@@ -535,6 +606,38 @@ TypedArray<ASAbilitySpec> ASComponent::get_unlocked_abilities() const {
 	TypedArray<ASAbilitySpec> ret;
 	for (int i = 0; i < unlocked_abilities.size(); i++) {
 		ret.push_back(unlocked_abilities[i]);
+	}
+	return ret;
+}
+
+TypedArray<ASAbilitySpec> ASComponent::get_active_abilities() const {
+	TypedArray<ASAbilitySpec> ret;
+	for (int i = 0; i < active_abilities.size(); i++) {
+		ret.push_back(active_abilities[i]);
+	}
+	return ret;
+}
+
+TypedArray<ASEffectSpec> ASComponent::get_active_effects() const {
+	TypedArray<ASEffectSpec> ret;
+	for (int i = 0; i < active_effects.size(); i++) {
+		ret.push_back(active_effects[i]);
+	}
+	return ret;
+}
+
+TypedArray<ASCueSpec> ASComponent::get_active_cues() const {
+	TypedArray<ASCueSpec> ret;
+	for (int i = 0; i < active_cues.size(); i++) {
+		ret.push_back(active_cues[i]);
+	}
+	return ret;
+}
+
+TypedArray<ASCue> ASComponent::get_registered_cues() const {
+	TypedArray<ASCue> ret;
+	for (int i = 0; i < registered_cues.size(); i++) {
+		ret.push_back(registered_cues[i]);
 	}
 	return ret;
 }
@@ -651,6 +754,9 @@ void ASComponent::_process_abilities(float p_delta) {
 			ability->end_ability(this, spec);
 			spec->set_is_active(false);
 
+			StringName status = "Finished";
+			_record_ability_event(ability->get_ability_tag(), status, nullptr, spec->get_level());
+
 			// Must re-find index as the list might have changed due to end_ability triggers
 			current_idx = active_abilities.find(spec);
 			if (current_idx != -1) {
@@ -726,6 +832,8 @@ void ASComponent::_process_abilities(float p_delta) {
 void ASComponent::_remove_effect_at_index(int p_idx) {
 	Ref<ASEffectSpec> spec = active_effects[p_idx];
 	Ref<ASEffect> effect = spec->get_effect();
+
+	_record_effect_event(effect->get_effect_tag(), "Removed", (Node *)spec->get_source_component(), spec->get_stack_count());
 
 	// Remove tags
 	TypedArray<StringName> granted = effect->get_granted_tags();
@@ -1056,6 +1164,10 @@ bool ASComponent::can_activate_ability_by_tag(const StringName &p_tag) {
 }
 
 bool ASComponent::try_activate_ability_by_tag(const StringName &p_tag, Object *p_target_node) {
+	if (is_ability_active(p_tag)) {
+		return false;
+	}
+
 	bool authority = is_multiplayer_authority();
 	if (!authority) {
 		_is_predicting = true;
@@ -1217,6 +1329,7 @@ bool ASComponent::try_activate_ability_by_resource(const Ref<ASAbility> &p_abili
 
 			p_ability->activate_ability(this, spec, p_target_node);
 			emit_signal("ability_activated", spec);
+			_record_ability_event(p_ability->get_ability_tag(), "Started", Object::cast_to<Node>(p_target_node), spec->get_level());
 
 			if (p_ability->get_duration_policy() != ASAbility::POLICY_INSTANT) {
 				active_abilities.push_back(spec);
@@ -1272,6 +1385,7 @@ void ASComponent::cancel_ability_by_resource(const Ref<ASAbility> &p_ability) {
 
 			p_ability->end_ability(this, spec);
 			spec->set_is_active(false);
+			_record_ability_event(p_ability->get_ability_tag(), "Canceled", nullptr, spec->get_level());
 			active_abilities.remove_at(i);
 			emit_signal("ability_ended", spec, true);
 		}
@@ -1540,6 +1654,7 @@ void ASComponent::apply_effect_spec_to_self(Ref<ASEffectSpec> p_spec) {
 	ERR_FAIL_COND(effect.is_null());
 
 	p_spec->set_target_component(this);
+	_record_effect_event(effect->get_effect_tag(), "Applied", (Node *)p_spec->get_source_component(), p_spec->get_stack_count());
 
 	if (owned_tags.is_null()) {
 		owned_tags.instantiate();
@@ -1792,6 +1907,16 @@ void ASComponent::_execute_cue_with_spec(const StringName &p_tag, Ref<ASCueSpec>
 	emit_signal("tag_event_received", p_tag, p_spec->get_extra_data());
 	Ref<ASCue> cue = p_spec->get_cue();
 	if (cue.is_valid()) {
+		if (cue->get_event_type() == ASCue::ON_ACTIVE) {
+			active_cues.push_back(p_spec);
+			_record_cue_event(p_tag, "Played", (Node *)p_spec->get_source_asc());
+		} else if (cue->get_event_type() == ASCue::ON_REMOVE) {
+			for (int i = active_cues.size() - 1; i >= 0; i--) {
+				if (active_cues[i]->get_cue() == cue) {
+					active_cues.remove_at(i);
+				}
+			}
+		}
 		cue->execute(p_spec);
 	}
 }
@@ -2193,6 +2318,41 @@ void ASComponent::apply_snapshot(uint32_t p_tick) {
 	_is_rolling_back = false;
 }
 
+void ASComponent::rollback_to_tick(uint32_t p_tick) {
+	if (p_tick >= current_tick) {
+		return; // We don't rollback to the future (that's just applying a state)
+	}
+
+	apply_snapshot(p_tick);
+
+	// Clean up history buffers: remove anything that happened after the rollback point
+	auto filter_history = [p_tick](auto &history_vec) {
+		for (int i = history_vec.size() - 1; i >= 0; i--) {
+			if (history_vec[i].tick_id > p_tick) {
+				history_vec.remove_at(i);
+			} else {
+				break; // Done, entries are chronological
+			}
+		}
+	};
+
+	filter_history(_name_history);
+	filter_history(_cond_history);
+	filter_history(_attribute_history);
+	filter_history(_ability_history);
+	filter_history(_effect_history);
+	filter_history(_cue_history);
+
+	// Event history uses .tick instead of .tick_id (v0.2 structure fix)
+	for (int i = _event_history.size() - 1; i >= 0; i--) {
+		if (_event_history[i].tick > p_tick) {
+			_event_history.remove_at(i);
+		} else {
+			break;
+		}
+	}
+}
+
 void ASComponent::request_activate_ability(const StringName &p_tag) {
 	if (_is_server()) {
 		try_activate_ability_by_tag(p_tag);
@@ -2238,28 +2398,13 @@ void ASComponent::dispatch_event(const StringName &p_tag, Node *p_instigator, fl
 		return;
 	}
 
-	ASEventTagData event_data;
-	event_data.event_tag = p_tag;
-	event_data.set_instigator(p_instigator);
-	event_data.set_target(this);
-	event_data.magnitude = p_magnitude;
-	event_data.custom_payload = p_custom_payload;
+	_record_event_tag_event(p_tag, p_instigator);
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
-	double current_time = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
-#else
-	double current_time = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
-#endif
-
-	event_data.timestamp = current_time;
-	event_data.tick_id = current_tick;
-
-	ASEventTagHistoricalEntry entry;
-	entry.data = event_data;
-	entry.tick = current_tick;
-	_event_history.push_back(entry);
-	if (_event_history.size() > _event_history_max_size) {
-		_event_history.remove_at(0);
+	// Set magnitude and payload on the newly added entry (last one)
+	if (!_event_history.is_empty()) {
+		ASEventTagHistorical &last = _event_history.write[_event_history.size() - 1];
+		last.data.magnitude = p_magnitude;
+		last.data.custom_payload = p_custom_payload;
 	}
 
 	// Trigger abilities waiting for this event
@@ -2278,7 +2423,7 @@ bool ASComponent::has_event_occurred(const StringName &p_tag, float p_lookback_s
 #endif
 
 	for (int i = _event_history.size() - 1; i >= 0; i--) {
-		const ASEventTagHistoricalEntry &entry = _event_history[i];
+		const ASEventTagHistorical &entry = _event_history[i];
 
 		if (current_time - entry.data.timestamp > (double)p_lookback_sec) {
 			break;
@@ -2312,6 +2457,107 @@ void ASComponent::clear_conditional_history() {
 	_cond_history.clear();
 }
 
+void ASComponent::clear_attribute_history() {
+	_attribute_history.clear();
+}
+
+void ASComponent::clear_ability_history() {
+	_ability_history.clear();
+}
+
+void ASComponent::clear_effect_history() {
+	_effect_history.clear();
+}
+
+void ASComponent::clear_cue_history() {
+	_cue_history.clear();
+}
+
+void ASComponent::clear_all_history() {
+	clear_tag_history();
+	clear_attribute_history();
+	clear_ability_history();
+	clear_effect_history();
+	clear_cue_history();
+}
+
+TypedArray<Dictionary> ASComponent::get_attribute_history(float p_lookback_sec) const {
+	TypedArray<Dictionary> result;
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	double current_time = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+#else
+	double current_time = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
+#endif
+	for (int i = _attribute_history.size() - 1; i >= 0; i--) {
+		const ASAttributeHistorical &entry = _attribute_history[i];
+		if (current_time - entry.timestamp > (double)p_lookback_sec) {
+			break;
+		}
+		result.push_back(entry.to_dict());
+	}
+	return result;
+}
+
+TypedArray<Dictionary> ASComponent::get_ability_history(float p_lookback_sec) const {
+	TypedArray<Dictionary> result;
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	double current_time = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+#else
+	double current_time = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
+#endif
+	for (int i = _ability_history.size() - 1; i >= 0; i--) {
+		const ASAbilityHistorical &entry = _ability_history[i];
+		if (current_time - entry.timestamp > (double)p_lookback_sec) {
+			break;
+		}
+		result.push_back(entry.to_dict());
+	}
+	return result;
+}
+
+TypedArray<Dictionary> ASComponent::get_effect_history(float p_lookback_sec) const {
+	TypedArray<Dictionary> result;
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	double current_time = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+#else
+	double current_time = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
+#endif
+	for (int i = _effect_history.size() - 1; i >= 0; i--) {
+		const ASEffectHistorical &entry = _effect_history[i];
+		if (current_time - entry.timestamp > (double)p_lookback_sec) {
+			break;
+		}
+		result.push_back(entry.to_dict());
+	}
+	return result;
+}
+
+TypedArray<Dictionary> ASComponent::get_cue_history(float p_lookback_sec) const {
+	TypedArray<Dictionary> result;
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	double current_time = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+#else
+	double current_time = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
+#endif
+	for (int i = _cue_history.size() - 1; i >= 0; i--) {
+		const ASCueHistorical &entry = _cue_history[i];
+		if (current_time - entry.timestamp > (double)p_lookback_sec) {
+			break;
+		}
+		result.push_back(entry.to_dict());
+	}
+	return result;
+}
+
+float ASComponent::get_attribute_last_delta(const StringName &p_attribute) const {
+	for (int i = _attribute_history.size() - 1; i >= 0; i--) {
+		if (_attribute_history[i].attribute == p_attribute) {
+			return _attribute_history[i].delta;
+		}
+	}
+	return 0.0f;
+}
+
 ASComponent::ASComponent() {
 	owned_tags.instantiate();
 	state_cache.instantiate();
@@ -2321,4 +2567,109 @@ ASComponent::~ASComponent() {
 	active_abilities.clear();
 	active_effects.clear();
 	unlocked_abilities.clear();
+}
+
+void ASComponent::_record_ability_event(const StringName &p_ability_tag, const StringName &p_status, Node *p_instigator, int p_level) {
+	ASAbilityHistorical entry;
+	entry.ability_tag = p_ability_tag;
+	entry.status = p_status;
+	entry.set_instigator(p_instigator);
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	entry.timestamp = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+#else
+	entry.timestamp = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
+#endif
+	entry.tick_id = current_tick;
+	entry.level = p_level;
+	_ability_history.push_back(entry);
+	if (_ability_history.size() > _ability_history_max_size) {
+		_ability_history.remove_at(0);
+	}
+}
+
+void ASComponent::_record_effect_event(const StringName &p_effect_tag, const StringName &p_status, Node *p_instigator, int p_stacks) {
+	ASEffectHistorical entry;
+	entry.effect_tag = p_effect_tag;
+	entry.status = p_status;
+	entry.set_instigator(p_instigator);
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	entry.timestamp = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+#else
+	entry.timestamp = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
+#endif
+	entry.tick_id = current_tick;
+	entry.stack_count = p_stacks;
+	_effect_history.push_back(entry);
+	if (_effect_history.size() > _effect_history_max_size) {
+		_effect_history.remove_at(0);
+	}
+}
+
+void ASComponent::_record_cue_event(const StringName &p_cue_tag, const StringName &p_status, Node *p_instigator) {
+	ASCueHistorical entry;
+	entry.cue_tag = p_cue_tag;
+	entry.status = p_status;
+	entry.set_instigator(p_instigator);
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	entry.timestamp = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+#else
+	entry.timestamp = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
+#endif
+	entry.tick_id = current_tick;
+	_cue_history.push_back(entry);
+	if (_cue_history.size() > _cue_history_max_size) {
+		_cue_history.remove_at(0);
+	}
+}
+
+void ASComponent::_record_name_tag_event(const StringName &p_tag, bool p_added) {
+	ASNameTagHistorical entry;
+	entry.tag_name = p_tag;
+	entry.set_target(this);
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	entry.timestamp = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+#else
+	entry.timestamp = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
+#endif
+	entry.tick_id = current_tick;
+	entry.added = p_added;
+	_name_history.push_back(entry);
+	if (_name_history.size() > _name_history_max_size) {
+		_name_history.remove_at(0);
+	}
+}
+
+void ASComponent::_record_conditional_tag_event(const StringName &p_tag, bool p_added) {
+	ASConditionalTagHistorical entry;
+	entry.tag_name = p_tag;
+	entry.set_target(this);
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	entry.timestamp = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+#else
+	entry.timestamp = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
+#endif
+	entry.tick_id = current_tick;
+	entry.added = p_added;
+	_cond_history.push_back(entry);
+	if (_cond_history.size() > _cond_history_max_size) {
+		_cond_history.remove_at(0);
+	}
+}
+
+void ASComponent::_record_event_tag_event(const StringName &p_tag, Node *p_instigator) {
+	ASEventTagHistorical entry;
+	entry.data.event_tag = p_tag;
+	entry.data.set_instigator(p_instigator);
+	entry.data.set_target(this);
+#ifdef ABILITY_SYSTEM_GDEXTENSION
+	entry.data.timestamp = (double)Time::get_singleton()->get_ticks_msec() / 1000.0;
+#else
+	entry.data.timestamp = (double)OS::get_singleton()->get_ticks_msec() / 1000.0;
+#endif
+	entry.data.tick_id = current_tick;
+	entry.tick = current_tick;
+	_event_history.push_back(entry);
+	if (_event_history.size() > _event_history_max_size) {
+		_event_history.remove_at(0);
+	}
 }

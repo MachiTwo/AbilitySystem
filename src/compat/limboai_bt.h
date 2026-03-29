@@ -126,7 +126,12 @@ protected:
 public:
 	virtual ~BTTask() = default;
 
-	// Core BT lifecycle methods (to be overridden by subclasses)
+	// Public BT lifecycle (LimboAI API)
+	virtual void enter() { _enter(); }
+	virtual void exit() { _exit(); }
+	virtual BT::Status tick(double p_delta) { return _tick(p_delta); }
+
+	// Core BT lifecycle overrides
 	virtual void _setup() {}
 	virtual void _enter() {}
 	virtual void _exit() {}
@@ -147,6 +152,11 @@ public:
 	virtual int get_child_count() const { return 0; }
 	virtual Ref<BTTask> get_child(int p_idx) const { return Ref<BTTask>(); }
 
+	virtual void set_status(int p_status) {}
+	_FORCE_INLINE_ int get_status() const { return 0; }
+	virtual void set_elapsed_time(double p_elapsed) {}
+	_FORCE_INLINE_ double get_elapsed_time() const { return 0.0; }
+
 	// Utility methods
 	virtual String get_task_name() const { return "BTTask"; }
 	virtual String get_category() const { return ""; }
@@ -154,6 +164,38 @@ public:
 protected:
 	Node *agent = nullptr;
 	Ref<Blackboard> blackboard;
+};
+
+/**
+ * BTSequence - Executes children in order until one fails or all succeed
+ */
+class BTSequence : public BTComposite {
+	GDCLASS(BTSequence, BTComposite)
+public:
+	virtual BT::Status _tick(double p_delta) override {
+		for (int i = 0; i < get_child_count(); i++) {
+			BT::Status status = get_child(i)->tick(p_delta);
+			if (status != BT::SUCCESS)
+				return status;
+		}
+		return BT::SUCCESS;
+	}
+};
+
+/**
+ * BTSelector - Executes children in order until one succeeds
+ */
+class BTSelector : public BTComposite {
+	GDCLASS(BTSelector, BTComposite)
+public:
+	virtual BT::Status _tick(double p_delta) override {
+		for (int i = 0; i < get_child_count(); i++) {
+			BT::Status status = get_child(i)->tick(p_delta);
+			if (status == BT::SUCCESS)
+				return BT::SUCCESS;
+		}
+		return BT::FAILURE;
+	}
 };
 
 /**
@@ -300,6 +342,9 @@ public:
 	Node *get_agent() const { return agent; }
 	Ref<BehaviorTree> get_behavior_tree() const { return behavior_tree; }
 	BT::Status get_last_status() const { return last_status; }
+
+	Dictionary capture_state() const { return Dictionary(); }
+	void restore_state(const Dictionary &p_dict) {}
 
 	BTInstance() = default;
 	~BTInstance() = default;

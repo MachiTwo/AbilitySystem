@@ -1,6 +1,0 @@
-[gd_resource type="ASCueAnimation" format=3]
-[resource]
-cue_name = "Cue_Combo1"
-cue_tag = &"attack.combo1"
-event_type = 1
-animation_name = "Combo1"

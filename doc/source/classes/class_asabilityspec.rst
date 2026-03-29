@@ -114,9 +114,7 @@ Returns the ability resource.
 
 :ref:`Array<class_Array>`\[:ref:`ASEffectSpec<class_ASEffectSpec>`\] **get_active_effects**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_active_effects>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns all active effect instances created and managed by this specific ability execution.
 
 .. rst-class:: classref-item-separator
 
@@ -176,9 +174,7 @@ Returns the index of the currently active phase.
 
 ``float`` **get_duration_remaining**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_duration_remaining>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns the time remaining in seconds for the current phase or ability duration.
 
 .. rst-class:: classref-item-separator
 
@@ -250,9 +246,7 @@ Returns the list of active sub-specs (phases or sub-abilities) managed by this s
 
 ``float`` **get_total_duration**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_total_duration>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns the initial total duration of the ability instance as calculated at activation.
 
 .. rst-class:: classref-item-separator
 
@@ -300,9 +294,7 @@ Removes a sub-ability spec.
 
 |void| **set_duration_remaining**\ (\ duration\: ``float``\ ) :ref:`🔗<class_ASAbilitySpec_method_set_duration_remaining>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Manually modifies the remaining duration. Can be used for duration extensions or reductions.
 
 .. rst-class:: classref-item-separator
 
@@ -338,9 +330,7 @@ Sets the instance level.
 
 |void| **set_total_duration**\ (\ duration\: ``float``\ ) :ref:`🔗<class_ASAbilitySpec_method_set_total_duration>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Sets the total expected duration for this instance. This value is used as the reference for progress calculations.
 
 .. rst-class:: classref-item-separator
 
@@ -352,9 +342,7 @@ Sets the instance level.
 
 ``bool`` **tick**\ (\ delta\: ``float``\ ) :ref:`🔗<class_ASAbilitySpec_method_tick>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Advances the internal timers of the spec. Returns true if the duration has expired or the ability logic has signaled completion.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

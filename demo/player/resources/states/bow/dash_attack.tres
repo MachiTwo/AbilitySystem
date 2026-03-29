@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="AttackData" format=3]
+[gd_resource type="Resource" script_class="AttackData" format=3 uid="uid://cskk4p0l2rxuw"]
 
-[ext_resource type="Script" path="res://gameplay/resources/AttackData.gd" id="1_attack_data"]
-[ext_resource type="Script" path="res://gameplay/core/State.gd" id="1_n1gac"]
+[ext_resource type="Script" uid="uid://cfdupwa3y8vui" path="res://gameplay/resources/AttackData.gd" id="1_attack_data"]
+[ext_resource type="Script" uid="uid://bp3jpp0t30au5" path="res://gameplay/core/State.gd" id="1_n1gac"]
 [ext_resource type="PackedScene" path="res://player/resources/states/bow/projectiles/Arrow.tscn" id="2_arrow"]
 
 [sub_resource type="Animation" id="Animation_dash_atk"]

@@ -1,0 +1,105 @@
+name: 🌐 Multiplayer Tests
+
+on:
+  workflow_call:
+    inputs:
+      godot-bin-name:
+        required: true
+        type: string
+
+jobs:
+  run-multiplayer:
+    name: 🌐 Run Multiplayer Tests
+    if: |
+      !contains(github.event.head_commit.message, '[tests skip]') &&
+      !contains(github.event.head_commit.message, '[mp skip]')
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        player_id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Restore Test Binaries from Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: dist/
+          key: ${{ github.sha }}-test-binaries
+          fail-on-cache-miss: true
+
+      - name: Deploy Binaries
+        run: |
+          cp -r dist/multiplayer/* .
+          cp -r dist/godot/* .
+          cp -r dist/limboai/limboai addons/
+
+      - name: Setup Godot Environment
+        shell: bash
+        run: |
+          BIN_NAME="${{ inputs.godot-bin-name }}"
+          chmod +x "$BIN_NAME"
+          echo "GODOT_BIN=$(pwd)/$BIN_NAME" >> $GITHUB_ENV
+
+      - name: Sync Addons to All Demos (ability_system + limboai)
+        run: python utility/post_build.py
+
+      - name: Fix Binary Permissions (.so in all addons)
+        run: |
+          find addons -name '*.so' -exec chmod +x {} \; 2>/dev/null || true
+          find utility/multiplayer/demo/addons -name '*.so' -exec chmod +x {} \; 2>/dev/null || true
+
+      - name: Run Multiplayer Test (Client ${{ matrix.player_id }})
+        env:
+          MP_GHA_PLAYER_ID: ${{ matrix.player_id }}
+          MP_SERVER_PORT: 7777
+        run: |
+          pip install python-dotenv
+          python utility/multiplayer/runner.py --player-id ${{ matrix.player_id }}
+
+      - name: Upload Player Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mp-log-player-${{ matrix.player_id }}
+          path: utility/multiplayer/logs/doctest_mp_player_${{ matrix.player_id }}.log
+
+  analyze-multiplayer:
+    name: 📊 Analysis & Disclosure
+    needs: [run-multiplayer]
+    runs-on: ubuntu-latest
+    if: always() && needs.run-multiplayer.result != 'skipped'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Download All Player Logs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: mp-log-player-*
+          path: all-logs
+          merge-multiple: false
+
+      - name: Flatten logs into single directory
+        run: |
+          find all-logs -name "*.log" -exec mv {} all-logs/ \; 2>/dev/null || true
+
+      - name: Run Log Analyzer (Consolidated Summary)
+        run: |
+          pip install pre-commit
+          pip install python-dotenv
+          python utility/multiplayer/log_analyzer.py --log-dir all-logs --generate-mermaid --gha-summary
+          pre-commit run prettier --files utility/multiplayer/mp_coverage_report.md || true
+
+      - name: Publish Summary
+        if: always()
+        run: |
+          if [ -f utility/multiplayer/mp_coverage_report.md ]; then
+            cat utility/multiplayer/mp_coverage_report.md >> $GITHUB_STEP_SUMMARY
+          fi

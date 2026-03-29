@@ -175,16 +175,16 @@ void ASEventTagData::from_dict(const Dictionary &p_dict) {
 	}
 }
 
-// === ASEventTagHistoricalEntry Implementation ===
+// === ASEventTagHistorical Implementation ===
 
-Dictionary ASEventTagHistoricalEntry::to_dict() const {
+Dictionary ASEventTagHistorical::to_dict() const {
 	Dictionary dict;
 	dict["data"] = data.to_dict();
 	dict["tick"] = tick;
 	return dict;
 }
 
-void ASEventTagHistoricalEntry::from_dict(const Dictionary &p_dict) {
+void ASEventTagHistorical::from_dict(const Dictionary &p_dict) {
 	if (p_dict.has("data")) {
 		data.from_dict(p_dict["data"]);
 	}
@@ -193,9 +193,9 @@ void ASEventTagHistoricalEntry::from_dict(const Dictionary &p_dict) {
 	}
 }
 
-// === ASNameTagHistoricalEntry Implementation ===
+// === ASNameTagHistorical Implementation ===
 
-Dictionary ASNameTagHistoricalEntry::to_dict() const {
+Dictionary ASNameTagHistorical::to_dict() const {
 	Dictionary dict;
 	dict["tag_name"] = tag_name;
 	dict["target_id"] = target_id;
@@ -205,7 +205,7 @@ Dictionary ASNameTagHistoricalEntry::to_dict() const {
 	return dict;
 }
 
-void ASNameTagHistoricalEntry::from_dict(const Dictionary &p_dict) {
+void ASNameTagHistorical::from_dict(const Dictionary &p_dict) {
 	if (p_dict.has("tag_name")) {
 		tag_name = p_dict["tag_name"];
 	}
@@ -223,9 +223,9 @@ void ASNameTagHistoricalEntry::from_dict(const Dictionary &p_dict) {
 	}
 }
 
-// === ASConditionalTagHistoricalEntry Implementation ===
+// === ASConditionalTagHistorical Implementation ===
 
-Dictionary ASConditionalTagHistoricalEntry::to_dict() const {
+Dictionary ASConditionalTagHistorical::to_dict() const {
 	Dictionary dict;
 	dict["tag_name"] = tag_name;
 	dict["target_id"] = target_id;
@@ -235,7 +235,7 @@ Dictionary ASConditionalTagHistoricalEntry::to_dict() const {
 	return dict;
 }
 
-void ASConditionalTagHistoricalEntry::from_dict(const Dictionary &p_dict) {
+void ASConditionalTagHistorical::from_dict(const Dictionary &p_dict) {
 	if (p_dict.has("tag_name")) {
 		tag_name = p_dict["tag_name"];
 	}
@@ -250,6 +250,116 @@ void ASConditionalTagHistoricalEntry::from_dict(const Dictionary &p_dict) {
 	}
 	if (p_dict.has("added")) {
 		added = p_dict["added"];
+	}
+}
+
+// === ASAttributeHistorical Implementation ===
+
+Dictionary ASAttributeHistorical::to_dict() const {
+	Dictionary dict;
+	dict["attribute"] = attribute;
+	dict["old_value"] = old_value;
+	dict["new_value"] = new_value;
+	dict["delta"] = delta;
+	dict["instigator_id"] = instigator_id;
+	dict["timestamp"] = timestamp;
+	dict["tick_id"] = tick_id;
+	dict["operation"] = (int)operation;
+	return dict;
+}
+
+void ASAttributeHistorical::from_dict(const Dictionary &p_dict) {
+	if (p_dict.has("attribute")) {
+		attribute = p_dict["attribute"];
+	}
+	if (p_dict.has("old_value")) {
+		old_value = p_dict["old_value"];
+	}
+	if (p_dict.has("new_value")) {
+		new_value = p_dict["new_value"];
+	}
+	if (p_dict.has("delta")) {
+		delta = p_dict["delta"];
+	}
+	if (p_dict.has("instigator_id")) {
+		instigator_id = ObjectID((uint64_t)p_dict["instigator_id"]);
+	}
+	if (p_dict.has("timestamp")) {
+		timestamp = p_dict["timestamp"];
+	}
+	if (p_dict.has("tick_id")) {
+		tick_id = p_dict["tick_id"];
+	}
+	if (p_dict.has("operation")) {
+		operation = (ModifierOp)(int)p_dict["operation"];
+	}
+}
+
+// === ASAbilityHistorical Implementation ===
+
+Dictionary ASAbilityHistorical::to_dict() const {
+	Dictionary dict;
+	dict["ability_tag"] = ability_tag;
+	dict["status"] = status;
+	dict["instigator_id"] = instigator_id;
+	dict["timestamp"] = timestamp;
+	dict["tick_id"] = tick_id;
+	dict["level"] = level;
+	return dict;
+}
+
+void ASAbilityHistorical::from_dict(const Dictionary &p_dict) {
+	if (p_dict.has("ability_tag")) {
+		ability_tag = p_dict["ability_tag"];
+	}
+	if (p_dict.has("status")) {
+		status = p_dict["status"];
+	}
+	if (p_dict.has("instigator_id")) {
+		instigator_id = ObjectID((uint64_t)p_dict["instigator_id"]);
+	}
+	if (p_dict.has("timestamp")) {
+		timestamp = p_dict["timestamp"];
+	}
+	if (p_dict.has("tick_id")) {
+		tick_id = p_dict["tick_id"];
+	}
+	if (p_dict.has("level")) {
+		level = p_dict["level"];
+	}
+}
+
+// === ASEffectHistorical Implementation ===
+
+Dictionary ASEffectHistorical::to_dict() const {
+	Dictionary dict;
+	dict["effect_tag"] = effect_tag;
+	dict["status"] = status;
+	dict["instigator_id"] = instigator_id;
+	dict["timestamp"] = timestamp;
+	dict["tick_id"] = tick_id;
+	dict["stack_count"] = stack_count;
+	return dict;
+}
+
+void ASEffectHistorical::from_dict(const Dictionary &p_dict) {
+	if (p_dict.has("effect_tag")) {
+		effect_tag = p_dict["effect_tag"];
+	}
+	if (p_dict.has("status")) {
+		status = p_dict["status"];
+	}
+	if (p_dict.has("instigator_id")) {
+		instigator_id = ObjectID((uint64_t)p_dict["instigator_id"]);
+	}
+	if (p_dict.has("timestamp")) {
+		timestamp = p_dict["timestamp"];
+	}
+	if (p_dict.has("tick_id")) {
+		tick_id = p_dict["tick_id"];
+	}
+	if (p_dict.has("stack_count")) {
+		stack_count = p_dict["stack_count"];
 	}
 }
 
@@ -358,6 +468,7 @@ void ASEffectState::from_dict(const Dictionary &p_dict) {
 Dictionary ASCooldownData::to_dict() const {
 	Dictionary dict;
 	dict["remaining"] = remaining;
+	dict["initial_duration"] = initial_duration;
 	dict["tags"] = tags;
 	return dict;
 }
@@ -366,10 +477,45 @@ void ASCooldownData::from_dict(const Dictionary &p_dict) {
 	if (p_dict.has("remaining")) {
 		remaining = p_dict["remaining"];
 	}
+	if (p_dict.has("initial_duration")) {
+		initial_duration = p_dict["initial_duration"];
+	}
 	if (p_dict.has("tags")) {
-		tags = Array(p_dict["tags"]);
+		tags = (Array)p_dict["tags"];
 	}
 }
+
+// === ASCueHistorical Implementation ===
+
+Dictionary ASCueHistorical::to_dict() const {
+	Dictionary dict;
+	dict["cue_tag"] = cue_tag;
+	dict["status"] = status;
+	dict["instigator_id"] = instigator_id;
+	dict["timestamp"] = timestamp;
+	dict["tick_id"] = tick_id;
+	return dict;
+}
+
+void ASCueHistorical::from_dict(const Dictionary &p_dict) {
+	if (p_dict.has("cue_tag")) {
+		cue_tag = p_dict["cue_tag"];
+	}
+	if (p_dict.has("status")) {
+		status = p_dict["status"];
+	}
+	if (p_dict.has("instigator_id")) {
+		instigator_id = ObjectID((uint64_t)p_dict["instigator_id"]);
+	}
+	if (p_dict.has("timestamp")) {
+		timestamp = p_dict["timestamp"];
+	}
+	if (p_dict.has("tick_id")) {
+		tick_id = p_dict["tick_id"];
+	}
+}
+
+// === ASStateCacheEntry Implementation ===
 
 void ASStateCache::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("capture_state", "component"), &ASStateCache::capture_state);
@@ -615,8 +761,6 @@ int ASStateCache::get_used_slots() const {
 	return count;
 }
 
-// === ASComponentState Implementation ===
-
 void ASComponentState::clear() {
 	tick = 0;
 	attributes.clear();
@@ -626,6 +770,10 @@ void ASComponentState::clear() {
 	name_history.clear();
 	conditional_history.clear();
 	event_history.clear();
+	attribute_history.clear();
+	ability_history.clear();
+	effect_history.clear();
+	cue_history.clear();
 }
 
 Dictionary ASComponentState::to_dict() const {
@@ -660,18 +808,46 @@ Dictionary ASComponentState::to_dict() const {
 
 	// Historical data (optional)
 	Array name_hist_array;
-	for (const ASNameTagHistoricalEntry &entry : name_history) {
-		Dictionary entry_dict;
-		entry_dict["tag_name"] = entry.tag_name;
-		entry_dict["target_id"] = entry.target_id;
-		entry_dict["timestamp"] = entry.timestamp;
-		entry_dict["tick_id"] = entry.tick_id;
-		entry_dict["added"] = entry.added;
-		name_hist_array.push_back(entry_dict);
+	for (const ASNameTagHistorical &entry : name_history) {
+		name_hist_array.push_back(entry.to_dict());
 	}
 	dict["name_history"] = name_hist_array;
 
-	// Similar for conditional and event history...
+	Array cond_hist_array;
+	for (const ASConditionalTagHistorical &entry : conditional_history) {
+		cond_hist_array.push_back(entry.to_dict());
+	}
+	dict["conditional_history"] = cond_hist_array;
+
+	Array event_hist_array;
+	for (const ASEventTagHistorical &entry : event_history) {
+		event_hist_array.push_back(entry.to_dict());
+	}
+	dict["event_history"] = event_hist_array;
+
+	Array attr_hist_array;
+	for (const ASAttributeHistorical &entry : attribute_history) {
+		attr_hist_array.push_back(entry.to_dict());
+	}
+	dict["attribute_history"] = attr_hist_array;
+
+	Array ability_hist_array;
+	for (const ASAbilityHistorical &entry : ability_history) {
+		ability_hist_array.push_back(entry.to_dict());
+	}
+	dict["ability_history"] = ability_hist_array;
+
+	Array effect_hist_array;
+	for (const ASEffectHistorical &entry : effect_history) {
+		effect_hist_array.push_back(entry.to_dict());
+	}
+	dict["effect_history"] = effect_hist_array;
+
+	Array cue_hist_array;
+	for (const ASCueHistorical &entry : cue_history) {
+		cue_hist_array.push_back(entry.to_dict());
+	}
+	dict["cue_history"] = cue_hist_array;
 
 	return dict;
 }
@@ -755,6 +931,10 @@ void ASComponentState::capture_from_component(ASComponent *p_component) {
 	name_history = p_component->_name_history;
 	conditional_history = p_component->_cond_history;
 	event_history = p_component->_event_history;
+	attribute_history = p_component->_attribute_history;
+	ability_history = p_component->_ability_history;
+	effect_history = p_component->_effect_history;
+	cue_history = p_component->_cue_history;
 }
 
 void ASComponentState::apply_to_component(ASComponent *p_component) const {
@@ -799,6 +979,10 @@ void ASComponentState::apply_to_component(ASComponent *p_component) const {
 	p_component->_name_history = name_history;
 	p_component->_cond_history = conditional_history;
 	p_component->_event_history = event_history;
+	p_component->_attribute_history = attribute_history;
+	p_component->_ability_history = ability_history;
+	p_component->_effect_history = effect_history;
+	p_component->_cue_history = cue_history;
 
 	p_component->current_tick = tick;
 }

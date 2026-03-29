@@ -53,24 +53,28 @@
 			<return type="void" />
 			<param index="0" name="cue" type="ASCue" />
 			<description>
+				Removes a direct [ASCue] resource from the package.
 			</description>
 		</method>
 		<method name="remove_cue_tag">
 			<return type="void" />
 			<param index="0" name="tag" type="StringName" />
 			<description>
+				Removes a cue tag from the package.
 			</description>
 		</method>
 		<method name="remove_effect">
 			<return type="void" />
 			<param index="0" name="effect" type="ASEffect" />
 			<description>
+				Removes a direct [ASEffect] resource from the package.
 			</description>
 		</method>
 		<method name="remove_effect_tag">
 			<return type="void" />
 			<param index="0" name="tag" type="StringName" />
 			<description>
+				Removes an effect tag from the package.
 			</description>
 		</method>
 	</methods>
@@ -88,8 +92,10 @@
 			List of effect tags.
 		</member>
 		<member name="events_on_deliver" type="StringName[]" setter="set_events_on_deliver" getter="get_events_on_deliver" default="[]">
+			List of events dispatched to the target immediately upon package delivery.
 		</member>
 		<member name="package_tag" type="StringName" setter="set_package_tag" getter="get_package_tag" default="&amp;&quot;&quot;">
+			Unique identifier tag for the package. Used for tracking and delivery logic.
 		</member>
 	</members>
 </class>

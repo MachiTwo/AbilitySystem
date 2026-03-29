@@ -55,6 +55,7 @@
 			<param index="0" name="attribute" type="StringName" />
 			<param index="1" name="amount" type="float" />
 			<description>
+				Adds a prerequisite attribute value required for the ability to activate. Unlike costs, requirements do not consume the attribute; they only verify the current value.
 			</description>
 		</method>
 		<method name="add_trigger">
@@ -62,6 +63,7 @@
 			<param index="0" name="tag" type="StringName" />
 			<param index="1" name="type" type="int" enum="ASAbility.TriggerType" />
 			<description>
+				Registers an automatic activation trigger based on Global Tags or ASEvents. For example, an ability can be triggered when 'State.OnFire' is added to the actor.
 			</description>
 		</method>
 		<method name="apply_costs" qualifiers="const">
@@ -122,11 +124,13 @@
 			<return type="float" />
 			<param index="0" name="attribute" type="StringName" />
 			<description>
+				Returns the numeric requirement value for a specific attribute of this ability.
 			</description>
 		</method>
 		<method name="get_requirement_count" qualifiers="const">
 			<return type="int" />
 			<description>
+				Returns the total number of attribute prerequisites defined for this ability.
 			</description>
 		</method>
 		<method name="remove_cost">
@@ -140,6 +144,7 @@
 			<return type="bool" />
 			<param index="0" name="attribute" type="StringName" />
 			<description>
+				Removes an attribute requirement by its tag name. Returns true if the requirement existed and was successfully removed.
 			</description>
 		</method>
 	</methods>

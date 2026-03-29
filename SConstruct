@@ -51,6 +51,7 @@ customs = ["custom.py"]
 customs = [os.path.abspath(path) for path in customs]
 
 opts = Variables(customs, ARGUMENTS)
+opts.Add("tests", "Tests to run (no, unit, bridge, yes)", "no")
 opts.Update(localEnv)
 
 Help(opts.GenerateHelpText(localEnv))
@@ -99,52 +100,73 @@ if os.path.exists(gcpp_sconstruct_path):
         with open(gcpp_sconstruct_path, "w") as f:
             f.write("\n".join(lines))
 
-env = SConscript("godot-cpp/SConstruct", {"env": env.Clone(), "customs": customs})
+# --- Godot-CCP Build (Isolated from AS defines) ---
+gcpp_env = env.Clone()
+env = SConscript("godot-cpp/SConstruct", {"env": gcpp_env, "customs": customs})
 
+# Now add AS-specific defines to the returned environment
 env.Append(CPPPATH=[".", "src"])
 env.Append(CPPDEFINES=["ABILITY_SYSTEM_GDEXTENSION"])
 
-# --- Target Collection ---
+# --- Object Directory and Define Selection ---
+tests_arg = ARGUMENTS.get("tests", env.get("tests", "no"))
+bin_prefix = "bin"
+
+if tests_arg != "no":
+    bin_prefix = f"bin/test-{tests_arg}"
+    env.Append(CPPDEFINES=["AS_TESTS_ENABLED"])
+    if tests_arg == "unit":
+        env.Append(CPPDEFINES=["AS_UNIT_TESTS_ENABLED"])
+    elif tests_arg == "bridge":
+        env.Append(CPPDEFINES=["AS_BRIDGE_TESTS_ENABLED"])
+    elif tests_arg == "yes":
+        env.Append(CPPDEFINES=["AS_UNIT_TESTS_ENABLED", "AS_BRIDGE_TESTS_ENABLED"])
+
+# Configure object folder mapping (VariantDir)
+env.VariantDir(f"src/{bin_prefix}", "src", duplicate=0)
+
+# Collect all source files using the specific bin prefix
 sources = []
+sources += Glob(f"src/{bin_prefix}/*.cpp")
+sources += Glob(f"src/{bin_prefix}/core/*.cpp")
+sources += Glob(f"src/{bin_prefix}/resources/*.cpp")
+sources += Glob(f"src/{bin_prefix}/scene/*.cpp")
+sources += Glob(f"src/{bin_prefix}/editor/*.cpp")
+sources += Glob(f"src/{bin_prefix}/compat/*.cpp")
+sources += Glob(f"src/{bin_prefix}/bridge/*.cpp")
 
-# Collect LimboAI sources if available
+if tests_arg != "no":
+    sources += Glob(f"src/{bin_prefix}/tests/*.cpp")
+
+# --- LimboAI Integration ---
 if os.path.isdir("src/limboai"):
-    # Integrated sources into AS binary using the new internal submodule path
-    env.VariantDir("src/bin/limboai", "src/limboai", duplicate=0)
-    limbo_sources = Glob("src/bin/limboai/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/blackboard/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/blackboard/bb_param/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/bt/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/bt/tasks/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/bt/tasks/blackboard/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/bt/tasks/composites/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/bt/tasks/decorators/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/bt/tasks/misc/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/bt/tasks/scene/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/bt/tasks/utility/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/compat/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/hsm/*.cpp")
+    # Integrated sources into AS binary using the dynamic bin prefix
+    env.VariantDir(f"src/{bin_prefix}/limboai", "src/limboai", duplicate=0)
+    limbo_sources = Glob(f"src/{bin_prefix}/limboai/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/blackboard/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/blackboard/bb_param/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/bt/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/bt/tasks/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/bt/tasks/blackboard/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/bt/tasks/composites/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/bt/tasks/decorators/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/bt/tasks/misc/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/bt/tasks/scene/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/bt/tasks/utility/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/compat/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/hsm/*.cpp")
     if env["target"] != "template_release":
-        limbo_sources += Glob("src/bin/limboai/editor/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/editor/debugger/*.cpp")
-    limbo_sources += Glob("src/bin/limboai/util/*.cpp")
+        limbo_sources += Glob(f"src/{bin_prefix}/limboai/editor/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/editor/debugger/*.cpp")
+    limbo_sources += Glob(f"src/{bin_prefix}/limboai/util/*.cpp")
 
-    # CRITICAL: Include ALL sources (including register_types) but define
-    # LIMBOAI_SUBMODULE_BUILD to disable the redundant GDExtension entry point.
     sources += limbo_sources
     env.Append(CPPDEFINES=["LIMBOAI_SUBMODULE_BUILD"])
-
-    # Still need includes and defines for the ASBridge logic to compile
     env.Append(CPPPATH=["src/limboai"])
     env.Append(CPPDEFINES=["LIMBOAI_GDEXTENSION"])
-    env.Append(CPPDEFINES=["LIMBOAI_SUBMODULE_BUILD"])
     env.Append(CPPDEFINES=[("limboai_init", "limboai_init_unused")])
 
     # --- LimboAI Automatic Patching (CI Resilience) ---
-    # Patch limboai/compat/variant.cpp to fix include-order bug:
-    # variant.h transitively includes variant.hpp -> hashfuncs.hpp which
-    # forward-declares Ref<>, shadowing the full template from ref.hpp.
-    # We insert ref.hpp + ref_counted.hpp BEFORE variant.h to fix this.
     limboai_variant_cpp = os.path.join("src", "limboai", "compat", "variant.cpp")
     if os.path.exists(limboai_variant_cpp):
         with open(limboai_variant_cpp, "r") as f:
@@ -162,7 +184,6 @@ if os.path.isdir("src/limboai"):
                 with open(limboai_variant_cpp, "w") as f:
                     f.write(patched)
 
-    # Patch limboai/compat/variant.h to also activate under ABILITY_SYSTEM_GDEXTENSION
     limboai_variant_h = os.path.join("src", "limboai", "compat", "variant.h")
     if os.path.exists(limboai_variant_h):
         with open(limboai_variant_h, "r") as f:
@@ -171,18 +192,17 @@ if os.path.isdir("src/limboai"):
             patched_h = variant_h_content.replace(
                 "#ifdef LIMBOAI_GDEXTENSION\n",
                 "#if defined(LIMBOAI_GDEXTENSION) || defined(ABILITY_SYSTEM_GDEXTENSION)\n",
-                1,  # Only first occurrence (the include/using block)
+                1,
             )
             if patched_h != variant_h_content:
                 with open(limboai_variant_h, "w") as f:
                     f.write(patched_h)
 
-    # Generate LimboAI version header (required for compilation)
+    # Generate LimboAI version header
     sys.path.append("src/limboai")
     try:
         import limboai_version
 
-        # We need to be in the limboai directory for the script to find its 'util' folder
         curr_dir = os.getcwd()
         os.chdir("src/limboai")
         try:
@@ -192,29 +212,12 @@ if os.path.isdir("src/limboai"):
     except Exception as e:
         print(f"[SCONSTRUCT] Warning: Could not generate limboai_version.gen.h: {e}")
 
-# Configure object folder mapping (VariantDir)
-env.VariantDir("src/bin", "src", duplicate=0)
-
-# Collect all source files
-sources += Glob("src/bin/*.cpp")
-sources += Glob("src/bin/core/*.cpp")
-sources += Glob("src/bin/resources/*.cpp")
-sources += Glob("src/bin/scene/*.cpp")
-sources += Glob("src/bin/editor/*.cpp")
-sources += Glob("src/bin/compat/*.cpp")
-sources += Glob("src/bin/bridge/*.cpp")
-
-tests_arg = ARGUMENTS.get("tests", env.get("tests", "no"))
-if tests_arg in ["unit", "yes"]:
-    env.VariantDir("src/bin/tests", "src/tests", duplicate=0)
-    sources += Glob("src/bin/tests/*.cpp")
-    env.Append(CPPDEFINES=["AS_TESTS_ENABLED"])
-
 
 if env["target"] in ["editor"]:
     try:
         doc_data = env.GodotCPPDocData(
-            "src/bin/gen/doc_data.gen.cpp", source=Glob("src/doc_classes/*.xml")
+            f"src/{bin_prefix}/gen/doc_data.gen.cpp",
+            source=Glob("src/doc_classes/*.xml"),
         )
         sources.append(doc_data)
     except AttributeError:

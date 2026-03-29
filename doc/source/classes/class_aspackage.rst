@@ -161,9 +161,7 @@ List of effect tags.
 - |void| **set_events_on_deliver**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
 - :ref:`Array<class_Array>`\[``StringName``\] **get_events_on_deliver**\ (\ )
 
-.. container:: contribute
-
-	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+List of events dispatched to the target immediately upon package delivery.
 
 .. rst-class:: classref-item-separator
 
@@ -180,9 +178,7 @@ List of effect tags.
 - |void| **set_package_tag**\ (\ value\: ``StringName``\ )
 - ``StringName`` **get_package_tag**\ (\ )
 
-.. container:: contribute
-
-	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Unique identifier tag for the package. Used for tracking and delivery logic.
 
 .. rst-class:: classref-section-separator
 
@@ -271,9 +267,7 @@ Clears all effects from the package.
 
 |void| **remove_cue**\ (\ cue\: :ref:`ASCue<class_ASCue>`\ ) :ref:`🔗<class_ASPackage_method_remove_cue>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Removes a direct :ref:`ASCue<class_ASCue>` resource from the package.
 
 .. rst-class:: classref-item-separator
 
@@ -285,9 +279,7 @@ Clears all effects from the package.
 
 |void| **remove_cue_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_ASPackage_method_remove_cue_tag>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Removes a cue tag from the package.
 
 .. rst-class:: classref-item-separator
 
@@ -299,9 +291,7 @@ Clears all effects from the package.
 
 |void| **remove_effect**\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ ) :ref:`🔗<class_ASPackage_method_remove_effect>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Removes a direct :ref:`ASEffect<class_ASEffect>` resource from the package.
 
 .. rst-class:: classref-item-separator
 
@@ -313,9 +303,7 @@ Clears all effects from the package.
 
 |void| **remove_effect_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_ASPackage_method_remove_effect_tag>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Removes an effect tag from the package.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

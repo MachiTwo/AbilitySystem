@@ -707,9 +707,7 @@ Adds a native cost modifier.
 
 |void| **add_requirement**\ (\ attribute\: ``StringName``, amount\: ``float``\ ) :ref:`🔗<class_ASAbility_method_add_requirement>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Adds a prerequisite attribute value required for the ability to activate. Unlike costs, requirements do not consume the attribute; they only verify the current value.
 
 .. rst-class:: classref-item-separator
 
@@ -721,9 +719,7 @@ Adds a native cost modifier.
 
 |void| **add_trigger**\ (\ tag\: ``StringName``, type\: :ref:`TriggerType<enum_ASAbility_TriggerType>`\ ) :ref:`🔗<class_ASAbility_method_add_trigger>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Registers an automatic activation trigger based on Global Tags or ASEvents. For example, an ability can be triggered when 'State.OnFire' is added to the actor.
 
 .. rst-class:: classref-item-separator
 
@@ -819,9 +815,7 @@ Returns the cost amount for a specific attribute of this ability.
 
 ``float`` **get_requirement_amount**\ (\ attribute\: ``StringName``\ ) |const| :ref:`🔗<class_ASAbility_method_get_requirement_amount>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns the numeric requirement value for a specific attribute of this ability.
 
 .. rst-class:: classref-item-separator
 
@@ -833,9 +827,7 @@ Returns the cost amount for a specific attribute of this ability.
 
 ``int`` **get_requirement_count**\ (\ ) |const| :ref:`🔗<class_ASAbility_method_get_requirement_count>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns the total number of attribute prerequisites defined for this ability.
 
 .. rst-class:: classref-item-separator
 
@@ -859,9 +851,7 @@ Removes a cost definition for a specific attribute.
 
 ``bool`` **remove_requirement**\ (\ attribute\: ``StringName``\ ) :ref:`🔗<class_ASAbility_method_remove_requirement>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Removes an attribute requirement by its tag name. Returns true if the requirement existed and was successfully removed.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

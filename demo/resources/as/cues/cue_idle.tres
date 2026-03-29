@@ -1,6 +1,0 @@
-[gd_resource type="ASCueAnimation" format=3]
-[resource]
-cue_name = "Cue_Idle"
-cue_tag = &"state.idle"
-event_type = 1
-animation_name = "Idle"

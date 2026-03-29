@@ -1,7 +1,7 @@
-[gd_resource type="Resource" script_class="MoveData" format=3]
+[gd_resource type="Resource" script_class="MoveData" format=3 uid="uid://ctge0txjlg774"]
 
-[ext_resource type="Script" path="res://gameplay/resources/MoveData.gd" id="1_move_data"]
-[ext_resource type="Script" path="res://gameplay/core/State.gd" id="1_u6xt4"]
+[ext_resource type="Script" uid="uid://586x71cr8v0p" path="res://gameplay/resources/MoveData.gd" id="1_move_data"]
+[ext_resource type="Script" uid="uid://bp3jpp0t30au5" path="res://gameplay/core/State.gd" id="1_u6xt4"]
 
 [sub_resource type="Animation" id="Animation_hyper"]
 resource_name = "Jump"

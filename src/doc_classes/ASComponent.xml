@@ -9,6 +9,18 @@
 	<tutorials>
 	</tutorials>
 	<methods>
+		<method name="_is_local_authority" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Check if this component is running on the local authority (client or server).
+			</description>
+		</method>
+		<method name="_is_server" qualifiers="const">
+			<return type="bool" />
+			<description>
+				Check if this component is running on the server.
+			</description>
+		</method>
 		<method name="_on_calculate_custom_magnitude" qualifiers="virtual const">
 			<return type="float" />
 			<param index="0" name="effect_spec" type="ASEffectSpec" />
@@ -207,11 +219,25 @@
 		<method name="clear_conditional_history">
 			<return type="void" />
 			<description>
+				Clears the short-term historical buffer for [constant AbilitySystem.CONDITIONAL] tags on this component.
+			</description>
+		</method>
+		<method name="clear_cue_history">
+			<return type="void" />
+			<description>
+				Clears the chronological buffer of visual cue events on this component.
+			</description>
+		</method>
+		<method name="clear_effect_history">
+			<return type="void" />
+			<description>
+				Clears the chronological buffer of effect application and removal events on this component.
 			</description>
 		</method>
 		<method name="clear_effects">
 			<return type="void" />
 			<description>
+				Removes all active effects from the actor immediately.
 			</description>
 		</method>
 		<method name="clear_event_history">
@@ -223,11 +249,31 @@
 		<method name="clear_name_history">
 			<return type="void" />
 			<description>
+				Clears the short-term historical buffer for [constant AbilitySystem.NAME] tags on this component.
 			</description>
 		</method>
 		<method name="clear_tag_history">
 			<return type="void" />
 			<description>
+				Clears all short-term tag history buffers (NAME and CONDITIONAL) on the component.
+			</description>
+		</method>
+		<method name="clear_ability_history">
+			<return type="void" />
+			<description>
+				Clears the chronological buffer of ability activation events on this component.
+			</description>
+		</method>
+		<method name="clear_all_history">
+			<return type="void" />
+			<description>
+				Clears every chronological and historical buffer on this component (Tags, Attributes, Abilities, Effects, Cues, and Events).
+			</description>
+		</method>
+		<method name="clear_attribute_history">
+			<return type="void" />
+			<description>
+				Clears the chronological buffer of attribute changes on this component.
 			</description>
 		</method>
 		<method name="confirm_ability_activation">
@@ -247,10 +293,62 @@
 				Dispatches a transient ASEventTag to this component. The event is broadcast to all listeners and stored in the short-term historical buffer ([method has_event_occurred]). This is the preferred way to signal non-persistent occurrences (e.g. Impact, Hit, Achievement).
 			</description>
 		</method>
+		<method name="find_effect_by_tag" qualifiers="const">
+			<return type="ASEffect" />
+			<param index="0" name="tag" type="StringName" />
+			<description>
+				Searches the archetype container and all currently unlocked abilities to find the [ASEffect] resource associated with the given tag.
+			</description>
+		</method>
+		<method name="get_active_abilities" qualifiers="const">
+			<return type="ASAbilitySpec[]" />
+			<description>
+				Returns a list of all abilities currently executing on this actor.
+			</description>
+		</method>
+		<method name="get_ability_history" qualifiers="const">
+			<return type="Dictionary[]" />
+			<param index="0" name="lookback_sec" type="float" default="1.0" />
+			<description>
+				Retrieves the buffer of ability lifecycle events (Started, Finished, etc.) within the requested timeframe. Each entry is a [Dictionary] representing an ASAbilityHistorical record.
+			</description>
+		</method>
+		<method name="get_ability_history_size" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the current size of the ability history buffer.
+			</description>
+		</method>
+		<method name="get_active_cues" qualifiers="const">
+			<return type="ASCueSpec[]" />
+			<description>
+				Returns a list of all active feedback cues (VFX/SFX) currently running on this actor.
+			</description>
+		</method>
+		<method name="get_active_effects" qualifiers="const">
+			<return type="ASEffectSpec[]" />
+			<description>
+				Returns a list of all active effect instances (buffs, debuffs, etc.) applied to this actor.
+			</description>
+		</method>
+		<method name="get_effect_history" qualifiers="const">
+			<return type="Dictionary[]" />
+			<param index="0" name="lookback_sec" type="float" default="1.0" />
+			<description>
+				Retrieves the buffer of effect lifecycle events within the requested timeframe. Each entry is a [Dictionary] representing an ASEffectHistorical record.
+			</description>
+		</method>
+		<method name="get_effect_history_size" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the current size of the effect history buffer.
+			</description>
+		</method>
 		<method name="get_ability_cooldown_preview" qualifiers="const">
 			<return type="float" />
 			<param index="0" name="tag" type="StringName" />
 			<description>
+				Retrieves the base cooldown defined in the ability resource catalog for preview purposes.
 			</description>
 		</method>
 		<method name="get_ability_cost_preview" qualifiers="const">
@@ -258,12 +356,14 @@
 			<param index="0" name="tag" type="StringName" />
 			<param index="1" name="attribute" type="StringName" />
 			<description>
+				Retrieves the base cost for a specific attribute of an ability from the catalog. Useful for UI tooltips.
 			</description>
 		</method>
 		<method name="get_ability_duration_preview" qualifiers="const">
 			<return type="float" />
 			<param index="0" name="tag" type="StringName" />
 			<description>
+				Retrieves the base duration defined in the ability resource catalog.
 			</description>
 		</method>
 		<method name="get_animation_player" qualifiers="const">
@@ -284,6 +384,40 @@
 			<param index="0" name="tag" type="StringName" />
 			<description>
 				Returns the unmodified base value of the attribute identified by the tag.
+			</description>
+		</method>
+		<method name="get_attribute_history" qualifiers="const">
+			<return type="Dictionary[]" />
+			<param index="0" name="lookback_sec" type="float" default="1.0" />
+			<description>
+				Retrieves chronological entries of attribute modifications within the requested timeframe. Each entry is a [Dictionary] representing an ASAttributeHistorical record.
+			</description>
+		</method>
+		<method name="get_attribute_history_size" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the current size of the attribute history buffer.
+			</description>
+		</method>
+		<method name="get_attribute_last_delta" qualifiers="const">
+			<return type="float" />
+			<param index="0" name="attribute" type="StringName" />
+			<description>
+				Retrieves the final delta (change amount) for the specified attribute from the last historical entry. Returns 0.0 if no history exists for that attribute.
+			</description>
+		</method>
+		<method name="get_attribute_max_value" qualifiers="const">
+			<return type="float" />
+			<param index="0" name="tag" type="StringName" />
+			<description>
+				Retrieves the maximum value (ceiling) defined for the attribute resource.
+			</description>
+		</method>
+		<method name="get_attribute_percent" qualifiers="const">
+			<return type="float" />
+			<param index="0" name="tag" type="StringName" />
+			<description>
+				Returns the ratio of [method get_attribute_value_by_tag] to [method get_attribute_max_value]. Useful for health bars and resource gauges.
 			</description>
 		</method>
 		<method name="get_attribute_sets" qualifiers="const">
@@ -315,6 +449,7 @@
 		<method name="get_conditional_history_size" qualifiers="const">
 			<return type="int" />
 			<description>
+				Returns the number of entries currently stored in the conditional history buffer.
 			</description>
 		</method>
 		<method name="get_cooldown_remaining" qualifiers="const">
@@ -322,6 +457,26 @@
 			<param index="0" name="ability_tag" type="StringName" />
 			<description>
 				Returns the time remaining for a specific cooldown tag.
+			</description>
+		</method>
+		<method name="get_cooldown_percent" qualifiers="const">
+			<return type="float" />
+			<param index="0" name="ability_tag" type="StringName" />
+			<description>
+				Returns the completion ratio of the cooldown (remaining / initial duration). Returns 0.0 if not on cooldown.
+			</description>
+		</method>
+		<method name="get_cue_history" qualifiers="const">
+			<return type="Dictionary[]" />
+			<param index="0" name="lookback_sec" type="float" default="1.0" />
+			<description>
+				Retrieves the buffer of visual cue events occurred within the last [param lookback_sec] seconds. Each entry is a [Dictionary] representing an ASCueHistorical record.
+			</description>
+		</method>
+		<method name="get_cue_history_size" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the current size of the cue history buffer.
 			</description>
 		</method>
 		<method name="get_cue_resource" qualifiers="const">
@@ -334,11 +489,13 @@
 		<method name="get_event_history_size" qualifiers="const">
 			<return type="int" />
 			<description>
+				Returns the number of entries currently stored in the event history buffer.
 			</description>
 		</method>
 		<method name="get_name_history_size" qualifiers="const">
 			<return type="int" />
 			<description>
+				Returns the number of entries currently stored in the name history buffer.
 			</description>
 		</method>
 		<method name="get_node_ptr" qualifiers="const">
@@ -346,6 +503,18 @@
 			<param index="0" name="name" type="StringName" />
 			<description>
 				Returns a registered node by its alias.
+			</description>
+		</method>
+		<method name="get_owned_tags" qualifiers="const">
+			<return type="ASTagSpec" />
+			<description>
+				Exposes the internal tag manager [ASTagSpec] for detailed inspections. Use this to bypass the high-level API and access refcounts or recursive hierarchy queries directly.
+			</description>
+		</method>
+		<method name="get_registered_cues" qualifiers="const">
+			<return type="ASCue[]" />
+			<description>
+				Returns the list of all cue resources currently registered with this component.
 			</description>
 		</method>
 		<method name="get_tags" qualifiers="const">
@@ -751,6 +920,7 @@
 			<param index="0" name="event_tag" type="StringName" />
 			<param index="1" name="data" type="Dictionary" />
 			<description>
+				Emitted when a tag-based event containing a data payload is received. Similar to [signal event_received] but optimized for logic requiring specific data dictionaries without instigator or magnitude metadata.
 			</description>
 		</signal>
 	</signals>

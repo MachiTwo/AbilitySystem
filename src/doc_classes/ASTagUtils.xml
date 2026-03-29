@@ -26,6 +26,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Counts how many times a specific [constant CONDITIONAL] tag was added to the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="cond_count_removals" qualifiers="static">
@@ -34,6 +35,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Counts how many times a specific [constant CONDITIONAL] tag was removed from the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="cond_get_recent_additions" qualifiers="static">
@@ -41,6 +43,7 @@
 			<param index="0" name="target" type="Node" />
 			<param index="1" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns an array of conditional tag names that were added to the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="cond_get_recent_changes" qualifiers="static">
@@ -48,6 +51,7 @@
 			<param index="0" name="target" type="Node" />
 			<param index="1" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns an array of all conditional tag events (additions and removals) that occurred within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="cond_get_recent_removals" qualifiers="static">
@@ -55,6 +59,7 @@
 			<param index="0" name="target" type="Node" />
 			<param index="1" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns an array of conditional tag names that were removed from the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="cond_had_tag" qualifiers="static">
@@ -63,6 +68,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns true if the target had the specified conditional tag at any point during the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="cond_was_tag_added" qualifiers="static">
@@ -71,6 +77,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns true if the specified conditional tag was added to the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="cond_was_tag_removed" qualifiers="static">
@@ -79,6 +86,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns true if the specified conditional tag was removed from the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="detect_tag_type" qualifiers="static">
@@ -95,6 +103,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns the number of times the specified event occurred on the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="event_did_occur" qualifiers="static">
@@ -103,6 +112,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns true if the specified event occurred on the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="event_get_all_recent_events" qualifiers="static">
@@ -110,6 +120,7 @@
 			<param index="0" name="target" type="Node" />
 			<param index="1" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns a list of all event entries that occurred on the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="event_get_last_data" qualifiers="static">
@@ -117,6 +128,7 @@
 			<param index="0" name="tag" type="StringName" />
 			<param index="1" name="target" type="Node" />
 			<description>
+				Retrieves the data payload from the most recent occurrence of the specified event tag.
 			</description>
 		</method>
 		<method name="event_get_last_instigator" qualifiers="static">
@@ -124,6 +136,7 @@
 			<param index="0" name="tag" type="StringName" />
 			<param index="1" name="target" type="Node" />
 			<description>
+				Retrieves the instigator node from the most recent occurrence of the specified event tag.
 			</description>
 		</method>
 		<method name="event_get_last_magnitude" qualifiers="static">
@@ -131,6 +144,7 @@
 			<param index="0" name="tag" type="StringName" />
 			<param index="1" name="target" type="Node" />
 			<description>
+				Retrieves the magnitude value from the most recent occurrence of the specified event tag.
 			</description>
 		</method>
 		<method name="event_get_recent_events" qualifiers="static">
@@ -139,6 +153,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns a list of recent entries for a specific event tag on the target.
 			</description>
 		</method>
 		<method name="history_dump" qualifiers="static">
@@ -146,6 +161,7 @@
 			<param index="0" name="target" type="Node" />
 			<param index="1" name="lookback_sec" type="float" default="5.0" />
 			<description>
+				Prints a formatted debug log of all historical entries for the target to the console.
 			</description>
 		</method>
 		<method name="history_get_all_changes" qualifiers="static">
@@ -153,6 +169,7 @@
 			<param index="0" name="target" type="Node" />
 			<param index="1" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns a combined array of all Name and Conditional tag changes within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="history_get_tag_history" qualifiers="static">
@@ -161,12 +178,14 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns all historical entries (timeline) for a specific tag on the target.
 			</description>
 		</method>
 		<method name="history_get_total_size" qualifiers="static">
 			<return type="int" />
 			<param index="0" name="target" type="Node" />
 			<description>
+				Returns the combined number of entries across all historical buffers for the target.
 			</description>
 		</method>
 		<method name="history_was_tag_present" qualifiers="static">
@@ -175,6 +194,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				General purpose query to check if any version of the specified tag was present at any point within the target's historical buffers.
 			</description>
 		</method>
 		<method name="is_can_tag" qualifiers="static">
@@ -225,6 +245,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Counts how many times a specific [constant NAME] tag was added to the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="name_count_removals" qualifiers="static">
@@ -233,6 +254,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Counts how many times a specific [constant NAME] tag was removed from the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="name_get_recent_additions" qualifiers="static">
@@ -240,6 +262,7 @@
 			<param index="0" name="target" type="Node" />
 			<param index="1" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns an array of name tag identifiers that were added to the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="name_get_recent_changes" qualifiers="static">
@@ -247,6 +270,7 @@
 			<param index="0" name="target" type="Node" />
 			<param index="1" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns an array of all name tag events (additions and removals) that occurred within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="name_get_recent_removals" qualifiers="static">
@@ -254,6 +278,7 @@
 			<param index="0" name="target" type="Node" />
 			<param index="1" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns an array of name tag identifiers that were removed from the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="name_had_tag" qualifiers="static">
@@ -262,6 +287,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns true if the target had the specified name tag at any point during the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="name_was_tag_added" qualifiers="static">
@@ -270,6 +296,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns true if the specified name tag was added to the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="name_was_tag_removed" qualifiers="static">
@@ -278,6 +305,7 @@
 			<param index="1" name="target" type="Node" />
 			<param index="2" name="lookback_sec" type="float" default="1.0" />
 			<description>
+				Returns true if the specified name tag was removed from the target within the last [param lookback_sec] seconds.
 			</description>
 		</method>
 		<method name="validate_tag_type" qualifiers="static">

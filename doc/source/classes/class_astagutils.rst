@@ -191,9 +191,7 @@ Method Descriptions
 
 ``int`` **cond_count_additions**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_count_additions>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Counts how many times a specific :ref:`CONDITIONAL<class_ASTagUtils_constant_CONDITIONAL>` tag was added to the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -205,9 +203,7 @@ Method Descriptions
 
 ``int`` **cond_count_removals**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_count_removals>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Counts how many times a specific :ref:`CONDITIONAL<class_ASTagUtils_constant_CONDITIONAL>` tag was removed from the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -219,9 +215,7 @@ Method Descriptions
 
 ``Array`` **cond_get_recent_additions**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_get_recent_additions>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns an array of conditional tag names that were added to the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -233,9 +227,7 @@ Method Descriptions
 
 ``Array`` **cond_get_recent_changes**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_get_recent_changes>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns an array of all conditional tag events (additions and removals) that occurred within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -247,9 +239,7 @@ Method Descriptions
 
 ``Array`` **cond_get_recent_removals**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_get_recent_removals>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns an array of conditional tag names that were removed from the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -261,9 +251,7 @@ Method Descriptions
 
 ``bool`` **cond_had_tag**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_had_tag>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns true if the target had the specified conditional tag at any point during the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -275,9 +263,7 @@ Method Descriptions
 
 ``bool`` **cond_was_tag_added**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_was_tag_added>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns true if the specified conditional tag was added to the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -289,9 +275,7 @@ Method Descriptions
 
 ``bool`` **cond_was_tag_removed**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_was_tag_removed>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns true if the specified conditional tag was removed from the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -317,9 +301,7 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 ``int`` **event_count_occurrences**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_count_occurrences>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns the number of times the specified event occurred on the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -331,9 +313,7 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 ``bool`` **event_did_occur**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_did_occur>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns true if the specified event occurred on the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -345,9 +325,7 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 ``Array`` **event_get_all_recent_events**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_get_all_recent_events>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns a list of all event entries that occurred on the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -359,9 +337,7 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 ``Dictionary`` **event_get_last_data**\ (\ tag\: ``StringName``, target\: ``Node``\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_get_last_data>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Retrieves the data payload from the most recent occurrence of the specified event tag.
 
 .. rst-class:: classref-item-separator
 
@@ -373,9 +349,7 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 ``Node`` **event_get_last_instigator**\ (\ tag\: ``StringName``, target\: ``Node``\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_get_last_instigator>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Retrieves the instigator node from the most recent occurrence of the specified event tag.
 
 .. rst-class:: classref-item-separator
 
@@ -387,9 +361,7 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 ``float`` **event_get_last_magnitude**\ (\ tag\: ``StringName``, target\: ``Node``\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_get_last_magnitude>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Retrieves the magnitude value from the most recent occurrence of the specified event tag.
 
 .. rst-class:: classref-item-separator
 
@@ -401,9 +373,7 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 ``Array`` **event_get_recent_events**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_get_recent_events>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns a list of recent entries for a specific event tag on the target.
 
 .. rst-class:: classref-item-separator
 
@@ -415,9 +385,7 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 |void| **history_dump**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 5.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_history_dump>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Prints a formatted debug log of all historical entries for the target to the console.
 
 .. rst-class:: classref-item-separator
 
@@ -429,9 +397,7 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 ``Array`` **history_get_all_changes**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_history_get_all_changes>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns a combined array of all Name and Conditional tag changes within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -443,9 +409,7 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 ``Array`` **history_get_tag_history**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_history_get_tag_history>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns all historical entries (timeline) for a specific tag on the target.
 
 .. rst-class:: classref-item-separator
 
@@ -457,9 +421,7 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 ``int`` **history_get_total_size**\ (\ target\: ``Node``\ ) |static| :ref:`🔗<class_ASTagUtils_method_history_get_total_size>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns the combined number of entries across all historical buffers for the target.
 
 .. rst-class:: classref-item-separator
 
@@ -471,9 +433,7 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 ``bool`` **history_was_tag_present**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_history_was_tag_present>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+General purpose query to check if any version of the specified tag was present at any point within the target's historical buffers.
 
 .. rst-class:: classref-item-separator
 
@@ -557,9 +517,7 @@ Returns true if tag name starts with "Team.".
 
 ``int`` **name_count_additions**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_count_additions>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Counts how many times a specific :ref:`NAME<class_ASTagUtils_constant_NAME>` tag was added to the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -571,9 +529,7 @@ Returns true if tag name starts with "Team.".
 
 ``int`` **name_count_removals**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_count_removals>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Counts how many times a specific :ref:`NAME<class_ASTagUtils_constant_NAME>` tag was removed from the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -585,9 +541,7 @@ Returns true if tag name starts with "Team.".
 
 ``Array`` **name_get_recent_additions**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_get_recent_additions>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns an array of name tag identifiers that were added to the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -599,9 +553,7 @@ Returns true if tag name starts with "Team.".
 
 ``Array`` **name_get_recent_changes**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_get_recent_changes>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns an array of all name tag events (additions and removals) that occurred within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -613,9 +565,7 @@ Returns true if tag name starts with "Team.".
 
 ``Array`` **name_get_recent_removals**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_get_recent_removals>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns an array of name tag identifiers that were removed from the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -627,9 +577,7 @@ Returns true if tag name starts with "Team.".
 
 ``bool`` **name_had_tag**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_had_tag>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns true if the target had the specified name tag at any point during the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -641,9 +589,7 @@ Returns true if tag name starts with "Team.".
 
 ``bool`` **name_was_tag_added**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_was_tag_added>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns true if the specified name tag was added to the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 
@@ -655,9 +601,7 @@ Returns true if tag name starts with "Team.".
 
 ``bool`` **name_was_tag_removed**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_was_tag_removed>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns true if the specified name tag was removed from the target within the last ``lookback_sec`` seconds.
 
 .. rst-class:: classref-item-separator
 

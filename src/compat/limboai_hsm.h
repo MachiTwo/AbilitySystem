@@ -209,6 +209,9 @@ public:
 	virtual Ref<LimboState> get_current_state() const { return current_state; }
 	virtual String get_current_state_name() const;
 
+	Dictionary capture_state() const { return Dictionary(); }
+	void restore_state(const Dictionary &p_dict) {}
+
 	virtual void set_update_mode(LimboHSM_Compat::UpdateMode p_mode) { update_mode = p_mode; }
 	virtual LimboHSM_Compat::UpdateMode get_update_mode() const { return update_mode; }
 

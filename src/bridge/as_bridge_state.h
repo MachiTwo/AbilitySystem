@@ -57,11 +57,17 @@ private:
 	TypedArray<StringName> listen_events;
 
 	StringName transition_event;
+	StringName component_alias = "Self";
 
 protected:
 	static void _bind_methods();
 
 public:
+	void initialize(Node *p_agent) { set_agent(p_agent); }
+	ASComponent *get_actor_component() const { return ASComponent::resolve(get_agent(), component_alias); }
+
+	void set_component_alias(const StringName &p_alias) { component_alias = p_alias; }
+	StringName get_component_alias() const { return component_alias; }
 	void set_asc_node_path(const NodePath &p_path) { asc_node_path = p_path; }
 	NodePath get_asc_node_path() const { return asc_node_path; }
 

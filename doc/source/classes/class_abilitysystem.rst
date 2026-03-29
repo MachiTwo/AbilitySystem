@@ -93,27 +93,27 @@ Enumerations
 
 enum **ASTagType**: :ref:`🔗<enum_AbilitySystem_ASTagType>`
 
-.. _class_AbilitySystem_constant_ASTagType::NAME:
+.. _class_AbilitySystem_constant_NAME:
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **ASTagType::NAME** = ``0``
+:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **NAME** = ``0``
 
 Identity tags (Ability, Effect, Cue, Attribute).
 
-.. _class_AbilitySystem_constant_ASTagType::CONDITIONAL:
+.. _class_AbilitySystem_constant_CONDITIONAL:
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **ASTagType::CONDITIONAL** = ``1``
+:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **CONDITIONAL** = ``1``
 
 Status/State tags (on_fire, stunned, moving).
 
-.. _class_AbilitySystem_constant_ASTagType::EVENT:
+.. _class_AbilitySystem_constant_EVENT:
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **ASTagType::EVENT** = ``2``
+:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **EVENT** = ``2``
 
 Transient signals/events tags (Hit, Impact, Death).
 
@@ -132,9 +132,7 @@ Method Descriptions
 
 :ref:`Array<class_Array>`\[``StringName``\] **get_all_registered_tags**\ (\ ) |const| :ref:`🔗<class_AbilitySystem_method_get_all_registered_tags>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns an array of all tags currently registered in the global system. This includes Name, Conditional, and Event tags from the project settings and runtime registrations.
 
 .. rst-class:: classref-item-separator
 
@@ -278,9 +276,7 @@ Priority order:
 
 ``int`` **run_tests**\ (\ ) :ref:`🔗<class_AbilitySystem_method_run_tests>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Executes the internal unit test suite for the Ability System. Returns 0 on success or the number of failed test cases. This is primarily used for CI/CD validation and development integrity checks.
 
 .. rst-class:: classref-item-separator
 

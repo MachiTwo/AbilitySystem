@@ -1,0 +1,46 @@
+name: 🎮 Singleplayer Tests
+
+on:
+  workflow_call:
+    inputs:
+      godot-bin-name:
+        required: true
+        type: string
+
+jobs:
+  run-singleplayer:
+    name: 🎮 Run Singleplayer Tests
+    if: |
+      !contains(github.event.head_commit.message, '[tests skip]') &&
+      !contains(github.event.head_commit.message, '[integration skip]')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Restore Test Binaries from Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: dist/
+          key: ${{ github.sha }}-test-binaries
+          fail-on-cache-miss: true
+
+      - name: Deploy Binaries
+        run: |
+          cp -r dist/standard/* .
+          cp -r dist/godot/* .
+          cp -r dist/limboai/limboai addons/
+
+      - name: Setup Environment
+        run: |
+          BIN_NAME="${{ inputs.godot-bin-name }}"
+          chmod +x "$BIN_NAME"
+          echo "GODOT_BIN=$(pwd)/$BIN_NAME" >> $GITHUB_ENV
+
+      - name: Sync Addons to Demos
+        run: |
+          python utility/post_build.py
+
+      - name: Run Integration Tests
+        run: |
+          python utility/tests.py playtest

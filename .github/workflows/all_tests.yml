@@ -22,13 +22,13 @@ jobs:
     with:
       godot-bin-name: ${{ needs.infrastructure.outputs.godot-bin-name }}
 
-  unit-integration:
-    name: 🧪 C++ Integration
+  bridge:
+    name: 🧪 Bridge (Integration)
     needs: [infrastructure]
     if: |
       always() &&
       needs.infrastructure.result == 'success'
-    uses: ./.github/workflows/test_unit_integration.yml
+    uses: ./.github/workflows/test_bridge.yml
     with:
       godot-bin-name: ${{ needs.infrastructure.outputs.godot-bin-name }}
 
