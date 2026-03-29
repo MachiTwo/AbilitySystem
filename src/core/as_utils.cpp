@@ -481,7 +481,7 @@ void ASCooldownData::from_dict(const Dictionary &p_dict) {
 		initial_duration = p_dict["initial_duration"];
 	}
 	if (p_dict.has("tags")) {
-		tags = p_dict["tags"];
+		tags = (Array)p_dict["tags"];
 	}
 }
 

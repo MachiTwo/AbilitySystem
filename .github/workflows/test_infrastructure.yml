@@ -1,0 +1,98 @@
+name: 🧱 Test Infrastructure
+
+on:
+  workflow_call:
+    outputs:
+      godot-bin-name:
+        description: "Name of the downloaded Godot binary"
+        value: ${{ jobs.build-infra.outputs.godot-bin-name }}
+
+jobs:
+  build-infra:
+    name: 🏗️ Build Infrastructure
+    if: "!contains(github.event.head_commit.message, '[tests skip]')"
+    runs-on: ubuntu-latest
+    outputs:
+      godot-bin-name: ${{ steps.godot.outputs.bin-name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          submodules: recursive
+
+      - name: Setup SCons
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y scons build-essential
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+          GC_VER=$(grep "GODOT_CPP_API_VERSION=" deps.env | cut -d "=" -f 2 | tr -d " ")
+          echo "GODOT_CPP_VERSION=$GC_VER" >> "$GITHUB_ENV"
+
+      - name: Fetch godot-cpp
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: godotengine/godot-cpp
+          ref: ${{ env.GODOT_CPP_VERSION }}
+          path: godot-cpp
+          submodules: recursive
+
+      - name: Setup godot-cpp
+        uses: ./godot-cpp/.github/actions/setup-godot-cpp
+        with:
+          platform: linux
+
+      - name: Restore SCons Cache
+        uses: ./.github/actions/zyris-cache-restore
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: infra-linux-${{ env.GODOT_VERSION }}
+
+      - name: Build Standard Plugin
+        shell: bash
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
+        run: |
+          scons target=editor platform=linux -j$(nproc)
+
+      - name: Prepare Artifacts
+        shell: bash
+        run: |
+          mkdir -p dist/standard
+          cp -r addons dist/standard/
+
+      - name: Save SCons Cache
+        uses: ./.github/actions/zyris-cache-save
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: infra-linux-${{ env.GODOT_VERSION }}
+
+      - name: Download Godot Binary
+        id: godot
+        shell: bash
+        run: |
+          GODOT_VERSION="${{ env.GODOT_VERSION_FOR_EXPORT }}"
+          URL="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
+          BIN_NAME="Godot_v${GODOT_VERSION}_linux.x86_64"
+          wget --tries=5 --waitretry=5 "$URL" -O godot.zip
+          unzip godot.zip
+          chmod +x "$BIN_NAME"
+          mkdir -p dist/godot
+          cp "$BIN_NAME" dist/godot/
+          echo "bin-name=$BIN_NAME" >> "$GITHUB_OUTPUT"
+
+      - name: Download LimboAI Addon
+        shell: bash
+        run: |
+          python utility/download_integration.py --clean
+          mkdir -p dist/limboai
+          cp -r addons/limboai dist/limboai/
+
+      - name: Save Test Binaries to Cache
+        uses: actions/cache/save@v4
+        with:
+          path: dist/
+          key: ${{ github.sha }}-test-binaries

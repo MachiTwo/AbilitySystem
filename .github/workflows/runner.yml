@@ -53,6 +53,13 @@ jobs:
         id: init
         uses: ./.github/actions/init-version
 
+  all-tests:
+    name: 🧪 All Tests
+    needs: [pre-commit, init-version]
+    uses: ./.github/workflows/all_tests.yml
+    with:
+      plugin-version: ${{ needs.init-version.outputs.plugin-version }}
+
   module-builds:
     name: 🏗️ Module Builds
     if: |
