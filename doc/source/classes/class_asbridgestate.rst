@@ -10,7 +10,7 @@
 ASBridgeState
 =============
 
-**Inherits:** ``RefCounted``
+**Inherits:** ``LimboState``
 
 LimboState with integrated Ability System support.
 
@@ -31,21 +31,25 @@ Properties
 .. table::
    :widths: auto
 
-   +----------------+------------------------------------------------------------------------------+--------------+
-   | ``bool``       | :ref:`check_tags_on_enter<class_ASBridgeState_property_check_tags_on_enter>` | ``false``    |
-   +----------------+------------------------------------------------------------------------------+--------------+
-   | ``Array``      | :ref:`enter_events<class_ASBridgeState_property_enter_events>`               | ``[]``       |
-   +----------------+------------------------------------------------------------------------------+--------------+
-   | ``Array``      | :ref:`exit_events<class_ASBridgeState_property_exit_events>`                 | ``[]``       |
-   +----------------+------------------------------------------------------------------------------+--------------+
-   | ``Array``      | :ref:`listen_events<class_ASBridgeState_property_listen_events>`             | ``[]``       |
-   +----------------+------------------------------------------------------------------------------+--------------+
-   | ``Array``      | :ref:`required_tags<class_ASBridgeState_property_required_tags>`             | ``[]``       |
-   +----------------+------------------------------------------------------------------------------+--------------+
-   | ``StringName`` | :ref:`transition_event<class_ASBridgeState_property_transition_event>`       | ``&"&quot;`` |
-   +----------------+------------------------------------------------------------------------------+--------------+
-   | ``Array``      | :ref:`update_events<class_ASBridgeState_property_update_events>`             | ``[]``       |
-   +----------------+------------------------------------------------------------------------------+--------------+
+   +---------------------------------------------+------------------------------------------------------------------------------+------------------+
+   | ``NodePath``                                | :ref:`asc_node_path<class_ASBridgeState_property_asc_node_path>`             | ``NodePath("")`` |
+   +---------------------------------------------+------------------------------------------------------------------------------+------------------+
+   | ``Blackboard``                              | :ref:`blackboard<class_ASBridgeState_property_blackboard>`                   |                  |
+   +---------------------------------------------+------------------------------------------------------------------------------+------------------+
+   | ``bool``                                    | :ref:`check_tags_on_enter<class_ASBridgeState_property_check_tags_on_enter>` | ``true``         |
+   +---------------------------------------------+------------------------------------------------------------------------------+------------------+
+   | :ref:`Array<class_Array>`\[``StringName``\] | :ref:`enter_events<class_ASBridgeState_property_enter_events>`               | ``[]``           |
+   +---------------------------------------------+------------------------------------------------------------------------------+------------------+
+   | :ref:`Array<class_Array>`\[``StringName``\] | :ref:`exit_events<class_ASBridgeState_property_exit_events>`                 | ``[]``           |
+   +---------------------------------------------+------------------------------------------------------------------------------+------------------+
+   | :ref:`Array<class_Array>`\[``StringName``\] | :ref:`listen_events<class_ASBridgeState_property_listen_events>`             | ``[]``           |
+   +---------------------------------------------+------------------------------------------------------------------------------+------------------+
+   | :ref:`Array<class_Array>`\[``StringName``\] | :ref:`required_tags<class_ASBridgeState_property_required_tags>`             | ``[]``           |
+   +---------------------------------------------+------------------------------------------------------------------------------+------------------+
+   | ``StringName``                              | :ref:`transition_event<class_ASBridgeState_property_transition_event>`       | ``&""``          |
+   +---------------------------------------------+------------------------------------------------------------------------------+------------------+
+   | :ref:`Array<class_Array>`\[``StringName``\] | :ref:`update_events<class_ASBridgeState_property_update_events>`             | ``[]``           |
+   +---------------------------------------------+------------------------------------------------------------------------------+------------------+
 
 .. rst-class:: classref-reftable-group
 
@@ -55,37 +59,9 @@ Methods
 .. table::
    :widths: auto
 
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | ``bool``       | :ref:`can_enter_state<class_ASBridgeState_method_can_enter_state>`\ (\ agent\: ``Node``\ )                 |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | ``bool``       | :ref:`get_check_tags_on_enter<class_ASBridgeState_method_get_check_tags_on_enter>`\ (\ )                   |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | ``Array``      | :ref:`get_enter_events<class_ASBridgeState_method_get_enter_events>`\ (\ )                                 |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | ``Array``      | :ref:`get_exit_events<class_ASBridgeState_method_get_exit_events>`\ (\ )                                   |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | ``Array``      | :ref:`get_listen_events<class_ASBridgeState_method_get_listen_events>`\ (\ )                               |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | ``Array``      | :ref:`get_required_tags<class_ASBridgeState_method_get_required_tags>`\ (\ )                               |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | ``StringName`` | :ref:`get_transition_event<class_ASBridgeState_method_get_transition_event>`\ (\ )                         |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | ``Array``      | :ref:`get_update_events<class_ASBridgeState_method_get_update_events>`\ (\ )                               |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_check_tags_on_enter<class_ASBridgeState_method_set_check_tags_on_enter>`\ (\ check\: ``bool``\ ) |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_enter_events<class_ASBridgeState_method_set_enter_events>`\ (\ events\: ``Array``\ )             |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_exit_events<class_ASBridgeState_method_set_exit_events>`\ (\ events\: ``Array``\ )               |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_listen_events<class_ASBridgeState_method_set_listen_events>`\ (\ events\: ``Array``\ )           |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_required_tags<class_ASBridgeState_method_set_required_tags>`\ (\ tags\: ``Array``\ )             |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_transition_event<class_ASBridgeState_method_set_transition_event>`\ (\ event\: ``StringName``\ ) |
-   +----------------+------------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_update_events<class_ASBridgeState_method_set_update_events>`\ (\ events\: ``Array``\ )           |
-   +----------------+------------------------------------------------------------------------------------------------------------+
+   +----------+----------------------------------------------------------------------------------------------------+
+   | ``bool`` | :ref:`can_enter_state<class_ASBridgeState_method_can_enter_state>`\ (\ agent\: ``Node``\ ) |const| |
+   +----------+----------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -96,15 +72,34 @@ Methods
 Property Descriptions
 ---------------------
 
+.. _class_ASBridgeState_property_asc_node_path:
+
+.. rst-class:: classref-property
+
+``NodePath`` **asc_node_path** = ``NodePath("")`` :ref:`🔗<class_ASBridgeState_property_asc_node_path>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_asc_node_path**\ (\ value\: ``NodePath``\ )
+- ``NodePath`` **get_asc_node_path**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_ASBridgeState_property_check_tags_on_enter:
 
 .. rst-class:: classref-property
 
-``bool`` **check_tags_on_enter** = ``false`` :ref:`🔗<class_ASBridgeState_property_check_tags_on_enter>`
+``bool`` **check_tags_on_enter** = ``true`` :ref:`🔗<class_ASBridgeState_property_check_tags_on_enter>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_check_tags_on_enter**\ (\ check\: ``bool``\ )
+- |void| **set_check_tags_on_enter**\ (\ value\: ``bool``\ )
 - ``bool`` **get_check_tags_on_enter**\ (\ )
 
 .. container:: contribute
@@ -119,12 +114,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-``Array`` **enter_events** = ``[]`` :ref:`🔗<class_ASBridgeState_property_enter_events>`
+:ref:`Array<class_Array>`\[``StringName``\] **enter_events** = ``[]`` :ref:`🔗<class_ASBridgeState_property_enter_events>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_enter_events**\ (\ events\: ``Array``\ )
-- ``Array`` **get_enter_events**\ (\ )
+- |void| **set_enter_events**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_enter_events**\ (\ )
 
 .. container:: contribute
 
@@ -138,12 +133,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-``Array`` **exit_events** = ``[]`` :ref:`🔗<class_ASBridgeState_property_exit_events>`
+:ref:`Array<class_Array>`\[``StringName``\] **exit_events** = ``[]`` :ref:`🔗<class_ASBridgeState_property_exit_events>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_exit_events**\ (\ events\: ``Array``\ )
-- ``Array`` **get_exit_events**\ (\ )
+- |void| **set_exit_events**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_exit_events**\ (\ )
 
 .. container:: contribute
 
@@ -157,12 +152,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-``Array`` **listen_events** = ``[]`` :ref:`🔗<class_ASBridgeState_property_listen_events>`
+:ref:`Array<class_Array>`\[``StringName``\] **listen_events** = ``[]`` :ref:`🔗<class_ASBridgeState_property_listen_events>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_listen_events**\ (\ events\: ``Array``\ )
-- ``Array`` **get_listen_events**\ (\ )
+- |void| **set_listen_events**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_listen_events**\ (\ )
 
 .. container:: contribute
 
@@ -176,12 +171,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-``Array`` **required_tags** = ``[]`` :ref:`🔗<class_ASBridgeState_property_required_tags>`
+:ref:`Array<class_Array>`\[``StringName``\] **required_tags** = ``[]`` :ref:`🔗<class_ASBridgeState_property_required_tags>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_required_tags**\ (\ tags\: ``Array``\ )
-- ``Array`` **get_required_tags**\ (\ )
+- |void| **set_required_tags**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_required_tags**\ (\ )
 
 .. container:: contribute
 
@@ -195,11 +190,11 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-``StringName`` **transition_event** = ``&"&quot;`` :ref:`🔗<class_ASBridgeState_property_transition_event>`
+``StringName`` **transition_event** = ``&""`` :ref:`🔗<class_ASBridgeState_property_transition_event>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_transition_event**\ (\ event\: ``StringName``\ )
+- |void| **set_transition_event**\ (\ value\: ``StringName``\ )
 - ``StringName`` **get_transition_event**\ (\ )
 
 .. container:: contribute
@@ -214,12 +209,12 @@ Property Descriptions
 
 .. rst-class:: classref-property
 
-``Array`` **update_events** = ``[]`` :ref:`🔗<class_ASBridgeState_property_update_events>`
+:ref:`Array<class_Array>`\[``StringName``\] **update_events** = ``[]`` :ref:`🔗<class_ASBridgeState_property_update_events>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_update_events**\ (\ events\: ``Array``\ )
-- ``Array`` **get_update_events**\ (\ )
+- |void| **set_update_events**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_update_events**\ (\ )
 
 .. container:: contribute
 
@@ -238,177 +233,9 @@ Method Descriptions
 
 .. rst-class:: classref-method
 
-``bool`` **can_enter_state**\ (\ agent\: ``Node``\ ) :ref:`🔗<class_ASBridgeState_method_can_enter_state>`
+``bool`` **can_enter_state**\ (\ agent\: ``Node``\ ) |const| :ref:`🔗<class_ASBridgeState_method_can_enter_state>`
 
 Returns ``true`` if this state can be entered (checks required tags if :ref:`check_tags_on_enter<class_ASBridgeState_property_check_tags_on_enter>` is enabled).
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_get_check_tags_on_enter:
-
-.. rst-class:: classref-method
-
-``bool`` **get_check_tags_on_enter**\ (\ ) :ref:`🔗<class_ASBridgeState_method_get_check_tags_on_enter>`
-
-Returns whether to check required tags before entering.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_get_enter_events:
-
-.. rst-class:: classref-method
-
-``Array`` **get_enter_events**\ (\ ) :ref:`🔗<class_ASBridgeState_method_get_enter_events>`
-
-Returns the array of events to dispatch on state enter.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_get_exit_events:
-
-.. rst-class:: classref-method
-
-``Array`` **get_exit_events**\ (\ ) :ref:`🔗<class_ASBridgeState_method_get_exit_events>`
-
-Returns the array of events to dispatch on state exit.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_get_listen_events:
-
-.. rst-class:: classref-method
-
-``Array`` **get_listen_events**\ (\ ) :ref:`🔗<class_ASBridgeState_method_get_listen_events>`
-
-Returns the array of events to listen for (trigger transition).
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_get_required_tags:
-
-.. rst-class:: classref-method
-
-``Array`` **get_required_tags**\ (\ ) :ref:`🔗<class_ASBridgeState_method_get_required_tags>`
-
-Returns the array of tags required to enter this state.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_get_transition_event:
-
-.. rst-class:: classref-method
-
-``StringName`` **get_transition_event**\ (\ ) :ref:`🔗<class_ASBridgeState_method_get_transition_event>`
-
-Returns the event that triggers automatic transition out of this state.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_get_update_events:
-
-.. rst-class:: classref-method
-
-``Array`` **get_update_events**\ (\ ) :ref:`🔗<class_ASBridgeState_method_get_update_events>`
-
-Returns the array of events to dispatch during state update.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_set_check_tags_on_enter:
-
-.. rst-class:: classref-method
-
-|void| **set_check_tags_on_enter**\ (\ check\: ``bool``\ ) :ref:`🔗<class_ASBridgeState_method_set_check_tags_on_enter>`
-
-If ``true``, validates required tags before allowing state entry.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_set_enter_events:
-
-.. rst-class:: classref-method
-
-|void| **set_enter_events**\ (\ events\: ``Array``\ ) :ref:`🔗<class_ASBridgeState_method_set_enter_events>`
-
-Sets the events to dispatch when entering this state.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_set_exit_events:
-
-.. rst-class:: classref-method
-
-|void| **set_exit_events**\ (\ events\: ``Array``\ ) :ref:`🔗<class_ASBridgeState_method_set_exit_events>`
-
-Sets the events to dispatch when exiting this state.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_set_listen_events:
-
-.. rst-class:: classref-method
-
-|void| **set_listen_events**\ (\ events\: ``Array``\ ) :ref:`🔗<class_ASBridgeState_method_set_listen_events>`
-
-Sets the events to listen for. When detected, triggers ``event_finished``.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_set_required_tags:
-
-.. rst-class:: classref-method
-
-|void| **set_required_tags**\ (\ tags\: ``Array``\ ) :ref:`🔗<class_ASBridgeState_method_set_required_tags>`
-
-Sets the tags required for this state to be entered.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_set_transition_event:
-
-.. rst-class:: classref-method
-
-|void| **set_transition_event**\ (\ event\: ``StringName``\ ) :ref:`🔗<class_ASBridgeState_method_set_transition_event>`
-
-Sets the event that triggers automatic transition from this state.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASBridgeState_method_set_update_events:
-
-.. rst-class:: classref-method
-
-|void| **set_update_events**\ (\ events\: ``Array``\ ) :ref:`🔗<class_ASBridgeState_method_set_update_events>`
-
-Sets the events to dispatch during each ``_update`` call.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

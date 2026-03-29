@@ -27,6 +27,14 @@
 				Performs deep equality comparison between two state snapshots.
 			</description>
 		</method>
+		<method name="compress_state" qualifiers="static">
+			<return type="PackedByteArray" />
+			<param index="0" name="state" type="ASStateSnapshot" />
+			<description>
+				Compresses a state snapshot using compression algorithms.
+				Significantly reduces data size for network bandwidth optimization.
+			</description>
+		</method>
 		<method name="compute_state_difference" qualifiers="static">
 			<return type="float" />
 			<param index="0" name="a" type="ASStateSnapshot" />
@@ -36,12 +44,11 @@
 				Higher values indicate greater differences. Useful for state change detection.
 			</description>
 		</method>
-		<method name="serialize_state" qualifiers="static">
-			<return type="PackedByteArray" />
-			<param index="0" name="state" type="ASStateSnapshot" />
+		<method name="decompress_state" qualifiers="static">
+			<return type="ASStateSnapshot" />
+			<param index="0" name="data" type="PackedByteArray" />
 			<description>
-				Serializes a state snapshot to compact binary format.
-				Optimized for network transmission and file storage.
+				Decompresses state snapshot data created by compress_state().
 			</description>
 		</method>
 		<method name="deserialize_state" qualifiers="static">
@@ -51,27 +58,11 @@
 				Deserializes a state snapshot from binary data created by serialize_state().
 			</description>
 		</method>
-		<method name="compress_state" qualifiers="static">
-			<return type="PackedByteArray" />
+		<method name="dump_state" qualifiers="static">
+			<return type="void" />
 			<param index="0" name="state" type="ASStateSnapshot" />
 			<description>
-				Compresses a state snapshot using compression algorithms.
-				Significantly reduces data size for network bandwidth optimization.
-			</description>
-		</method>
-		<method name="decompress_state" qualifiers="static">
-			<return type="ASStateSnapshot" />
-			<param index="0" name="data" type="PackedByteArray" />
-			<description>
-				Decompresses state snapshot data created by compress_state().
-			</description>
-		</method>
-		<method name="validate_state" qualifiers="static">
-			<return type="bool" />
-			<param index="0" name="state" type="ASStateSnapshot" />
-			<description>
-				Validates the integrity and consistency of a state snapshot.
-				Checks for invalid data, corrupted values, and logical inconsistencies.
+				Prints detailed state information to the console for debugging.
 			</description>
 		</method>
 		<method name="get_validation_errors" qualifiers="static">
@@ -82,11 +73,12 @@
 				Empty array indicates no validation errors found.
 			</description>
 		</method>
-		<method name="dump_state" qualifiers="static">
-			<return type="void" />
+		<method name="serialize_state" qualifiers="static">
+			<return type="PackedByteArray" />
 			<param index="0" name="state" type="ASStateSnapshot" />
 			<description>
-				Prints detailed state information to the console for debugging.
+				Serializes a state snapshot to compact binary format.
+				Optimized for network transmission and file storage.
 			</description>
 		</method>
 		<method name="state_to_string" qualifiers="static">
@@ -97,9 +89,23 @@
 				Useful for logging and quick state identification.
 			</description>
 		</method>
+		<method name="validate_state" qualifiers="static">
+			<return type="bool" />
+			<param index="0" name="state" type="ASStateSnapshot" />
+			<description>
+				Validates the integrity and consistency of a state snapshot.
+				Checks for invalid data, corrupted values, and logical inconsistencies.
+			</description>
+		</method>
 	</methods>
-	<members>
-	</members>
 	<constants>
+		<constant name="ADD" value="0" enum="ModifierOp">
+		</constant>
+		<constant name="MULTIPLY" value="1" enum="ModifierOp">
+		</constant>
+		<constant name="DIVIDE" value="2" enum="ModifierOp">
+		</constant>
+		<constant name="OVERRIDE" value="3" enum="ModifierOp">
+		</constant>
 	</constants>
 </class>

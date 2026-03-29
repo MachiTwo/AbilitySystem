@@ -51,23 +51,79 @@ Methods
 .. table::
    :widths: auto
 
-   +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                    | :ref:`validate_tag_type<class_ASTagUtils_method_validate_tag_type>`\ (\ tag\: ``StringName``, expected_type\: :ref:`ASTagType<enum_ASTagUtils_ASTagType>`\ ) |static| |
-   +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASTagType<enum_ASTagUtils_ASTagType>` | :ref:`detect_tag_type<class_ASTagUtils_method_detect_tag_type>`\ (\ tag\: ``StringName``\ ) |static|                                                                  |
-   +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                    | :ref:`is_state_tag<class_ASTagUtils_method_is_state_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                        |
-   +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                    | :ref:`is_class_tag<class_ASTagUtils_method_is_class_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                        |
-   +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                    | :ref:`is_team_tag<class_ASTagUtils_method_is_team_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                          |
-   +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                    | :ref:`is_event_tag<class_ASTagUtils_method_is_event_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                        |
-   +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                    | :ref:`is_immune_tag<class_ASTagUtils_method_is_immune_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                      |
-   +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                    | :ref:`is_can_tag<class_ASTagUtils_method_is_can_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                            |
-   +---------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                     | :ref:`cond_count_additions<class_ASTagUtils_method_cond_count_additions>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|       |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                     | :ref:`cond_count_removals<class_ASTagUtils_method_cond_count_removals>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|         |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array``                                   | :ref:`cond_get_recent_additions<class_ASTagUtils_method_cond_get_recent_additions>`\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|                   |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array``                                   | :ref:`cond_get_recent_changes<class_ASTagUtils_method_cond_get_recent_changes>`\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|                       |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array``                                   | :ref:`cond_get_recent_removals<class_ASTagUtils_method_cond_get_recent_removals>`\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|                     |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`cond_had_tag<class_ASTagUtils_method_cond_had_tag>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|                       |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`cond_was_tag_added<class_ASTagUtils_method_cond_was_tag_added>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|           |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`cond_was_tag_removed<class_ASTagUtils_method_cond_was_tag_removed>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|       |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | :ref:`ASTagType<enum_ASTagUtils_ASTagType>` | :ref:`detect_tag_type<class_ASTagUtils_method_detect_tag_type>`\ (\ tag\: ``StringName``\ ) |static|                                                                    |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                     | :ref:`event_count_occurrences<class_ASTagUtils_method_event_count_occurrences>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`event_did_occur<class_ASTagUtils_method_event_did_occur>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|                 |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array``                                   | :ref:`event_get_all_recent_events<class_ASTagUtils_method_event_get_all_recent_events>`\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|               |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Dictionary``                              | :ref:`event_get_last_data<class_ASTagUtils_method_event_get_last_data>`\ (\ tag\: ``StringName``, target\: ``Node``\ ) |static|                                         |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Node``                                    | :ref:`event_get_last_instigator<class_ASTagUtils_method_event_get_last_instigator>`\ (\ tag\: ``StringName``, target\: ``Node``\ ) |static|                             |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                   | :ref:`event_get_last_magnitude<class_ASTagUtils_method_event_get_last_magnitude>`\ (\ tag\: ``StringName``, target\: ``Node``\ ) |static|                               |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array``                                   | :ref:`event_get_recent_events<class_ASTagUtils_method_event_get_recent_events>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                      | :ref:`history_dump<class_ASTagUtils_method_history_dump>`\ (\ target\: ``Node``, lookback_sec\: ``float`` = 5.0\ ) |static|                                             |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array``                                   | :ref:`history_get_all_changes<class_ASTagUtils_method_history_get_all_changes>`\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|                       |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array``                                   | :ref:`history_get_tag_history<class_ASTagUtils_method_history_get_tag_history>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                     | :ref:`history_get_total_size<class_ASTagUtils_method_history_get_total_size>`\ (\ target\: ``Node``\ ) |static|                                                         |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`history_was_tag_present<class_ASTagUtils_method_history_was_tag_present>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`is_can_tag<class_ASTagUtils_method_is_can_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                              |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`is_class_tag<class_ASTagUtils_method_is_class_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                          |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`is_event_tag<class_ASTagUtils_method_is_event_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                          |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`is_immune_tag<class_ASTagUtils_method_is_immune_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                        |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`is_state_tag<class_ASTagUtils_method_is_state_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                          |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`is_team_tag<class_ASTagUtils_method_is_team_tag>`\ (\ tag\: ``StringName``\ ) |static|                                                                            |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                     | :ref:`name_count_additions<class_ASTagUtils_method_name_count_additions>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|       |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                     | :ref:`name_count_removals<class_ASTagUtils_method_name_count_removals>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|         |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array``                                   | :ref:`name_get_recent_additions<class_ASTagUtils_method_name_get_recent_additions>`\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|                   |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array``                                   | :ref:`name_get_recent_changes<class_ASTagUtils_method_name_get_recent_changes>`\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|                       |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array``                                   | :ref:`name_get_recent_removals<class_ASTagUtils_method_name_get_recent_removals>`\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|                     |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`name_had_tag<class_ASTagUtils_method_name_had_tag>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|                       |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`name_was_tag_added<class_ASTagUtils_method_name_was_tag_added>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|           |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`name_was_tag_removed<class_ASTagUtils_method_name_was_tag_removed>`\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static|       |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                    | :ref:`validate_tag_type<class_ASTagUtils_method_validate_tag_type>`\ (\ tag\: ``StringName``, expected_type\: :ref:`ASTagType<enum_ASTagUtils_ASTagType>`\ ) |static|   |
+   +---------------------------------------------+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -108,6 +164,18 @@ A dynamic conditional tag with duration and magnitude support (e.g., Can.Attack)
 
 A high-frequency ephemeral tag with payload support (e.g., Event.Damage).
 
+.. _class_ASTagUtils_constant_UNKNOWN:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`ASTagType<enum_ASTagUtils_ASTagType>` **UNKNOWN** = ``255``
+
+.. container:: contribute
+
+	There is currently no description for this enum. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+
+
 .. rst-class:: classref-section-separator
 
 ----
@@ -117,15 +185,113 @@ A high-frequency ephemeral tag with payload support (e.g., Event.Damage).
 Method Descriptions
 -------------------
 
-.. _class_ASTagUtils_method_validate_tag_type:
+.. _class_ASTagUtils_method_cond_count_additions:
 
 .. rst-class:: classref-method
 
-``bool`` **validate_tag_type**\ (\ tag\: ``StringName``, expected_type\: :ref:`ASTagType<enum_ASTagUtils_ASTagType>`\ ) |static| :ref:`🔗<class_ASTagUtils_method_validate_tag_type>`
+``int`` **cond_count_additions**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_count_additions>`
 
-Validates that a tag exists and matches the expected type.
+.. container:: contribute
 
-Returns false if tag doesn't exist or type doesn't match.
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_cond_count_removals:
+
+.. rst-class:: classref-method
+
+``int`` **cond_count_removals**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_count_removals>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_cond_get_recent_additions:
+
+.. rst-class:: classref-method
+
+``Array`` **cond_get_recent_additions**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_get_recent_additions>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_cond_get_recent_changes:
+
+.. rst-class:: classref-method
+
+``Array`` **cond_get_recent_changes**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_get_recent_changes>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_cond_get_recent_removals:
+
+.. rst-class:: classref-method
+
+``Array`` **cond_get_recent_removals**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_get_recent_removals>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_cond_had_tag:
+
+.. rst-class:: classref-method
+
+``bool`` **cond_had_tag**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_had_tag>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_cond_was_tag_added:
+
+.. rst-class:: classref-method
+
+``bool`` **cond_was_tag_added**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_was_tag_added>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_cond_was_tag_removed:
+
+.. rst-class:: classref-method
+
+``bool`` **cond_was_tag_removed**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_cond_was_tag_removed>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
 
 .. rst-class:: classref-item-separator
 
@@ -145,13 +311,181 @@ Event.\* -> EVENT, Can.\* or Immune.\* -> CONDITIONAL, others -> NAME.
 
 ----
 
-.. _class_ASTagUtils_method_is_state_tag:
+.. _class_ASTagUtils_method_event_count_occurrences:
 
 .. rst-class:: classref-method
 
-``bool`` **is_state_tag**\ (\ tag\: ``StringName``\ ) |static| :ref:`🔗<class_ASTagUtils_method_is_state_tag>`
+``int`` **event_count_occurrences**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_count_occurrences>`
 
-Returns true if tag name starts with "State.".
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_event_did_occur:
+
+.. rst-class:: classref-method
+
+``bool`` **event_did_occur**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_did_occur>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_event_get_all_recent_events:
+
+.. rst-class:: classref-method
+
+``Array`` **event_get_all_recent_events**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_get_all_recent_events>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_event_get_last_data:
+
+.. rst-class:: classref-method
+
+``Dictionary`` **event_get_last_data**\ (\ tag\: ``StringName``, target\: ``Node``\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_get_last_data>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_event_get_last_instigator:
+
+.. rst-class:: classref-method
+
+``Node`` **event_get_last_instigator**\ (\ tag\: ``StringName``, target\: ``Node``\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_get_last_instigator>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_event_get_last_magnitude:
+
+.. rst-class:: classref-method
+
+``float`` **event_get_last_magnitude**\ (\ tag\: ``StringName``, target\: ``Node``\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_get_last_magnitude>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_event_get_recent_events:
+
+.. rst-class:: classref-method
+
+``Array`` **event_get_recent_events**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_event_get_recent_events>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_history_dump:
+
+.. rst-class:: classref-method
+
+|void| **history_dump**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 5.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_history_dump>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_history_get_all_changes:
+
+.. rst-class:: classref-method
+
+``Array`` **history_get_all_changes**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_history_get_all_changes>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_history_get_tag_history:
+
+.. rst-class:: classref-method
+
+``Array`` **history_get_tag_history**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_history_get_tag_history>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_history_get_total_size:
+
+.. rst-class:: classref-method
+
+``int`` **history_get_total_size**\ (\ target\: ``Node``\ ) |static| :ref:`🔗<class_ASTagUtils_method_history_get_total_size>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_history_was_tag_present:
+
+.. rst-class:: classref-method
+
+``bool`` **history_was_tag_present**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_history_was_tag_present>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_is_can_tag:
+
+.. rst-class:: classref-method
+
+``bool`` **is_can_tag**\ (\ tag\: ``StringName``\ ) |static| :ref:`🔗<class_ASTagUtils_method_is_can_tag>`
+
+Returns true if tag name starts with "Can.".
 
 .. rst-class:: classref-item-separator
 
@@ -164,18 +498,6 @@ Returns true if tag name starts with "State.".
 ``bool`` **is_class_tag**\ (\ tag\: ``StringName``\ ) |static| :ref:`🔗<class_ASTagUtils_method_is_class_tag>`
 
 Returns true if tag name starts with "Class.".
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASTagUtils_method_is_team_tag:
-
-.. rst-class:: classref-method
-
-``bool`` **is_team_tag**\ (\ tag\: ``StringName``\ ) |static| :ref:`🔗<class_ASTagUtils_method_is_team_tag>`
-
-Returns true if tag name starts with "Team.".
 
 .. rst-class:: classref-item-separator
 
@@ -205,13 +527,151 @@ Returns true if tag name starts with "Immune.".
 
 ----
 
-.. _class_ASTagUtils_method_is_can_tag:
+.. _class_ASTagUtils_method_is_state_tag:
 
 .. rst-class:: classref-method
 
-``bool`` **is_can_tag**\ (\ tag\: ``StringName``\ ) |static| :ref:`🔗<class_ASTagUtils_method_is_can_tag>`
+``bool`` **is_state_tag**\ (\ tag\: ``StringName``\ ) |static| :ref:`🔗<class_ASTagUtils_method_is_state_tag>`
 
-Returns true if tag name starts with "Can.".
+Returns true if tag name starts with "State.".
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_is_team_tag:
+
+.. rst-class:: classref-method
+
+``bool`` **is_team_tag**\ (\ tag\: ``StringName``\ ) |static| :ref:`🔗<class_ASTagUtils_method_is_team_tag>`
+
+Returns true if tag name starts with "Team.".
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_name_count_additions:
+
+.. rst-class:: classref-method
+
+``int`` **name_count_additions**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_count_additions>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_name_count_removals:
+
+.. rst-class:: classref-method
+
+``int`` **name_count_removals**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_count_removals>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_name_get_recent_additions:
+
+.. rst-class:: classref-method
+
+``Array`` **name_get_recent_additions**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_get_recent_additions>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_name_get_recent_changes:
+
+.. rst-class:: classref-method
+
+``Array`` **name_get_recent_changes**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_get_recent_changes>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_name_get_recent_removals:
+
+.. rst-class:: classref-method
+
+``Array`` **name_get_recent_removals**\ (\ target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_get_recent_removals>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_name_had_tag:
+
+.. rst-class:: classref-method
+
+``bool`` **name_had_tag**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_had_tag>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_name_was_tag_added:
+
+.. rst-class:: classref-method
+
+``bool`` **name_was_tag_added**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_was_tag_added>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_name_was_tag_removed:
+
+.. rst-class:: classref-method
+
+``bool`` **name_was_tag_removed**\ (\ tag\: ``StringName``, target\: ``Node``, lookback_sec\: ``float`` = 1.0\ ) |static| :ref:`🔗<class_ASTagUtils_method_name_was_tag_removed>`
+
+.. container:: contribute
+
+	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASTagUtils_method_validate_tag_type:
+
+.. rst-class:: classref-method
+
+``bool`` **validate_tag_type**\ (\ tag\: ``StringName``, expected_type\: :ref:`ASTagType<enum_ASTagUtils_ASTagType>`\ ) |static| :ref:`🔗<class_ASTagUtils_method_validate_tag_type>`
+
+Validates that a tag exists and matches the expected type.
+
+Returns false if tag doesn't exist or type doesn't match.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

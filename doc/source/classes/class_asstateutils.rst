@@ -52,24 +52,87 @@ Methods
    +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``bool``                                      | :ref:`compare_states<class_ASStateUtils_method_compare_states>`\ (\ a\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`, b\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static|                     |
    +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``float``                                     | :ref:`compute_state_difference<class_ASStateUtils_method_compute_state_difference>`\ (\ a\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`, b\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static| |
-   +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``PackedByteArray``                           | :ref:`serialize_state<class_ASStateUtils_method_serialize_state>`\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static|                                                                  |
-   +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | :ref:`ASStateSnapshot<class_ASStateSnapshot>` | :ref:`deserialize_state<class_ASStateUtils_method_deserialize_state>`\ (\ data\: ``PackedByteArray``\ ) |static|                                                                                         |
-   +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``PackedByteArray``                           | :ref:`compress_state<class_ASStateUtils_method_compress_state>`\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static|                                                                    |
+   +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                     | :ref:`compute_state_difference<class_ASStateUtils_method_compute_state_difference>`\ (\ a\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`, b\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static| |
    +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | :ref:`ASStateSnapshot<class_ASStateSnapshot>` | :ref:`decompress_state<class_ASStateUtils_method_decompress_state>`\ (\ data\: ``PackedByteArray``\ ) |static|                                                                                           |
    +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                      | :ref:`validate_state<class_ASStateUtils_method_validate_state>`\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static|                                                                    |
-   +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``Array``                                     | :ref:`get_validation_errors<class_ASStateUtils_method_get_validation_errors>`\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static|                                                      |
+   | :ref:`ASStateSnapshot<class_ASStateSnapshot>` | :ref:`deserialize_state<class_ASStateUtils_method_deserialize_state>`\ (\ data\: ``PackedByteArray``\ ) |static|                                                                                         |
    +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                        | :ref:`dump_state<class_ASStateUtils_method_dump_state>`\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static|                                                                            |
    +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``Array``                                     | :ref:`get_validation_errors<class_ASStateUtils_method_get_validation_errors>`\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static|                                                      |
+   +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``PackedByteArray``                           | :ref:`serialize_state<class_ASStateUtils_method_serialize_state>`\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static|                                                                  |
+   +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``String``                                    | :ref:`state_to_string<class_ASStateUtils_method_state_to_string>`\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static|                                                                  |
    +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+   | ``bool``                                      | :ref:`validate_state<class_ASStateUtils_method_validate_state>`\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static|                                                                    |
+   +-----------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+
+.. rst-class:: classref-section-separator
+
+----
+
+.. rst-class:: classref-descriptions-group
+
+Enumerations
+------------
+
+.. _enum_ASStateUtils_ModifierOp:
+
+.. rst-class:: classref-enumeration
+
+enum **ModifierOp**: :ref:`🔗<enum_ASStateUtils_ModifierOp>`
+
+.. _class_ASStateUtils_constant_ADD:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`ModifierOp<enum_ASStateUtils_ModifierOp>` **ADD** = ``0``
+
+.. container:: contribute
+
+	There is currently no description for this enum. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+
+
+.. _class_ASStateUtils_constant_MULTIPLY:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`ModifierOp<enum_ASStateUtils_ModifierOp>` **MULTIPLY** = ``1``
+
+.. container:: contribute
+
+	There is currently no description for this enum. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+
+
+.. _class_ASStateUtils_constant_DIVIDE:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`ModifierOp<enum_ASStateUtils_ModifierOp>` **DIVIDE** = ``2``
+
+.. container:: contribute
+
+	There is currently no description for this enum. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+
+
+.. _class_ASStateUtils_constant_OVERRIDE:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`ModifierOp<enum_ASStateUtils_ModifierOp>` **OVERRIDE** = ``3``
+
+.. container:: contribute
+
+	There is currently no description for this enum. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+
 
 .. rst-class:: classref-section-separator
 
@@ -92,46 +155,6 @@ Performs deep equality comparison between two state snapshots.
 
 ----
 
-.. _class_ASStateUtils_method_compute_state_difference:
-
-.. rst-class:: classref-method
-
-``float`` **compute_state_difference**\ (\ a\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`, b\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_compute_state_difference>`
-
-Computes a numerical difference score between two snapshots.
-
-Higher values indicate greater differences. Useful for state change detection.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASStateUtils_method_serialize_state:
-
-.. rst-class:: classref-method
-
-``PackedByteArray`` **serialize_state**\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_serialize_state>`
-
-Serializes a state snapshot to compact binary format.
-
-Optimized for network transmission and file storage.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASStateUtils_method_deserialize_state:
-
-.. rst-class:: classref-method
-
-:ref:`ASStateSnapshot<class_ASStateSnapshot>` **deserialize_state**\ (\ data\: ``PackedByteArray``\ ) |static| :ref:`🔗<class_ASStateUtils_method_deserialize_state>`
-
-Deserializes a state snapshot from binary data created by serialize_state().
-
-.. rst-class:: classref-item-separator
-
-----
-
 .. _class_ASStateUtils_method_compress_state:
 
 .. rst-class:: classref-method
@@ -141,6 +164,20 @@ Deserializes a state snapshot from binary data created by serialize_state().
 Compresses a state snapshot using compression algorithms.
 
 Significantly reduces data size for network bandwidth optimization.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASStateUtils_method_compute_state_difference:
+
+.. rst-class:: classref-method
+
+``float`` **compute_state_difference**\ (\ a\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`, b\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_compute_state_difference>`
+
+Computes a numerical difference score between two snapshots.
+
+Higher values indicate greater differences. Useful for state change detection.
 
 .. rst-class:: classref-item-separator
 
@@ -158,15 +195,25 @@ Decompresses state snapshot data created by compress_state().
 
 ----
 
-.. _class_ASStateUtils_method_validate_state:
+.. _class_ASStateUtils_method_deserialize_state:
 
 .. rst-class:: classref-method
 
-``bool`` **validate_state**\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_validate_state>`
+:ref:`ASStateSnapshot<class_ASStateSnapshot>` **deserialize_state**\ (\ data\: ``PackedByteArray``\ ) |static| :ref:`🔗<class_ASStateUtils_method_deserialize_state>`
 
-Validates the integrity and consistency of a state snapshot.
+Deserializes a state snapshot from binary data created by serialize_state().
 
-Checks for invalid data, corrupted values, and logical inconsistencies.
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASStateUtils_method_dump_state:
+
+.. rst-class:: classref-method
+
+|void| **dump_state**\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_dump_state>`
+
+Prints detailed state information to the console for debugging.
 
 .. rst-class:: classref-item-separator
 
@@ -186,13 +233,15 @@ Empty array indicates no validation errors found.
 
 ----
 
-.. _class_ASStateUtils_method_dump_state:
+.. _class_ASStateUtils_method_serialize_state:
 
 .. rst-class:: classref-method
 
-|void| **dump_state**\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_dump_state>`
+``PackedByteArray`` **serialize_state**\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_serialize_state>`
 
-Prints detailed state information to the console for debugging.
+Serializes a state snapshot to compact binary format.
+
+Optimized for network transmission and file storage.
 
 .. rst-class:: classref-item-separator
 
@@ -207,6 +256,20 @@ Prints detailed state information to the console for debugging.
 Returns a compact string representation of the state snapshot.
 
 Useful for logging and quick state identification.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASStateUtils_method_validate_state:
+
+.. rst-class:: classref-method
+
+``bool`` **validate_state**\ (\ state\: :ref:`ASStateSnapshot<class_ASStateSnapshot>`\ ) |static| :ref:`🔗<class_ASStateUtils_method_validate_state>`
+
+Validates the integrity and consistency of a state snapshot.
+
+Checks for invalid data, corrupted values, and logical inconsistencies.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

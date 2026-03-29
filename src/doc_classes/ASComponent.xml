@@ -576,8 +576,8 @@
 		<method name="try_activate_ability_by_resource">
 			<return type="bool" />
 			<param index="0" name="ability" type="ASAbility" />
-			<param index="1" name="target_node" type="Object" />
-			<param index="2" name="parent_id" type="int" />
+			<param index="1" name="target_node" type="Object" default="null" />
+			<param index="2" name="parent_id" type="int" default="0" />
 			<description>
 				Attempts to activate an ability using its resource reference. Supports hierarchical linking via [param parent_id].
 			</description>

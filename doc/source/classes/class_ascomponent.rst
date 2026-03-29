@@ -204,7 +204,7 @@ Methods
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                   | :ref:`tick<class_ASComponent_method_tick>`\ (\ delta\: ``float``\ )                                                                                                                                             |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-   | ``bool``                                                                 | :ref:`try_activate_ability_by_resource<class_ASComponent_method_try_activate_ability_by_resource>`\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, target_node\: ``Object``, parent_id\: ``int``\ )            |
+   | ``bool``                                                                 | :ref:`try_activate_ability_by_resource<class_ASComponent_method_try_activate_ability_by_resource>`\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, target_node\: ``Object`` = null, parent_id\: ``int`` = 0\ ) |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
    | ``bool``                                                                 | :ref:`try_activate_ability_by_tag<class_ASComponent_method_try_activate_ability_by_tag>`\ (\ tag\: ``StringName``, target_node\: ``Object`` = null\ )                                                           |
    +--------------------------------------------------------------------------+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -1430,7 +1430,7 @@ Manually advances the component's internal simulation by ``delta`` seconds. This
 
 .. rst-class:: classref-method
 
-``bool`` **try_activate_ability_by_resource**\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, target_node\: ``Object``, parent_id\: ``int``\ ) :ref:`🔗<class_ASComponent_method_try_activate_ability_by_resource>`
+``bool`` **try_activate_ability_by_resource**\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, target_node\: ``Object`` = null, parent_id\: ``int`` = 0\ ) :ref:`🔗<class_ASComponent_method_try_activate_ability_by_resource>`
 
 Attempts to activate an ability using its resource reference. Supports hierarchical linking via ``parent_id``.
 

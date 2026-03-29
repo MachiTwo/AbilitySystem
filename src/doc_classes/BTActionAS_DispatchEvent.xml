@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<class name="BTActionAS_DispatchEvent" inherits="RefCounted" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../doc/class.xsd">
+<class name="BTActionAS_DispatchEvent" inherits="BTAction" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../doc/class.xsd">
 	<brief_description>
 		BTAction that dispatches an Ability System event.
 	</brief_description>
@@ -9,50 +9,14 @@
 	</description>
 	<tutorials>
 	</tutorials>
-	<methods>
-		<method name="get_custom_payload">
-			<return type="Dictionary" />
-			<description>
-				Returns the custom payload dictionary for the event.
-			</description>
-		</method>
-		<method name="get_event_tag">
-			<return type="StringName" />
-			<description>
-				Returns the event tag to dispatch.
-			</description>
-		</method>
-		<method name="get_magnitude">
-			<return type="float" />
-			<description>
-				Returns the event magnitude.
-			</description>
-		</method>
-		<method name="set_custom_payload">
-			<return type="void" />
-			<param index="0" name="payload" type="Dictionary" />
-			<description>
-				Sets the custom payload dictionary for the event.
-			</description>
-		</method>
-		<method name="set_event_tag">
-			<return type="void" />
-			<param index="0" name="tag" type="StringName" />
-			<description>
-				Sets the event tag to dispatch. Must be registered as ASTagType::EVENT.
-			</description>
-		</method>
-		<method name="set_magnitude">
-			<return type="void" />
-			<param index="0" name="value" type="float" />
-			<description>
-				Sets the event magnitude (intensity).
-			</description>
-		</method>
-	</methods>
 	<members>
-		<member name="custom_payload" type="Dictionary" setter="set_custom_payload" getter="get_custom_payload" default="{}" />
-		<member name="event_tag" type="StringName" setter="set_event_tag" getter="get_event_tag" default="&amp;&quot;&amp;quot;" />
-		<member name="magnitude" type="float" setter="set_magnitude" getter="get_magnitude" default="1.0" />
+		<member name="asc_node_path" type="NodePath" setter="set_asc_node_path" getter="get_asc_node_path" default="NodePath(&quot;&quot;)">
+		</member>
+		<member name="custom_payload" type="Dictionary" setter="set_custom_payload" getter="get_custom_payload" default="{}">
+		</member>
+		<member name="event_tag" type="StringName" setter="set_event_tag" getter="get_event_tag" default="&amp;&quot;&quot;">
+		</member>
+		<member name="magnitude" type="float" setter="set_magnitude" getter="get_magnitude" default="1.0">
+		</member>
 	</members>
 </class>
