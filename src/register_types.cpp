@@ -116,6 +116,7 @@
 #include "modules/ability_system/compat/limboai_string_names.h"
 #include "modules/ability_system/compat/limboai_task_db.h"
 #include "modules/ability_system/compat/limboai_utility.h"
+#include "modules/ability_system/limboai/register_types.h"
 
 #ifdef TOOLS_ENABLED
 #include "modules/ability_system/editor/as_editor_plugin.h"
@@ -137,7 +138,7 @@ static ASBridge *as_bridge = nullptr;
 
 void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 #endif
-#ifdef ABILITY_SYSTEM_GDEXTENSION
+#if defined(LIMBOAI_MODULE) || defined(LIMBOAI_GDEXTENSION)
 	// Initialize LimboAI module for every level (it handles internally)
 	initialize_limboai_module(p_level);
 #endif
@@ -175,8 +176,8 @@ void initialize_ability_system_module(ModuleInitializationLevel p_level) {
 		GDREGISTER_CLASS(LimboHSM);
 		GDREGISTER_ABSTRACT_CLASS(BTTask);
 		GDREGISTER_CLASS(BTLeaf);
-		GDREGISTER_CLASS(BTComposite);
-		GDREGISTER_CLASS(BTDecorator);
+		GDREGISTER_ABSTRACT_CLASS(BTComposite);
+		GDREGISTER_ABSTRACT_CLASS(BTDecorator);
 		GDREGISTER_CLASS(BTAction);
 		GDREGISTER_CLASS(BTCondition);
 		GDREGISTER_CLASS(BehaviorTree);
@@ -247,7 +248,7 @@ void uninitialize_ability_system_module(ModuleInitializationLevel p_level) {
 		}
 	}
 
-#ifdef ABILITY_SYSTEM_GDEXTENSION
+#if defined(LIMBOAI_MODULE) || defined(LIMBOAI_GDEXTENSION)
 	// Uninitialize LimboAI module (it handles internally)
 	uninitialize_limboai_module(p_level);
 #endif

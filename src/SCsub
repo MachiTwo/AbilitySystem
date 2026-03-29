@@ -6,7 +6,7 @@ module_env = env.Clone()
 
 # Add the module define if compiling as a native module
 if "ABILITY_SYSTEM_GDEXTENSION" not in env["CPPDEFINES"]:
-    module_env.Append(CPPDEFINES=["ABILITY_SYSTEM_MODULE"])
+    module_env.Append(CPPDEFINES=["ABILITY_SYSTEM_MODULE", "LIMBOAI_MODULE"])
 
 # Collect core source files (now relative to src/)
 sources = []
@@ -38,8 +38,11 @@ sources += Glob("limboai/editor/debugger/*.cpp")
 if env.get("target") != "template_release":
     sources += Glob("limboai/editor/*.cpp")
 
-module_env.Append(CPPDEFINES=["LIMBOAI_SUBMODULE_BUILD"])
-module_env.Append(CPPPATH=["#modules/ability_system/limboai", "#modules/ability_system"])
+module_env.Append(CPPPATH=[
+    "#modules/ability_system/limboai",
+    "#modules/ability_system",
+    "#", # To allow including core/...
+])
 
 # Add collected files to Godot's module environment
 module_env.add_source_files(env.modules_sources, sources)
