@@ -18,17 +18,16 @@
 [resource]
 _data = {
 "attack.combo1": ExtResource("10"),
-"attack.combo2": ExtResource("11"),
-"attack.combo3": ExtResource("12"),
-"state.dash": ExtResource("4"),
-"attack.dash_attack": ExtResource("14"),
-"state.dead": ExtResource("8"),
-"state.fall": ExtResource("6"),
-"attack.heavy": ExtResource("13"),
-"state.hurt": ExtResource("7"),
-"state.hyperdash": ExtResource("9"),
-"state.idle": ExtResource("1"),
-"state.jump": ExtResource("5"),
-"state.run": ExtResource("3"),
-"state.walk": ExtResource("2")
+"attack.fast": ExtResource("10"),
+"attack.normal": ExtResource("11"),
+"attack.special": ExtResource("12"),
+"motion.dash": ExtResource("4"),
+"status.dead": ExtResource("8"),
+"jump.fall": ExtResource("6"),
+"attack.charged": ExtResource("13"),
+"status.hurt": ExtResource("7"),
+"motion.idle": ExtResource("1"),
+"jump.high": ExtResource("5"),
+"motion.run": ExtResource("3"),
+"motion.walk": ExtResource("2")
 }

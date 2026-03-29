@@ -13,19 +13,18 @@ var time_elapsed: float = 0.0
 var _current_state: StringName = &""
 
 const TAG_COLORS := {
-	&"state.idle": Color(0.785, 0.786, 0.761),
-	&"state.walk": Color(0.5, 0.5, 0.5),
-	&"state.run": Color(0.25, 0.5, 1.0),
-	&"state.dash": Color(0.4, 0.4, 0.8),
-	&"state.jump": Color(0.5, 1.0, 0.5),
-	&"state.fall": Color(1.0, 1.0, 0.0),
-	&"state.hurt": Color(1.0, 0.5, 0.0),
-	&"state.dead": Color(1.0, 0.0, 0.0),
-	&"state.hyperdash": Color(0.0, 0.8, 0.8),
-	&"attack.combo1": Color(1.0, 0.0, 0.0),
-	&"attack.combo2": Color(1.0, 0.27, 0.0),
-	&"attack.combo3": Color(1.0, 0.0, 0.27),
-	&"attack.heavy": Color(0.8, 0.0, 0.0),
+	&"motion.idle": Color(0.785, 0.786, 0.761),
+	&"motion.walk": Color(0.5, 0.5, 0.5),
+	&"motion.run": Color(0.25, 0.5, 1.0),
+	&"motion.dash": Color(0.4, 0.4, 0.8),
+	&"jump.high": Color(0.5, 1.0, 0.5),
+	&"jump.fall": Color(1.0, 1.0, 0.0),
+	&"status.hurt": Color(1.0, 0.5, 0.0),
+	&"status.dead": Color(1.0, 0.0, 0.0),
+	&"attack.fast": Color(1.0, 0.0, 0.0),
+	&"attack.normal": Color(1.0, 0.27, 0.0),
+	&"attack.special": Color(1.0, 0.0, 0.27),
+	&"attack.charged": Color(0.8, 0.0, 0.0),
 	&"attack.dash_attack": Color(0.53, 0.0, 0.8),
 }
 
@@ -78,7 +77,7 @@ func _update_status_list() -> void:
 			var a_name = String(a_tag).replace("ability.", "").capitalize()
 			
 			var status_color = "aaaaaa"
-			if spec.is_active():
+			if spec.get_is_active():
 				status_color = "55ff55"
 			elif spec.get_cooldown_remaining() > 0:
 				status_color = "ff5555"

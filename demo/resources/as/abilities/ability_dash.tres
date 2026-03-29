@@ -2,10 +2,10 @@
 [ext_resource type="ASCue" path="res://resources/as/cues/cue_dash.tres" id="1"]
 [resource]
 ability_name = "dash"
-ability_tag = &"state.dash"
-activation_owned_tags = PackedStringArray("state.dash")
-activation_blocked_any_tags = PackedStringArray("state.dead", "state.hurt")
-activation_cancel_tags = PackedStringArray("state.idle", "state.walk", "state.run")
+ability_tag = &"motion.dash"
+activation_owned_tags = PackedStringArray("motion.dash")
+activation_blocked_any_tags = PackedStringArray("status.dead", "status.hurt")
+activation_cancel_tags = PackedStringArray("motion.idle", "motion.walk", "motion.run")
 duration_policy = 1
 duration = 0.3
 cues = [ExtResource("1")]

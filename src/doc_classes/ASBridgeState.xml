@@ -21,7 +21,7 @@
 	<members>
 		<member name="asc_node_path" type="NodePath" setter="set_asc_node_path" getter="get_asc_node_path" default="NodePath(&quot;&quot;)">
 		</member>
-		<member name="blackboard" type="Blackboard" setter="" getter="get_blackboard" overrides="LimboState" />
+		<member name="blackboard" type="RefCounted" setter="" getter="get_blackboard" overrides="LimboState" />
 		<member name="check_tags_on_enter" type="bool" setter="set_check_tags_on_enter" getter="get_check_tags_on_enter" default="true">
 		</member>
 		<member name="enter_events" type="StringName[]" setter="set_enter_events" getter="get_enter_events" default="[]">

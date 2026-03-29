@@ -6,6 +6,12 @@ signal died
 @export var asc: ASComponent
 @export var hotbar: Hotbar
 
+# Referências internas
+@onready var _sprite: Node = $ColorRect
+@onready var _anim_player: AnimationPlayer = $AnimationPlayer
+@onready var _hitbox: Area2D = $Hitbox
+@onready var _delivery: ASDelivery = $Hitbox/ASDelivery
+
 var is_stunned: bool = false
 
 # Timers internos
@@ -27,13 +33,8 @@ var facing_direction: float = 1.0:
 			if scale.x != 0:
 				scale.x = abs(scale.x) * sign(value)
 
-# Referências internas
-var _sprite: Node
-var _anim_player: AnimationPlayer
-var _hitbox: Area2D
-
-# Estado atual rastreado
-var _current_state_tag: StringName = &""
+var _is_blocked: bool:
+	get: return is_stunned or current_health <= 0 or (asc and asc.has_tag(&"status.dead"))
 
 # Dash physics params
 const DASH_SPEED_MULT := 3.0
@@ -106,12 +107,9 @@ func _ready() -> void:
 	if not asc:
 		asc = find_child("ASComponent") as ASComponent
 
-	# Encontra nós visuais
-	_sprite = find_child("ColorRect")
+	# Encontra nós visuais (Fallback se necessário, mas @onready é preferível)
+	if not _sprite: _sprite = find_child("ColorRect")
 	if not _sprite: _sprite = find_child("Sprite2D")
-
-	_anim_player = find_child("AnimationPlayer")
-	_hitbox = find_child("Hitbox")
 
 	# Conecta sinais do ASComponent
 	if asc:
@@ -129,6 +127,8 @@ func _ready() -> void:
 			asc.register_node(&"ColorRect", _sprite)
 		if _hitbox:
 			asc.register_node(&"Hitbox", _hitbox)
+		if _delivery:
+			_delivery.source_component = asc
 
 	# Inicializa Hotbar
 	if hotbar:
@@ -159,7 +159,7 @@ func _on_hotbar_selection_changed(item: Resource) -> void:
 
 func _activate_initial_state() -> void:
 	if asc:
-		asc.try_activate_ability_by_tag(&"state.idle")
+		asc.try_activate_ability_by_tag(&"motion.idle")
 
 func _physics_process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
@@ -190,20 +190,18 @@ func _physics_process(delta: float) -> void:
 	else:
 		_jump_buffer_timer -= delta
 
-	# Attack timer
-	if _is_attacking:
-		_attack_timer -= delta
-		if _attack_timer <= 0:
-			_finish_attack()
+	# Sync internal attacking state from ASC
+	_is_attacking = asc.is_ability_active(&"attack.fast") or asc.is_ability_active(&"attack.normal") or asc.is_ability_active(&"attack.special") or asc.is_ability_active(&"attack.charged")
 
 	_handle_gravity(delta)
 	_handle_input()
 	_handle_movement(delta)
 	move_and_slide()
 	_update_state_from_physics()
+	_update_context_tags()
 
 func _handle_gravity(delta: float) -> void:
-	if _current_state_tag == &"state.dash" or _current_state_tag == &"state.hyperdash":
+	if asc and asc.has_tag(&"motion.dash"):
 		velocity.y = 0
 		return
 
@@ -217,14 +215,14 @@ func _handle_input() -> void:
 
 	# Dash Input
 	if Input.is_action_just_pressed("dash") and current_stamina >= 10:
-		if _try_activate(&"state.dash"):
+		if asc.try_activate_ability_by_tag(&"motion.dash"):
 			asc.apply_effect_by_tag(&"effect.dash_cost")
 			_start_dash()
 			return
 
 	# Jump Input
 	if _jump_buffer_timer > 0 and _coyote_timer > 0 and not _is_attacking:
-		if _try_activate(&"state.jump"):
+		if asc.try_activate_ability_by_tag(&"jump.high"):
 			var jf = jump_force if jump_force > 0 else 500.0
 			velocity.y = -jf
 			_jump_buffer_timer = 0
@@ -243,26 +241,20 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("hotbar_3"):
 		hotbar.select_slot(2)
 
-	# Attack Input
-	if event.is_action_pressed("attack_light"):
-		_try_start_attack(&"attack.combo1", COMBO_DURATION, 10)
-	elif event.is_action_pressed("attack_heavy"):
-		_try_start_attack(&"attack.heavy", HEAVY_DURATION, 15)
+	# Light Attack Input (Phased Combo)
+	if Input.is_action_just_pressed("attack_light") and not _is_blocked:
+		asc.try_activate_ability_by_tag(&"attack.fast")
+	
+	# Heavy Attack Input
+	if Input.is_action_just_pressed("attack_heavy") and not _is_blocked:
+		asc.try_activate_ability_by_tag(&"attack.charged")
 
-func _try_start_attack(tag: StringName, dur: float, dmg: int) -> void:
-	if _try_activate(tag):
-		_is_attacking = true
-		_attack_timer = dur
-		if _hitbox:
-			_hitbox.position = Vector2(30 * facing_direction, 0)
-
+# [ABILITY PHASES] The C++ core handles sequential execution of attack.fast phases.
+# No manual queueing or time tracking needed here anymore.
 func _finish_attack() -> void:
-	_is_attacking = false
-	_attack_timer = 0
-	# Cancela qualquer habilidade de ataque ativa
-	for tag in [&"attack.combo1", &"attack.combo2", &"attack.combo3", &"attack.heavy", &"attack.dash_attack"]:
-		if asc.is_ability_active(tag):
-			asc.cancel_ability_by_tag(tag)
+	# Forcefully cancel all attack abilities
+	for tag in [&"attack.fast", &"attack.normal", &"attack.special", &"attack.charged"]:
+		asc.cancel_ability_by_tag(tag)
 	_update_state_from_physics()
 
 func _start_dash() -> void:
@@ -280,22 +272,16 @@ func _handle_movement(delta: float) -> void:
 	var can_control = true
 
 	# Dash: locked movement
-	if _current_state_tag == &"state.dash":
+	if asc and asc.has_tag(&"motion.dash"):
 		can_control = false
 		var target_speed = spd * DASH_SPEED_MULT * facing_direction
 		velocity.x = move_toward(velocity.x, target_speed, DASH_ACCEL * delta)
 		if is_on_wall():
-			asc.cancel_ability_by_tag(&"state.dash")
+			asc.cancel_ability_by_tag(&"motion.dash")
 			velocity.x = 0
 			_dash_coyote_timer = 0
 		return
 
-	# HyperDash
-	if _current_state_tag == &"state.hyperdash":
-		can_control = false
-		var target_speed = spd * HYPERDASH_SPEED_MULT * facing_direction
-		velocity.x = move_toward(velocity.x, target_speed, DASH_ACCEL * delta)
-		return
 
 	# Attacking: preserve momentum
 	if _is_attacking:
@@ -333,44 +319,34 @@ func _update_state_from_physics() -> void:
 	if _is_attacking: return
 
 	# Dash in progress
-	if _current_state_tag == &"state.dash" or _current_state_tag == &"state.hyperdash":
+	if asc and asc.has_tag(&"motion.dash"):
 		if _dash_coyote_timer <= 0:
-			asc.cancel_ability_by_tag(_current_state_tag)
+			asc.cancel_ability_by_tag(&"motion.dash")
 		else:
 			return
 
 	# Hurt
 	if _hurt_timer > 0:
-		_try_activate(&"state.hurt")
+		asc.try_activate_ability_by_tag(&"status.hurt")
 		return
 
 	# Airborne
 	if not is_on_floor():
 		if velocity.y < 0:
-			_try_activate(&"state.jump")
+			asc.try_activate_ability_by_tag(&"jump.high")
 		else:
-			_try_activate(&"state.fall")
+			asc.try_activate_ability_by_tag(&"jump.fall")
 		return
 
 	# Ground
 	var direction := Input.get_axis("ui_left", "ui_right")
 	if direction != 0:
 		if Input.is_action_pressed("run") and current_stamina > 0:
-			_try_activate(&"state.run")
+			asc.try_activate_ability_by_tag(&"motion.run")
 		else:
-			_try_activate(&"state.walk")
+			asc.try_activate_ability_by_tag(&"motion.walk")
 	else:
-		_try_activate(&"state.idle")
-
-func _try_activate(tag: StringName) -> bool:
-	if not asc: return false
-	if _current_state_tag == tag: return true
-	return asc.try_activate_ability_by_tag(tag)
-
-func _on_tag_changed(tag: StringName, is_present: bool) -> void:
-	if is_present:
-		if String(tag).begins_with("state.") or String(tag).begins_with("attack."):
-			_current_state_tag = tag
+		asc.try_activate_ability_by_tag(&"motion.idle")
 
 func take_damage(amount: int) -> void:
 	if current_health <= 0: return
@@ -380,7 +356,7 @@ func take_damage(amount: int) -> void:
 		die()
 
 func die() -> void:
-	_try_activate(&"state.dead")
+	asc.try_activate_ability_by_tag(&"status.dead")
 	emit_signal("died")
 	queue_free()
 
@@ -389,7 +365,7 @@ func _process(delta: float) -> void:
 
 	# Regeneração de Stamina
 	var is_consuming = false
-	if _current_state_tag == &"state.run" or _is_attacking or _current_state_tag == &"state.dash":
+	if (asc and (asc.has_tag(&"motion.run") or asc.has_tag(&"motion.dash"))) or _is_attacking:
 		is_consuming = true
 
 	if not is_consuming and current_stamina < max_stamina:
@@ -398,3 +374,26 @@ func _process(delta: float) -> void:
 
 func reset_dash_timer() -> void:
 	_dash_coyote_timer = 0.0
+
+var _physics_context: int = 2 # Default to AIR (BehaviorStates.Physics.AIR = 2)
+
+func set_physics_context(p_context: int) -> void:
+	_physics_context = p_context
+
+func _update_context_tags() -> void:
+	if not asc: return
+	
+	# Determine effective context: Floor overrides Air, but Water (3) is authoritative from Level
+	var ctx = _physics_context
+	if is_on_floor() and ctx != 3: # 3 = WATER
+		ctx = 1 # 1 = GROUND
+	elif not is_on_floor() and ctx == 1:
+		ctx = 2 # 2 = AIR
+	
+	match ctx:
+		1: # GROUND
+			asc.add_tag(&"physics.ground")
+		3: # WATER
+			asc.add_tag(&"physics.water")
+		2, _: # AIR
+			asc.add_tag(&"physics.air")

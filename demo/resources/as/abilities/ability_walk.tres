@@ -2,9 +2,9 @@
 [ext_resource type="ASCue" path="res://resources/as/cues/cue_walk.tres" id="1"]
 [resource]
 ability_name = "walk"
-ability_tag = &"state.walk"
-activation_owned_tags = PackedStringArray("state.walk")
-activation_blocked_any_tags = PackedStringArray("state.dead", "state.hurt")
-activation_cancel_tags = PackedStringArray("state.idle", "state.run", "state.dash", "state.jump", "state.fall")
+ability_tag = &"motion.walk"
+activation_owned_tags = PackedStringArray("motion.walk")
+activation_blocked_any_tags = PackedStringArray("status.dead", "status.hurt")
+activation_cancel_tags = PackedStringArray("motion.idle", "motion.run", "motion.dash", "jump.high", "jump.fall")
 duration_policy = 2
 cues = [ExtResource("1")]

@@ -31,6 +31,7 @@
 [ext_resource type="ASEffect" path="res://resources/as/effects/effect_attack_damage.tres" id="28_wpyo2"]
 [ext_resource type="ASEffect" path="res://resources/as/effects/effect_dash_cost.tres" id="29_7crtr"]
 [ext_resource type="ASStateSnapshot" path="res://resources/as/as_state_snapshot.tres" id="30_2uvqg"]
+[ext_resource type="ASPackage" path="res://resources/as/packages/package_melee_hit.tres" id="31_wpyo2"]
 
 [sub_resource type="ASAttributeSet" id="ASAttributeSet_1s1yo"]
 attribute_definitions = Array[ASAttribute]([ExtResource("17_gswnw"), ExtResource("18_xcnuv"), ExtResource("19_j55il"), ExtResource("20_hjies"), ExtResource("21_mmwog"), ExtResource("22_8pxes"), ExtResource("23_fmu53"), ExtResource("24_w7j2h"), ExtResource("25_n0b8q"), ExtResource("26_jfgyi"), ExtResource("27_237xx")])
@@ -77,6 +78,11 @@ libraries/ = ExtResource("5_eki5k")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1801274408]
 shape = SubResource("RectangleShape2D_2jcct")
+
+[node name="ASDelivery" type="ASDelivery" parent="Hitbox" unique_id="ASDelivery_melee"]
+auto_connect = true
+one_shot = true
+package = ExtResource("31_wpyo2")
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=850690303]
 

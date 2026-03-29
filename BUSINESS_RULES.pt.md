@@ -780,6 +780,7 @@ Os métodos são categorizados pela sua intenção e camada de acesso:
   - `get_...`: **Extração de Informação.** Obtém valores, referências ou metadados de leitura.
   - `cancel_...`: **Interrupção.** Encerra voluntariamente um fluxo em execução.
   - `request_...`: **Intenção em Rede.** Solicita a execução de uma ação via RPC (Multiplayer).
+  - `activation_cancel_tags`: **Política de Interrupção.** Tags de habilidades ou efeitos ativos que serão cancelados ao disparar esta ação (HSM Nativa).
 - **🏗️ Camada de Infraestrutura/Interna (Uso Restrito ou de Configuração)**
   - `apply_...`: **Aplicação Forçada.** Injeta um payload ou container ignorando regras de ativação. Usado em inicialização ou por sistemas de entrega (`ASDelivery`).
   - `add_...` / `remove_...`: **Mutação de Baixo Nível.** Altera coleções internas. Não deve ser usado como atalho para ativar lógica de jogo (ex: use `try_activate` em vez de tentar "adicionar" um efeito manualmente).
