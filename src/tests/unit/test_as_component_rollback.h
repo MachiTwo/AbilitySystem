@@ -54,7 +54,7 @@
 using namespace godot;
 #endif
 
-// Helper: builds a minimal ASComponent with a Health attribute.
+// Helper: builds a minimal ASComponent with a Health attribute using PUBLIC API.
 static ASComponent *_make_asc_rollback(float p_hp = 100.0f) {
 	ASComponent *asc = memnew(ASComponent);
 
@@ -67,8 +67,11 @@ static ASComponent *_make_asc_rollback(float p_hp = 100.0f) {
 	hp->set_base_value(p_hp);
 	hp->set_min_value(0.0f);
 	hp->set_max_value(p_hp);
+
+	// Correct public API: add_attribute_definition
 	aset->add_attribute_definition(hp);
 
+	// Correct public API: add_attribute_set
 	asc->add_attribute_set(aset);
 	return asc;
 }
