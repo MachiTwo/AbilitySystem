@@ -31,11 +31,15 @@ jobs:
         with:
           platform: linux
 
-      # EXPLICITLY checkout LimboAI for Bridge tests!
-      - name: Build GDExtension (With LimboAI/Bridge)
+      - name: Build godot-cpp (generates bindings incl. gdvirtual.gen.inc)
         shell: bash
         run: |
-          scons target=template_debug platform=linux arch=x86_64 tests=bridge
+          scons -C godot-cpp platform=linux arch=x86_64 target=template_debug -j$(nproc)
+
+      - name: Build GDExtension Bridge Tests
+        shell: bash
+        run: |
+          scons target=template_debug platform=linux arch=x86_64 tests=bridge -j$(nproc)
 
       - name: Download Godot Engine
         run: |

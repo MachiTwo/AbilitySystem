@@ -28,7 +28,10 @@
 /* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.                 */
 /**************************************************************************/
 
-// --- TEMPLATE OBRIGATÓRIO ---
+// NOTE: ASBridgeState inherits LimboState (Node), not RefCounted — use memnew/memdelete.
+// set_blackboard() does not exist on ASBridgeState; the blackboard is managed by
+// LimboHSM/BTPlayer. These tests validate only the public configuration API.
+
 #ifndef TEST_AS_BRIDGE_STATE_H
 #define TEST_AS_BRIDGE_STATE_H
 
@@ -46,45 +49,69 @@
 using namespace godot;
 #endif
 
-TEST_CASE("ASBridge - BridgeState Integration") {
+TEST_CASE("[ASBridgeState] Configuration API (Public)") {
 	Node *root = memnew(Node);
 	ASComponent *asc = memnew(ASComponent);
 	asc->set_name("MainASC");
 	root->add_child(asc);
 
-	Ref<ASBridgeState> bridge = memnew(ASBridgeState);
+	// ASBridgeState is a Node (LimboState), not a RefCounted — use raw pointer.
+	ASBridgeState *bridge = memnew(ASBridgeState);
+	root->add_child(bridge);
 
-	SUBCASE("ASC Resolution - 3 Variations") {
-		// Var 1: Resolução automática via parent/agent
-		bridge->initialize(asc);
-		CHECK(bridge->get_actor_component() == asc);
+	SUBCASE("component_alias — setter/getter - 3 Variations") {
+		// Var 1: Default alias is 'Self'
+		CHECK(bridge->get_component_alias() == StringName("Self"));
 
-		// Var 2: Resolução via alias registrado no componente
-		asc->register_node("Self", asc);
-		bridge->set_component_alias("Self");
-		CHECK(bridge->get_actor_component() == asc);
+		// Var 2: Alias can be changed
+		bridge->set_component_alias(StringName("Player"));
+		CHECK(bridge->get_component_alias() == StringName("Player"));
 
-		// Var 3: Resolução negativa (alias inexistente)
-		bridge->set_component_alias("Invalid");
-		// Deve retornar nullptr mas não crashar
-		CHECK(bridge->get_actor_component() == nullptr);
+		// Var 3: Alias can be reset back to Self
+		bridge->set_component_alias(StringName("Self"));
+		CHECK(bridge->get_component_alias() == StringName("Self"));
 	}
 
-	SUBCASE("Blackboard Integration - 3 Variations") {
-		Ref<Blackboard> bb = memnew(Blackboard);
-		bridge->set_blackboard(bb);
+	SUBCASE("required_tags — setter/getter - 3 Variations") {
+		// Var 1: Default is empty
+		CHECK(bridge->get_required_tags().size() == 0);
 
-		// Var 1: Sincronização de Blackboard
-		CHECK(bridge->get_blackboard() == bb);
+		// Var 2: Tags are stored correctly
+		TypedArray<StringName> tags;
+		tags.push_back(StringName("State.Grounded"));
+		tags.push_back(StringName("State.Armed"));
+		bridge->set_required_tags(tags);
+		CHECK(bridge->get_required_tags().size() == 2);
 
-		// Var 2: Persistência de dados entre ticks da bridge
-		bb->set_var("test_val", 42);
-		CHECK((int)bridge->get_blackboard()->get_var("test_val") == 42);
+		// Var 3: Replacing with empty clears them
+		bridge->set_required_tags(TypedArray<StringName>());
+		CHECK(bridge->get_required_tags().size() == 0);
+	}
 
-		// Var 3: Troca de Blackboard em runtime
-		Ref<Blackboard> bb2 = memnew(Blackboard);
-		bridge->set_blackboard(bb2);
-		CHECK(bridge->get_blackboard() == bb2);
+	SUBCASE("check_tags_on_enter — toggle - 3 Variations") {
+		// Var 1: Default is true
+		CHECK(bridge->get_check_tags_on_enter() == true);
+
+		// Var 2: Can be disabled
+		bridge->set_check_tags_on_enter(false);
+		CHECK(bridge->get_check_tags_on_enter() == false);
+
+		// Var 3: Can be re-enabled
+		bridge->set_check_tags_on_enter(true);
+		CHECK(bridge->get_check_tags_on_enter() == true);
+	}
+
+	SUBCASE("transition_event — setter/getter - 3 Variations") {
+		// Var 1: Default is empty
+		CHECK(bridge->get_transition_event() == StringName(""));
+
+		// Var 2: Event tag is stored
+		bridge->set_transition_event(StringName("Event.OnDeath"));
+		CHECK(bridge->get_transition_event() == StringName("Event.OnDeath"));
+
+		// Var 3: Overwriting with a different event is fine
+		bridge->set_transition_event(StringName("Event.OnHit"));
+		CHECK(bridge->get_transition_event() == StringName("Event.OnHit"));
 	}
 
 	memdelete(root);

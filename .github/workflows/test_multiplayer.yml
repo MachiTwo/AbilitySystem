@@ -36,7 +36,7 @@ jobs:
 
       - name: Deploy Binaries
         run: |
-          cp -r dist/multiplayer/* .
+          cp -r dist/standard/* .
           cp -r dist/godot/* .
 
       - name: Setup Godot Environment

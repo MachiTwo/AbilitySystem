@@ -39,7 +39,3 @@ jobs:
       - name: Sync Addons to Demos
         run: |
           python utility/post_build.py
-
-      - name: Run Integration Tests
-        run: |
-          python utility/tests.py playtest

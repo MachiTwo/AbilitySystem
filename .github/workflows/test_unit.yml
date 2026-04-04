@@ -31,12 +31,15 @@ jobs:
         with:
           platform: linux
 
-      # DO NOT checkout LimboAI! This guarantees pure AbilitySystem testing.
-      - name: Build GDExtension (Without LimboAI)
+      - name: Build godot-cpp (generates bindings incl. gdvirtual.gen.inc)
         shell: bash
         run: |
-          # SCons automatically disables LimboAI and ASBridge if the 'limboai' folder is missing!
-          scons target=template_debug platform=linux arch=x86_64 tests=unit
+          scons -C godot-cpp platform=linux arch=x86_64 target=template_debug -j$(nproc)
+
+      - name: Build GDExtension Unit Tests
+        shell: bash
+        run: |
+          scons target=template_debug platform=linux arch=x86_64 tests=unit -j$(nproc)
 
       - name: Download Godot Engine
         # Here we would download the matching Godot Engine headless executable
