@@ -53,38 +53,10 @@ jobs:
         id: init
         uses: ./.github/actions/init-version
 
-  test-infrastructure:
-    name: 🧱 Infrastructure
+  tests:
+    name: 🧪 Tests
     needs: [pre-commit, init-version]
-    uses: ./.github/workflows/test_infrastructure.yml
-
-  test-unit:
-    name: 🧪 Unit
-    needs: [test-infrastructure, init-version]
-    uses: ./.github/workflows/test_unit.yml
-    with:
-      godot-bin-name: ${{ needs.test-infrastructure.outputs.godot-bin-name }}
-
-  test-bridge:
-    name: 🧪 Bridge (Integration)
-    needs: [test-infrastructure, init-version]
-    uses: ./.github/workflows/test_bridge.yml
-    with:
-      godot-bin-name: ${{ needs.test-infrastructure.outputs.godot-bin-name }}
-
-  test-singleplayer:
-    name: 🎮 Singleplayer
-    needs: [test-infrastructure, init-version]
-    uses: ./.github/workflows/test_singleplayer.yml
-    with:
-      godot-bin-name: ${{ needs.test-infrastructure.outputs.godot-bin-name }}
-
-  test-multiplayer:
-    name: 🌐 Multiplayer
-    needs: [test-infrastructure, init-version]
-    uses: ./.github/workflows/test_multiplayer.yml
-    with:
-      godot-bin-name: ${{ needs.test-infrastructure.outputs.godot-bin-name }}
+    uses: ./.github/workflows/all_tests.yml
 
   module-builds:
     name: 🏗️ Module Builds
