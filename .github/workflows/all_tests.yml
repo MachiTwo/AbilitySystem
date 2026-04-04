@@ -2,10 +2,6 @@ name: 🧪 All Tests
 
 on:
   workflow_call:
-    inputs:
-      plugin-version:
-        required: true
-        type: string
 
 jobs:
   infrastructure:
