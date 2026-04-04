@@ -37,7 +37,7 @@
 #include "src/bridge/as_bridge_condition_has_tag.h"
 #include "src/limboai/bt/behavior_tree.h"
 #include "src/limboai/bt/tasks/bt_composite.h"
-#include "src/limboai/bt/tasks/bt_sequence.h"
+#include "src/limboai/bt/tasks/composites/bt_sequence.h"
 #include "src/limboai/hsm/limbo_hsm.h"
 #include "src/limboai/hsm/limbo_state.h"
 #include "src/resources/as_ability.h"
