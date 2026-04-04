@@ -38,7 +38,6 @@ jobs:
         run: |
           cp -r dist/multiplayer/* .
           cp -r dist/godot/* .
-          cp -r dist/limboai/limboai addons/
 
       - name: Setup Godot Environment
         shell: bash

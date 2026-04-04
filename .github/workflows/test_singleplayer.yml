@@ -29,7 +29,6 @@ jobs:
         run: |
           cp -r dist/standard/* .
           cp -r dist/godot/* .
-          cp -r dist/limboai/limboai addons/
 
       - name: Setup Environment
         run: |

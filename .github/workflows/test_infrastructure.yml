@@ -84,13 +84,6 @@ jobs:
           cp "$BIN_NAME" dist/godot/
           echo "bin-name=$BIN_NAME" >> "$GITHUB_OUTPUT"
 
-      - name: Download LimboAI Addon
-        shell: bash
-        run: |
-          python utility/download_integration.py --clean
-          mkdir -p dist/limboai
-          cp -r addons/limboai dist/limboai/
-
       - name: Save Test Binaries to Cache
         uses: actions/cache/save@v4
         with:
