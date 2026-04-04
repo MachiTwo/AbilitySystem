@@ -9,18 +9,6 @@
 	<tutorials>
 	</tutorials>
 	<methods>
-		<method name="_is_local_authority" qualifiers="const">
-			<return type="bool" />
-			<description>
-				Check if this component is running on the local authority (client or server).
-			</description>
-		</method>
-		<method name="_is_server" qualifiers="const">
-			<return type="bool" />
-			<description>
-				Check if this component is running on the server.
-			</description>
-		</method>
 		<method name="_on_calculate_custom_magnitude" qualifiers="virtual const">
 			<return type="float" />
 			<param index="0" name="effect_spec" type="ASEffectSpec" />
@@ -216,6 +204,24 @@
 				If [member snapshot_state] is assigned, it also populates that resource for persistent storage or long-term synchronization.
 			</description>
 		</method>
+		<method name="clear_ability_history">
+			<return type="void" />
+			<description>
+				Clears the chronological buffer of ability activation events on this component.
+			</description>
+		</method>
+		<method name="clear_all_history">
+			<return type="void" />
+			<description>
+				Clears every chronological and historical buffer on this component (Tags, Attributes, Abilities, Effects, Cues, and Events).
+			</description>
+		</method>
+		<method name="clear_attribute_history">
+			<return type="void" />
+			<description>
+				Clears the chronological buffer of attribute changes on this component.
+			</description>
+		</method>
 		<method name="clear_conditional_history">
 			<return type="void" />
 			<description>
@@ -258,24 +264,6 @@
 				Clears all short-term tag history buffers (NAME and CONDITIONAL) on the component.
 			</description>
 		</method>
-		<method name="clear_ability_history">
-			<return type="void" />
-			<description>
-				Clears the chronological buffer of ability activation events on this component.
-			</description>
-		</method>
-		<method name="clear_all_history">
-			<return type="void" />
-			<description>
-				Clears every chronological and historical buffer on this component (Tags, Attributes, Abilities, Effects, Cues, and Events).
-			</description>
-		</method>
-		<method name="clear_attribute_history">
-			<return type="void" />
-			<description>
-				Clears the chronological buffer of attribute changes on this component.
-			</description>
-		</method>
 		<method name="confirm_ability_activation">
 			<return type="void" />
 			<param index="0" name="tag" type="StringName" />
@@ -300,50 +288,6 @@
 				Searches the archetype container and all currently unlocked abilities to find the [ASEffect] resource associated with the given tag.
 			</description>
 		</method>
-		<method name="get_active_abilities" qualifiers="const">
-			<return type="ASAbilitySpec[]" />
-			<description>
-				Returns a list of all abilities currently executing on this actor.
-			</description>
-		</method>
-		<method name="get_ability_history" qualifiers="const">
-			<return type="Dictionary[]" />
-			<param index="0" name="lookback_sec" type="float" default="1.0" />
-			<description>
-				Retrieves the buffer of ability lifecycle events (Started, Finished, etc.) within the requested timeframe. Each entry is a [Dictionary] representing an ASAbilityHistorical record.
-			</description>
-		</method>
-		<method name="get_ability_history_size" qualifiers="const">
-			<return type="int" />
-			<description>
-				Returns the current size of the ability history buffer.
-			</description>
-		</method>
-		<method name="get_active_cues" qualifiers="const">
-			<return type="ASCueSpec[]" />
-			<description>
-				Returns a list of all active feedback cues (VFX/SFX) currently running on this actor.
-			</description>
-		</method>
-		<method name="get_active_effects" qualifiers="const">
-			<return type="ASEffectSpec[]" />
-			<description>
-				Returns a list of all active effect instances (buffs, debuffs, etc.) applied to this actor.
-			</description>
-		</method>
-		<method name="get_effect_history" qualifiers="const">
-			<return type="Dictionary[]" />
-			<param index="0" name="lookback_sec" type="float" default="1.0" />
-			<description>
-				Retrieves the buffer of effect lifecycle events within the requested timeframe. Each entry is a [Dictionary] representing an ASEffectHistorical record.
-			</description>
-		</method>
-		<method name="get_effect_history_size" qualifiers="const">
-			<return type="int" />
-			<description>
-				Returns the current size of the effect history buffer.
-			</description>
-		</method>
 		<method name="get_ability_cooldown_preview" qualifiers="const">
 			<return type="float" />
 			<param index="0" name="tag" type="StringName" />
@@ -364,6 +308,37 @@
 			<param index="0" name="tag" type="StringName" />
 			<description>
 				Retrieves the base duration defined in the ability resource catalog.
+			</description>
+		</method>
+		<method name="get_ability_history" qualifiers="const">
+			<return type="Dictionary[]" />
+			<param index="0" name="lookback_sec" type="float" default="1.0" />
+			<description>
+				Retrieves the buffer of ability lifecycle events (Started, Finished, etc.) within the requested timeframe. Each entry is a [Dictionary] representing an ASAbilityHistorical record.
+			</description>
+		</method>
+		<method name="get_ability_history_size" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the current size of the ability history buffer.
+			</description>
+		</method>
+		<method name="get_active_abilities" qualifiers="const">
+			<return type="ASAbilitySpec[]" />
+			<description>
+				Returns a list of all abilities currently executing on this actor.
+			</description>
+		</method>
+		<method name="get_active_cues" qualifiers="const">
+			<return type="ASCueSpec[]" />
+			<description>
+				Returns a list of all active feedback cues (VFX/SFX) currently running on this actor.
+			</description>
+		</method>
+		<method name="get_active_effects" qualifiers="const">
+			<return type="ASEffectSpec[]" />
+			<description>
+				Returns a list of all active effect instances (buffs, debuffs, etc.) applied to this actor.
 			</description>
 		</method>
 		<method name="get_animation_player" qualifiers="const">
@@ -452,18 +427,18 @@
 				Returns the number of entries currently stored in the conditional history buffer.
 			</description>
 		</method>
-		<method name="get_cooldown_remaining" qualifiers="const">
-			<return type="float" />
-			<param index="0" name="ability_tag" type="StringName" />
-			<description>
-				Returns the time remaining for a specific cooldown tag.
-			</description>
-		</method>
 		<method name="get_cooldown_percent" qualifiers="const">
 			<return type="float" />
 			<param index="0" name="ability_tag" type="StringName" />
 			<description>
 				Returns the completion ratio of the cooldown (remaining / initial duration). Returns 0.0 if not on cooldown.
+			</description>
+		</method>
+		<method name="get_cooldown_remaining" qualifiers="const">
+			<return type="float" />
+			<param index="0" name="ability_tag" type="StringName" />
+			<description>
+				Returns the time remaining for a specific cooldown tag.
 			</description>
 		</method>
 		<method name="get_cue_history" qualifiers="const">
@@ -484,6 +459,19 @@
 			<param index="0" name="tag" type="StringName" />
 			<description>
 				Returns the cue resource associated with the specified tag.
+			</description>
+		</method>
+		<method name="get_effect_history" qualifiers="const">
+			<return type="Dictionary[]" />
+			<param index="0" name="lookback_sec" type="float" default="1.0" />
+			<description>
+				Retrieves the buffer of effect lifecycle events within the requested timeframe. Each entry is a [Dictionary] representing an ASEffectHistorical record.
+			</description>
+		</method>
+		<method name="get_effect_history_size" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the current size of the effect history buffer.
 			</description>
 		</method>
 		<method name="get_event_history_size" qualifiers="const">
@@ -694,6 +682,12 @@
 			<param index="0" name="tag" type="StringName" />
 			<description>
 				Requests the server to activate an ability. Used for client-side prediction and RPC communication.
+			</description>
+		</method>
+		<method name="rollback_to_tick">
+			<return type="void" />
+			<param index="0" name="tick" type="int" />
+			<description>
 			</description>
 		</method>
 		<method name="set_animation_player">

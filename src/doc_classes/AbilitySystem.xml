@@ -134,14 +134,11 @@
 		</signal>
 	</signals>
 	<constants>
-		<constant name="NAME" value="0" enum="ASTagType">
-			Identity tags (Ability, Effect, Cue, Attribute).
+		<constant name="ASTagType::NAME" value="0" enum="ASTagType">
 		</constant>
-		<constant name="CONDITIONAL" value="1" enum="ASTagType">
-			Status/State tags (on_fire, stunned, moving).
+		<constant name="ASTagType::CONDITIONAL" value="1" enum="ASTagType">
 		</constant>
-		<constant name="EVENT" value="2" enum="ASTagType">
-			Transient signals/events tags (Hit, Impact, Death).
+		<constant name="ASTagType::EVENT" value="2" enum="ASTagType">
 		</constant>
 	</constants>
 </class>

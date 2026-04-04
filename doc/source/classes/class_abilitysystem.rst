@@ -93,29 +93,41 @@ Enumerations
 
 enum **ASTagType**: :ref:`🔗<enum_AbilitySystem_ASTagType>`
 
-.. _class_AbilitySystem_constant_NAME:
+.. _class_AbilitySystem_constant_ASTagType::NAME:
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **NAME** = ``0``
+:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **ASTagType::NAME** = ``0``
 
-Identity tags (Ability, Effect, Cue, Attribute).
+.. container:: contribute
 
-.. _class_AbilitySystem_constant_CONDITIONAL:
+	There is currently no description for this enum. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
 
-.. rst-class:: classref-enumeration-constant
 
-:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **CONDITIONAL** = ``1``
 
-Status/State tags (on_fire, stunned, moving).
-
-.. _class_AbilitySystem_constant_EVENT:
+.. _class_AbilitySystem_constant_ASTagType::CONDITIONAL:
 
 .. rst-class:: classref-enumeration-constant
 
-:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **EVENT** = ``2``
+:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **ASTagType::CONDITIONAL** = ``1``
 
-Transient signals/events tags (Hit, Impact, Death).
+.. container:: contribute
+
+	There is currently no description for this enum. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+
+
+.. _class_AbilitySystem_constant_ASTagType::EVENT:
+
+.. rst-class:: classref-enumeration-constant
+
+:ref:`ASTagType<enum_AbilitySystem_ASTagType>` **ASTagType::EVENT** = ``2``
+
+.. container:: contribute
+
+	There is currently no description for this enum. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+
 
 .. rst-class:: classref-section-separator
 
