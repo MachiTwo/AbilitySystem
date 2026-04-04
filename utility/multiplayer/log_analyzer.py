@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import re
 import argparse
+import sys
 from pathlib import Path
 
 
@@ -22,9 +23,19 @@ def main():
     args = parser.parse_args()
 
     log_path = Path(args.log_dir)
+
+    # Validate log directory with detailed error message
     if not log_path.exists():
-        print(f"Error: Log directory {args.log_dir} does not exist.")
-        return
+        print(f"❌ Error: Log directory '{args.log_dir}' does not exist")
+        print(f"   Expected logs in: {log_path.absolute()}")
+        sys.exit(1)
+
+    # Check if any logs exist
+    log_files = list(log_path.glob("*.log"))
+    if not log_files:
+        print(f"⚠️  Warning: No .log files found in '{args.log_dir}'")
+        print("   Continuing with empty analysis...")
+        print(f"   Log directory: {log_path.absolute()}")
 
     results = {}
     total_passed = 0
@@ -32,8 +43,10 @@ def main():
 
     # regex for doctest output: "passed: 37 | failed: 0"
     doctest_re = re.compile(r"passed:\s+(\d+)\s+\|\s+failed:\s+(\d+)")
+    # TODO: Implement sync_error detection when mp_test_runner.gd adds [SYNC_ERROR] logging
+    # sync_error_re = re.compile(r"\[SYNC_ERROR\].*")
 
-    for log_file in log_path.glob("*.log"):
+    for log_file in sorted(log_path.glob("*.log")):
         player_match = re.search(r"player_(\d+)", log_file.name)
         player_id = player_match.group(1) if player_match else "unknown"
 

@@ -21,12 +21,14 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Demo Ability System"
-run/main_scene="res://scenes/level.tscn"
+run/main_scene="res://ui/user_registration.tscn"
 config/features=PackedStringArray("4.6", "Forward Plus")
 
 [autoload]
 
+GameData="res://autoload/GameData.gd"
 GameMachine="res://autoload/GameMachine.gd"
+MultiplayerGameManager="res://autoload/MultiplayerGameManager.gd"
 
 [input]
 

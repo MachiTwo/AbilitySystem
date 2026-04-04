@@ -1,26 +1,13 @@
-class_name ItemData
 extends Resource
+## Placeholder: Old ItemData class
+## Migrate to new Item.gd in inventory/
 
-@export var display_name: String = "Item"
-@export var icon: Texture2D
+class_name ItemData
 
-@export_group("Behavior")
-## Composição de estados (Move, Attack, Interactive) associada a este item.
-@export var compose: Compose
-
-## Habilidade baseada no Ability System que este item desbloqueia (Opcional, se quiser dar uma habilidade única).
-@export var ability: ASAbility
-
-## Tag condicional que este item concede para habilitar habilidades específicas (ex: Weapon.Sword).
-@export var weapon_tag: StringName = &"weapon.unarmed"
-
-## Dicionário de modificadores de contexto ao equipar este item.
-## Ex: { "Weapon": BehaviorStates.Weapon.KATANA }
-@export var context_modifiers: Dictionary = {
-	"Weapon": 0 # BehaviorStates.Weapon.ANY/NONE
-}
-
-func get_context_modifier(category: String) -> int:
-	if context_modifiers.has(category):
-		return context_modifiers[category]
-	return -1 # Not found
+var id: String = ""
+var display_name: String = ""
+var description: String = ""
+var icon: Texture2D
+var quantity: int = 1
+var max_stack: int = 1
+var weapon_tag: String = ""

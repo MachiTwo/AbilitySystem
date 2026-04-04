@@ -1,0 +1,81 @@
+extends Control
+## Pause menu - shown when player presses ESC
+
+@onready var resume_button: Button = $VBoxContainer/ResumeButton
+@onready var open_lan_button: Button = $VBoxContainer/OpenLanButton
+@onready var close_server_button: Button = $VBoxContainer/CloseServerButton
+@onready var quit_button: Button = $VBoxContainer/QuitButton
+@onready var status_label: Label = $VBoxContainer/StatusLabel
+
+var is_open: bool = false
+var lan_is_open: bool = false
+
+func _ready() -> void:
+	resume_button.pressed.connect(_on_resume_pressed)
+	open_lan_button.pressed.connect(_on_open_lan_pressed)
+	close_server_button.pressed.connect(_on_close_server_pressed)
+	quit_button.pressed.connect(_on_quit_pressed)
+
+	visible = false
+	_update_buttons()
+
+func _process(_delta: float) -> void:
+	if Input.is_action_just_pressed("ui_cancel"):
+		if visible:
+			_on_resume_pressed()
+		else:
+			_show_pause_menu()
+
+func _show_pause_menu() -> void:
+	visible = true
+	is_open = true
+	get_tree().paused = true
+	resume_button.grab_focus()
+	_update_buttons()
+
+func _on_resume_pressed() -> void:
+	visible = false
+	is_open = false
+	get_tree().paused = false
+
+func _on_open_lan_pressed() -> void:
+	var game_data = get_node_or_null("/root/GameData")
+	if not game_data or game_data.game_mode != "singleplayer":
+		status_label.text = "Only available in singleplayer mode"
+		return
+
+	print("[PauseMenu] Opening world to LAN...")
+	status_label.text = ""
+	lan_is_open = true
+	_update_buttons()
+
+	# TODO: Call MultiplayerGameManager.open_to_lan() when implemented
+	status_label.text = "World opened to LAN! (Not yet fully implemented)"
+
+func _on_close_server_pressed() -> void:
+	print("[PauseMenu] Closing LAN server...")
+	lan_is_open = false
+	_update_buttons()
+
+	# TODO: Call MultiplayerGameManager.close_lan_server() when implemented
+	status_label.text = ""
+
+func _on_quit_pressed() -> void:
+	print("[PauseMenu] Quitting to menu...")
+	get_tree().paused = false
+	var game_data = get_node_or_null("/root/GameData")
+	if game_data and game_data.has_method("reset"):
+		game_data.reset()
+	get_tree().change_scene_to_file("res://ui/main_menu.tscn")
+
+func _update_buttons() -> void:
+	"""Update button visibility based on game state"""
+	var game_data = get_node_or_null("/root/GameData")
+	var mode = game_data.game_mode if game_data else ""
+	match mode:
+		"singleplayer":
+			open_lan_button.visible = not lan_is_open
+			close_server_button.visible = lan_is_open
+		"multiplayer_server", "multiplayer_client":
+			open_lan_button.visible = false
+			close_server_button.visible = false

@@ -1,41 +1,6 @@
-# Plano de Implementação: Correções C++ Framework e Limpeza Demo
+# Limpeza da Demo Layer
 
-**Status**: Pronto para execução
-**Data**: 2026-04-04
-
----
-
-## FASE 1: Correções C++ Framework (✅ CONCLUÍDO)
-
-### 1.1 Incluir Header Time para Build Module
-
-**Problema**: `'Time' has not been declared` em 14 localizações de as_component.cpp
-
-**Solução Implementada**:
-
-- ✅ Adicionado `#include "core/os/time.h"` ao bloco else (module build) em as_component.cpp
-- ✅ Envolvido todos os `Time::get_singleton()` com ifdef guards:
-  - `#ifdef ABILITY_SYSTEM_GDEXTENSION` → usar `Time::get_singleton()`
-  - `#else` → usar `OS::get_singleton()`
-- ✅ Corrigido em 8 funções:
-  1. `set_attribute_base_value_by_tag()` - linha 481
-  2. `_record_ability_event()` - linha 2561
-  3. `_record_effect_event()` - linha 2579
-  4. `_record_cue_event()` - linha 2597
-  5. `_record_name_tag_event()` - linha 2613
-  6. `_record_conditional_tag_event()` - linha 2630
-  7. `_record_event_tag_event()` - linha 2648
-  8. `get_attribute_history()`, `get_ability_history()`, `get_effect_history()`, `get_cue_history()`
-
-**Verificação**: Todos os 14 `Time::get_singleton()` foram envolvidos com ifdef ou já estavam protegidos.
-
-**Status**: ✅ CONCLUÍDO
-
----
-
-## FASE 2: Limpeza da Demo Layer
-
-### 2.1 Análise e Remoção da Pasta Gameplay
+## 1 Análise e Remoção da Pasta Gameplay
 
 **Descobertas**:
 
@@ -54,10 +19,10 @@
 **Ação**:
 
 1. Deletar pasta `demo/gameplay/` completamente
-2. Atualizar `demo/autoload/GameMachine.gd` para não estender classe legada
-3. Remover cache de classes globais do Godot
+   Atualizar `demo/autoload/GameMachine.gd` para não estender classe legada
+2. Remover cache de classes globais do Godot
 
-### 2.2 Refatoração de Markdowns da Demo
+## 2 Refatoração de Markdowns da Demo
 
 **Arquivos Identificados**:
 
@@ -77,12 +42,12 @@ demo/
 
 **Estratégia de Refatoração**:
 
-#### 2.2.1 Remover/Reorganizar Markdowns Legados
+### 1 Remover/Reorganizar Markdowns Legados
 
 - ❌ Deletar: `BehaviorStateEngineering.md` (sistema descontinuado)
 - ❓ Revisar: `GEMINI.md`, `HashMap.md`, `StateIndex.md` (determinar relevância)
 
-#### 2.2.2 Criar Novo README para Ability System Demo
+### 2 Criar Novo README para Ability System Demo
 
 **Arquivo**: `demo/ABILITY_SYSTEM_DEMO.md`
 
@@ -91,7 +56,7 @@ Conteúdo esperado:
 ```markdown
 # Ability System - Demo Scene
 
-## Overview
+# Overview
 
 A cena de demo demonstra como usar o Ability System para:
 
@@ -100,16 +65,16 @@ A cena de demo demonstra como usar o Ability System para:
 - Rastreamento de estado via tags (NAME, CONDITIONAL, EVENT)
 - UI responsiva com sinais tag_changed
 
-## Arquitetura
+# Arquitetura
 
-### Player Component (demo/player/)
+## Player Component (demo/player/)
 
 - `player.tscn` - Cena principal com CharacterBody2D
 - `player.gd` - Lógica do player
 - `player_animations.tres` - Biblioteca de animações
 - `resources/hotbar.tres` - Sistema de inventário
 
-### UI Component (demo/ui/)
+## UI Component (demo/ui/)
 
 - `hud.tscn` - HUD principal
 - `hud.gd` - Rastreamento de estado e atributos
@@ -118,41 +83,41 @@ A cena de demo demonstra como usar o Ability System para:
   - Estado atual colorizado
   - Histórico de ativações
 
-### Resources (demo/resources/)
+## Resources (demo/resources/)
 
 - `abilities/` - Definições de habilidades (ability\_\*.tres)
 - `attributes/` - Definições de atributos (attr\_\*.tres)
 - `effects/` - Definições de efeitos (effect\_\*.tres)
 - `packages/` - Pacotes de entrega (package\_\*.tres)
 
-## Key Concepts
+# Key Concepts
 
-### Tag System
+## Tag System
 
 - **NAME**: Tags persistentes (weapon.unarmed, weapon.sword)
 - **CONDITIONAL**: Tags condicionais que podem ser removidas
 - **EVENT**: Tags de eventos únicos
 
-### Ability Flow
+## Ability Flow
 
 1. Player input → ASComponent.try_activate_ability_by_tag()
-2. Habilidade executa fases
-3. Efeitos são disparados (ASDelivery, ASPackage)
-4. Sinais são emitidos (ability_activated, tag_changed)
+   Habilidade executa fases
+2. Efeitos são disparados (ASDelivery, ASPackage)
+3. Sinais são emitidos (ability_activated, tag_changed)
 
-### UI Binding
+## UI Binding
 
 - HUD se conecta via `asc.tag_changed.connect(_on_asc_tag_changed)`
 - Atualiza estado de forma reativa (não polling)
 - Formata tags para exibição legível
 
-## Running the Demo
+# Running the Demo
 
 1. Abra `demo/demo.tscn`
-2. Pressione Play
-3. WASD para mover, Space para pular, Mouse Click para atacar
+   Pressione Play
+2. WASD para mover, Space para pular, Mouse Click para atacar
 
-## Debugging
+# Debugging
 
 Console prints adicionados em:
 
@@ -160,7 +125,7 @@ Console prints adicionados em:
 - `demo/player/player.gd`: "[State] Activating motion.\*", "[Tag Color]"
 ```
 
-#### 2.2.3 Atualizar README Principal
+### 3 Atualizar README Principal
 
 **Arquivo**: `demo/README.md`
 
@@ -171,19 +136,19 @@ Conteúdo:
 
 Esta pasta contém uma cena de demonstração funcional do Ability System.
 
-## Quick Start
+# Quick Start
 
 - Cena principal: `demo.tscn`
 - Cena do player: `player/player.tscn`
 - HUD: `ui/hud.tscn`
 
-## Documentação Completa
+# Documentação Completa
 
 - [Ability System Demo Guide](ABILITY_SYSTEM_DEMO.md)
 - [Framework Documentation](../src/doc_classes/)
 - [Business Rules](../BUSINESS_RULES.pt.md)
 
-## Estrutura
+# Estrutura
 
 - `player/` - Player controller e assets
 - `ui/` - Interface de usuário
@@ -191,7 +156,7 @@ Esta pasta contém uma cena de demonstração funcional do Ability System.
 - `autoload/` - Autoloads da demo
 ```
 
-### 2.3 Remover Dependências de Camera e Animation Legadas
+## 3 Remover Dependências de Camera e Animation Legadas
 
 **Verificar**:
 
@@ -207,9 +172,9 @@ grep -r "extends Machine" demo --include="*.gd"
 
 ---
 
-## FASE 3: Resolução de Erros de Teste GDExtension
+# FASE 3: Resolução de Erros de Teste GDExtension
 
-### 3.1 Protected Method Access Errors
+## 3.1 Protected Method Access Errors
 
 **Problema**: Unit tests acessam métodos/construtores protegidos de ASComponent
 
@@ -218,46 +183,46 @@ grep -r "extends Machine" demo --include="*.gd"
 **Ação Necessária**:
 
 1. Revisar erros específicos do build GDExtension
-2. Adicionar friend declarations adicionais se necessário:
+   Adicionar friend declarations adicionais se necessário:
    ```cpp
    // em as_component.h
    friend class TestASComponent;
    friend class TestASComponentRollback;
    ```
-3. Ou refatorar testes para não acessar métodos protegidos diretamente
+2. Ou refatorar testes para não acessar métodos protegidos diretamente
 
 ---
 
-## FASE 4: Validação de Estado do Player
+# FASE 4: Validação de Estado do Player
 
-### 4.1 Verificação de Colorização
+## 4.1 Verificação de Colorização
 
 **Status Atual**: Player não coloriza baseado em estado (bug não resolvido)
 
 **Próximas Ações**:
 
 1. Verificar se `tag_changed` signal está disparando
-2. Verificar se `_on_tag_changed()` está sendo chamado
-3. Adicionar logs adicionais em `demo/player/player.gd`
+   Verificar se `_on_tag_changed()` está sendo chamado
+2. Adicionar logs adicionais em `demo/player/player.gd`
 
 ---
 
-## Ordem de Execução
+# Ordem de Execução
 
-### Imediato (Build Blocker):
+## Imediato (Build Blocker):
 
 1. ✅ **CONCLUÍDO**: Compilar C++ com Time includes
-2. **EM PROGRESSO**: Executar GHA build para confirmar sucesso
-3. ⏳ **PENDENTE**: Resolver testes GDExtension (se houver erros)
+   **EM PROGRESSO**: Executar GHA build para confirmar sucesso
+2. ⏳ **PENDENTE**: Resolver testes GDExtension (se houver erros)
 
-### Curto Prazo (Demo Cleanup):
+## Curto Prazo (Demo Cleanup):
 
 4. Deletar `demo/gameplay/`
 5. Refatorar `demo/autoload/GameMachine.gd`
 6. Refatorar markdowns da demo
 7. Executar demo e validar funcionamento
 
-### Médio Prazo (Polish):
+## Médio Prazo (Polish):
 
 8. Debugar player colorization
 9. Documentar padrões de uso do Ability System
@@ -265,27 +230,27 @@ grep -r "extends Machine" demo --include="*.gd"
 
 ---
 
-## Checklist de Implementação
+# Checklist de Implementação
 
-### C++ Framework (✅ CONCLUÍDO)
+## C++ Framework (✅ CONCLUÍDO)
 
 - [x] Adicionar include `core/os/time.h`
 - [x] Envolver Time::get_singleton() com ifdef
 - [x] Compilação local validada
 
-### Demo Layer - Fase 1
+## Demo Layer - Fase 1
 
 - [ ] Deletar `demo/gameplay/`
 - [ ] Remover cache de classes globais Godot
 - [ ] Atualizar `GameMachine.gd` ou remover se necessário
 
-### Demo Layer - Fase 2
+## Demo Layer - Fase 2
 
 - [ ] Criar `demo/ABILITY_SYSTEM_DEMO.md`
 - [ ] Atualizar `demo/README.md`
 - [ ] Remover/reorganizar markdowns legados
 
-### Validação
+## Validação
 
 - [ ] GHA build passou (module + gdextension)
 - [ ] Demo executa sem erros
@@ -294,36 +259,36 @@ grep -r "extends Machine" demo --include="*.gd"
 
 ---
 
-## Arquivos Afetados
+# Arquivos Afetados
 
-### C++
+## C++
 
 - `src/scene/as_component.cpp` ✅
 
-### GDScript (Demo)
+## GDScript (Demo)
 
 - `demo/autoload/GameMachine.gd` ⏳
 - `demo/ui/hud.gd` ✅ (já refatorado na sessão anterior)
 - `demo/player/player.gd` ✅ (já refatorado)
 
-### Markdown
+## Markdown
 
 - `demo/README.md` ⏳
 - `demo/ABILITY_SYSTEM_DEMO.md` ⏳ (criar novo)
 - `demo/BehaviorStateEngineering.md` ❌ (deletar)
 
-### Folders
+## Folders
 
 - `demo/gameplay/` ❌ (deletar completamente)
 
 ---
 
-## Notas Importantes
+# Notas Importantes
 
 1. **GameMachine**: Pode ser mantido se refatorado para NÃO estender Machine (usar simple Node ou Control)
-2. **Tag System**: Funciona corretamente - HUD foi corrigido em sessão anterior
-3. **C++ Compilation**: Agora deve passar em module e gdextension targets
-4. **Tests**: Podem precisar de refatoração para acessar public API em vez de protegida
+   **Tag System**: Funciona corretamente - HUD foi corrigido em sessão anterior
+2. **C++ Compilation**: Agora deve passar em module e gdextension targets
+3. **Tests**: Podem precisar de refatoração para acessar public API em vez de protegida
 
 ---
 

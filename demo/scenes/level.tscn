@@ -181,8 +181,7 @@ offset_top = 4.0
 offset_right = 1.0
 offset_bottom = 4.0
 
-[node name="Player" parent="." unique_id=1279872675 instance=ExtResource("2_70hee")]
-position = Vector2(567, 491)
+[node name="Players" type="Node" parent="." unique_id=1279872675]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1039054140]
 position = Vector2(576, 324)

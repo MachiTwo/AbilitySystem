@@ -19,5 +19,5 @@
 
 [resource]
 script = ExtResource("1_compose")
-move_states = Array[ExtResource("1_45ifw")]([ExtResource("2_idle"), ExtResource("3_walk"), ExtResource("4_run"), ExtResource("5_jump"), ExtResource("6_fall"), ExtResource("7_dash"), ExtResource("15_hyper"), ExtResource("13_hurt"), ExtResource("14_die")])
-attack_states = Array[ExtResource("1_45ifw")]([ExtResource("8_atk1"), ExtResource("9_atk2"), ExtResource("10_atk3"), ExtResource("11_heavy"), ExtResource("12_dash_atk")])
+move_states = Array[Resource]([ExtResource("2_idle"), ExtResource("3_walk"), ExtResource("4_run"), ExtResource("5_jump"), ExtResource("6_fall"), ExtResource("7_dash"), ExtResource("15_hyper"), ExtResource("13_hurt"), ExtResource("14_die")])
+attack_states = Array[Resource]([ExtResource("8_atk1"), ExtResource("9_atk2"), ExtResource("10_atk3"), ExtResource("11_heavy"), ExtResource("12_dash_atk")])

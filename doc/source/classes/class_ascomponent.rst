@@ -846,7 +846,7 @@ Clears the chronological buffer of attribute changes on this component.
 
 |void| **clear_conditional_history**\ (\ ) :ref:`🔗<class_ASComponent_method_clear_conditional_history>`
 
-Clears the short-term historical buffer for :ref:`AbilitySystem.CONDITIONAL<class_AbilitySystem_constant_CONDITIONAL>` tags on this component.
+Clears the short-term historical buffer for :ref:`ASTagUtils.CONDITIONAL<class_ASTagUtils_constant_CONDITIONAL>` tags on this component.
 
 .. rst-class:: classref-item-separator
 
@@ -906,7 +906,7 @@ Clears all events from the historical buffer.
 
 |void| **clear_name_history**\ (\ ) :ref:`🔗<class_ASComponent_method_clear_name_history>`
 
-Clears the short-term historical buffer for :ref:`AbilitySystem.NAME<class_AbilitySystem_constant_NAME>` tags on this component.
+Clears the short-term historical buffer for :ref:`ASTagUtils.NAME<class_ASTagUtils_constant_NAME>` tags on this component.
 
 .. rst-class:: classref-item-separator
 

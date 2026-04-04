@@ -54,10 +54,21 @@ jobs:
           find addons -name '*.so' -exec chmod +x {} \; 2>/dev/null || true
           find utility/multiplayer/demo/addons -name '*.so' -exec chmod +x {} \; 2>/dev/null || true
 
+      - name: Build Demo Executable (Headless)
+        env:
+          GODOT_BIN: ${{ env.GODOT_BIN }}
+        run: |
+          mkdir -p bin/demo
+          ${GODOT_BIN} --headless --path demo --export-debug "Linux/X11" bin/demo/demo.x86_64 2>&1 | tee build.log
+          chmod +x bin/demo/demo.x86_64
+          echo "Demo executable built: $(ls -lh bin/demo/demo.x86_64)"
+
       - name: Run Multiplayer Test (Client ${{ matrix.player_id }})
+        timeout-minutes: 5
         env:
           MP_GHA_PLAYER_ID: ${{ matrix.player_id }}
           MP_SERVER_PORT: 7777
+          MP_SERVER_HOST: 127.0.0.1
         run: |
           pip install python-dotenv
           python utility/multiplayer/runner.py --player-id ${{ matrix.player_id }}

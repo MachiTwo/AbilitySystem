@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://yvm63v5fnktv" path="res://player/player.gd" id="1_eki5k"]
 [ext_resource type="ASAbility" path="res://resources/abilities/ability_idle.tres" id="3_b8hi5"]
-[ext_resource type="Resource" path="res://player/resources/hotbar.tres" id="3_stemn"]
 [ext_resource type="ASAbility" path="res://resources/abilities/ability_walk.tres" id="4_2uvqg"]
 [ext_resource type="ASAbility" path="res://resources/abilities/ability_run.tres" id="5_1s1yo"]
 [ext_resource type="AnimationLibrary" path="res://player/animations/player_animations.tres" id="5_eki5k"]
@@ -52,7 +51,6 @@ size = Vector2(60, 60)
 [node name="Player" type="CharacterBody2D" unique_id=1283876318 node_paths=PackedStringArray("asc") groups=["Player"]]
 script = ExtResource("1_eki5k")
 asc = NodePath("ASComponent")
-hotbar = ExtResource("3_stemn")
 
 [node name="ASComponent" type="ASComponent" parent="." unique_id=894956273]
 container = SubResource("ASContainer_5ejfk")
@@ -71,6 +69,13 @@ color = Color(0.7850983, 0.7861089, 0.7607244, 1)
 libraries/ = ExtResource("5_eki5k")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=837778900]
+
+[node name="NameLabel" type="Label" parent="." unique_id=298471042]
+offset_top = -35.0
+offset_bottom = -25.0
+text = "Player"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 10
 
 [node name="Hitbox" type="Area2D" parent="." unique_id=46514287]
 

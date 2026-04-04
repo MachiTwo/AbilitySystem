@@ -1,8 +1,8 @@
-[gd_resource type="Resource" script_class="MoveData" format=3 uid="uid://dscsvdp4hklnc"]
+[gd_resource type="Resource" script_class="MoveData" format=3]
 
-[ext_resource type="Script" uid="uid://586x71cr8v0p" path="res://gameplay/resources/MoveData.gd" id="1_move_data"]
-[ext_resource type="Script" uid="uid://bp3jpp0t30au5" path="res://gameplay/core/State.gd" id="1_xdkp6"]
-[ext_resource type="Resource" uid="uid://vqitp2461j3b" path="res://player/resources/states/unarmed/Dash.tres" id="2_dash"]
+[ext_resource type="Script" path="res://gameplay/resources/MoveData.gd" id="1_move_data"]
+[ext_resource type="Script" path="res://gameplay/core/State.gd" id="1_xdkp6"]
+[ext_resource type="Resource" path="res://player/resources/states/unarmed/Dash.tres" id="2_dash"]
 
 [sub_resource type="Animation" id="Animation_hyper"]
 resource_name = "Jump"
@@ -20,7 +20,7 @@ context_cooldown_filter = 1
 cost_type = 1
 cost_amount = 15
 priority_override = 5
-previous_states = Array[ExtResource("1_xdkp6")]([ExtResource("2_dash")])
+previous_states = Array[Resource]([ExtResource("2_dash")])
 entry_requirements = {
 "attack": 0,
 "effect": 0,

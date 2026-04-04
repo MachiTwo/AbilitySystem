@@ -121,6 +121,9 @@ var jump_buffer_time: float:
 	get: return _attr(&"jump_buffer_time")
 
 func _ready() -> void:
+	# Initialize NameLabel if this is the local player
+	_setup_name_label()
+
 	if not asc:
 		asc = find_child("ASComponent") as ASComponent
 
@@ -148,28 +151,46 @@ func _ready() -> void:
 			_delivery.source_component = asc
 
 	# Inicializa Hotbar
+	if not hotbar:
+		# Create hotbar if not assigned in inspector
+		hotbar = Hotbar.new()
+		add_child(hotbar)
+
 	if hotbar:
 		if not hotbar.is_connected("selection_changed", _on_hotbar_selection_changed):
 			hotbar.connect("selection_changed", _on_hotbar_selection_changed)
-		_on_hotbar_selection_changed(hotbar.get_current_item())
+		# Initialize hotbar with inventory reference
+		# TODO: Get inventory from player or parent
 
 	call_deferred("_activate_initial_state")
 
-func _on_hotbar_selection_changed(item: Resource) -> void:
-	if not asc: return
-	
+func _setup_name_label() -> void:
+	"""Initialize the NameLabel with player name"""
+	var name_label = find_child("NameLabel") as Label
+	if name_label:
+		var game_data = get_node_or_null("/root/GameData")
+		if game_data:
+			name_label.text = game_data.player_name
+		else:
+			name_label.text = "Player"
+
+func _on_hotbar_selection_changed(slot: int) -> void:
+	if not asc or not hotbar: return
+
+	var item = hotbar.get_item(slot)
+
 	# 1. Limpa todas as tags de arma atuais (Lowercase weapon.*)
 	var current_tags = asc.get_tags()
 	for tag in current_tags:
 		if String(tag).begins_with("weapon."):
 			asc.remove_tag(tag)
-	
+
 	# 2. Concede a nova tag baseada no item
 	if item and "weapon_tag" in item and not item.weapon_tag.is_empty():
 		var w_tag = String(item.weapon_tag).to_lower()
 		asc.add_tag(StringName(w_tag))
 		print("[Player] Weapon Swapped: ", w_tag)
-	
+
 	# 3. Unlock de habilidade única (opcional)
 	if item and "ability" in item and item.ability is ASAbility:
 		asc.unlock_ability_by_resource(item.ability)
@@ -438,9 +459,13 @@ func _update_context_tags() -> void:
 			asc.add_tag(&"physics.air")
 
 func _on_tag_changed(_tag: StringName, _added: bool) -> void:
-	if not asc: return
+	if not asc:
+		print("[ERROR] _on_tag_changed: ASComponent é null!")
+		return
 
 	var current_tags = asc.get_tags()
+	print("[DEBUG] _on_tag_changed called - Current tags: %s" % [current_tags])
+
 	var best_color = TAG_COLORS.get(&"motion.idle", Color.WHITE)
 
 	# Encontra a tag ativa com maior prioridade (última na lista de TAG_COLORS)
@@ -450,6 +475,72 @@ func _on_tag_changed(_tag: StringName, _added: bool) -> void:
 			print("[Tag Color] %s → Color: %s" % [t, best_color])
 
 	if _sprite:
+		print("[DEBUG] Aplicando cor ao _sprite: %s" % [best_color])
 		_sprite.modulate = best_color
 	else:
-		print("[ERROR] _sprite é null!")
+		print("[ERROR] _sprite é null! Node path: %s" % [$ColorRect])
+		# Tenta encontrar o node novamente
+		if has_node("ColorRect"):
+			_sprite = $ColorRect
+			_sprite.modulate = best_color
+			print("[SUCCESS] ColorRect encontrado e colorido!")
+
+# ============= MULTIPLAYER SUPPORT =============
+
+var network_id: int = -1
+var ai_controller: Node = null
+var input_axis: float = 0.0
+
+func setup_network_sync(player_id: int) -> void:
+	"""Called by MultiplayerGameManager to setup this player for multiplayer"""
+	network_id = player_id
+	print("[Player %d] Setting up network synchronization..." % player_id)
+
+	# Add AI controller for automatic behavior
+	if player_id >= 1:  # Only AI for non-player characters
+		# Try to use advanced PlayerAITree first, fallback to simple PlayerAI
+		var ai_script = preload("res://resources/behavior_trees/PlayerAITree.gd")
+		if ai_script:
+			ai_controller = ai_script.new()
+			add_child(ai_controller)
+			print("[Player %d] Advanced AI tree attached" % player_id)
+		else:
+			# Fallback to simple AI
+			var simple_ai = preload("res://player/player_ai.gd")
+			ai_controller = simple_ai.new()
+			add_child(ai_controller)
+			if ai_controller.has_method("setup_for_network"):
+				ai_controller.setup_for_network(player_id)
+			print("[Player %d] Simple AI controller attached" % player_id)
+
+	# TODO: Add MultiplayerSynchronizer for position/state sync
+
+func set_input_axis(axis: float, _vertical: float = 0.0) -> void:
+	"""Called by AI controller to set movement input"""
+	input_axis = clamp(axis, -1.0, 1.0)
+
+func try_jump() -> bool:
+	"""Try to jump (called by AI)"""
+	if _jump_buffer_timer > 0 and _coyote_timer > 0 and not _is_attacking:
+		if asc and asc.try_activate_ability_by_tag(&"jump.high"):
+			var jf = jump_force if jump_force > 0 else 500.0
+			velocity.y = -jf
+			_jump_buffer_timer = 0
+			_coyote_timer = 0
+			return true
+	return false
+
+func try_dash() -> bool:
+	"""Try to dash (called by AI)"""
+	if current_stamina >= 10:
+		if asc and asc.try_activate_ability_by_tag(&"motion.dash"):
+			asc.apply_effect_by_tag(&"effect.dash_cost")
+			_start_dash()
+			return true
+	return false
+
+func attack_light() -> bool:
+	"""Light attack (called by AI)"""
+	if not _is_blocked and asc:
+		return asc.try_activate_ability_by_tag(&"attack.fast")
+	return false

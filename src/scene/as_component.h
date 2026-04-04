@@ -97,6 +97,18 @@ class ASComponent : public Node {
 	friend class ASCueAudio;
 	friend class ASStateSnapshot;
 	friend class ASDelivery;
+	friend class ASAbilitySpec;
+	friend class ASEffectSpec;
+	friend class ASCueSpec;
+	friend class ASBridgeState;
+	friend class ASBridgePrediction;
+	friend class ASTagUtils;
+	friend class ASAbility;
+	friend class ASStateCache;
+	friend class ASCueAnimation;
+	friend class ASCueAudio;
+	friend class ASStateSnapshot;
+	friend class ASDelivery;
 	friend class BTActionAS_ActivateAbility;
 	friend class BTActionAS_DispatchEvent;
 	friend class BTActionAS_WaitForEvent;
@@ -309,6 +321,7 @@ public:
 	// Virtual callback for custom magnitudes from scripts
 	GDVIRTUAL2RC(float, _on_calculate_custom_magnitude, Ref<ASEffectSpec>, int);
 
+	// Constructor / Destructor (Public for tests and normal instantiation)
 	ASComponent();
 	~ASComponent();
 

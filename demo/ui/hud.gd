@@ -105,7 +105,9 @@ func _track_combo_phases() -> void:
 func _update_status_list() -> void:
 	if not is_instance_valid(asc) or not label_compose: return
 	
-	var final_text = "[color=#ffffff]Item: %s[/color]\n" % (player_ref.hotbar.get_current_item().display_name if player_ref.hotbar.get_current_item() else "None")
+	var selected_item = player_ref.hotbar.get_selected_item() if player_ref and player_ref.hotbar else null
+	var item_name = selected_item.get_display_name() if selected_item else "None"
+	var final_text = "[color=#ffffff]Item: %s[/color]\n" % item_name
 	final_text += "[color=#aaaaaa]States:[/color]\n"
 	
 	for item in LISTED_ABILITIES:

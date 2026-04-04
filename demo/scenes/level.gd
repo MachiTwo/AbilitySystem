@@ -7,14 +7,21 @@ extends Node2D
 
 signal respawn_tick(time_left: int)
 
+var chat_system: Node = null
+var pause_menu: Node = null
+
 var _respawn_timer: float = 0.0
 var _is_respawning: bool = false
 
 func _ready() -> void:
-	var existing_player = get_tree().get_first_node_in_group("Player")
-	if existing_player and existing_player.has_signal("died"):
-		existing_player.connect("died", _on_player_died)
-		
+	# Setup chat system and pause menu
+	_setup_ui_systems()
+
+	# Connect to multiplayer game manager for player spawning
+	var mp_manager = get_node_or_null("/root/MultiplayerGameManager")
+	if mp_manager:
+		mp_manager.player_spawned.connect(_on_player_spawned)
+
 	# Configura Area de Água (Simulada via código para este teste, idealmente seria um Node na cena)
 	var water_area = Area2D.new()
 	water_area.name = "WaterArea"
@@ -25,16 +32,41 @@ func _ready() -> void:
 	water_area.add_child(col)
 	water_area.position = Vector2(500, 0) # Posição arbitrária no level
 	add_child(water_area)
-	
+
 	water_area.body_entered.connect(_on_water_entered)
 	water_area.body_exited.connect(_on_water_exited)
-	
+
 	# Visual Debug para a água
 	var debug_rect = ColorRect.new()
 	debug_rect.size = shape.size
 	debug_rect.position = -shape.size / 2
 	debug_rect.color = Color(0, 0, 1, 0.3)
 	water_area.add_child(debug_rect)
+
+func _setup_ui_systems() -> void:
+	"""Initialize chat system and pause menu"""
+	# Load and instantiate chat system
+	var chat_scene = preload("res://ui/chat_system.tscn")
+	chat_system = chat_scene.instantiate()
+	add_child(chat_system)
+
+	# Load and instantiate pause menu
+	var pause_scene = preload("res://ui/pause_menu.tscn")
+	pause_menu = pause_scene.instantiate()
+	add_child(pause_menu)
+
+	# Show welcome message
+	if chat_system:
+		var game_data = get_node_or_null("/root/GameData")
+		if game_data and chat_system.has_method("show_system_info"):
+			chat_system.show_system_info(game_data.game_mode, game_data.server_port)
+		if chat_system.has_method("add_system_message"):
+			chat_system.add_system_message("[WELCOME] Welcome to Ability System!")
+
+func _on_player_spawned(player_id: int, player_node: Node) -> void:
+	"""Called when a player is spawned by MultiplayerGameManager"""
+	if player_node and player_node.has_signal("died"):
+		player_node.connect("died", _on_player_died)
 
 func _process(delta: float) -> void:
 	if _is_respawning:
@@ -80,11 +112,11 @@ func _on_water_entered(body: Node) -> void:
 	if body.is_in_group("Player"):
 		print("[Level] Player entered Water!")
 		if body.has_method("set_physics_context"):
-			body.set_physics_context(BehaviorStates.Physics.WATER)
+			body.set_physics_context(3)  # WATER
 
 func _on_water_exited(body: Node) -> void:
 	if body.is_in_group("Player"):
 		print("[Level] Player exited Water!")
 		if body.has_method("set_physics_context"):
 			# Assume Air ao sair da água, o Player.gd vai corrigir se tocar no chão
-			body.set_physics_context(BehaviorStates.Physics.AIR)
+			body.set_physics_context(2)  # AIR
