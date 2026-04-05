@@ -187,10 +187,10 @@ func _cmd_shutdown(args: Array) -> void:
 func _cmd_clear() -> void:
 	# Limpa console (Windows)
 	if OS.get_name() == "Windows":
-		OS.execute("cmd", PackedStringArray(["/c", "cls"]), true)
+		OS.execute("cmd", PackedStringArray(["/c", "cls"]))
 	# Linux/Mac
 	else:
-		OS.execute("clear", PackedStringArray(), true)
+		OS.execute("clear", PackedStringArray())
 
 func _cmd_exit() -> void:
 	_cmd_shutdown([])

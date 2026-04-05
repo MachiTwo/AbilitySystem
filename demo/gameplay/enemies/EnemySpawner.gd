@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 ## Automatically spawns enemies at regular intervals
 
 class_name EnemySpawner
@@ -29,7 +29,7 @@ func _process(delta: float) -> void:
 
 func _spawn_enemy() -> void:
 	"""Spawn a new enemy"""
-	var enemy_script = preload("res://demo/gameplay/enemies/Enemy.gd")
+	var enemy_script = preload("res://gameplay/enemies/Enemy.gd")
 	var enemy = CharacterBody2D.new()
 	enemy.set_script(enemy_script)
 	enemy.level = enemy_level

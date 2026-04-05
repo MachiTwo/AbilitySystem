@@ -1,4 +1,4 @@
-extends Node
+extends Node2D
 ## Automatically spawns dummies at regular intervals
 ## Respects max dummy count
 

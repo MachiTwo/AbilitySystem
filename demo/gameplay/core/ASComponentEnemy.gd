@@ -5,8 +5,8 @@ extends Node
 class_name ASComponentEnemy
 
 var owner_node: Node = null
-var container: ASAbilityContainer = null
-var attribute_set: ASAttributeSet = null
+var container: Node = null
+var attribute_set: Node = null
 
 # Signal compatibility
 signal tag_changed(tag: StringName, added: bool)

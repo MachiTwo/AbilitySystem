@@ -100,7 +100,7 @@ func _verify_multiplayer() -> void:
 		verification_results["AdminCommandHandlers"] = "MISSING"
 
 	# Check ServerLogger
-	if ServerLogger and ServerLogger.has_method("log"):
+	if ServerLogger and ServerLogger.has_method("log_message"):
 		_pass("ServerLogger system initialized")
 		verification_results["ServerLogger"] = "OK"
 	else:
@@ -137,10 +137,10 @@ func _fail(message: String) -> void:
 	print("  ✗ %s" % message)
 
 func _print_results() -> void:
-	var separator = "="*70
-	print("\n" + separator)
+	var sep = "="*70
+	print("\n" + sep)
 	print("📊 VERIFICATION SUMMARY")
-	print(separator)
+	print(sep)
 
 	var ok_count = 0
 	var fail_count = 0
@@ -165,8 +165,7 @@ func _print_results() -> void:
 		print("\n✅ VERIFICATION PASSED - All systems are properly configured!")
 		print("The demo is ready to run.")
 
-	var separator = "="*70
-	print(separator + "\n")
+	print(sep + "\n")
 
 func print_verification_details() -> void:
 	"""Print detailed verification information"""

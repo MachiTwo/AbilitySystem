@@ -31,14 +31,14 @@ func execute_command(executor_id: int, command: String, args: Array = []) -> boo
 	if not RBAC.can_execute(executor_id, command):
 		print("[AdminCommand] Permission denied for %d to execute '%s'" % [executor_id, command])
 		if ServerLogger:
-			ServerLogger.log(ServerLogger.LogLevel.WARN, "AdminCommand", "Permission denied for peer %d: %s" % [executor_id, command])
+			ServerLogger.log_message(ServerLogger.LogLevel.WARN, "AdminCommand", "Permission denied for peer %d: %s" % [executor_id, command])
 		command_executed.emit(command, executor_id, false)
 		return false
 
 	if command not in _command_handlers:
 		print("[AdminCommand] Unknown command: %s" % command)
 		if ServerLogger:
-			ServerLogger.log(ServerLogger.LogLevel.WARN, "AdminCommand", "Unknown command: %s" % command)
+			ServerLogger.log_message(ServerLogger.LogLevel.WARN, "AdminCommand", "Unknown command: %s" % command)
 		command_executed.emit(command, executor_id, false)
 		return false
 

@@ -199,8 +199,9 @@ func _die() -> void:
 
 	# Grant XP
 	if target and target.network_id in get_tree().get_nodes_in_group("Player"):
-		if GameplayManager:
-			GameplayManager.grant_xp(target.network_id, experience_reward * level)
+		var gameplay_manager = _get_gameplay_manager()
+		if gameplay_manager:
+			gameplay_manager.grant_xp(target.network_id, experience_reward * level)
 
 	# Sound
 	if AudioManager:
@@ -220,3 +221,10 @@ func apply_effect(effect: String) -> void:
 	"""Apply effect"""
 	if as_component:
 		as_component.apply_effect(effect)
+
+func _get_gameplay_manager() -> Node:
+	"""Get GameplayManager instance from level"""
+	var level = get_tree().current_scene
+	while level and not level.has_meta("gameplay_manager"):
+		level = level.get_parent()
+	return level.get_meta("gameplay_manager") if level else null

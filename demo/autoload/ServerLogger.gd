@@ -11,10 +11,10 @@ var _start_time_ms: int = 0
 
 func _ready() -> void:
 	_start_time_ms = Time.get_ticks_msec()
-	log(LogLevel.INFO, "ServerLogger", "Initialized")
+	log_message(LogLevel.INFO, "ServerLogger", "Initialized")
 
 ## Log com nível automático
-func log(level: LogLevel, source: String, message: String) -> void:
+func log_message(level: LogLevel, source: String, message: String) -> void:
 	var timestamp = _get_timestamp()
 	var level_str = _level_to_string(level)
 	var formatted = "[%s] [%s] %s: %s" % [timestamp, level_str, source, message]
@@ -27,29 +27,29 @@ func log(level: LogLevel, source: String, message: String) -> void:
 
 ## Log de conexão de peer
 func log_peer_connected(peer_id: int, player_name: String) -> void:
-	log(LogLevel.INFO, "CONNECT", "Peer %d connected: %s" % [peer_id, player_name])
+	log_message(LogLevel.INFO, "CONNECT", "Peer %d connected: %s" % [peer_id, player_name])
 
 ## Log de desconexão de peer
 func log_peer_disconnected(peer_id: int, player_name: String) -> void:
-	log(LogLevel.INFO, "DISCONNECT", "Peer %d disconnected: %s" % [peer_id, player_name])
+	log_message(LogLevel.INFO, "DISCONNECT", "Peer %d disconnected: %s" % [peer_id, player_name])
 
 ## Log de comando executado
 func log_command(executor_id: int, command: String, success: bool) -> void:
 	var status = "SUCCESS" if success else "FAILED"
-	log(LogLevel.INFO, "COMMAND", "Peer %d executed '%s': %s" % [executor_id, command, status])
+	log_message(LogLevel.INFO, "COMMAND", "Peer %d executed '%s': %s" % [executor_id, command, status])
 
 ## Log de chat
 func log_chat(peer_id: int, player_name: String, message: String) -> void:
-	log(LogLevel.INFO, "CHAT", "[%s] %s: %s" % [peer_id, player_name, message])
+	log_message(LogLevel.INFO, "CHAT", "[%s] %s: %s" % [peer_id, player_name, message])
 
 ## Log de erro
 func log_error(source: String, error_msg: String) -> void:
-	log(LogLevel.ERROR, source, error_msg)
+	log_message(LogLevel.ERROR, source, error_msg)
 
 ## Log de status periódico
 func log_server_status(connected_players: int, max_players: int, uptime_sec: float) -> void:
 	var status_msg = "Status: %d/%d players | Uptime: %.1fs" % [connected_players, max_players, uptime_sec]
-	log(LogLevel.INFO, "SERVER", status_msg)
+	log_message(LogLevel.INFO, "SERVER", status_msg)
 
 ## Retorna logs recentes
 func get_recent_logs(count: int = 50) -> PackedStringArray:

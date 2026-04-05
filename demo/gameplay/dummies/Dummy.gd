@@ -160,8 +160,9 @@ func _die() -> void:
 	var players = get_tree().get_nodes_in_group("Player")
 	for player in players:
 		if global_position.distance_to(player.global_position) < 500:
-			if GameplayManager:
-				GameplayManager.grant_xp(player.network_id, experience_reward)
+			var gameplay_manager = _get_gameplay_manager()
+			if gameplay_manager:
+				gameplay_manager.grant_xp(player.network_id, experience_reward)
 
 	# Sound
 	if AudioManager:
@@ -183,3 +184,10 @@ func apply_effect(effect: String) -> void:
 	"""Apply a status effect"""
 	if as_component:
 		as_component.apply_effect(effect)
+
+func _get_gameplay_manager() -> Node:
+	"""Get GameplayManager instance from level"""
+	var level = get_tree().current_scene
+	while level and not level.has_meta("gameplay_manager"):
+		level = level.get_parent()
+	return level.get_meta("gameplay_manager") if level else null

@@ -195,9 +195,10 @@ func _fail(message: String) -> void:
 	tests_failed += 1
 
 func _print_summary() -> void:
-	print("\n" + "="*60)
+	var sep = "="*60
+	print("\n" + sep)
 	print("📊 Test Summary")
-	print("="*60)
+	print(sep)
 	print("Total: %d | Passed: %d | Failed: %d" % [tests_passed + tests_failed, tests_passed, tests_failed])
 
 	if tests_failed > 0:
@@ -205,4 +206,4 @@ func _print_summary() -> void:
 	else:
 		print("\n✅ All tests passed!")
 
-	print("="*60 + "\n")
+	print(sep + "\n")
