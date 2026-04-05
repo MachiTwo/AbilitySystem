@@ -25,7 +25,7 @@ func _ready() -> void:
 	if not admin_panel:
 		# Procura por CanvasLayer/PanelContainer com script admin_panel
 		for node in get_tree().root.get_children():
-			if node.name == "Level" and node.has_child("AdminPanel"):
+			if node.name == "Level" and node.has_node("AdminPanel"):
 				admin_panel = node.get_node("AdminPanel")
 				break
 
