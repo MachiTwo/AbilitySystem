@@ -174,8 +174,8 @@ func _setup_name_label() -> void:
 			name_label.text = game_data.player_name
 		else:
 			name_label.text = "Player"
-		# Initialize scale to prevent flipping with player direction
-		name_label.scale.x = facing_direction
+		# Keep label scale always positive to prevent flipping
+		name_label.scale.x = 1.0
 
 func _on_hotbar_selection_changed(slot: int) -> void:
 	if not asc or not hotbar: return
@@ -418,6 +418,10 @@ func die() -> void:
 
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
+
+	# Keep NameLabel upright (never flipped)
+	if _name_label:
+		_name_label.scale.x = 1.0
 
 	# Regeneração de Stamina
 	var is_consuming = false
