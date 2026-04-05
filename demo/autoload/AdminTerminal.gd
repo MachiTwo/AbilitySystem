@@ -2,8 +2,6 @@ extends Node
 ## Terminal CLI Interativa para Admin
 ## Processa comandos digitados no console do servidor
 
-class_name AdminTerminal
-
 var is_running: bool = false
 var server_info: Dictionary = {
 	"host": "127.0.0.1",

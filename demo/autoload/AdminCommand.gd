@@ -2,8 +2,6 @@ extends Node
 ## Sistema de Processamento de Comandos de Admin
 ## Executa comandos validados pelo RBAC
 
-class_name AdminCommand
-
 signal command_executed(command: String, executor_id: int, success: bool)
 signal player_kicked(peer_id: int, reason: String)
 signal player_banned(peer_id: int, hours: float, reason: String)

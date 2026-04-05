@@ -2,8 +2,6 @@ extends Node
 ## Role-Based Access Control System
 ## Gerencia roles, permissões e controle de acesso para jogadores
 
-class_name RBAC
-
 # Definições de roles e suas permissões
 const ROLES := {
 	"admin": [

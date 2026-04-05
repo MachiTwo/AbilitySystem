@@ -2,8 +2,6 @@ extends Node
 ## System Verification - Checks all critical systems are initialized
 ## Run this autoload to ensure everything is properly connected
 
-class_name SystemVerification
-
 var verification_results: Dictionary = {}
 
 func _ready() -> void:
@@ -22,24 +20,24 @@ func _verify_autoloads() -> void:
 	"""Verify all required autoloads are present and initialized"""
 	print("[VERIFY] Checking Autoloads...")
 
-	var autoloads = [
-		("GameData", GameData),
-		("GameMachine", GameMachine),
-		("MultiplayerGameManager", MultiplayerGameManager),
-		("RBAC", RBAC),
-		("AdminCommand", AdminCommand),
-		("AdminTerminal", AdminTerminal),
-		("ServerLogger", ServerLogger),
-	]
+	var autoloads = {
+		"GameData": GameData,
+		"GameMachine": GameMachine,
+		"MultiplayerGameManager": MultiplayerGameManager,
+		"RBAC": RBAC,
+		"AdminCommand": AdminCommand,
+		"AdminTerminal": AdminTerminal,
+		"ServerLogger": ServerLogger,
+	}
 
-	for name_str in autoloads:
-		var autoload = name_str[1]
+	for name_str in autoloads.keys():
+		var autoload = autoloads[name_str]
 		if autoload != null:
-			_pass("Autoload: %s" % name_str[0])
-			verification_results[name_str[0]] = "OK"
+			_pass("Autoload: %s" % name_str)
+			verification_results[name_str] = "OK"
 		else:
-			_fail("Autoload: %s not found" % name_str[0])
-			verification_results[name_str[0]] = "MISSING"
+			_fail("Autoload: %s not found" % name_str)
+			verification_results[name_str] = "MISSING"
 
 func _verify_scenes() -> void:
 	"""Verify all required scenes can be loaded"""

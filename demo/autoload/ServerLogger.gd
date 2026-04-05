@@ -1,8 +1,6 @@
 extends Node
 ## Centralized logging system for all server events
 
-class_name ServerLogger
-
 enum LogLevel { DEBUG, INFO, WARN, ERROR }
 
 const ENABLE_FILE_LOGGING = false  # Ativar para persistência
