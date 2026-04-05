@@ -50,9 +50,6 @@ var facing_direction: float = 1.0:
 			facing_direction = value
 			if scale.x != 0:
 				scale.x = abs(scale.x) * sign(value)
-				# Keep NameLabel upright by counter-scaling
-				if _name_label:
-					_name_label.scale.x = sign(value)
 
 var _is_blocked: bool:
 	get: return is_stunned or current_health <= 0 or (asc and asc.has_tag(&"status.dead"))

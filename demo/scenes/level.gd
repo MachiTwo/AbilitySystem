@@ -103,22 +103,22 @@ func _create_gameplay_zones() -> void:
 	print("[Level] Creating gameplay zones...")
 
 	# Zone 1: Combat Arena
-	_create_zone(1, "Combat Arena", 10, 15, Vector2(250, 250))
+	_create_zone(1, "Combat Arena", 0, 0, Vector2(250, 250))
 
 	# Zone 2: Training Grounds
-	_create_zone(2, "Training Grounds", 20, 0, Vector2(750, 250))
+	_create_zone(2, "Training Grounds", 0, 0, Vector2(750, 250))
 
 	# Zone 3: Chaos Zone
-	_create_zone(3, "Chaos Zone", 0, 10, Vector2(1250, 250))
+	_create_zone(3, "Chaos Zone", 0, 0, Vector2(1250, 250))
 
 	# Zone 4: Nature Zone
-	_create_zone(4, "Nature Zone", 10, 8, Vector2(250, 750))
+	_create_zone(4, "Nature Zone", 0, 0, Vector2(250, 750))
 
 	# Zone 5: Corrupted Realm
-	_create_zone(5, "Corrupted Realm", 0, 12, Vector2(750, 750))
+	_create_zone(5, "Corrupted Realm", 0, 0, Vector2(750, 750))
 
 	# Zone 6: Sanctuary
-	_create_zone(6, "Sanctuary", 15, 0, Vector2(1250, 750))
+	_create_zone(6, "Sanctuary", 0, 0, Vector2(1250, 750))
 
 	print("[Level] All zones created!")
 
