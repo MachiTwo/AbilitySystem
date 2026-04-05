@@ -139,6 +139,14 @@ func _on_peer_connected(peer_id: int) -> void:
 	print("[MP-MANAGER] Peer %d connected" % peer_id)
 	connected_players[peer_id] = true
 
+	# Register peer in RBAC
+	if is_server and RBAC:
+		var player_name = "Player_%d" % peer_id
+		var game_data = get_node_or_null("/root/GameData")
+		if game_data and game_data.player_name != "Player":
+			player_name = game_data.player_name
+		RBAC.register_peer(peer_id, player_name)
+
 	# Server spawns a player for each connected client
 	if is_server and peer_id > 0:
 		var spawn_pos = _get_spawn_position(peer_id)
@@ -147,6 +155,11 @@ func _on_peer_connected(peer_id: int) -> void:
 func _on_peer_disconnected(peer_id: int) -> void:
 	print("[MP-MANAGER] Peer %d disconnected" % peer_id)
 	connected_players.erase(peer_id)
+
+	# Unregister peer from RBAC
+	if is_server and RBAC:
+		RBAC.unregister_peer(peer_id)
+
 	player_despawned.emit(peer_id)
 
 func _on_connected_to_server() -> void:

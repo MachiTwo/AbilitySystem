@@ -9,12 +9,21 @@ extends Control
 
 var is_open: bool = false
 var lan_is_open: bool = false
+var admin_panel: Node = null
 
 func _ready() -> void:
 	resume_button.pressed.connect(_on_resume_pressed)
 	open_lan_button.pressed.connect(_on_open_lan_pressed)
 	close_server_button.pressed.connect(_on_close_server_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
+
+	# Carrega admin panel se existir
+	admin_panel = get_node_or_null("/root/level/AdminPanel")
+	if admin_panel:
+		if admin_panel.has_signal("close_to_lan_requested"):
+			admin_panel.close_to_lan_requested.connect(_on_admin_close_to_lan)
+		if admin_panel.has_signal("shutdown_requested"):
+			admin_panel.shutdown_requested.connect(_on_admin_shutdown)
 
 	visible = false
 	_update_buttons()
@@ -33,10 +42,19 @@ func _show_pause_menu() -> void:
 	resume_button.grab_focus()
 	_update_buttons()
 
+	# Mostra admin panel se for host/servidor
+	if admin_panel and multiplayer.is_server():
+		admin_panel.show_admin_panel()
+		admin_panel.refresh()
+
 func _on_resume_pressed() -> void:
 	visible = false
 	is_open = false
 	get_tree().paused = false
+
+	# Esconde admin panel
+	if admin_panel:
+		admin_panel.hide_admin_panel()
 
 func _on_open_lan_pressed() -> void:
 	var game_data = get_node_or_null("/root/GameData")
@@ -79,3 +97,14 @@ func _update_buttons() -> void:
 		"multiplayer_server", "multiplayer_client":
 			open_lan_button.visible = false
 			close_server_button.visible = false
+
+func _on_admin_close_to_lan() -> void:
+	"""Handler quando admin fecha LAN via admin panel"""
+	print("[PauseMenu] Admin closed LAN")
+	lan_is_open = false
+	_update_buttons()
+
+func _on_admin_shutdown() -> void:
+	"""Handler quando admin desliga servidor via admin panel"""
+	print("[PauseMenu] Admin shutdown server")
+	_on_quit_pressed()
