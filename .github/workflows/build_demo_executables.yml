@@ -25,6 +25,29 @@ jobs:
         run: |
           grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
 
+      - name: Download Packaged Plugin Artifact
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p demo/addons/ability_system
+          ARTIFACTS=$(gh api repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts)
+          PLUGIN_ARTIFACT=$(echo $ARTIFACTS | jq -r '.artifacts[] | select(.name | startswith("${{ env.PROJECT_ID }}+v")) | .id' | head -1)
+
+          if [ -z "$PLUGIN_ARTIFACT" ]; then
+            echo "Error: Could not find plugin artifact"
+            exit 1
+          fi
+
+          gh api repos/${{ github.repository }}/actions/artifacts/$PLUGIN_ARTIFACT/zip > plugin.zip
+          unzip -q -o plugin.zip -d demo/addons/ability_system/
+          rm plugin.zip
+
+          if [ ! -f "demo/addons/ability_system/plugin.cfg" ]; then
+            echo "Error: Plugin not properly extracted"
+            exit 1
+          fi
+
       # Setup Godot
       - name: Download Godot Engine
         shell: bash

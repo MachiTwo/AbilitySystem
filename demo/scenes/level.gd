@@ -11,12 +11,21 @@ var chat_system: Node = null
 var pause_menu: Node = null
 var admin_panel: Node = null
 
+# Gameplay systems
+var gameplay_manager: Node = null
+var spawn_manager: Node = null
+var dummy_spawners: Dictionary = {}
+var enemy_spawners: Dictionary = {}
+
 var _respawn_timer: float = 0.0
 var _is_respawning: bool = false
 
 func _ready() -> void:
 	# Setup chat system and pause menu
 	_setup_ui_systems()
+
+	# Setup gameplay systems (managers and spawners)
+	_setup_gameplay_systems()
 
 	# Connect to multiplayer game manager for player spawning
 	var mp_manager = get_node_or_null("/root/MultiplayerGameManager")
@@ -69,10 +78,131 @@ func _setup_ui_systems() -> void:
 		if chat_system.has_method("add_system_message"):
 			chat_system.add_system_message("[WELCOME] Welcome to Ability System!")
 
+func _setup_gameplay_systems() -> void:
+	"""Initialize gameplay managers and create zones with spawners"""
+	print("\n" + "="*60)
+	print("🎮 SETTING UP GAMEPLAY SYSTEMS")
+	print("="*60 + "\n")
+
+	# Create GameplayManager
+	gameplay_manager = preload("res://demo/gameplay/core/GameplayManager.gd").new()
+	add_child(gameplay_manager)
+
+	# Create SpawnManager
+	spawn_manager = preload("res://demo/gameplay/level/SpawnManager.gd").new()
+	add_child(spawn_manager)
+
+	# Create zones with spawners
+	_create_gameplay_zones()
+
+	print("[Level] Gameplay systems initialized!")
+
+func _create_gameplay_zones() -> void:
+	"""Create all 6 gameplay zones with dummies and enemies"""
+	print("[Level] Creating gameplay zones...")
+
+	# Zone 1: Combat Arena
+	_create_zone(1, "Combat Arena", 10, 15, Vector2(250, 250))
+
+	# Zone 2: Training Grounds
+	_create_zone(2, "Training Grounds", 20, 0, Vector2(750, 250))
+
+	# Zone 3: Chaos Zone
+	_create_zone(3, "Chaos Zone", 0, 10, Vector2(1250, 250))
+
+	# Zone 4: Nature Zone
+	_create_zone(4, "Nature Zone", 10, 8, Vector2(250, 750))
+
+	# Zone 5: Corrupted Realm
+	_create_zone(5, "Corrupted Realm", 0, 12, Vector2(750, 750))
+
+	# Zone 6: Sanctuary
+	_create_zone(6, "Sanctuary", 15, 0, Vector2(1250, 750))
+
+	print("[Level] All zones created!")
+
+func _create_zone(zone_id: int, zone_name: String, dummy_count: int, enemy_count: int, center: Vector2) -> void:
+	"""Create a single zone with spawners"""
+	print("  Zone %d: %s" % [zone_id, zone_name])
+
+	# Dummy spawner
+	if dummy_count > 0:
+		var dummy_spawner = preload("res://demo/gameplay/dummies/DummySpawner.gd").new()
+		dummy_spawner.name = "DummySpawner%d" % zone_id
+		dummy_spawner.global_position = center
+		dummy_spawner.max_dummies = dummy_count
+		match zone_id:
+			1:
+				dummy_spawner.difficulty = "basic"
+			2:
+				dummy_spawner.difficulty = "basic"
+			3:
+				dummy_spawner.difficulty = "advanced"
+			4:
+				dummy_spawner.difficulty = "basic"
+			5:
+				dummy_spawner.difficulty = "elite"
+			6:
+				dummy_spawner.difficulty = "basic"
+
+		add_child(dummy_spawner)
+		dummy_spawners[zone_id] = dummy_spawner
+
+	# Enemy spawner
+	if enemy_count > 0:
+		var enemy_spawner = preload("res://demo/gameplay/enemies/EnemySpawner.gd").new()
+		enemy_spawner.name = "EnemySpawner%d" % zone_id
+		enemy_spawner.global_position = center
+		enemy_spawner.max_enemies = enemy_count
+		enemy_spawner.enemy_level = zone_id  # Enemies get harder by zone
+
+		add_child(enemy_spawner)
+		enemy_spawners[zone_id] = enemy_spawner
+
 func _on_player_spawned(player_id: int, player_node: Node) -> void:
 	"""Called when a player is spawned by MultiplayerGameManager"""
+	# Register player with gameplay manager
+	if gameplay_manager and gameplay_manager.has_method("register_player"):
+		gameplay_manager.register_player(player_id, player_node)
+
+	# Register death signal
 	if player_node and player_node.has_signal("died"):
 		player_node.connect("died", _on_player_died)
+
+func get_dummy_count(zone: int = -1) -> int:
+	"""Get current dummy count in a zone or globally"""
+	if zone > 0 and zone in dummy_spawners:
+		return dummy_spawners[zone].get_active_count()
+
+	var total = 0
+	for spawner in dummy_spawners.values():
+		total += spawner.get_active_count()
+	return total
+
+func get_enemy_count(zone: int = -1) -> int:
+	"""Get current enemy count in a zone or globally"""
+	if zone > 0 and zone in enemy_spawners:
+		return enemy_spawners[zone].get_active_count()
+
+	var total = 0
+	for spawner in enemy_spawners.values():
+		total += spawner.get_active_count()
+	return total
+
+func get_zone_info(zone: int) -> Dictionary:
+	"""Get information about a zone"""
+	return {
+		"zone": zone,
+		"dummies": dummy_spawners[zone].get_active_count() if zone in dummy_spawners else 0,
+		"enemies": enemy_spawners[zone].get_active_count() if zone in enemy_spawners else 0,
+	}
+
+func get_all_zone_info() -> Array:
+	"""Get info for all zones"""
+	var info: Array = []
+	for zone in range(1, 7):
+		info.append(get_zone_info(zone))
+	return info
 
 func _process(delta: float) -> void:
 	if _is_respawning:

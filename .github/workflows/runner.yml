@@ -93,11 +93,12 @@ jobs:
 
   build-demo:
     name: 🎮 Build Demo Executables
-    needs: [init-version, tests]
+    needs: [init-version, tests, package-plugin]
     if: |
       always() &&
       needs.init-version.result == 'success' &&
-      needs.tests.result == 'success'
+      needs.tests.result == 'success' &&
+      needs.package-plugin.result == 'success'
     uses: ./.github/workflows/build_demo_executables.yml
     with:
       plugin_version: ${{ needs.init-version.outputs.plugin-version }}
