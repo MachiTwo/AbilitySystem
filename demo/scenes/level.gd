@@ -9,6 +9,7 @@ signal respawn_tick(time_left: int)
 
 var chat_system: Node = null
 var pause_menu: Node = null
+var admin_panel: Node = null
 
 var _respawn_timer: float = 0.0
 var _is_respawning: bool = false
@@ -44,7 +45,7 @@ func _ready() -> void:
 	water_area.add_child(debug_rect)
 
 func _setup_ui_systems() -> void:
-	"""Initialize chat system and pause menu"""
+	"""Initialize chat system, pause menu, and admin panel"""
 	# Load and instantiate chat system
 	var chat_scene = preload("res://ui/chat_system.tscn")
 	chat_system = chat_scene.instantiate()
@@ -54,6 +55,11 @@ func _setup_ui_systems() -> void:
 	var pause_scene = preload("res://ui/pause_menu.tscn")
 	pause_menu = pause_scene.instantiate()
 	add_child(pause_menu)
+
+	# Load and instantiate admin panel
+	var admin_scene = preload("res://ui/admin_panel.tscn")
+	admin_panel = admin_scene.instantiate()
+	add_child(admin_panel)
 
 	# Show welcome message
 	if chat_system:

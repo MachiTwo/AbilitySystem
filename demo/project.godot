@@ -32,6 +32,7 @@ MultiplayerGameManager="res://autoload/MultiplayerGameManager.gd"
 RBAC="res://autoload/RBAC.gd"
 AdminCommand="res://autoload/AdminCommand.gd"
 AdminTerminal="res://autoload/AdminTerminal.gd"
+ServerLogger="res://autoload/ServerLogger.gd"
 
 [input]
 

@@ -32,16 +32,23 @@ func _ready() -> void:
 func execute_command(executor_id: int, command: String, args: Array = []) -> bool:
 	if not RBAC.can_execute(executor_id, command):
 		print("[AdminCommand] Permission denied for %d to execute '%s'" % [executor_id, command])
+		if ServerLogger:
+			ServerLogger.log(ServerLogger.LogLevel.WARN, "AdminCommand", "Permission denied for peer %d: %s" % [executor_id, command])
 		command_executed.emit(command, executor_id, false)
 		return false
 
 	if command not in _command_handlers:
 		print("[AdminCommand] Unknown command: %s" % command)
+		if ServerLogger:
+			ServerLogger.log(ServerLogger.LogLevel.WARN, "AdminCommand", "Unknown command: %s" % command)
 		command_executed.emit(command, executor_id, false)
 		return false
 
 	var handler = _command_handlers[command]
 	var success = handler.call(executor_id, args)
+
+	if ServerLogger:
+		ServerLogger.log_command(executor_id, command, success)
 
 	command_executed.emit(command, executor_id, success)
 	return success
@@ -125,15 +132,18 @@ func _cmd_broadcast_message(executor_id: int, args: Array) -> bool:
 
 	var message = args[0]
 	var sender_name = RBAC.get_peer_data(executor_id).get("name", "Server")
+	var formatted_message = "[ADMIN] %s: %s" % [sender_name, message]
 
-	print("[AdminCommand] Broadcasting: %s" % message)
+	print("[AdminCommand] Broadcasting: %s" % formatted_message)
 
-	# Envia via RPC para chat
+	# Envia via RPC para chat - broadcast_message é a RPC method
 	var chat_layer = _get_chat_system()
 	if chat_layer:
-		chat_layer.add_system_message.rpc("[ADMIN] %s: %s" % [sender_name, message])
+		chat_layer.broadcast_message.rpc(sender_name, formatted_message)
+	else:
+		print("[AdminCommand] WARNING: Chat system not found")
 
-	broadcast_message_sent.emit(message)
+	broadcast_message_sent.emit(formatted_message)
 	return true
 
 func _cmd_list_players(executor_id: int, args: Array) -> bool:
@@ -157,14 +167,21 @@ func _cmd_mute_player(executor_id: int, args: Array) -> bool:
 		print("[AdminCommand] Player %d not found" % target_id)
 		return false
 
-	# Adiciona tag de mute no ASComponent se existir
-	if player.has_meta("asc"):
-		var asc = player.get_meta("asc")
-		if asc:
-			asc.add_tag(&"status.muted")
-			print("[AdminCommand] Muted player %d" % target_id)
-			return true
+	# Tenta acessar ASComponent direto
+	var asc = null
+	if player.has_node("ASComponent"):
+		asc = player.get_node("ASComponent")
+	elif "asc" in player:
+		asc = player.asc
+	elif player.has_meta("asc"):
+		asc = player.get_meta("asc")
 
+	if asc and asc.has_method("add_tag"):
+		asc.add_tag(&"status.muted")
+		print("[AdminCommand] Muted player %d" % target_id)
+		return true
+
+	print("[AdminCommand] Could not mute player %d (no ASComponent)" % target_id)
 	return false
 
 func _cmd_unmute_player(executor_id: int, args: Array) -> bool:
@@ -179,13 +196,21 @@ func _cmd_unmute_player(executor_id: int, args: Array) -> bool:
 		print("[AdminCommand] Player %d not found" % target_id)
 		return false
 
-	if player.has_meta("asc"):
-		var asc = player.get_meta("asc")
-		if asc:
-			asc.remove_tag(&"status.muted")
-			print("[AdminCommand] Unmuted player %d" % target_id)
-			return true
+	# Tenta acessar ASComponent direto
+	var asc = null
+	if player.has_node("ASComponent"):
+		asc = player.get_node("ASComponent")
+	elif "asc" in player:
+		asc = player.asc
+	elif player.has_meta("asc"):
+		asc = player.get_meta("asc")
 
+	if asc and asc.has_method("remove_tag"):
+		asc.remove_tag(&"status.muted")
+		print("[AdminCommand] Unmuted player %d" % target_id)
+		return true
+
+	print("[AdminCommand] Could not unmute player %d (no ASComponent)" % target_id)
 	return false
 
 func _cmd_get_server_status(executor_id: int, args: Array) -> bool:

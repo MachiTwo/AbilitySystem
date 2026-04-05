@@ -142,9 +142,12 @@ func _on_peer_connected(peer_id: int) -> void:
 	# Register peer in RBAC
 	if is_server and RBAC:
 		var player_name = "Player_%d" % peer_id
-		var game_data = get_node_or_null("/root/GameData")
-		if game_data and game_data.player_name != "Player":
-			player_name = game_data.player_name
+		# Only use GameData.player_name for host (peer_id=1)
+		# Other peers get default name or will be set via RPC later
+		if peer_id == 1:
+			var game_data = get_node_or_null("/root/GameData")
+			if game_data and game_data.player_name != "Player":
+				player_name = game_data.player_name
 		RBAC.register_peer(peer_id, player_name)
 
 	# Server spawns a player for each connected client

@@ -18,12 +18,25 @@ func _ready() -> void:
 	quit_button.pressed.connect(_on_quit_pressed)
 
 	# Carrega admin panel se existir
-	admin_panel = get_node_or_null("/root/level/AdminPanel")
+	# Tenta múltiplos caminhos possíveis
+	admin_panel = get_node_or_null("../AdminPanel")  # Relativo se pausemenu é irmão
+	if not admin_panel:
+		admin_panel = get_node_or_null("/root/level/AdminPanel")
+	if not admin_panel:
+		# Procura por CanvasLayer/PanelContainer com script admin_panel
+		for node in get_tree().root.get_children():
+			if node.name == "Level" and node.has_child("AdminPanel"):
+				admin_panel = node.get_node("AdminPanel")
+				break
+
 	if admin_panel:
 		if admin_panel.has_signal("close_to_lan_requested"):
 			admin_panel.close_to_lan_requested.connect(_on_admin_close_to_lan)
 		if admin_panel.has_signal("shutdown_requested"):
 			admin_panel.shutdown_requested.connect(_on_admin_shutdown)
+		print("[PauseMenu] Admin panel connected successfully")
+	else:
+		print("[PauseMenu] WARNING: Admin panel not found")
 
 	visible = false
 	_update_buttons()

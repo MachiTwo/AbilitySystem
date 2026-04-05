@@ -1,0 +1,230 @@
+name: 🎮 Build Demo Executables
+
+on:
+  workflow_call:
+    inputs:
+      plugin_version:
+        required: true
+        type: string
+
+jobs:
+  build-demo:
+    name: 🎮 Build Demo (Client & Server - All Platforms)
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+        with:
+          submodules: recursive
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      # Setup Godot
+      - name: Download Godot Engine
+        shell: bash
+        run: |
+          mkdir -p godot-bin
+          cd godot-bin
+          # Download Godot 4.6.1 Linux binary (headless)
+          wget -q https://github.com/godotengine/godot-releases/releases/download/4.6.1-stable/Godot_v4.6.1-stable_linux.x86_64.zip
+          unzip -q Godot_v4.6.1-stable_linux.x86_64.zip
+          chmod +x Godot_v4.6.1-stable_linux.x86_64
+          cd ..
+          echo "GODOT_BIN=$(pwd)/godot-bin/Godot_v4.6.1-stable_linux.x86_64" >> "$GITHUB_ENV"
+
+      - name: Download Export Templates
+        shell: bash
+        run: |
+          TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/4.6.1.stable"
+          mkdir -p "$TEMPLATES_DIR"
+
+          cd /tmp
+          wget -q https://github.com/godotengine/godot-releases/releases/download/4.6.1-stable/Godot_v4.6.1-stable_export-templates.tpz
+          unzip -q -o Godot_v4.6.1-stable_export-templates.tpz -d "$TEMPLATES_DIR"
+          rm Godot_v4.6.1-stable_export-templates.tpz
+
+          echo "✅ Export templates installed"
+
+      - name: Setup Godot Export Presets
+        shell: bash
+        run: |
+          mkdir -p demo
+          cat > demo/export_presets.cfg << 'EOF'
+          [preset.0]
+          name="Windows Desktop"
+          platform="Windows Desktop"
+          runnable=true
+          export_filter="all_resources"
+          export_files=[]
+          include_filter=""
+          exclude_filter=""
+          export_path="../../artifacts/demo_windows_client.exe"
+          [preset.0.options]
+          application/run/main_scene="res://ui/user_registration.tscn"
+
+          [preset.1]
+          name="Linux"
+          platform="Linux/X11"
+          runnable=true
+          export_filter="all_resources"
+          export_path="../../artifacts/demo_linux_client"
+
+          [preset.2]
+          name="macOS"
+          platform="macOS"
+          runnable=true
+          export_filter="all_resources"
+          export_path="../../artifacts/demo_macos_client"
+
+          [preset.3]
+          name="Android"
+          platform="Android"
+          runnable=true
+          export_filter="all_resources"
+          export_path="../../artifacts/demo_android_client.apk"
+          EOF
+
+      - name: 📦 Create Artifacts Directory
+        shell: bash
+        run: mkdir -p artifacts
+
+      - name: 🎮 Export Demo Clients
+        shell: bash
+        run: |
+          cd demo
+
+          echo "🔨 Building Windows Client..."
+          ${{ env.GODOT_BIN }} --headless --path . --export-release "Windows Desktop" ../artifacts/demo_windows_client.exe
+
+          echo "🔨 Building Linux Client..."
+          ${{ env.GODOT_BIN }} --headless --path . --export-release "Linux/X11" ../artifacts/demo_linux_client
+
+          echo "🔨 Building macOS Client..."
+          ${{ env.GODOT_BIN }} --headless --path . --export-release "macOS" ../artifacts/demo_macos_client
+
+          echo "🔨 Building Android Client..."
+          ${{ env.GODOT_BIN }} --headless --path . --export-release "Android" ../artifacts/demo_android_client.apk
+
+          echo "✅ All clients built successfully"
+
+      - name: 🖥️ Export Demo Servers
+        shell: bash
+        run: |
+          cd demo
+
+          # Modifica export presets para servidor (usando server.tscn)
+          cat > export_presets_server.cfg << 'EOF'
+          [preset.0]
+          name="Windows Server"
+          platform="Windows Desktop"
+          export_path="../../artifacts/demo_windows_server.exe"
+          [preset.0.options]
+          application/run/main_scene="res://server/server.tscn"
+
+          [preset.1]
+          name="Linux Server"
+          platform="Linux/X11"
+          export_path="../../artifacts/demo_linux_server"
+          [preset.1.options]
+          application/run/main_scene="res://server/server.tscn"
+
+          [preset.2]
+          name="macOS Server"
+          platform="macOS"
+          export_path="../../artifacts/demo_macos_server"
+          [preset.2.options]
+          application/run/main_scene="res://server/server.tscn"
+
+          [preset.3]
+          name="Android Server"
+          platform="Android"
+          export_path="../../artifacts/demo_android_server.apk"
+          [preset.3.options]
+          application/run/main_scene="res://server/server.tscn"
+          EOF
+
+          echo "🔨 Building Windows Server..."
+          ${{ env.GODOT_BIN }} --headless --path . --export-release "Windows Server" ../artifacts/demo_windows_server.exe
+
+          echo "🔨 Building Linux Server..."
+          ${{ env.GODOT_BIN }} --headless --path . --export-release "Linux Server" ../artifacts/demo_linux_server
+
+          echo "🔨 Building macOS Server..."
+          ${{ env.GODOT_BIN }} --headless --path . --export-release "macOS Server" ../artifacts/demo_macos_server
+
+          echo "🔨 Building Android Server..."
+          ${{ env.GODOT_BIN }} --headless --path . --export-release "Android Server" ../artifacts/demo_android_server.apk
+
+          echo "✅ All servers built successfully"
+
+      - name: 🔒 Set File Permissions
+        shell: bash
+        run: |
+          cd artifacts
+          chmod +x demo_linux_client demo_linux_server demo_macos_client demo_macos_server 2>/dev/null || true
+          chmod +x *.exe 2>/dev/null || true
+
+      - name: 📋 List Built Artifacts
+        shell: bash
+        run: |
+          echo "📦 Built executables:"
+          ls -lh artifacts/
+          echo ""
+          echo "✅ Total files: $(ls artifacts/ | wc -l)"
+
+      - name: 📤 Upload Demo Executables
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-executables-${{ inputs.plugin_version }}
+          path: artifacts/
+          retention-days: 90
+          if-no-files-found: error
+
+      - name: 📝 Create Executables Manifest
+        shell: bash
+        run: |
+          cat > DEMO_MANIFEST.md << 'EOF'
+          # Demo Executables - v${{ inputs.plugin_version }}
+
+          ## Client Binaries
+          - `demo_windows_client.exe` - Windows 64-bit client
+          - `demo_linux_client` - Linux 64-bit client
+          - `demo_macos_client` - macOS Universal client
+          - `demo_android_client.apk` - Android client
+
+          ## Server Binaries
+          - `demo_windows_server.exe` - Windows 64-bit dedicated server
+          - `demo_linux_server` - Linux 64-bit dedicated server
+          - `demo_macos_server` - macOS dedicated server
+          - `demo_android_server.apk` - Android server
+
+          ## Usage
+
+          ### Running Client
+          ```bash
+          ./demo_linux_client
+          ```
+
+          ### Running Dedicated Server
+          ```bash
+          ./demo_linux_server --port 7777 --max-players 10
+          ```
+
+          ## Build Info
+          - Godot Version: 4.6.1
+          - Built on: ${{ runner.os }}
+          - Build Date: ${{ github.event.head_commit.timestamp }}
+          EOF
+
+      - name: 📤 Upload Manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-manifest-${{ inputs.plugin_version }}
+          path: DEMO_MANIFEST.md
+          retention-days: 90

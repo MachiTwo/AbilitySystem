@@ -92,6 +92,8 @@ func register_peer(peer_id: int, player_name: String) -> void:
 	}
 
 	print("[RBAC] Registered peer %d: %s (role: %s)" % [peer_id, player_name, initial_role])
+	if ServerLogger:
+		ServerLogger.log_peer_connected(peer_id, player_name)
 
 ## Remove um peer desconectado
 func unregister_peer(peer_id: int) -> void:

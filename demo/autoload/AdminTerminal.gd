@@ -15,7 +15,7 @@ var server_info: Dictionary = {
 func _ready() -> void:
 	print("[AdminTerminal] Initialized")
 
-## Inicia a CLI interativa (bloqueia thread até shutdown)
+## Inicia a CLI interativa (não bloqueia - usa process frame para input)
 func start_interactive_cli() -> void:
 	if not multiplayer.is_server():
 		print("[AdminTerminal] Only server can run CLI")
@@ -25,26 +25,26 @@ func start_interactive_cli() -> void:
 	print("\n" + _get_header())
 	print("[SERVER] Ready on %s:%d" % [server_info["host"], server_info["port"]])
 	print("[SERVER] Type 'help' for commands\n")
+	print("> ", false)  # Prompt sem newline
 
-	# Loop principal
-	while is_running and not get_tree().root.is_queued_for_deletion():
-		var input = _read_input()
-		if input.is_empty():
-			continue
+	# Conecta ao tree_exiting para cleanup quando servidor fecha
+	if not is_connected("tree_exiting", Callable(self, "_on_tree_exiting")):
+		tree_exiting.connect(_on_tree_exiting)
 
-		_process_command(input)
-
-		if not is_running:
-			break
-
-		# Pequeno delay para evitar busy loop
-		get_tree().process_frame
+	# Marca que CLI está rodando
+	print("[AdminTerminal] CLI initialized in non-blocking mode")
 
 ## Configura parâmetros do servidor
 func set_server_info(host: String, port: int, max_players: int = 10) -> void:
 	server_info["host"] = host
 	server_info["port"] = port
 	server_info["max_players"] = max_players
+
+## Processa via _process para não bloquear
+func _process(_delta: float) -> void:
+	# Nota: Em servidor headless real, isso seria substitído por leitura de stdin
+	# Por enquanto, é stub para não bloquear
+	pass
 
 ## Processa um comando digitado
 func _process_command(input: String) -> void:
@@ -216,6 +216,11 @@ func _get_header() -> String:
 func print_log(message: String, level: String = "INFO") -> void:
 	var timestamp = Time.get_time_string_from_system()
 	print("[%s] [%s] %s" % [timestamp, level, message])
+
+## Callback quando árvore é destruída
+func _on_tree_exiting() -> void:
+	is_running = false
+	print("[AdminTerminal] CLI shutting down")
 
 ## Debug: Mostra estado do terminal
 func debug_print_state() -> void:
