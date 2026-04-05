@@ -81,6 +81,6 @@ func _create_projectile() -> Node2D:
 	projectile.add_child(collision)
 
 	# Add script
-	projectile.set_script(preload("res://demo/gameplay/projectiles/Projectile.gd"))
+	projectile.set_script(preload("res://gameplay/projectiles/Projectile.gd"))
 
 	return projectile

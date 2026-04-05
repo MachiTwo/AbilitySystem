@@ -9,9 +9,10 @@ var tests_failed: int = 0
 var test_results: Array = []
 
 func _ready() -> void:
-	print("\n" + "="*60)
+	var separator = "============================================================"
+	print("\n" + separator)
 	print("🧪 RBAC & AdminCommand System Tests")
-	print("="*60)
+	print(separator)
 
 	# Run all tests
 	test_rbac_initialization()

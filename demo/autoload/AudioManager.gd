@@ -2,25 +2,8 @@ extends Node
 ## Central audio manager for gameplay sounds
 ## Handles SFX playback with optional procedural generation and variation
 
-class_name AudioManager
-
-# Sound effect dictionary - maps sound names to their audio stream paths or procedural generators
-var sound_effects: Dictionary = {
-	"hit_impact": preload("res://resources/audio/hit_impact.ogg") if ResourceLoader.exists("res://resources/audio/hit_impact.ogg") else null,
-	"critical_hit": preload("res://resources/audio/critical_hit.ogg") if ResourceLoader.exists("res://resources/audio/critical_hit.ogg") else null,
-	"enemy_killed": preload("res://resources/audio/enemy_killed.ogg") if ResourceLoader.exists("res://resources/audio/enemy_killed.ogg") else null,
-	"level_up": preload("res://resources/audio/level_up.ogg") if ResourceLoader.exists("res://resources/audio/level_up.ogg") else null,
-	"skill_unlock": preload("res://resources/audio/skill_unlock.ogg") if ResourceLoader.exists("res://resources/audio/skill_unlock.ogg") else null,
-	"xp_gain": preload("res://resources/audio/xp_gain.ogg") if ResourceLoader.exists("res://resources/audio/xp_gain.ogg") else null,
-	"weapon_swing": preload("res://resources/audio/weapon_swing.ogg") if ResourceLoader.exists("res://resources/audio/weapon_swing.ogg") else null,
-	"weapon_slash": preload("res://resources/audio/weapon_slash.ogg") if ResourceLoader.exists("res://resources/audio/weapon_slash.ogg") else null,
-	"projectile_fire": preload("res://resources/audio/projectile_fire.ogg") if ResourceLoader.exists("res://resources/audio/projectile_fire.ogg") else null,
-	"player_jump": preload("res://resources/audio/player_jump.ogg") if ResourceLoader.exists("res://resources/audio/player_jump.ogg") else null,
-	"player_dash": preload("res://resources/audio/player_dash.ogg") if ResourceLoader.exists("res://resources/audio/player_dash.ogg") else null,
-	"dummy_hit": preload("res://resources/audio/dummy_hit.ogg") if ResourceLoader.exists("res://resources/audio/dummy_hit.ogg") else null,
-	"ui_select": preload("res://resources/audio/ui_select.ogg") if ResourceLoader.exists("res://resources/audio/ui_select.ogg") else null,
-	"ui_confirm": preload("res://resources/audio/ui_confirm.ogg") if ResourceLoader.exists("res://resources/audio/ui_confirm.ogg") else null,
-}
+# Sound effect dictionary - lazy loaded from file system
+var sound_effects: Dictionary = {}
 
 # Audio players pool
 var audio_players: Array[AudioStreamPlayer] = []
@@ -128,5 +111,5 @@ func play_sound_with_variation(sound_name: String, pitch_min: float = 0.9, pitch
 
 	player.stream = audio_stream
 	player.pitch_scale = randf_range(pitch_min, pitch_max)
-	player.volume_db = linear2db(randf_range(volume_min, volume_max))
+	player.volume_db = linear_to_db(randf_range(volume_min, volume_max))
 	player.play()

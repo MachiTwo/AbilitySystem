@@ -10,9 +10,10 @@ var dummy_spawners: Dictionary = {}
 var enemy_spawners: Dictionary = {}
 
 func _ready() -> void:
-	print("\n" + "="*60)
+	var separator = "============================================================"
+	print("\n" + separator)
 	print("🎮 GAMEPLAY LEVEL INITIALIZED")
-	print("="*60 + "\n")
+	print(separator + "\n")
 
 	# Initialize managers
 	_setup_managers()

@@ -5,10 +5,10 @@ extends Node
 class_name WeaponManager
 
 var weapon_templates: Dictionary = {
-	"sword": preload("res://demo/gameplay/weapons/Sword.gd"),
-	"staff": preload("res://demo/gameplay/weapons/Staff.gd"),
-	"axe": preload("res://demo/gameplay/weapons/Axe.gd"),
-	"dagger": preload("res://demo/gameplay/weapons/Dagger.gd"),
+	"sword": preload("res://gameplay/weapons/Sword.gd"),
+	"staff": preload("res://gameplay/weapons/Staff.gd"),
+	"axe": preload("res://gameplay/weapons/Axe.gd"),
+	"dagger": preload("res://gameplay/weapons/Dagger.gd"),
 }
 
 var weapon_stats: Dictionary = {

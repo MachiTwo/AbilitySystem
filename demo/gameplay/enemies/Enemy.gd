@@ -30,7 +30,7 @@ func _ready() -> void:
 	add_to_group("enemy_level_%d" % level)
 
 	# Create AS component
-	as_component = preload("res://demo/gameplay/ASComponentEnemy.tscn").instantiate()
+	as_component = preload("res://gameplay/ASComponentEnemy.tscn").instantiate()
 	add_child(as_component)
 
 	# Visual

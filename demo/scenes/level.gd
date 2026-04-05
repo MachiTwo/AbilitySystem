@@ -80,16 +80,17 @@ func _setup_ui_systems() -> void:
 
 func _setup_gameplay_systems() -> void:
 	"""Initialize gameplay managers and create zones with spawners"""
-	print("\n" + "="*60)
+	var separator = "============================================================"
+	print("\n" + separator)
 	print("🎮 SETTING UP GAMEPLAY SYSTEMS")
-	print("="*60 + "\n")
+	print(separator + "\n")
 
 	# Create GameplayManager
-	gameplay_manager = preload("res://demo/gameplay/core/GameplayManager.gd").new()
+	gameplay_manager = preload("res://gameplay/core/GameplayManager.gd").new()
 	add_child(gameplay_manager)
 
 	# Create SpawnManager
-	spawn_manager = preload("res://demo/gameplay/level/SpawnManager.gd").new()
+	spawn_manager = preload("res://gameplay/level/SpawnManager.gd").new()
 	add_child(spawn_manager)
 
 	# Create zones with spawners
@@ -127,7 +128,7 @@ func _create_zone(zone_id: int, zone_name: String, dummy_count: int, enemy_count
 
 	# Dummy spawner
 	if dummy_count > 0:
-		var dummy_spawner = preload("res://demo/gameplay/dummies/DummySpawner.gd").new()
+		var dummy_spawner = preload("res://gameplay/dummies/DummySpawner.gd").new()
 		dummy_spawner.name = "DummySpawner%d" % zone_id
 		dummy_spawner.global_position = center
 		dummy_spawner.max_dummies = dummy_count
@@ -150,7 +151,7 @@ func _create_zone(zone_id: int, zone_name: String, dummy_count: int, enemy_count
 
 	# Enemy spawner
 	if enemy_count > 0:
-		var enemy_spawner = preload("res://demo/gameplay/enemies/EnemySpawner.gd").new()
+		var enemy_spawner = preload("res://gameplay/enemies/EnemySpawner.gd").new()
 		enemy_spawner.name = "EnemySpawner%d" % zone_id
 		enemy_spawner.global_position = center
 		enemy_spawner.max_enemies = enemy_count

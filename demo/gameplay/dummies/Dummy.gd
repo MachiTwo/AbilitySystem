@@ -23,7 +23,7 @@ func _ready() -> void:
 	add_to_group("dummy_%s" % difficulty)
 
 	# Create AS component
-	as_component = preload("res://demo/gameplay/ASComponentDummy.tscn").instantiate()
+	as_component = preload("res://gameplay/ASComponentDummy.tscn").instantiate()
 	add_child(as_component)
 
 	# Visual

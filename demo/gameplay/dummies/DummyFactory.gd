@@ -3,9 +3,9 @@ extends Node
 
 class_name DummyFactory
 
-static func create_dummy(difficulty: String = "basic", position: Vector2 = Vector2.ZERO) -> Dummy:
+static func create_dummy(difficulty: String = "basic", position: Vector2 = Vector2.ZERO):
 	"""Create a dummy instance"""
-	var dummy_script = preload("res://demo/gameplay/dummies/Dummy.gd")
+	var dummy_script = preload("res://gameplay/dummies/Dummy.gd")
 	var dummy = CharacterBody2D.new()
 	dummy.set_script(dummy_script)
 	dummy.difficulty = difficulty
