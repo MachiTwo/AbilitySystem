@@ -370,11 +370,9 @@ func _update_state_from_physics() -> void:
 	if not is_on_floor():
 		if velocity.y < 0:
 			if not asc.is_ability_active(&"jump.high"):
-				print("[State] Activating jump.high")
 				asc.try_activate_ability_by_tag(&"jump.high")
 		else:
 			if not asc.is_ability_active(&"jump.fall"):
-				print("[State] Activating jump.fall")
 				asc.try_activate_ability_by_tag(&"jump.fall")
 		return
 
@@ -383,15 +381,12 @@ func _update_state_from_physics() -> void:
 	if direction != 0:
 		if Input.is_action_pressed("run") and current_stamina > 0:
 			if not asc.is_ability_active(&"motion.run"):
-				print("[State] Activating motion.run")
 				asc.try_activate_ability_by_tag(&"motion.run")
 		else:
 			if not asc.is_ability_active(&"motion.walk"):
-				print("[State] Activating motion.walk")
 				asc.try_activate_ability_by_tag(&"motion.walk")
 	else:
 		if not asc.is_ability_active(&"motion.idle"):
-			print("[State] Activating motion.idle")
 			asc.try_activate_ability_by_tag(&"motion.idle")
 
 func take_damage(amount: int) -> void:
@@ -467,7 +462,6 @@ func _on_tag_changed(_tag: StringName, _added: bool) -> void:
 		return
 
 	var current_tags = asc.get_tags()
-	print("[DEBUG] _on_tag_changed called - Current tags: %s" % [current_tags])
 
 	var best_color = TAG_COLORS.get(&"motion.idle", Color.WHITE)
 
@@ -475,10 +469,8 @@ func _on_tag_changed(_tag: StringName, _added: bool) -> void:
 	for t in current_tags:
 		if t in TAG_COLORS:
 			best_color = TAG_COLORS[t]
-			print("[Tag Color] %s → Color: %s" % [t, best_color])
 
 	if _sprite:
-		print("[DEBUG] Aplicando cor ao _sprite: %s" % [best_color])
 		_sprite.modulate = best_color
 	else:
 		print("[ERROR] _sprite é null! Node path: %s" % [$ColorRect])
