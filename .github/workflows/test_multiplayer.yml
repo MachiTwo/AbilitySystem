@@ -53,12 +53,20 @@ jobs:
           TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/$GODOT_VERSION.stable"
           mkdir -p "$TEMPLATES_DIR"
 
-          # Download templates for Linux
+          # Download export templates from official GitHub release
           cd /tmp
-          wget -q https://downloads.tuxfamily.org/godotengine/4.6.1/Godot_v4.6.1-stable_linux_headless.64.zip
-          unzip -q Godot_v4.6.1-stable_linux_headless.64.zip
-          cp -v Godot_v4.6.1-stable_linux_headless.x86_64 "$TEMPLATES_DIR/linux_release.x86_64" || true
-          cp -v Godot_v4.6.1-stable_linux_headless.x86_64 "$TEMPLATES_DIR/linux_debug.x86_64" || true
+          wget -q --timeout=30 --tries=3 https://github.com/godotengine/godot-releases/releases/download/4.6.1-stable/Godot_v4.6.1-stable_export-templates.tpz
+          if [ $? -ne 0 ]; then
+            echo "Failed to download from primary source, trying mirror..."
+            wget -q --timeout=30 --tries=3 https://downloads.tuxfamily.org/godotengine/4.6.1/Godot_v4.6.1-stable_export-templates.tpz
+          fi
+
+          unzip -q -o Godot_v4.6.1-stable_export-templates.tpz -d "$TEMPLATES_DIR"
+
+          if [ ! -f "$TEMPLATES_DIR/linux_release.x86_64" ] && [ ! -f "$TEMPLATES_DIR/templates/linux_release.x86_64" ]; then
+            echo "Warning: Export templates may not have been extracted properly"
+            ls -la "$TEMPLATES_DIR"
+          fi
 
       - name: Sync Addons to All Demos (ability_system + limboai)
         run: python utility/post_build.py

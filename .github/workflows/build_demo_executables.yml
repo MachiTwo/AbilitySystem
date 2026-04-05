@@ -55,7 +55,11 @@ jobs:
           mkdir -p godot-bin
           cd godot-bin
           # Download Godot 4.6.1 Linux binary (headless)
-          wget -q https://github.com/godotengine/godot-releases/releases/download/4.6.1-stable/Godot_v4.6.1-stable_linux.x86_64.zip
+          wget -q --timeout=30 --tries=3 https://github.com/godotengine/godot-releases/releases/download/4.6.1-stable/Godot_v4.6.1-stable_linux.x86_64.zip
+          if [ $? -ne 0 ]; then
+            echo "Primary download failed, trying mirror..."
+            wget -q --timeout=30 --tries=3 https://downloads.tuxfamily.org/godotengine/4.6.1/Godot_v4.6.1-stable_linux.x86_64.zip
+          fi
           unzip -q Godot_v4.6.1-stable_linux.x86_64.zip
           chmod +x Godot_v4.6.1-stable_linux.x86_64
           cd ..
@@ -68,11 +72,22 @@ jobs:
           mkdir -p "$TEMPLATES_DIR"
 
           cd /tmp
-          wget -q https://github.com/godotengine/godot-releases/releases/download/4.6.1-stable/Godot_v4.6.1-stable_export-templates.tpz
-          unzip -q -o Godot_v4.6.1-stable_export-templates.tpz -d "$TEMPLATES_DIR"
-          rm Godot_v4.6.1-stable_export-templates.tpz
+          wget -q --timeout=30 --tries=3 https://github.com/godotengine/godot-releases/releases/download/4.6.1-stable/Godot_v4.6.1-stable_export-templates.tpz
+          if [ $? -ne 0 ]; then
+            echo "Primary download failed, trying mirror..."
+            wget -q --timeout=30 --tries=3 https://downloads.tuxfamily.org/godotengine/4.6.1/Godot_v4.6.1-stable_export-templates.tpz
+          fi
 
-          echo "✅ Export templates installed"
+          unzip -q -o Godot_v4.6.1-stable_export-templates.tpz -d "$TEMPLATES_DIR"
+          rm -f Godot_v4.6.1-stable_export-templates.tpz
+
+          if [ -d "$TEMPLATES_DIR/templates" ]; then
+            mv "$TEMPLATES_DIR/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
+            rmdir "$TEMPLATES_DIR/templates" 2>/dev/null || true
+          fi
+
+          echo "✅ Export templates installed at $TEMPLATES_DIR"
+          ls -la "$TEMPLATES_DIR"
 
       - name: Setup Godot Export Presets
         shell: bash

@@ -36,6 +36,22 @@ jobs:
         run: |
           scons -C godot-cpp platform=linux arch=x86_64 target=template_debug -j$(nproc)
 
+          # Verify gdvirtual.gen.inc was generated
+          if [ ! -f "godot-cpp/gen/godot_cpp/core/gdvirtual.gen.inc" ]; then
+            echo "ERROR: gdvirtual.gen.inc not found after godot-cpp compilation"
+            echo "Checking godot-cpp/gen directory:"
+            find godot-cpp/gen -type f 2>/dev/null | head -20
+            exit 1
+          fi
+
+      - name: Setup Includes for Bridge Tests
+        shell: bash
+        run: |
+          # Create symlink for generated godot_cpp headers so includes work correctly
+          if [ ! -d "godot_cpp" ]; then
+            ln -s godot-cpp/gen/godot_cpp godot_cpp
+          fi
+
       - name: Build GDExtension Bridge Tests
         shell: bash
         run: |
@@ -43,7 +59,11 @@ jobs:
 
       - name: Download Godot Engine
         run: |
-          wget https://github.com/godotengine/godot-builds/releases/download/4.2.2-stable/Godot_v4.2.2-stable_linux.x86_64.zip
+          wget --timeout=30 --tries=3 https://github.com/godotengine/godot-builds/releases/download/4.2.2-stable/Godot_v4.2.2-stable_linux.x86_64.zip
+          if [ $? -ne 0 ]; then
+            echo "Primary download failed, trying mirror..."
+            wget --timeout=30 --tries=3 https://downloads.tuxfamily.org/godotengine/4.2.2/Godot_v4.2.2-stable_linux.x86_64.zip
+          fi
           unzip Godot_v4.2.2-stable_linux.x86_64.zip
           mv Godot_v4.2.2-stable_linux.x86_64 godot_headless
           chmod +x godot_headless
