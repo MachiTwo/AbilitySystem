@@ -70,13 +70,6 @@ libraries/ = ExtResource("5_eki5k")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=837778900]
 
-[node name="NameLabel" type="Label" parent="." unique_id=298471042]
-offset_top = -35.0
-offset_bottom = -25.0
-text = "Player"
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 10
-
 [node name="Hitbox" type="Area2D" parent="." unique_id=46514287]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox" unique_id=1801274408]
