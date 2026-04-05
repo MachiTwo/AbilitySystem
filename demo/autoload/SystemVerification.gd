@@ -5,10 +5,9 @@ extends Node
 var verification_results: Dictionary = {}
 
 func _ready() -> void:
-	var separator = "="*70
-	print("\n" + separator)
+	print("\n" + "=".repeat(70))
 	print("🔍 SYSTEM VERIFICATION - Ability System Demo")
-	print(separator + "\n")
+	print("=".repeat(70) + "\n")
 
 	_verify_autoloads()
 	_verify_scenes()
@@ -137,10 +136,9 @@ func _fail(message: String) -> void:
 	print("  ✗ %s" % message)
 
 func _print_results() -> void:
-	var sep = "="*70
-	print("\n" + sep)
+	print("\n" + "=".repeat(70))
 	print("📊 VERIFICATION SUMMARY")
-	print(sep)
+	print("=".repeat(70))
 
 	var ok_count = 0
 	var fail_count = 0
@@ -165,7 +163,7 @@ func _print_results() -> void:
 		print("\n✅ VERIFICATION PASSED - All systems are properly configured!")
 		print("The demo is ready to run.")
 
-	print(sep + "\n")
+	print("=".repeat(70) + "\n")
 
 func print_verification_details() -> void:
 	"""Print detailed verification information"""
