@@ -11,9 +11,9 @@ signal died
 @onready var _anim_player: AnimationPlayer = $AnimationPlayer
 @onready var _hitbox: Area2D = $Hitbox
 @onready var _delivery: ASDelivery = $Hitbox/ASDelivery
-@onready var _name_label: Label = $NameLabel
 
 var is_stunned: bool = false
+var player_name: String = "Player"
 
 # Timers internos
 var _coyote_timer: float = 0.0
@@ -122,8 +122,10 @@ var jump_buffer_time: float:
 	get: return _attr(&"jump_buffer_time")
 
 func _ready() -> void:
-	# Initialize NameLabel if this is the local player
-	_setup_name_label()
+	# Load player name from GameData
+	var game_data = get_node_or_null("/root/GameData")
+	if game_data:
+		player_name = game_data.player_name
 
 	if not asc:
 		asc = find_child("ASComponent") as ASComponent
@@ -164,18 +166,6 @@ func _ready() -> void:
 		# TODO: Get inventory from player or parent
 
 	call_deferred("_activate_initial_state")
-
-func _setup_name_label() -> void:
-	"""Initialize the NameLabel with player name"""
-	var name_label = find_child("NameLabel") as Label
-	if name_label:
-		var game_data = get_node_or_null("/root/GameData")
-		if game_data:
-			name_label.text = game_data.player_name
-		else:
-			name_label.text = "Player"
-		# Keep label scale always positive to prevent flipping
-		name_label.scale.x = 1.0
 
 func _on_hotbar_selection_changed(slot: int) -> void:
 	if not asc or not hotbar: return
@@ -419,10 +409,6 @@ func die() -> void:
 func _process(delta: float) -> void:
 	if Engine.is_editor_hint(): return
 
-	# Keep NameLabel upright (never flipped)
-	if _name_label:
-		_name_label.scale.x = 1.0
-
 	# Regeneração de Stamina
 	var is_consuming = false
 	if (asc and (asc.has_tag(&"motion.run") or asc.has_tag(&"motion.dash"))) or _is_attacking:
@@ -431,6 +417,15 @@ func _process(delta: float) -> void:
 	if not is_consuming and current_stamina < max_stamina:
 		var regen = stamina_regen_rate if stamina_regen_rate > 0 else 12.0
 		current_stamina += regen * delta
+
+func _draw() -> void:
+	"""Draw player name above the player, never flipped"""
+	if not player_name or player_name.is_empty():
+		return
+
+	# Draw name at the top of the player, always upright
+	var text_pos = Vector2(0, -30)  # Position above player
+	draw_string(ThemeDB.fallback_font, text_pos, player_name, HORIZONTAL_ALIGNMENT_CENTER, -1, 16, Color.WHITE)
 
 func reset_dash_timer() -> void:
 	_dash_coyote_timer = 0.0
