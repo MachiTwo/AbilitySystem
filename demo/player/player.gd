@@ -424,8 +424,9 @@ func _draw() -> void:
 		return
 
 	# Draw name at the top of the player, always upright
-	var text_pos = Vector2(0, -30)  # Position above player
-	draw_string(ThemeDB.fallback_font, text_pos, player_name, HORIZONTAL_ALIGNMENT_CENTER, -1, 16, Color.WHITE)
+	var font = ThemeDB.fallback_font
+	var text_pos = Vector2(-20, -35)  # Position above player
+	draw_string(font, text_pos, player_name, HORIZONTAL_ALIGNMENT_LEFT, -1, 14, Color.WHITE)
 
 func reset_dash_timer() -> void:
 	_dash_coyote_timer = 0.0
