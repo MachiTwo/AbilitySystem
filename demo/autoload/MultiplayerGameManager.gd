@@ -330,4 +330,3 @@ func _capture_and_broadcast_snapshot() -> void:
 	# TODO: Implement snapshot capture and distribution
 	# This would serialize all player states and send to clients for correction
 	pass
-

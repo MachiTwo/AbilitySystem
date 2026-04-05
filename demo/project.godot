@@ -26,15 +26,15 @@ config/features=PackedStringArray("4.6", "Forward Plus")
 
 [autoload]
 
-GameData="res://autoload/GameData.gd"
-GameMachine="res://autoload/GameMachine.gd"
-MultiplayerGameManager="res://autoload/MultiplayerGameManager.gd"
-RBAC="res://autoload/RBAC.gd"
-AdminCommand="res://autoload/AdminCommand.gd"
-AdminTerminal="res://autoload/AdminTerminal.gd"
-ServerLogger="res://autoload/ServerLogger.gd"
-SystemVerification="res://autoload/SystemVerification.gd"
-AudioManager="res://autoload/AudioManager.gd"
+GameData="*res://autoload/GameData.gd"
+GameMachine="*res://autoload/GameMachine.gd"
+MultiplayerGameManager="*res://autoload/MultiplayerGameManager.gd"
+RBAC="*res://autoload/RBAC.gd"
+AdminCommand="*res://autoload/AdminCommand.gd"
+AdminTerminal="*res://autoload/AdminTerminal.gd"
+ServerLogger="*res://autoload/ServerLogger.gd"
+SystemVerification="*res://autoload/SystemVerification.gd"
+AudioManager="*res://autoload/AudioManager.gd"
 
 [input]
 
