@@ -11,6 +11,7 @@ signal died
 @onready var _anim_player: AnimationPlayer = $AnimationPlayer
 @onready var _hitbox: Area2D = $Hitbox
 @onready var _delivery: ASDelivery = $Hitbox/ASDelivery
+@onready var _name_label: Label = $NameLabel
 
 var is_stunned: bool = false
 
@@ -49,6 +50,9 @@ var facing_direction: float = 1.0:
 			facing_direction = value
 			if scale.x != 0:
 				scale.x = abs(scale.x) * sign(value)
+				# Keep NameLabel upright by counter-scaling
+				if _name_label:
+					_name_label.scale.x = sign(value)
 
 var _is_blocked: bool:
 	get: return is_stunned or current_health <= 0 or (asc and asc.has_tag(&"status.dead"))
@@ -173,6 +177,8 @@ func _setup_name_label() -> void:
 			name_label.text = game_data.player_name
 		else:
 			name_label.text = "Player"
+		# Initialize scale to prevent flipping with player direction
+		name_label.scale.x = facing_direction
 
 func _on_hotbar_selection_changed(slot: int) -> void:
 	if not asc or not hotbar: return
