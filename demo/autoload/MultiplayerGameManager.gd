@@ -22,6 +22,7 @@ var player_container: Node
 var player_scene: PackedScene = preload("res://player/player.tscn")
 var game_mode_configured: bool = false
 var current_mode: String = ""  # "singleplayer", "multiplayer_server", "multiplayer_client"
+var lan_server_port: int = -1  # Port when opened to LAN (-1 = not open)
 
 func _ready() -> void:
 	print("[MP-MANAGER] Initializing multiplayer manager...")
@@ -216,6 +217,96 @@ func _get_spawn_position(player_id: int) -> Vector2:
 	if idx >= 0 and idx < positions.size():
 		return positions[idx]
 	return Vector2(400, 300)  # Fallback
+
+func open_to_lan(port: int = 0) -> bool:
+	"""Open singleplayer world to LAN for other players to join"""
+	if current_mode != "singleplayer":
+		print("[MP-MANAGER] ERROR: Can only open to LAN in singleplayer mode")
+		return false
+
+	if lan_server_port >= 0:
+		print("[MP-MANAGER] WARNING: World already open to LAN on port %d" % lan_server_port)
+		return false
+
+	# Use provided port or random port between 7778-7888
+	if port <= 0:
+		port = randi_range(7778, 7888)
+
+	print("[MP-MANAGER] Opening world to LAN on port %d..." % port)
+
+	is_server = true
+
+	var peer = ENetMultiplayerPeer.new()
+	var error = peer.create_server(port, max_players)
+
+	if error != OK:
+		print("[MP-MANAGER] ERROR: Failed to open to LAN: %d" % error)
+		is_server = false
+		return false
+
+	multiplayer.multiplayer_peer = peer
+	multiplayer.peer_connected.connect(_on_peer_connected)
+	multiplayer.peer_disconnected.connect(_on_peer_disconnected)
+
+	lan_server_port = port
+
+	# Notify via chat system
+	_broadcast_lan_info(port)
+
+	print("[MP-MANAGER] World opened to LAN on port %d" % port)
+	return true
+
+func close_lan_server() -> void:
+	"""Close LAN server and return to singleplayer"""
+	if lan_server_port < 0:
+		print("[MP-MANAGER] WARNING: LAN server not open")
+		return
+
+	print("[MP-MANAGER] Closing LAN server on port %d..." % lan_server_port)
+
+	# Disconnect all clients gracefully
+	if multiplayer.multiplayer_peer:
+		for peer_id in multiplayer.get_peers():
+			if peer_id != 1:  # Don't disconnect self
+				multiplayer.peer_disconnected.emit(peer_id)
+
+		multiplayer.multiplayer_peer = null
+
+	lan_server_port = -1
+	is_server = false
+
+	# Notify via chat system
+	_broadcast_lan_closed()
+
+	print("[MP-MANAGER] LAN server closed")
+
+func get_lan_port() -> int:
+	"""Get current LAN port, or -1 if not open"""
+	return lan_server_port
+
+func _broadcast_lan_info(port: int) -> void:
+	"""Send LAN info via chat system"""
+	var chat_system = get_tree().root.get_node_or_null("Level/ChatSystem")
+	if chat_system and chat_system.has_method("add_system_message"):
+		var ip_addr = "127.0.0.1"  # For LAN, typically localhost
+		# Try to get actual local IP if possible
+		var env_ip = OS.get_environment("MULTIPLAYER_IP")
+		if env_ip:
+			ip_addr = env_ip
+
+		chat_system.add_system_message("[SERVER] World opened to LAN!")
+		chat_system.add_system_message("[PORT] Listening on port: %d" % port)
+		chat_system.add_system_message("[IP] Local IP: %s" % ip_addr)
+		if ServerLogger:
+			ServerLogger.log(ServerLogger.LogLevel.INFO, "LAN", "World opened on %s:%d" % [ip_addr, port])
+
+func _broadcast_lan_closed() -> void:
+	"""Send LAN closed message via chat system"""
+	var chat_system = get_tree().root.get_node_or_null("Level/ChatSystem")
+	if chat_system and chat_system.has_method("add_system_message"):
+		chat_system.add_system_message("[SERVER] LAN server closed")
+		if ServerLogger:
+			ServerLogger.log(ServerLogger.LogLevel.INFO, "LAN", "World closed")
 
 func _process(_delta: float) -> void:
 	"""Main game loop - tick processing"""

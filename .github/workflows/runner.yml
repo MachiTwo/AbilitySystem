@@ -91,6 +91,17 @@ jobs:
       plugin_version: ${{ needs.init-version.outputs.plugin-version }}
       is_release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
+  build-demo:
+    name: 🎮 Build Demo Executables
+    needs: [init-version, tests]
+    if: |
+      always() &&
+      needs.init-version.result == 'success' &&
+      needs.tests.result == 'success'
+    uses: ./.github/workflows/build_demo_executables.yml
+    with:
+      plugin_version: ${{ needs.init-version.outputs.plugin-version }}
+
   post-release:
     name: 🚀 Final Delivery (GitHub Release)
     runs-on: ubuntu-latest
@@ -102,7 +113,7 @@ jobs:
       needs.init-version.result == 'success' &&
       needs.package-plugin.result == 'success' &&
       needs.module-builds.result == 'success'
-    needs: [init-version, module-builds, package-plugin]
+    needs: [init-version, module-builds, package-plugin, build-demo]
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
@@ -127,8 +138,16 @@ jobs:
             NAME=$(echo $i | jq -r '.name')
             ID=$(echo $i | jq -r '.id')
 
-            # Filter by project prefix
-            if [[ "$NAME" == "${{ env.PROJECT_ID }}+v"* ]]; then
+            # Download demo executables
+            if [[ "$NAME" == "demo-executables-"* ]] || [[ "$NAME" == "demo-manifest-"* ]]; then
+              FILENAME="$NAME"
+              if [[ "$FILENAME" != *.zip ]]; then
+                FILENAME="$FILENAME.zip"
+              fi
+              echo "Downloading demo artifact: $NAME as $FILENAME"
+              gh api repos/${{ github.repository }}/actions/artifacts/$ID/zip > "out/$FILENAME"
+            # Filter by project prefix for plugin artifacts
+            elif [[ "$NAME" == "${{ env.PROJECT_ID }}+v"* ]]; then
               # Group templates
               if [[ "$NAME" == *"template_debug"* ]] || [[ "$NAME" == *"template_release"* ]]; then
                 GROUP_NAME="${NAME/template_debug/templates}"

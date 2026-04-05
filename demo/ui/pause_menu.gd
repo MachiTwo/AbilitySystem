@@ -76,20 +76,29 @@ func _on_open_lan_pressed() -> void:
 		return
 
 	print("[PauseMenu] Opening world to LAN...")
-	status_label.text = ""
-	lan_is_open = true
-	_update_buttons()
 
-	# TODO: Call MultiplayerGameManager.open_to_lan() when implemented
-	status_label.text = "World opened to LAN! (Not yet fully implemented)"
+	var mp_manager = get_node_or_null("/root/MultiplayerGameManager")
+	if mp_manager:
+		if mp_manager.open_to_lan():
+			status_label.text = ""
+			lan_is_open = true
+			_update_buttons()
+		else:
+			status_label.text = "Failed to open world to LAN"
+	else:
+		status_label.text = "Multiplayer manager not found"
 
 func _on_close_server_pressed() -> void:
 	print("[PauseMenu] Closing LAN server...")
-	lan_is_open = false
-	_update_buttons()
 
-	# TODO: Call MultiplayerGameManager.close_lan_server() when implemented
-	status_label.text = ""
+	var mp_manager = get_node_or_null("/root/MultiplayerGameManager")
+	if mp_manager:
+		mp_manager.close_lan_server()
+		lan_is_open = false
+		_update_buttons()
+		status_label.text = ""
+	else:
+		status_label.text = "Multiplayer manager not found"
 
 func _on_quit_pressed() -> void:
 	print("[PauseMenu] Quitting to menu...")
