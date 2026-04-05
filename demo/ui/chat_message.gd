@@ -1,4 +1,4 @@
-extends HBoxContainer
+extends Container
 ## Individual chat message display
 
 @onready var label: Label = $Label

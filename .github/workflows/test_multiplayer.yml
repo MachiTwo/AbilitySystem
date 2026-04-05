@@ -46,6 +46,20 @@ jobs:
           chmod +x "$BIN_NAME"
           echo "GODOT_BIN=$(pwd)/$BIN_NAME" >> $GITHUB_ENV
 
+      - name: Download & Install Export Templates
+        shell: bash
+        run: |
+          GODOT_VERSION="4.6.1"
+          TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/$GODOT_VERSION.stable"
+          mkdir -p "$TEMPLATES_DIR"
+
+          # Download templates for Linux
+          cd /tmp
+          wget -q https://downloads.tuxfamily.org/godotengine/4.6.1/Godot_v4.6.1-stable_linux_headless.64.zip
+          unzip -q Godot_v4.6.1-stable_linux_headless.64.zip
+          cp -v Godot_v4.6.1-stable_linux_headless.x86_64 "$TEMPLATES_DIR/linux_release.x86_64" || true
+          cp -v Godot_v4.6.1-stable_linux_headless.x86_64 "$TEMPLATES_DIR/linux_debug.x86_64" || true
+
       - name: Sync Addons to All Demos (ability_system + limboai)
         run: python utility/post_build.py
 
