@@ -62,18 +62,26 @@ jobs:
           scons target=template_debug platform=linux arch=x86_64 tests=unit -j$(nproc)
 
       - name: Download Godot Engine
-        # Download the matching Godot Engine headless executable using deps.env versions
         run: |
-          GODOT_FILE="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64.zip"
-          GODOT_EXTRACTED="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64"
+          GODOT_FILE1="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64.zip"
+          GODOT_FILE2="Godot_v${GODOT_VERSION}_linux.x86_64.zip"
 
-          wget --timeout=30 --tries=3 ${GODOT_RELEASES_URL}/${GODOT_VERSION}-${GODOT_STATUS}/${GODOT_FILE}
-          if [ $? -ne 0 ]; then
-            echo "Primary download failed, trying mirror..."
-            wget --timeout=30 --tries=3 https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/${GODOT_FILE}
+          echo "Attempting to download: $GODOT_FILE1"
+          wget --timeout=30 --tries=3 ${GODOT_RELEASES_URL}/${GODOT_VERSION}-${GODOT_STATUS}/${GODOT_FILE1} -O godot.zip 2>/dev/null
+
+          if [ ! -s godot.zip ]; then
+            echo "First attempt failed, trying alternative filename..."
+            wget --timeout=30 --tries=3 ${GODOT_RELEASES_URL}/${GODOT_VERSION}-${GODOT_STATUS}/${GODOT_FILE2} -O godot.zip 2>/dev/null
           fi
-          unzip ${GODOT_FILE}
-          mv ${GODOT_EXTRACTED} godot_headless
+
+          if [ ! -s godot.zip ]; then
+            echo "Primary download failed, trying mirror..."
+            wget --timeout=30 --tries=3 https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/${GODOT_FILE2} -O godot.zip
+          fi
+
+          unzip -q godot.zip
+          BINARY=$(find . -maxdepth 1 -name "Godot_v*" -type f -executable | head -1)
+          mv "$BINARY" godot_headless
           chmod +x godot_headless
 
       - name: Run GDExtension Test Runner

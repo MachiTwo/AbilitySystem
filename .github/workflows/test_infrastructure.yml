@@ -74,20 +74,48 @@ jobs:
         id: godot
         shell: bash
         run: |
-          GODOT_FILE="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64.zip"
+          # Try different filename formats
+          GODOT_FILE1="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64.zip"
+          GODOT_FILE2="Godot_v${GODOT_VERSION}_linux.x86_64.zip"
           GODOT_EXTRACTED="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64"
-          URL="${GODOT_RELEASES_URL}/${GODOT_VERSION}-${GODOT_STATUS}/${GODOT_FILE}"
 
-          wget --tries=5 --waitretry=5 "$URL" -O godot.zip
-          if [ $? -ne 0 ]; then
-            echo "Primary download failed, trying mirror..."
-            wget --tries=5 --waitretry=5 "https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/${GODOT_FILE}" -O godot.zip
+          URL1="${GODOT_RELEASES_URL}/${GODOT_VERSION}-${GODOT_STATUS}/${GODOT_FILE1}"
+          URL2="${GODOT_RELEASES_URL}/${GODOT_VERSION}-${GODOT_STATUS}/${GODOT_FILE2}"
+
+          echo "Attempting to download from: $URL1"
+          wget --tries=3 --waitretry=5 "$URL1" -O godot.zip 2>/dev/null
+
+          if [ ! -f godot.zip ] || [ ! -s godot.zip ]; then
+            echo "First attempt failed, trying alternative filename..."
+            wget --tries=3 --waitretry=5 "$URL2" -O godot.zip 2>/dev/null
           fi
-          unzip godot.zip
-          chmod +x "$GODOT_EXTRACTED"
+
+          if [ ! -f godot.zip ] || [ ! -s godot.zip ]; then
+            echo "Primary downloads failed, trying mirror..."
+            wget --tries=3 --waitretry=5 "https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/${GODOT_FILE2}" -O godot.zip
+          fi
+
+          if [ ! -f godot.zip ] || [ ! -s godot.zip ]; then
+            echo "ERROR: Failed to download Godot binary"
+            exit 1
+          fi
+
+          unzip -q godot.zip
+
+          # Find the extracted binary (name might vary)
+          BINARY=$(find . -maxdepth 1 -name "Godot_v*" -type f -executable | head -1)
+          if [ -z "$BINARY" ]; then
+            echo "ERROR: Could not find Godot binary after extraction"
+            ls -la
+            exit 1
+          fi
+
+          chmod +x "$BINARY"
           mkdir -p dist/godot
-          cp "$GODOT_EXTRACTED" dist/godot/
-          echo "bin-name=$GODOT_EXTRACTED" >> "$GITHUB_OUTPUT"
+          cp "$BINARY" dist/godot/
+          BINARY_NAME=$(basename "$BINARY")
+          echo "bin-name=$BINARY_NAME" >> "$GITHUB_OUTPUT"
+          echo "Downloaded: $BINARY_NAME"
 
       - name: Download & Install Export Templates
         shell: bash
@@ -95,23 +123,43 @@ jobs:
           TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.${GODOT_STATUS}"
           mkdir -p "$TEMPLATES_DIR"
 
-          TEMPLATES_FILE="Godot_v${GODOT_VERSION_FOR_EXPORT}_export-templates.tpz"
+          TEMPLATES_FILE1="Godot_v${GODOT_VERSION_FOR_EXPORT}_export-templates.tpz"
+          TEMPLATES_FILE2="Godot_v${GODOT_VERSION}_export-templates.tpz"
+
           cd /tmp
-          wget --tries=5 --waitretry=5 ${GODOT_RELEASES_URL}/${GODOT_VERSION}-${GODOT_STATUS}/${TEMPLATES_FILE}
-          if [ $? -ne 0 ]; then
-            echo "Primary download failed, trying mirror..."
-            wget --tries=5 --waitretry=5 https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/${TEMPLATES_FILE}
+          echo "Attempting to download templates: $TEMPLATES_FILE1"
+          wget --tries=3 --waitretry=5 ${GODOT_RELEASES_URL}/${GODOT_VERSION}-${GODOT_STATUS}/${TEMPLATES_FILE1} 2>/dev/null
+
+          if [ ! -f "$TEMPLATES_FILE1" ] || [ ! -s "$TEMPLATES_FILE1" ]; then
+            echo "First attempt failed, trying alternative filename..."
+            wget --tries=3 --waitretry=5 ${GODOT_RELEASES_URL}/${GODOT_VERSION}-${GODOT_STATUS}/${TEMPLATES_FILE2} 2>/dev/null
+            if [ -f "$TEMPLATES_FILE2" ]; then
+              TEMPLATES_FILE="$TEMPLATES_FILE2"
+            fi
+          else
+            TEMPLATES_FILE="$TEMPLATES_FILE1"
           fi
 
-          unzip -q -o ${TEMPLATES_FILE} -d "$TEMPLATES_DIR"
-          rm -f ${TEMPLATES_FILE}
-
-          if [ -d "$TEMPLATES_DIR/templates" ]; then
-            mv "$TEMPLATES_DIR/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
-            rmdir "$TEMPLATES_DIR/templates" 2>/dev/null || true
+          if [ ! -f "$TEMPLATES_FILE" ] || [ ! -s "$TEMPLATES_FILE" ]; then
+            echo "Primary downloads failed, trying mirror..."
+            wget --tries=3 --waitretry=5 https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/${TEMPLATES_FILE2}
+            TEMPLATES_FILE="$TEMPLATES_FILE2"
           fi
 
-          echo "✅ Export templates installed at $TEMPLATES_DIR"
+          if [ ! -f "$TEMPLATES_FILE" ] || [ ! -s "$TEMPLATES_FILE" ]; then
+            echo "WARNING: Could not download export templates"
+            echo "This is not fatal - will continue without templates"
+          else
+            unzip -q -o ${TEMPLATES_FILE} -d "$TEMPLATES_DIR"
+            rm -f ${TEMPLATES_FILE}
+
+            if [ -d "$TEMPLATES_DIR/templates" ]; then
+              mv "$TEMPLATES_DIR/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
+              rmdir "$TEMPLATES_DIR/templates" 2>/dev/null || true
+            fi
+
+            echo "✅ Export templates installed at $TEMPLATES_DIR"
+          fi
 
       - name: Setup Demo Export Presets
         shell: bash
