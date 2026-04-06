@@ -34,7 +34,7 @@
 #include "../core/ability_system.h"
 
 ASComponent *ASBridgeTask::resolve_asc(Node *p_agent, const NodePath &p_asc_path) const {
-	return ASBridge::resolve_asc(p_agent, p_asc_path);
+	return AbilitySystem::get_singleton()->resolve_component(p_agent, p_asc_path);
 }
 
 bool ASBridgeTask::validate_tag(const StringName &p_tag) const {

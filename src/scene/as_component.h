@@ -85,14 +85,56 @@ class ASCueSpec;
 class ASComponent : public Node {
 	GDCLASS(ASComponent, Node);
 
+	friend class ASAbilitySpec;
+	friend class ASEffectSpec;
+	friend class ASCueSpec;
+	friend class ASBridgeState;
+	friend class ASBridgePrediction;
+	friend class ASTagUtils;
+	friend class ASAbility;
+	friend class ASStateCache;
+	friend class ASCueAnimation;
+	friend class ASCueAudio;
+	friend class ASStateSnapshot;
+	friend class ASDelivery;
+	friend class ASAbilitySpec;
+	friend class ASEffectSpec;
+	friend class ASCueSpec;
+	friend class ASBridgeState;
+	friend class ASBridgePrediction;
+	friend class ASTagUtils;
+	friend class ASAbility;
+	friend class ASStateCache;
+	friend class ASCueAnimation;
+	friend class ASCueAudio;
+	friend class ASStateSnapshot;
+	friend class ASDelivery;
+	friend class BTActionAS_ActivateAbility;
+	friend class BTActionAS_DispatchEvent;
+	friend class BTActionAS_WaitForEvent;
+	friend class BTConditionAS_CanActivate;
+	friend class BTConditionAS_EventOccurred;
+	friend class BTConditionAS_HasTag;
+	friend struct ASEventTag;
+	friend struct ASComponentState;
+
 public:
 	// Events Historical - Using structs from as_utils.h
-	Vector<ASEventTagHistoricalEntry> _event_history;
-	Vector<ASNameTagHistoricalEntry> _name_history;
-	Vector<ASConditionalTagHistoricalEntry> _cond_history;
-	uint32_t _event_history_max_size = 128;
+	Vector<ASNameTagHistorical> _name_history;
+	Vector<ASConditionalTagHistorical> _cond_history;
+	Vector<ASEventTagHistorical> _event_history;
+	Vector<ASAttributeHistorical> _attribute_history;
+	Vector<ASAbilityHistorical> _ability_history;
+	Vector<ASEffectHistorical> _effect_history;
+	Vector<ASCueHistorical> _cue_history;
+
 	uint32_t _name_history_max_size = 128;
 	uint32_t _cond_history_max_size = 128;
+	uint32_t _event_history_max_size = 128;
+	uint32_t _attr_history_max_size = 128;
+	uint32_t _ability_history_max_size = 128;
+	uint32_t _effect_history_max_size = 128;
+	uint32_t _cue_history_max_size = 128;
 
 	CharacterBody2D *character_body_2d = nullptr;
 	CharacterBody3D *character_body_3d = nullptr;
@@ -107,6 +149,7 @@ public:
 	Vector<Ref<ASEffectSpec>> active_effects;
 	Ref<ASTagSpec> owned_tags;
 	Vector<Ref<ASCue>> registered_cues;
+	Vector<Ref<ASCueSpec>> active_cues;
 	Ref<ASContainer> container;
 	Ref<ASStateSnapshot> snapshot_state;
 
@@ -119,41 +162,7 @@ public:
 	bool _is_rolling_back = false;
 	bool _is_predicting = false;
 
-protected:
-	static void _bind_methods();
-	void _notification(int p_what);
-
-	void _on_attribute_set_attribute_changed(const StringName &p_name, float p_old_val, float p_new_val);
-	void _update_attribute_current_values();
-
-	void _process_effects(float p_delta);
-	void _process_abilities(float p_delta);
-	void _process_cooldowns(float p_delta);
-	void _remove_effect_at_index(int p_idx);
-
-public:
-	static ASComponent *get_from_node(Node *p_node);
-
-	// --- Cooldown API ---
-	void start_cooldown(const StringName &p_ability_tag, float p_duration, const TypedArray<StringName> &p_cooldown_tags);
-	bool is_on_cooldown(const StringName &p_ability_tag) const;
-	float get_cooldown_remaining(const StringName &p_ability_tag) const;
-	void tick(float p_delta);
-	void _handle_ability_triggers(const StringName &p_tag, ASAbility::TriggerType p_type);
-
-	// Multiplayer & Prediction - Using dedicated ASStateCache from as_utils.h
-	ASStateCache state_cache;
-	uint32_t current_tick = 0;
-
-	bool _is_server() const;
-	bool _is_local_authority() const;
-
-	void capture_snapshot();
-	void apply_snapshot(uint32_t p_tick);
-
-	void request_activate_ability(const StringName &p_tag);
-	void confirm_ability_activation(const StringName &p_tag);
-
+	// --- Setup API ---
 	void apply_container(Ref<ASContainer> p_container, int p_lvl = 1);
 	void add_attribute_set(Ref<ASAttributeSet> p_set);
 	TypedArray<ASAttributeSet> get_attribute_sets() const;
@@ -164,6 +173,9 @@ public:
 	void lock_ability_by_tag(const StringName &p_tag);
 	void lock_ability_by_resource(const Ref<ASAbility> &p_ability);
 	bool is_ability_unlocked(const StringName &p_tag) const;
+	TypedArray<ASAbilitySpec> get_unlocked_abilities() const;
+	TypedArray<ASAbilitySpec> get_active_abilities() const;
+	TypedArray<ASEffectSpec> get_active_effects() const;
 
 	// --- Ability Activation API (Transient execution) ---
 	bool can_activate_ability_by_tag(const StringName &p_tag);
@@ -172,7 +184,7 @@ public:
 	bool is_ability_active(const StringName &p_tag) const;
 
 	bool can_activate_ability_by_resource(const Ref<ASAbility> &p_ability);
-	bool try_activate_ability_by_resource(const Ref<ASAbility> &p_ability, Object *p_target_node = nullptr, uint64_t p_parent_id = 0);
+	bool try_activate_ability_by_resource(const Ref<ASAbility> &p_ability, Object *p_target_node = nullptr, int p_parent_id = 0);
 	void cancel_ability_by_resource(const Ref<ASAbility> &p_ability);
 
 	void cancel_all_abilities();
@@ -190,15 +202,11 @@ public:
 	void remove_effect_by_resource(const Ref<ASEffect> &p_effect);
 	void clear_effects();
 
-	// --- Effect Execution API (Low level) ---
+	// --- Effect Low-level API ---
 	void apply_effect_by_tag(const StringName &p_tag, float p_lvl = 1.0f, Object *p_target_node = nullptr);
 	void apply_effect_by_resource(const Ref<ASEffect> &p_effect, float p_lvl = 1.0f, Object *p_target_node = nullptr);
 	void apply_package(const Ref<ASPackage> &p_package, float p_lvl = 1.0f, ASComponent *p_source_component = nullptr);
 
-	Ref<ASEffectSpec> make_outgoing_spec(Ref<ASEffect> p_effect, float p_lvl = 1.0f, Object *p_target_node = nullptr);
-	void apply_effect_spec_to_self(Ref<ASEffectSpec> p_spec);
-	void apply_effect_spec_to_target(Ref<ASEffectSpec> p_spec, ASComponent *p_target);
-	void remove_active_effect(Ref<ASEffectSpec> p_spec);
 	bool has_active_effect_by_tag(const StringName &p_tag) const;
 	bool has_active_effect_by_resource(const Ref<ASEffect> &p_effect) const;
 	Ref<ASEffect> find_effect_by_tag(const StringName &p_tag) const;
@@ -213,6 +221,10 @@ public:
 	float get_attribute_base_value_by_resource(const Ref<ASAttribute> &p_attribute) const;
 	void set_attribute_base_value_by_resource(const Ref<ASAttribute> &p_attribute, float p_value);
 	bool has_attribute_by_resource(const Ref<ASAttribute> &p_attribute) const;
+
+	float get_attribute_max_value(const StringName &p_tag) const;
+	float get_attribute_percent(const StringName &p_tag) const;
+	float get_cooldown_percent(const StringName &p_tag) const;
 
 	// --- Tag Management ---
 	void add_tag(const StringName &p_tag);
@@ -231,11 +243,11 @@ public:
 	bool try_activate_cue_by_resource(const Ref<ASCue> &p_cue, const Dictionary &p_data = Dictionary(), Object *p_target_node = nullptr);
 	void cancel_cue_by_resource(const Ref<ASCue> &p_cue);
 
-	void _execute_cue_with_spec(const StringName &p_tag, Ref<ASCueSpec> p_spec);
-
 	void register_cue_resource(Ref<ASCue> p_cue);
 	void unregister_cue_resource(const StringName &p_tag);
 	Ref<ASCue> get_cue_resource(const StringName &p_tag) const;
+	TypedArray<ASCue> get_registered_cues() const;
+	TypedArray<ASCueSpec> get_active_cues() const;
 
 	// --- AS Events API ---
 	void dispatch_event(const StringName &p_tag, Node *p_instigator = nullptr, float p_magnitude = 0.0f, const Dictionary &p_custom_payload = Dictionary());
@@ -246,9 +258,34 @@ public:
 	void clear_tag_history();
 	void clear_name_history();
 	void clear_conditional_history();
+	void clear_attribute_history();
+	void clear_ability_history();
+	void clear_effect_history();
+	void clear_cue_history();
+	void clear_all_history();
+
 	int get_name_history_size() const { return _name_history.size(); }
 	int get_conditional_history_size() const { return _cond_history.size(); }
 	int get_event_history_size() const { return _event_history.size(); }
+	int get_attribute_history_size() const { return _attribute_history.size(); }
+	int get_ability_history_size() const { return _ability_history.size(); }
+	int get_effect_history_size() const { return _effect_history.size(); }
+	int get_cue_history_size() const { return _cue_history.size(); }
+
+	// --- Historical Query API ---
+	TypedArray<Dictionary> get_attribute_history(float p_lookback_sec = 1.0f) const;
+	TypedArray<Dictionary> get_ability_history(float p_lookback_sec = 1.0f) const;
+	TypedArray<Dictionary> get_effect_history(float p_lookback_sec = 1.0f) const;
+	TypedArray<Dictionary> get_cue_history(float p_lookback_sec = 1.0f) const;
+	float get_attribute_last_delta(const StringName &p_attribute) const;
+
+	// --- Cooldown API ---
+	void start_cooldown(const StringName &p_ability_tag, float p_duration, const TypedArray<StringName> &p_cooldown_tags);
+	bool is_on_cooldown(const StringName &p_ability_tag) const;
+	float get_cooldown_remaining(const StringName &p_ability_tag) const;
+
+	// --- Simulation / Tick API ---
+	void tick(float p_delta);
 
 	// --- Montage API ---
 	void play_montage(const StringName &p_name, Node *p_target = nullptr);
@@ -284,6 +321,56 @@ public:
 	// Virtual callback for custom magnitudes from scripts
 	GDVIRTUAL2RC(float, _on_calculate_custom_magnitude, Ref<ASEffectSpec>, int);
 
+	// Constructor / Destructor (Public for tests and normal instantiation)
 	ASComponent();
 	~ASComponent();
+
+protected:
+	static void _bind_methods();
+	void _notification(int p_what);
+
+	// --- Internal Attribute Processing ---
+	void _on_attribute_set_attribute_changed(const StringName &p_name, float p_old_val, float p_new_val);
+	void _update_attribute_current_values();
+
+	// --- Internal Per-Tick Processing ---
+	void _process_effects(float p_delta);
+	void _process_abilities(float p_delta);
+	void _process_cooldowns(float p_delta);
+	void _remove_effect_at_index(int p_idx);
+	void _handle_ability_triggers(const StringName &p_tag, ASAbility::TriggerType p_type);
+
+	// --- Internal Event Recording ---
+	void _record_ability_event(const StringName &p_ability_tag, const StringName &p_status, Node *p_instigator, int p_level = 1);
+	void _record_effect_event(const StringName &p_effect_tag, const StringName &p_status, Node *p_instigator, int p_stacks = 1);
+	void _record_cue_event(const StringName &p_cue_tag, const StringName &p_status, Node *p_instigator);
+	void _record_name_tag_event(const StringName &p_tag, bool p_added);
+	void _record_conditional_tag_event(const StringName &p_tag, bool p_added);
+	void _record_event_tag_event(const StringName &p_tag, Node *p_instigator);
+
+	// --- Internal Static Resolution ---
+	static ASComponent *resolve(Node *p_node, const StringName &p_alias = "Self");
+
+	// --- Internal Effect Spec API ---
+	Ref<ASEffectSpec> make_outgoing_spec(Ref<ASEffect> p_effect, float p_lvl = 1.0f, Object *p_target_node = nullptr);
+	void apply_effect_spec_to_self(Ref<ASEffectSpec> p_spec);
+	void apply_effect_spec_to_target(Ref<ASEffectSpec> p_spec, ASComponent *p_target);
+	void remove_active_effect(Ref<ASEffectSpec> p_spec);
+
+	// --- Internal Cue Execution ---
+	void _execute_cue_with_spec(const StringName &p_tag, Ref<ASCueSpec> p_spec);
+
+	// --- Multiplayer & Prediction (Internal) ---
+	Ref<ASStateCache> state_cache;
+	uint32_t current_tick = 0;
+
+	bool _is_server() const;
+	bool _is_local_authority() const;
+
+	void capture_snapshot();
+	void apply_snapshot(uint32_t p_tick);
+	void rollback_to_tick(uint32_t p_tick);
+
+	void request_activate_ability(const StringName &p_tag);
+	void confirm_ability_activation(const StringName &p_tag);
 };

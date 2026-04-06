@@ -46,13 +46,13 @@
 #if defined(LIMBOAI_MODULE) || defined(LIMBOAI_GDEXTENSION)
 // Real LimboAI available — use actual headers
 #ifdef LIMBOAI_GDEXTENSION
-#include "blackboard/bb_variable.h"
-#include "blackboard/blackboard.h"
-#include "blackboard/blackboard_plan.h"
+#include "src/limboai/blackboard/bb_variable.h"
+#include "src/limboai/blackboard/blackboard.h"
+#include "src/limboai/blackboard/blackboard_plan.h"
 #else
-#include "modules/limboai/blackboard/bb_variable.h"
-#include "modules/limboai/blackboard/blackboard.h"
-#include "modules/limboai/blackboard/blackboard_plan.h"
+#include "modules/ability_system/limboai/blackboard/bb_variable.h"
+#include "modules/ability_system/limboai/blackboard/blackboard.h"
+#include "modules/ability_system/limboai/blackboard/blackboard_plan.h"
 #endif
 #else
 // Stub implementations follow
@@ -72,10 +72,10 @@ using namespace godot;
 #else
 #include "core/object/object.h"
 #include "core/object/ref_counted.h"
+#include "core/string/node_path.h"
 #include "core/string/string_name.h"
 #include "core/templates/hash_map.h"
 #include "core/variant/dictionary.h"
-#include "core/variant/node_path.h"
 #include "core/variant/variant.h"
 #include "scene/main/node.h"
 #endif
@@ -87,7 +87,8 @@ using namespace godot;
  * When LimboAI is available, uses the actual implementation.
  * When not available, provides a simplified version for AS integration.
  */
-class BBVariable {
+class BBVariable : public RefCounted {
+	GDCLASS(BBVariable, RefCounted)
 private:
 	Variant value;
 	Variant::Type type = Variant::NIL;
@@ -98,6 +99,9 @@ private:
 	ObjectID bound_object_id;
 	StringName bound_property;
 	bool is_bound = false;
+
+protected:
+	static void _bind_methods();
 
 public:
 	BBVariable() = default;
@@ -133,7 +137,7 @@ class Blackboard : public RefCounted {
 	GDCLASS(Blackboard, RefCounted)
 
 private:
-	HashMap<StringName, BBVariable> variables;
+	HashMap<StringName, Ref<BBVariable>> variables;
 	Ref<Blackboard> parent_blackboard; // Hierarchical scoping
 
 	// Auto-binding support
@@ -178,7 +182,7 @@ class BlackboardPlan : public Resource {
 	GDCLASS(BlackboardPlan, Resource)
 
 private:
-	HashMap<StringName, BBVariable> variables;
+	HashMap<StringName, Ref<BBVariable>> variables;
 	Array parent_plans; // Inheritance
 	HashMap<StringName, StringName> variable_mappings; // Map to parent scopes
 
@@ -195,7 +199,7 @@ public:
 
 	// Variable queries
 	bool has_variable(const StringName &p_name) const;
-	BBVariable get_variable_definition(const StringName &p_name) const;
+	Ref<BBVariable> get_variable_definition(const StringName &p_name) const;
 	Array get_variable_names() const;
 
 	// Inheritance

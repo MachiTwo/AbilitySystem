@@ -29,15 +29,19 @@ Properties
 .. table::
    :widths: auto
 
-   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\]       | :ref:`cues_resources<class_ASPackage_property_cues_resources>`       | ``[]`` |
-   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[``StringName``\]                  | :ref:`cues_tags<class_ASPackage_property_cues_tags>`                 | ``[]`` |
-   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\] | :ref:`effects_resources<class_ASPackage_property_effects_resources>` | ``[]`` |
-   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
-   | :ref:`Array<class_Array>`\[``StringName``\]                  | :ref:`effects_tags<class_ASPackage_property_effects_tags>`           | ``[]`` |
-   +--------------------------------------------------------------+----------------------------------------------------------------------+--------+
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[:ref:`ASCue<class_ASCue>`\]       | :ref:`cues_resources<class_ASPackage_property_cues_resources>`       | ``[]``  |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                  | :ref:`cues_tags<class_ASPackage_property_cues_tags>`                 | ``[]``  |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\] | :ref:`effects_resources<class_ASPackage_property_effects_resources>` | ``[]``  |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                  | :ref:`effects_tags<class_ASPackage_property_effects_tags>`           | ``[]``  |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                  | :ref:`events_on_deliver<class_ASPackage_property_events_on_deliver>` | ``[]``  |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
+   | ``StringName``                                               | :ref:`package_tag<class_ASPackage_property_package_tag>`             | ``&""`` |
+   +--------------------------------------------------------------+----------------------------------------------------------------------+---------+
 
 .. rst-class:: classref-reftable-group
 
@@ -142,6 +146,40 @@ List of direct :ref:`ASEffect<class_ASEffect>` resources.
 
 List of effect tags.
 
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASPackage_property_events_on_deliver:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[``StringName``\] **events_on_deliver** = ``[]`` :ref:`🔗<class_ASPackage_property_events_on_deliver>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_events_on_deliver**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_events_on_deliver**\ (\ )
+
+List of events dispatched to the target immediately upon package delivery.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASPackage_property_package_tag:
+
+.. rst-class:: classref-property
+
+``StringName`` **package_tag** = ``&""`` :ref:`🔗<class_ASPackage_property_package_tag>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_package_tag**\ (\ value\: ``StringName``\ )
+- ``StringName`` **get_package_tag**\ (\ )
+
+Unique identifier tag for the package. Used for tracking and delivery logic.
+
 .. rst-class:: classref-section-separator
 
 ----
@@ -229,9 +267,7 @@ Clears all effects from the package.
 
 |void| **remove_cue**\ (\ cue\: :ref:`ASCue<class_ASCue>`\ ) :ref:`🔗<class_ASPackage_method_remove_cue>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Removes a direct :ref:`ASCue<class_ASCue>` resource from the package.
 
 .. rst-class:: classref-item-separator
 
@@ -243,9 +279,7 @@ Clears all effects from the package.
 
 |void| **remove_cue_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_ASPackage_method_remove_cue_tag>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Removes a cue tag from the package.
 
 .. rst-class:: classref-item-separator
 
@@ -257,9 +291,7 @@ Clears all effects from the package.
 
 |void| **remove_effect**\ (\ effect\: :ref:`ASEffect<class_ASEffect>`\ ) :ref:`🔗<class_ASPackage_method_remove_effect>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Removes a direct :ref:`ASEffect<class_ASEffect>` resource from the package.
 
 .. rst-class:: classref-item-separator
 
@@ -271,9 +303,7 @@ Clears all effects from the package.
 
 |void| **remove_effect_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_ASPackage_method_remove_effect_tag>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Removes an effect tag from the package.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

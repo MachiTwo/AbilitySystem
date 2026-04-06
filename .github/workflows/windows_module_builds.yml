@@ -27,7 +27,7 @@ jobs:
       - name: Checkout Ability System
         uses: actions/checkout@v4.2.2
         with:
-          submodules: true
+          submodules: recursive
 
       - name: Import dependency versions
         shell: bash

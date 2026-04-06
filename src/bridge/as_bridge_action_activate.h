@@ -36,8 +36,6 @@
 using namespace godot;
 #endif
 
-#if AS_BRIDGE_LIMBOAI_AVAILABLE
-
 /**
  * BTActionAS_ActivateAbility
  *
@@ -67,5 +65,3 @@ public:
 	void set_activation_level(float p_level) { activation_level = p_level; }
 	float get_activation_level() const { return activation_level; }
 };
-
-#endif // AS_BRIDGE_LIMBOAI_AVAILABLE

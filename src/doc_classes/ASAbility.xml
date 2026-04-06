@@ -55,6 +55,7 @@
 			<param index="0" name="attribute" type="StringName" />
 			<param index="1" name="amount" type="float" />
 			<description>
+				Adds a prerequisite attribute value required for the ability to activate. Unlike costs, requirements do not consume the attribute; they only verify the current value.
 			</description>
 		</method>
 		<method name="add_trigger">
@@ -62,6 +63,7 @@
 			<param index="0" name="tag" type="StringName" />
 			<param index="1" name="type" type="int" enum="ASAbility.TriggerType" />
 			<description>
+				Registers an automatic activation trigger based on Global Tags or ASEvents. For example, an ability can be triggered when 'State.OnFire' is added to the actor.
 			</description>
 		</method>
 		<method name="apply_costs" qualifiers="const">
@@ -122,11 +124,13 @@
 			<return type="float" />
 			<param index="0" name="attribute" type="StringName" />
 			<description>
+				Returns the numeric requirement value for a specific attribute of this ability.
 			</description>
 		</method>
 		<method name="get_requirement_count" qualifiers="const">
 			<return type="int" />
 			<description>
+				Returns the total number of attribute prerequisites defined for this ability.
 			</description>
 		</method>
 		<method name="remove_cost">
@@ -140,6 +144,7 @@
 			<return type="bool" />
 			<param index="0" name="attribute" type="StringName" />
 			<description>
+				Removes an attribute requirement by its tag name. Returns true if the requirement existed and was successfully removed.
 			</description>
 		</method>
 	</methods>
@@ -158,12 +163,6 @@
 		</member>
 		<member name="ability_use_custom_duration" type="bool" setter="set_use_custom_duration" getter="get_use_custom_duration" default="false">
 			If true, triggers custom magnitude calculation for duration.
-		</member>
-		<member name="events_on_activate" type="StringName[]" setter="set_events_on_activate" getter="get_events_on_activate" default="[]">
-			Events dispatched when the ability is successfully activated.
-		</member>
-		<member name="events_on_end" type="StringName[]" setter="set_events_on_end" getter="get_events_on_end" default="[]">
-			Events dispatched when the ability ends (regardless of whether it was canceled or finished naturally).
 		</member>
 		<member name="activation_blocked_all_tags" type="StringName[]" setter="set_activation_blocked_all_tags" getter="get_activation_blocked_all_tags" default="[]">
 			Ability cannot activate if owner has [b]all[/b] of these tags simultaneously (AND logic).
@@ -204,17 +203,23 @@
 		<member name="effects" type="ASEffect[]" setter="set_effects" getter="get_effects" default="[]">
 			List of effects applied by this ability.
 		</member>
+		<member name="events_on_activate" type="StringName[]" setter="set_events_on_activate" getter="get_events_on_activate" default="[]">
+			Events dispatched when the ability is successfully activated.
+		</member>
+		<member name="events_on_end" type="StringName[]" setter="set_events_on_end" getter="get_events_on_end" default="[]">
+			Events dispatched when the ability ends (regardless of whether it was canceled or finished naturally).
+		</member>
+		<member name="phases" type="ASAbility[]" setter="set_phases" getter="get_phases" default="[]">
+			Sequential phases that this ability will execute in order.
+		</member>
+		<member name="requirements" type="Dictionary[]" setter="set_requirements" getter="get_requirements" default="[]">
+			Attribute requirements needed to activate the ability.
+		</member>
 		<member name="sub_abilities" type="ASAbility[]" setter="set_sub_abilities" getter="get_sub_abilities" default="[]">
 			Hierarchical sub-abilities that are unlocked alongside this parent ability.
 		</member>
 		<member name="sub_abilities_auto_activate" type="StringName[]" setter="set_sub_abilities_auto_activate" getter="get_sub_abilities_auto_activate" default="[]">
 			Tags of sub-abilities that should automatically activate when the parent ability starts.
-		</member>
-		<member name="phases" type="ASAbilityPhase[]" setter="set_phases" getter="get_phases" default="[]">
-			Sequential phases that this ability will execute in order.
-		</member>
-		<member name="requirements" type="Dictionary[]" setter="set_requirements" getter="get_requirements" default="[]">
-			Attribute requirements needed to activate the ability.
 		</member>
 		<member name="triggers" type="Dictionary[]" setter="set_triggers" getter="get_triggers" default="[]">
 			Automatic triggers for this ability (e.g. activate when a tag is added).
@@ -237,7 +242,7 @@
 			Ability attempts to activate when a specific Tag is removed from the owner.
 		</constant>
 		<constant name="TRIGGER_ON_EVENT" value="2" enum="TriggerType">
-			Ability attempts to activate when a specific [ASEventTag] is dispatched to the owner. This is the preferred way for reactive triggers like "Counter-attack on Hit".
+			Ability attempts to activate when a specific ASEventTag is dispatched to the owner. This is the preferred way for reactive triggers like "Counter-attack on Hit".
 		</constant>
 	</constants>
 </class>

@@ -34,6 +34,7 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include "src/tests/doctest.h"
 
+#ifdef AS_UNIT_TESTS_ENABLED
 // --- Unit: Data Resources ---
 #include "src/tests/unit/test_as_ability.h"
 #include "src/tests/unit/test_as_attribute.h"
@@ -49,12 +50,22 @@
 
 // --- Unit: Core Component Hub ---
 #include "src/tests/unit/test_as_component.h"
+#include "src/tests/unit/test_as_component_rollback.h"
 
 // --- Unit: Base infrastructure ---
 #include "src/tests/unit/test_as_base.h"
 
 // --- Integration: Gameplay Scenarios ---
 #include "src/tests/unit/test_gameplay_scenarios.h"
+#endif // AS_UNIT_TESTS_ENABLED
+
+#ifdef AS_BRIDGE_TESTS_ENABLED
+// --- Bridge: LimboAI Integration & Prediction ---
+#include "src/tests/bridge/test_as_bridge_prediction.h"
+#include "src/tests/bridge/test_as_bridge_state.h"
+#include "src/tests/bridge/test_as_bridge_tasks.h"
+#include "src/tests/bridge/test_as_limboai_full_integration.h"
+#endif // AS_BRIDGE_TESTS_ENABLED
 
 int run_gdextension_tests() {
 	doctest::Context context;

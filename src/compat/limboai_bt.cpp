@@ -40,7 +40,43 @@ void BTTask::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_agent", "agent"), &BTTask::set_agent);
 	ClassDB::bind_method(D_METHOD("get_agent"), &BTTask::get_agent);
 
+	ClassDB::bind_method(D_METHOD("set_blackboard", "blackboard"), &BTTask::set_blackboard);
+	ClassDB::bind_method(D_METHOD("get_blackboard"), &BTTask::get_blackboard);
+
 	ClassDB::bind_method(D_METHOD("get_task_name"), &BTTask::get_task_name);
+}
+
+// ============================================================================
+// BTComposite Implementation
+// ============================================================================
+
+void BTComposite::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("get_child_count"), &BTComposite::get_child_count);
+	ClassDB::bind_method(D_METHOD("get_child", "idx"), &BTComposite::get_child);
+}
+
+TypedArray<BTTask> BTComposite::get_children() const {
+	TypedArray<BTTask> arr;
+	for (int i = 0; i < children.size(); i++) {
+		arr.push_back(children[i]);
+	}
+	return arr;
+}
+
+// ============================================================================
+// BTDecorator Implementation
+// ============================================================================
+
+void BTDecorator::_bind_methods() {
+	ClassDB::bind_method(D_METHOD("get_child"), &BTDecorator::get_child, DEFVAL(0));
+}
+
+TypedArray<BTTask> BTDecorator::get_children() const {
+	TypedArray<BTTask> arr;
+	if (child.is_valid()) {
+		arr.push_back(child);
+	}
+	return arr;
 }
 
 // ============================================================================

@@ -4,7 +4,8 @@ default_language_version:
 exclude: |
   (?x)^(
     .*godot-cpp/.*|
-    .*reverse-engineering/.*|
+    .*icons/.*|
+    .*addons/ability_system/icons/.*|
     .*demo/.*|
     .*src/tests/doctest.h|
     .*doc/source/classes/.*

@@ -48,7 +48,7 @@
 #ifdef LIMBOAI_GDEXTENSION
 #include "util/limbo_task_db.h"
 #else
-#include "modules/limboai/util/limbo_task_db.h"
+#include "modules/ability_system/limboai/util/limbo_task_db.h"
 #endif
 #else
 // Stub implementations follow
@@ -89,11 +89,18 @@ public:
 	 */
 	static LimboTaskDB *get_singleton() { return singleton; }
 
+	template <class T>
+	static void register_task() {
+		GDREGISTER_CLASS(T);
+		if (singleton) {
+			singleton->register_task_name(T::get_class_static());
+		}
+	}
+
 	/**
 	 * Registers a custom task class with the LimboAI system.
-	 * Only works when LimboAI is available.
 	 */
-	virtual void register_task(const StringName &p_class_name);
+	virtual void register_task_name(const StringName &p_class_name);
 
 	/**
 	 * Checks if a task class is registered.

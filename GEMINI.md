@@ -1,7 +1,7 @@
 ba
 }r�(��l̂/�dS��j�%� �I�P��# GEMINI.md - Governança Técnica & Memória do Projeto
 
-> **Status:** v0.1.0 (Stable) - ATIVO
+> **Status:** v0.2.0 (Stable) - ATIVO
 > **Par:** Machi (Navigator) & Gemini (Pilot)
 > **Princípio:** Anti Vibe-Coding / Desapego Radical ao Código
 

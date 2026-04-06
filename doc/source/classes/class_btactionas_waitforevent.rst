@@ -10,7 +10,7 @@
 BTActionAS_WaitForEvent
 =======================
 
-**Inherits:** ``RefCounted``
+**Inherits:** ``BTAction``
 
 BTAction that waits for an Ability System event to occur.
 
@@ -19,9 +19,9 @@ BTAction that waits for an Ability System event to occur.
 Description
 -----------
 
-A Behavior Tree action that enters ``BT.RUNNING`` state and waits for a specific :ref:`ASEventTag<class_ASEventTag>` to occur. Uses :ref:`ASComponent.has_event_occurred()<class_ASComponent_method_has_event_occurred>` to check the Events Historical buffer.
+A Behavior Tree action that enters :ref:`BT.RUNNING<class_BT_constant_RUNNING>` state and waits for a specific ASEventTag to occur. Uses :ref:`ASComponent.has_event_occurred()<class_ASComponent_method_has_event_occurred>` to check the Events Historical buffer.
 
-Returns ``BT.SUCCESS`` when event is detected within the time window, continues ``BT.RUNNING`` while waiting.
+Returns :ref:`BT.SUCCESS<class_BT_constant_SUCCESS>` when event is detected within the time window, continues :ref:`BT.RUNNING<class_BT_constant_RUNNING>` while waiting.
 
 .. rst-class:: classref-reftable-group
 
@@ -31,29 +31,13 @@ Properties
 .. table::
    :widths: auto
 
-   +----------------+------------------------------------------------------------------------+--------------+
-   | ``StringName`` | :ref:`event_tag<class_BTActionAS_WaitForEvent_property_event_tag>`     | ``&"&quot;`` |
-   +----------------+------------------------------------------------------------------------+--------------+
-   | ``float``      | :ref:`time_window<class_BTActionAS_WaitForEvent_property_time_window>` | ``0.5``      |
-   +----------------+------------------------------------------------------------------------+--------------+
-
-.. rst-class:: classref-reftable-group
-
-Methods
--------
-
-.. table::
-   :widths: auto
-
-   +----------------+---------------------------------------------------------------------------------------------------------+
-   | ``StringName`` | :ref:`get_event_tag<class_BTActionAS_WaitForEvent_method_get_event_tag>`\ (\ )                          |
-   +----------------+---------------------------------------------------------------------------------------------------------+
-   | ``float``      | :ref:`get_time_window<class_BTActionAS_WaitForEvent_method_get_time_window>`\ (\ )                      |
-   +----------------+---------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_event_tag<class_BTActionAS_WaitForEvent_method_set_event_tag>`\ (\ tag\: ``StringName``\ )    |
-   +----------------+---------------------------------------------------------------------------------------------------------+
-   | |void|         | :ref:`set_time_window<class_BTActionAS_WaitForEvent_method_set_time_window>`\ (\ seconds\: ``float``\ ) |
-   +----------------+---------------------------------------------------------------------------------------------------------+
+   +----------------+----------------------------------------------------------------------------+------------------+
+   | ``NodePath``   | :ref:`asc_node_path<class_BTActionAS_WaitForEvent_property_asc_node_path>` | ``NodePath("")`` |
+   +----------------+----------------------------------------------------------------------------+------------------+
+   | ``StringName`` | :ref:`event_tag<class_BTActionAS_WaitForEvent_property_event_tag>`         | ``&""``          |
+   +----------------+----------------------------------------------------------------------------+------------------+
+   | ``float``      | :ref:`time_window<class_BTActionAS_WaitForEvent_property_time_window>`     | ``0.5``          |
+   +----------------+----------------------------------------------------------------------------+------------------+
 
 .. rst-class:: classref-section-separator
 
@@ -64,15 +48,34 @@ Methods
 Property Descriptions
 ---------------------
 
+.. _class_BTActionAS_WaitForEvent_property_asc_node_path:
+
+.. rst-class:: classref-property
+
+``NodePath`` **asc_node_path** = ``NodePath("")`` :ref:`🔗<class_BTActionAS_WaitForEvent_property_asc_node_path>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_asc_node_path**\ (\ value\: ``NodePath``\ )
+- ``NodePath`` **get_asc_node_path**\ (\ )
+
+.. container:: contribute
+
+	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_BTActionAS_WaitForEvent_property_event_tag:
 
 .. rst-class:: classref-property
 
-``StringName`` **event_tag** = ``&"&quot;`` :ref:`🔗<class_BTActionAS_WaitForEvent_property_event_tag>`
+``StringName`` **event_tag** = ``&""`` :ref:`🔗<class_BTActionAS_WaitForEvent_property_event_tag>`
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_event_tag**\ (\ tag\: ``StringName``\ )
+- |void| **set_event_tag**\ (\ value\: ``StringName``\ )
 - ``StringName`` **get_event_tag**\ (\ )
 
 .. container:: contribute
@@ -91,65 +94,12 @@ Property Descriptions
 
 .. rst-class:: classref-property-setget
 
-- |void| **set_time_window**\ (\ seconds\: ``float``\ )
+- |void| **set_time_window**\ (\ value\: ``float``\ )
 - ``float`` **get_time_window**\ (\ )
 
 .. container:: contribute
 
 	There is currently no description for this property. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
-
-.. rst-class:: classref-section-separator
-
-----
-
-.. rst-class:: classref-descriptions-group
-
-Method Descriptions
--------------------
-
-.. _class_BTActionAS_WaitForEvent_method_get_event_tag:
-
-.. rst-class:: classref-method
-
-``StringName`` **get_event_tag**\ (\ ) :ref:`🔗<class_BTActionAS_WaitForEvent_method_get_event_tag>`
-
-Returns the event tag to wait for.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_WaitForEvent_method_get_time_window:
-
-.. rst-class:: classref-method
-
-``float`` **get_time_window**\ (\ ) :ref:`🔗<class_BTActionAS_WaitForEvent_method_get_time_window>`
-
-Returns the time window for event detection (seconds).
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_WaitForEvent_method_set_event_tag:
-
-.. rst-class:: classref-method
-
-|void| **set_event_tag**\ (\ tag\: ``StringName``\ ) :ref:`🔗<class_BTActionAS_WaitForEvent_method_set_event_tag>`
-
-Sets the event tag to wait for.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_BTActionAS_WaitForEvent_method_set_time_window:
-
-.. rst-class:: classref-method
-
-|void| **set_time_window**\ (\ seconds\: ``float``\ ) :ref:`🔗<class_BTActionAS_WaitForEvent_method_set_time_window>`
-
-Sets the time window for event detection (how far back to check).
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

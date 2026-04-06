@@ -1,0 +1,92 @@
+name: 🧪 Bridge Tests (AbilitySystem + LimboAI)
+
+on:
+  workflow_call:
+    inputs:
+      godot-bin-name:
+        required: true
+        type: string
+  workflow_dispatch:
+
+jobs:
+  test-bridge-gdextension:
+    name: 🧩 Integrated Bridge
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout Ability System
+        uses: actions/checkout@v4.2.2
+        with:
+          submodules: recursive
+
+      - name: Import dependency versions
+        shell: bash
+        run: grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Checkout godot-cpp
+        uses: actions/checkout@v4.2.2
+        with:
+          repository: godotengine/godot-cpp
+          ref: ${{ env.GODOT_CPP_API_VERSION }}
+          path: godot-cpp
+          submodules: recursive
+
+      - name: Setup godot-cpp
+        uses: ./godot-cpp/.github/actions/setup-godot-cpp
+        with:
+          platform: linux
+
+      - name: Build godot-cpp (generates bindings incl. gdvirtual.gen.inc)
+        shell: bash
+        run: |
+          scons -C godot-cpp platform=linux arch=x86_64 target=template_debug -j$(nproc)
+
+          # Verify gdvirtual.gen.inc was generated (it's in include subdirectory)
+          if [ ! -f "godot-cpp/gen/include/godot_cpp/core/gdvirtual.gen.inc" ]; then
+            echo "ERROR: gdvirtual.gen.inc not found after godot-cpp compilation"
+            echo "Checking godot-cpp/gen directory:"
+            find godot-cpp/gen -type f 2>/dev/null | head -20
+            exit 1
+          fi
+
+      - name: Setup Includes for Bridge Tests
+        shell: bash
+        run: |
+          # Create symlink for generated godot_cpp headers so includes work correctly
+          if [ ! -d "godot_cpp" ]; then
+            ln -s godot-cpp/gen/godot_cpp godot_cpp
+          fi
+
+      - name: Build GDExtension Bridge Tests
+        shell: bash
+        run: |
+          scons target=template_debug platform=linux arch=x86_64 tests=bridge -j$(nproc)
+
+      - name: Download Godot Engine
+        run: |
+          GODOT_FILE="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64.zip"
+          GODOT_EXTRACTED="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64"
+
+          wget --timeout=30 --tries=3 ${GODOT_RELEASES_URL}/Godot-v${GODOT_VERSION}-${GODOT_STATUS}/${GODOT_FILE}
+          if [ $? -ne 0 ]; then
+            echo "Primary download failed, trying mirror..."
+            wget --timeout=30 --tries=3 https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/${GODOT_FILE}
+          fi
+          unzip ${GODOT_FILE}
+          mv ${GODOT_EXTRACTED} godot_headless
+          chmod +x godot_headless
+
+      - name: Run GDExtension Integrated Test Runner
+        run: |
+          mkdir -p test_project
+          cp -r addons test_project/
+          echo 'config_version=5' > test_project/project.godot
+
+          echo '
+          extends SceneTree
+          func _init():
+              print("Firing AS+LimboAI Integrated Tests...")
+              var result = AbilitySystem.run_tests()
+              quit(result)
+          ' > test_project/run_tests.gd
+
+          ./godot_headless --path test_project --headless -s run_tests.gd

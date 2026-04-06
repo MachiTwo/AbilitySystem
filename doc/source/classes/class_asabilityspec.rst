@@ -30,15 +30,19 @@ Methods
    :widths: auto
 
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                 | :ref:`add_sub_spec<class_ASAbilitySpec_method_add_sub_spec>`\ (\ spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>`\ )       |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
    | :ref:`ASAbility<class_ASAbility>`                                      | :ref:`get_ability<class_ASAbilitySpec_method_get_ability>`\ (\ ) |const|                                                   |
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
-   | ``float``                                                              | :ref:`get_cooldown_duration<class_ASAbilitySpec_method_get_cooldown_duration>`\ (\ ) |const|                               |
+   | :ref:`Array<class_Array>`\[:ref:`ASEffectSpec<class_ASEffectSpec>`\]   | :ref:`get_active_effects<class_ASAbilitySpec_method_get_active_effects>`\ (\ ) |const|                                     |
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
-   | ``int``                                                                | :ref:`get_current_phase_index<class_ASAbilitySpec_method_get_current_phase_index>`\ (\ ) |const|                           |
+   | ``float``                                                              | :ref:`get_cooldown_duration<class_ASAbilitySpec_method_get_cooldown_duration>`\ (\ ) |const|                               |
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
    | ``float``                                                              | :ref:`get_cooldown_remaining<class_ASAbilitySpec_method_get_cooldown_remaining>`\ (\ ) |const|                             |
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
    | ``float``                                                              | :ref:`get_cost_amount<class_ASAbilitySpec_method_get_cost_amount>`\ (\ attribute\: ``StringName``\ ) |const|               |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | ``int``                                                                | :ref:`get_current_phase_index<class_ASAbilitySpec_method_get_current_phase_index>`\ (\ ) |const|                           |
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
    | ``float``                                                              | :ref:`get_duration_remaining<class_ASAbilitySpec_method_get_duration_remaining>`\ (\ ) |const|                             |
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
@@ -50,17 +54,15 @@ Methods
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
    | :ref:`ASComponent<class_ASComponent>`                                  | :ref:`get_owner<class_ASAbilitySpec_method_get_owner>`\ (\ ) |const|                                                       |
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
-   | ``float``                                                              | :ref:`get_total_duration<class_ASAbilitySpec_method_get_total_duration>`\ (\ ) |const|                                     |
-   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                                 | :ref:`add_sub_spec<class_ASAbilitySpec_method_add_sub_spec>`\ (\ spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>`\ )       |
-   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
-   | |void|                                                                 | :ref:`remove_sub_spec<class_ASAbilitySpec_method_remove_sub_spec>`\ (\ spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>`\ ) |
-   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
    | :ref:`Array<class_Array>`\[:ref:`ASAbilitySpec<class_ASAbilitySpec>`\] | :ref:`get_sub_specs<class_ASAbilitySpec_method_get_sub_specs>`\ (\ ) |const|                                               |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | ``float``                                                              | :ref:`get_total_duration<class_ASAbilitySpec_method_get_total_duration>`\ (\ ) |const|                                     |
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                 | :ref:`init<class_ASAbilitySpec_method_init>`\ (\ ability\: :ref:`ASAbility<class_ASAbility>`, level\: ``int`` = 1\ )       |
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
    | ``bool``                                                               | :ref:`is_on_cooldown<class_ASAbilitySpec_method_is_on_cooldown>`\ (\ ) |const|                                             |
+   +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
+   | |void|                                                                 | :ref:`remove_sub_spec<class_ASAbilitySpec_method_remove_sub_spec>`\ (\ spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>`\ ) |
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
    | |void|                                                                 | :ref:`set_duration_remaining<class_ASAbilitySpec_method_set_duration_remaining>`\ (\ duration\: ``float``\ )               |
    +------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------+
@@ -82,6 +84,18 @@ Methods
 Method Descriptions
 -------------------
 
+.. _class_ASAbilitySpec_method_add_sub_spec:
+
+.. rst-class:: classref-method
+
+|void| **add_sub_spec**\ (\ spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>`\ ) :ref:`🔗<class_ASAbilitySpec_method_add_sub_spec>`
+
+Adds a sub-ability spec to this parent spec's lifecycle.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_ASAbilitySpec_method_get_ability:
 
 .. rst-class:: classref-method
@@ -94,6 +108,18 @@ Returns the ability resource.
 
 ----
 
+.. _class_ASAbilitySpec_method_get_active_effects:
+
+.. rst-class:: classref-method
+
+:ref:`Array<class_Array>`\[:ref:`ASEffectSpec<class_ASEffectSpec>`\] **get_active_effects**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_active_effects>`
+
+Returns all active effect instances created and managed by this specific ability execution.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_ASAbilitySpec_method_get_cooldown_duration:
 
 .. rst-class:: classref-method
@@ -101,18 +127,6 @@ Returns the ability resource.
 ``float`` **get_cooldown_duration**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_cooldown_duration>`
 
 Returns the base cooldown duration defined in the ability.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASAbilitySpec_method_get_current_phase_index:
-
-.. rst-class:: classref-method
-
-``int`` **get_current_phase_index**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_current_phase_index>`
-
-Returns the index of the currently active phase.
 
 .. rst-class:: classref-item-separator
 
@@ -142,15 +156,25 @@ Returns the cost for a specific attribute.
 
 ----
 
+.. _class_ASAbilitySpec_method_get_current_phase_index:
+
+.. rst-class:: classref-method
+
+``int`` **get_current_phase_index**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_current_phase_index>`
+
+Returns the index of the currently active phase.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_ASAbilitySpec_method_get_duration_remaining:
 
 .. rst-class:: classref-method
 
 ``float`` **get_duration_remaining**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_duration_remaining>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Returns the time remaining in seconds for the current phase or ability duration.
 
 .. rst-class:: classref-item-separator
 
@@ -204,44 +228,6 @@ Returns the component that owns this spec.
 
 ----
 
-.. _class_ASAbilitySpec_method_get_total_duration:
-
-.. rst-class:: classref-method
-
-``float`` **get_total_duration**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_total_duration>`
-
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASAbilitySpec_method_add_sub_spec:
-
-.. rst-class:: classref-method
-
-|void| **add_sub_spec**\ (\ spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>`\ ) :ref:`🔗<class_ASAbilitySpec_method_add_sub_spec>`
-
-Adds a sub-ability spec to this parent spec's lifecycle.
-
-.. rst-class:: classref-item-separator
-
-----
-
-.. _class_ASAbilitySpec_method_remove_sub_spec:
-
-.. rst-class:: classref-method
-
-|void| **remove_sub_spec**\ (\ spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>`\ ) :ref:`🔗<class_ASAbilitySpec_method_remove_sub_spec>`
-
-Removes a sub-ability spec.
-
-.. rst-class:: classref-item-separator
-
-----
-
 .. _class_ASAbilitySpec_method_get_sub_specs:
 
 .. rst-class:: classref-method
@@ -249,6 +235,18 @@ Removes a sub-ability spec.
 :ref:`Array<class_Array>`\[:ref:`ASAbilitySpec<class_ASAbilitySpec>`\] **get_sub_specs**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_sub_specs>`
 
 Returns the list of active sub-specs (phases or sub-abilities) managed by this spec.
+
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASAbilitySpec_method_get_total_duration:
+
+.. rst-class:: classref-method
+
+``float`` **get_total_duration**\ (\ ) |const| :ref:`🔗<class_ASAbilitySpec_method_get_total_duration>`
+
+Returns the initial total duration of the ability instance as calculated at activation.
 
 .. rst-class:: classref-item-separator
 
@@ -278,15 +276,25 @@ Returns true if the ability tag is currently on cooldown.
 
 ----
 
+.. _class_ASAbilitySpec_method_remove_sub_spec:
+
+.. rst-class:: classref-method
+
+|void| **remove_sub_spec**\ (\ spec\: :ref:`ASAbilitySpec<class_ASAbilitySpec>`\ ) :ref:`🔗<class_ASAbilitySpec_method_remove_sub_spec>`
+
+Removes a sub-ability spec.
+
+.. rst-class:: classref-item-separator
+
+----
+
 .. _class_ASAbilitySpec_method_set_duration_remaining:
 
 .. rst-class:: classref-method
 
 |void| **set_duration_remaining**\ (\ duration\: ``float``\ ) :ref:`🔗<class_ASAbilitySpec_method_set_duration_remaining>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Manually modifies the remaining duration. Can be used for duration extensions or reductions.
 
 .. rst-class:: classref-item-separator
 
@@ -322,9 +330,7 @@ Sets the instance level.
 
 |void| **set_total_duration**\ (\ duration\: ``float``\ ) :ref:`🔗<class_ASAbilitySpec_method_set_total_duration>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Sets the total expected duration for this instance. This value is used as the reference for progress calculations.
 
 .. rst-class:: classref-item-separator
 
@@ -336,9 +342,7 @@ Sets the instance level.
 
 ``bool`` **tick**\ (\ delta\: ``float``\ ) :ref:`🔗<class_ASAbilitySpec_method_tick>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Advances the internal timers of the spec. Returns true if the duration has expired or the ability logic has signaled completion.
 
 .. |virtual| replace:: :abbr:`virtual (This method should typically be overridden by the user to have any effect.)`
 .. |required| replace:: :abbr:`required (This method is required to be overridden when extending its base class.)`

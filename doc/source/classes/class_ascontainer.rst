@@ -38,6 +38,8 @@ Properties
    +----------------------------------------------------------------+----------------------------------------------------------------+--------+
    | :ref:`Array<class_Array>`\[:ref:`ASEffect<class_ASEffect>`\]   | :ref:`effects<class_ASContainer_property_effects>`             | ``[]`` |
    +----------------------------------------------------------------+----------------------------------------------------------------+--------+
+   | :ref:`Array<class_Array>`\[``StringName``\]                    | :ref:`events<class_ASContainer_property_events>`               | ``[]`` |
+   +----------------------------------------------------------------+----------------------------------------------------------------+--------+
 
 .. rst-class:: classref-reftable-group
 
@@ -136,6 +138,23 @@ Audiovisual cues for this archetype.
 
 Initial effects applied on startup.
 
+.. rst-class:: classref-item-separator
+
+----
+
+.. _class_ASContainer_property_events:
+
+.. rst-class:: classref-property
+
+:ref:`Array<class_Array>`\[``StringName``\] **events** = ``[]`` :ref:`🔗<class_ASContainer_property_events>`
+
+.. rst-class:: classref-property-setget
+
+- |void| **set_events**\ (\ value\: :ref:`Array<class_Array>`\[``StringName``\]\ )
+- :ref:`Array<class_Array>`\[``StringName``\] **get_events**\ (\ )
+
+List of events associated with this container that can be dispatched or heard.
+
 .. rst-class:: classref-section-separator
 
 ----
@@ -211,9 +230,7 @@ Returns true if a cue with the specified tag exists in the container.
 
 ``bool`` **has_cue_resource**\ (\ cue\: :ref:`ASCue<class_ASCue>`\ ) |const| :ref:`🔗<class_ASContainer_method_has_cue_resource>`
 
-.. container:: contribute
-
-	There is currently no description for this method. Please help us by `contributing one <https://contributing.godotengine.org/en/latest/documentation/class_reference.html>`__!
+Check if the container's catalog includes the specific :ref:`ASCue<class_ASCue>` resource reference.
 
 .. rst-class:: classref-item-separator
 

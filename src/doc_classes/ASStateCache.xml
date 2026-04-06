@@ -30,65 +30,10 @@
 				Automatically increments tick and manages circular buffer indexing.
 			</description>
 		</method>
-		<method name="restore_state">
-			<return type="bool" />
-			<param index="0" name="component" type="ASComponent" />
-			<param index="1" name="tick" type="int" />
-			<description>
-				Restores the ASComponent state from the cached entry at the specified tick.
-				Returns true if successful, false if tick not found in cache.
-			</description>
-		</method>
 		<method name="clear">
 			<return type="void" />
 			<description>
 				Clears all cached state entries and resets the cache.
-			</description>
-		</method>
-		<method name="set_buffer_size">
-			<return type="void" />
-			<param index="0" name="size" type="int" />
-			<description>
-				Sets the circular buffer size. Clears existing cache data.
-				Minimum size is 1, recommended size is 128 for most games.
-			</description>
-		</method>
-		<method name="get_buffer_size" qualifiers="const">
-			<return type="int" />
-			<description>
-				Returns the current buffer size.
-			</description>
-		</method>
-		<method name="get_current_tick" qualifiers="const">
-			<return type="int" />
-			<description>
-				Returns the current tick number of the cache.
-			</description>
-		</method>
-		<method name="has_tick" qualifiers="const">
-			<return type="bool" />
-			<param index="0" name="tick" type="int" />
-			<description>
-				Returns true if the cache contains an entry for the specified tick.
-			</description>
-		</method>
-		<method name="get_entry" qualifiers="const">
-			<return type="ASStateCacheEntry" />
-			<param index="0" name="tick" type="int" />
-			<description>
-				Returns the cache entry for the specified tick, or empty entry if not found.
-			</description>
-		</method>
-		<method name="get_available_ticks" qualifiers="const">
-			<return type="PackedInt32Array" />
-			<description>
-				Returns an array of all tick numbers currently stored in the cache.
-			</description>
-		</method>
-		<method name="serialize" qualifiers="const">
-			<return type="Array" />
-			<description>
-				Serializes all valid cache entries to an Array for storage.
 			</description>
 		</method>
 		<method name="deserialize">
@@ -104,15 +49,49 @@
 				Prints detailed cache information to the console for debugging.
 			</description>
 		</method>
+		<method name="get_available_ticks" qualifiers="const">
+			<return type="Array" />
+			<description>
+				Returns an array of all tick numbers currently stored in the cache.
+			</description>
+		</method>
+		<method name="get_current_tick" qualifiers="const">
+			<return type="int" />
+			<description>
+				Returns the current tick number of the cache.
+			</description>
+		</method>
 		<method name="get_used_slots" qualifiers="const">
 			<return type="int" />
 			<description>
 				Returns the number of cache slots currently in use.
 			</description>
 		</method>
+		<method name="has_tick" qualifiers="const">
+			<return type="bool" />
+			<param index="0" name="tick" type="int" />
+			<description>
+				Returns true if the cache contains an entry for the specified tick.
+			</description>
+		</method>
+		<method name="restore_state">
+			<return type="bool" />
+			<param index="0" name="component" type="ASComponent" />
+			<param index="1" name="tick" type="int" />
+			<description>
+				Restores the ASComponent state from the cached entry at the specified tick.
+				Returns true if successful, false if tick not found in cache.
+			</description>
+		</method>
+		<method name="serialize" qualifiers="const">
+			<return type="Array" />
+			<description>
+				Serializes all valid cache entries to an Array for storage.
+			</description>
+		</method>
 	</methods>
 	<members>
+		<member name="buffer_size" type="int" setter="set_buffer_size" getter="get_buffer_size" default="128">
+		</member>
 	</members>
-	<constants>
-	</constants>
 </class>
