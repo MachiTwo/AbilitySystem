@@ -4,8 +4,9 @@ on:
   workflow_call:
     inputs:
       godot-bin-name:
-        required: true
+        required: false
         type: string
+        description: "Name of Godot binary (provided by infrastructure, not used in this workflow)"
 
 jobs:
   run-singleplayer:
@@ -36,6 +37,31 @@ jobs:
           chmod +x "$BIN_NAME"
           echo "GODOT_BIN=$(pwd)/$BIN_NAME" >> $GITHUB_ENV
 
-      - name: Sync Addons to Demos
+      - name: Run Singleplayer Demo Client
+        timeout-minutes: 2
         run: |
-          python utility/post_build.py
+          echo "🎮 Starting Singleplayer Demo..."
+          ./dist/demo_client/demo_linux_client --headless 2>&1 | tee singleplayer_test.log &
+          CLIENT_PID=$!
+
+          # Give client time to start and verify it doesn't crash immediately
+          sleep 5
+
+          # Check if process is still running
+          if kill -0 $CLIENT_PID 2>/dev/null; then
+            echo "✅ Singleplayer demo started successfully"
+            kill $CLIENT_PID 2>/dev/null || true
+            wait $CLIENT_PID 2>/dev/null || true
+          else
+            echo "❌ Singleplayer demo crashed on startup"
+            cat singleplayer_test.log
+            exit 1
+          fi
+
+      - name: Upload Singleplayer Test Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: singleplayer-test-log
+          path: singleplayer_test.log
+          retention-days: 7

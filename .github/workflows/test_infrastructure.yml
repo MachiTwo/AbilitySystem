@@ -74,15 +74,87 @@ jobs:
         id: godot
         shell: bash
         run: |
-          GODOT_VERSION="${{ env.GODOT_VERSION_FOR_EXPORT }}"
-          URL="https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}/Godot_v${GODOT_VERSION}_linux.x86_64.zip"
-          BIN_NAME="Godot_v${GODOT_VERSION}_linux.x86_64"
+          GODOT_FILE="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64.zip"
+          GODOT_EXTRACTED="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64"
+          URL="${GODOT_RELEASES_URL}/Godot-v${GODOT_VERSION}-${GODOT_STATUS}/${GODOT_FILE}"
+
           wget --tries=5 --waitretry=5 "$URL" -O godot.zip
+          if [ $? -ne 0 ]; then
+            echo "Primary download failed, trying mirror..."
+            wget --tries=5 --waitretry=5 "https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/${GODOT_FILE}" -O godot.zip
+          fi
           unzip godot.zip
-          chmod +x "$BIN_NAME"
+          chmod +x "$GODOT_EXTRACTED"
           mkdir -p dist/godot
-          cp "$BIN_NAME" dist/godot/
-          echo "bin-name=$BIN_NAME" >> "$GITHUB_OUTPUT"
+          cp "$GODOT_EXTRACTED" dist/godot/
+          echo "bin-name=$GODOT_EXTRACTED" >> "$GITHUB_OUTPUT"
+
+      - name: Download & Install Export Templates
+        shell: bash
+        run: |
+          TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.${GODOT_STATUS}"
+          mkdir -p "$TEMPLATES_DIR"
+
+          TEMPLATES_FILE="Godot_v${GODOT_VERSION_FOR_EXPORT}_export-templates.tpz"
+          cd /tmp
+          wget --tries=5 --waitretry=5 ${GODOT_RELEASES_URL}/Godot-v${GODOT_VERSION}-${GODOT_STATUS}/${TEMPLATES_FILE}
+          if [ $? -ne 0 ]; then
+            echo "Primary download failed, trying mirror..."
+            wget --tries=5 --waitretry=5 https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/${TEMPLATES_FILE}
+          fi
+
+          unzip -q -o ${TEMPLATES_FILE} -d "$TEMPLATES_DIR"
+          rm -f ${TEMPLATES_FILE}
+
+          if [ -d "$TEMPLATES_DIR/templates" ]; then
+            mv "$TEMPLATES_DIR/templates/"* "$TEMPLATES_DIR/" 2>/dev/null || true
+            rmdir "$TEMPLATES_DIR/templates" 2>/dev/null || true
+          fi
+
+          echo "✅ Export templates installed at $TEMPLATES_DIR"
+
+      - name: Setup Demo Export Presets
+        shell: bash
+        run: |
+          mkdir -p demo
+          cat > demo/export_presets.cfg << 'EOF'
+          [preset.0]
+          name="Linux Client"
+          platform="Linux/X11"
+          runnable=true
+          export_filter="all_resources"
+          export_path="../../dist/demo_client/demo_linux_client"
+          [preset.0.options]
+          application/run/main_scene="res://ui/user_registration.tscn"
+
+          [preset.1]
+          name="Linux Server"
+          platform="Linux/X11"
+          runnable=true
+          export_filter="all_resources"
+          export_path="../../dist/demo_server/demo_linux_server"
+          [preset.1.options]
+          application/run/main_scene="res://server/server.tscn"
+          EOF
+
+      - name: Export Demo Client & Server
+        shell: bash
+        env:
+          GODOT_BIN: ${{ github.workspace }}/dist/godot/${{ steps.godot.outputs.bin-name }}
+        run: |
+          cd demo
+
+          echo "🔨 Exporting Demo Client..."
+          mkdir -p ../dist/demo_client
+          ${GODOT_BIN} --headless --path . --export-release "Linux Client" ../dist/demo_client/demo_linux_client
+          chmod +x ../dist/demo_client/demo_linux_client
+
+          echo "🔨 Exporting Demo Server..."
+          mkdir -p ../dist/demo_server
+          ${GODOT_BIN} --headless --path . --export-release "Linux Server" ../dist/demo_server/demo_linux_server
+          chmod +x ../dist/demo_server/demo_linux_server
+
+          echo "✅ Demo Client & Server exported successfully"
 
       - name: Save Test Binaries to Cache
         uses: actions/cache/save@v4

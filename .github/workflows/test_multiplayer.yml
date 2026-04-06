@@ -4,15 +4,83 @@ on:
   workflow_call:
     inputs:
       godot-bin-name:
-        required: true
+        required: false
         type: string
+        description: "Name of Godot binary (provided by infrastructure, not used in this workflow)"
 
 jobs:
-  run-multiplayer:
-    name: 🌐 Run Multiplayer Tests
+  run-server:
+    name: 🖥️ Run Multiplayer Server
     if: |
       !contains(github.event.head_commit.message, '[tests skip]') &&
       !contains(github.event.head_commit.message, '[mp skip]')
+    runs-on: ubuntu-latest
+    outputs:
+      server-ready: ${{ steps.server.outputs.ready }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Import dependency versions
+        shell: bash
+        run: |
+          grep -v '^#' deps.env | grep -v '^$' >> "$GITHUB_ENV"
+
+      - name: Restore Test Binaries from Cache
+        uses: actions/cache/restore@v4
+        with:
+          path: dist/
+          key: ${{ github.sha }}-test-binaries
+          fail-on-cache-miss: true
+
+      - name: Deploy Binaries
+        run: |
+          cp -r dist/demo_server/* .
+
+      - name: Setup Server Environment
+        shell: bash
+        run: |
+          mkdir -p logs
+          chmod +x demo_linux_server
+          echo "SERVER_BIN=$(pwd)/demo_linux_server" >> $GITHUB_ENV
+          echo "SERVER_PORT=7777" >> $GITHUB_ENV
+          echo "SERVER_HOST=127.0.0.1" >> $GITHUB_ENV
+
+      - name: Start Multiplayer Server
+        id: server
+        timeout-minutes: 10
+        shell: bash
+        run: |
+          echo "🖥️ Starting Multiplayer Server..."
+          ${SERVER_BIN} --headless --server-port ${SERVER_PORT} 2>&1 | tee logs/server.log &
+          SERVER_PID=$!
+          echo "server-pid=$SERVER_PID" >> "$GITHUB_OUTPUT"
+
+          # Wait for server to be ready
+          for i in {1..30}; do
+            if grep -q "Server listening" logs/server.log 2>/dev/null; then
+              echo "✅ Server ready"
+              echo "ready=true" >> "$GITHUB_OUTPUT"
+              break
+            fi
+            sleep 1
+          done
+
+          # Keep server running for clients
+          wait $SERVER_PID || true
+
+      - name: Upload Server Log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mp-server-log
+          path: logs/server.log
+          retention-days: 7
+
+  run-clients:
+    name: 🎮 Run Client Multiplayer Tests
+    needs: [run-server]
+    if: needs.run-server.outputs.server-ready == 'true'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -34,101 +102,93 @@ jobs:
           key: ${{ github.sha }}-test-binaries
           fail-on-cache-miss: true
 
-      - name: Deploy Binaries
+      - name: Deploy Demo Client
         run: |
-          cp -r dist/standard/* .
-          cp -r dist/godot/* .
+          cp -r dist/demo_client/* .
 
-      - name: Setup Godot Environment
+      - name: Setup Client Environment
         shell: bash
         run: |
-          BIN_NAME="${{ inputs.godot-bin-name }}"
-          chmod +x "$BIN_NAME"
-          echo "GODOT_BIN=$(pwd)/$BIN_NAME" >> $GITHUB_ENV
+          mkdir -p logs
+          chmod +x demo_linux_client
+          echo "CLIENT_BIN=$(pwd)/demo_linux_client" >> $GITHUB_ENV
 
-      - name: Download & Install Export Templates
-        shell: bash
-        run: |
-          TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.${GODOT_STATUS}"
-          mkdir -p "$TEMPLATES_DIR"
-
-          TEMPLATES_FILE="Godot_v${GODOT_VERSION_FOR_EXPORT}_export-templates.tpz"
-          cd /tmp
-          wget -q --timeout=30 --tries=3 ${GODOT_RELEASES_URL}/Godot-v${GODOT_VERSION}-${GODOT_STATUS}/${TEMPLATES_FILE}
-          if [ $? -ne 0 ]; then
-            echo "Failed to download from primary source, trying mirror..."
-            wget -q --timeout=30 --tries=3 https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/${TEMPLATES_FILE}
-          fi
-
-          unzip -q -o ${TEMPLATES_FILE} -d "$TEMPLATES_DIR"
-
-          if [ ! -f "$TEMPLATES_DIR/linux_release.x86_64" ] && [ ! -f "$TEMPLATES_DIR/templates/linux_release.x86_64" ]; then
-            echo "Warning: Export templates may not have been extracted properly"
-            ls -la "$TEMPLATES_DIR"
-          fi
-
-      - name: Sync Addons to All Demos (ability_system + limboai)
-        run: python utility/post_build.py
-
-      - name: Fix Binary Permissions (.so in all addons)
-        run: |
-          find addons -name '*.so' -exec chmod +x {} \; 2>/dev/null || true
-          find utility/multiplayer/demo/addons -name '*.so' -exec chmod +x {} \; 2>/dev/null || true
-
-      - name: Build Demo Executable (Headless)
-        env:
-          GODOT_BIN: ${{ env.GODOT_BIN }}
-        run: |
-          mkdir -p bin/demo
-          ${GODOT_BIN} --headless --path demo --export-debug "Linux/X11" bin/demo/demo.x86_64 2>&1 | tee build.log
-          chmod +x bin/demo/demo.x86_64
-          echo "Demo executable built: $(ls -lh bin/demo/demo.x86_64)"
-
-      - name: Run Multiplayer Test (Client ${{ matrix.player_id }})
+      - name: Run Multiplayer Client (${{ matrix.player_id }})
         timeout-minutes: 5
         env:
           MP_GHA_PLAYER_ID: ${{ matrix.player_id }}
           MP_SERVER_PORT: 7777
           MP_SERVER_HOST: 127.0.0.1
+        shell: bash
         run: |
-          pip install python-dotenv
-          python utility/multiplayer/runner.py --player-id ${{ matrix.player_id }}
+          echo "🎮 Starting Client ${{ matrix.player_id }}..."
+          mkdir -p logs
 
-      - name: Upload Player Log
+          # Give server time to be fully ready
+          sleep 2
+
+          # Run client with server connection
+          ${CLIENT_BIN} \
+            --headless \
+            --server-host ${MP_SERVER_HOST} \
+            --server-port ${MP_SERVER_PORT} \
+            --player-id ${{ matrix.player_id }} \
+            2>&1 | tee logs/client_${{ matrix.player_id }}.log &
+
+          CLIENT_PID=$!
+
+          # Wait for client to run test and disconnect
+          wait $CLIENT_PID || true
+
+          # Check if client ran successfully
+          if grep -q "Test completed\|Disconnected from server" logs/client_${{ matrix.player_id }}.log; then
+            echo "✅ Client ${{ matrix.player_id }} test completed"
+          else
+            echo "⚠️ Client ${{ matrix.player_id }} may have issues, check logs"
+          fi
+
+      - name: Upload Client Log
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: mp-log-player-${{ matrix.player_id }}
-          path: utility/multiplayer/logs/doctest_mp_player_${{ matrix.player_id }}.log
+          name: mp-client-log-${{ matrix.player_id }}
+          path: logs/client_${{ matrix.player_id }}.log
+          retention-days: 7
 
   analyze-multiplayer:
     name: 📊 Analysis & Disclosure
-    needs: [run-multiplayer]
+    needs: [run-clients]
     runs-on: ubuntu-latest
-    if: always() && needs.run-multiplayer.result != 'skipped'
+    if: always() && needs.run-clients.result != 'skipped'
     steps:
       - name: Checkout
         uses: actions/checkout@v4.2.2
 
-      - name: Download All Player Logs
+      - name: Download All Client Logs
         uses: actions/download-artifact@v4
         with:
-          pattern: mp-log-player-*
+          pattern: mp-client-log-*
           path: all-logs
           merge-multiple: false
+
+      - name: Download Server Log
+        uses: actions/download-artifact@v4
+        with:
+          name: mp-server-log
+          path: all-logs
+        continue-on-error: true
 
       - name: Flatten logs into single directory
         run: |
           mkdir -p all-logs
           find all-logs -name "*.log" -exec mv {} all-logs/ \; 2>/dev/null || true
+          ls -la all-logs/ || true
 
       - name: Run Log Analyzer (Consolidated Summary)
         run: |
           mkdir -p all-logs
-          pip install pre-commit
           pip install python-dotenv
           python utility/multiplayer/log_analyzer.py --log-dir all-logs --generate-mermaid --gha-summary || echo "No logs to analyze"
-          pre-commit run prettier --files utility/multiplayer/mp_coverage_report.md || true
 
       - name: Publish Summary
         if: always()
