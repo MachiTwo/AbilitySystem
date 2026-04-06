@@ -76,7 +76,7 @@ jobs:
         run: |
           GODOT_FILE="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64.zip"
           GODOT_EXTRACTED="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64"
-          URL="${GODOT_RELEASES_URL}/Godot-v${GODOT_VERSION}-${GODOT_STATUS}/${GODOT_FILE}"
+          URL="${GODOT_RELEASES_URL}/${GODOT_VERSION}-${GODOT_STATUS}/${GODOT_FILE}"
 
           wget --tries=5 --waitretry=5 "$URL" -O godot.zip
           if [ $? -ne 0 ]; then
@@ -97,7 +97,7 @@ jobs:
 
           TEMPLATES_FILE="Godot_v${GODOT_VERSION_FOR_EXPORT}_export-templates.tpz"
           cd /tmp
-          wget --tries=5 --waitretry=5 ${GODOT_RELEASES_URL}/Godot-v${GODOT_VERSION}-${GODOT_STATUS}/${TEMPLATES_FILE}
+          wget --tries=5 --waitretry=5 ${GODOT_RELEASES_URL}/${GODOT_VERSION}-${GODOT_STATUS}/${TEMPLATES_FILE}
           if [ $? -ne 0 ]; then
             echo "Primary download failed, trying mirror..."
             wget --tries=5 --waitretry=5 https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/${TEMPLATES_FILE}

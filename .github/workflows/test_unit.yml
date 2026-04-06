@@ -67,7 +67,7 @@ jobs:
           GODOT_FILE="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64.zip"
           GODOT_EXTRACTED="Godot_v${GODOT_VERSION_FOR_EXPORT}_linux.x86_64"
 
-          wget --timeout=30 --tries=3 ${GODOT_RELEASES_URL}/Godot-v${GODOT_VERSION}-stable/${GODOT_FILE}
+          wget --timeout=30 --tries=3 ${GODOT_RELEASES_URL}/${GODOT_VERSION}-${GODOT_STATUS}/${GODOT_FILE}
           if [ $? -ne 0 ]; then
             echo "Primary download failed, trying mirror..."
             wget --timeout=30 --tries=3 https://downloads.tuxfamily.org/godotengine/${GODOT_VERSION}/${GODOT_FILE}
