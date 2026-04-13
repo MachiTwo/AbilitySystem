@@ -28,7 +28,11 @@ jobs:
 
       - name: Deploy Binaries
         run: |
-          cp -r dist/standard/* .
+          # Copy addons and resources next to the exported demo client
+          # (Godot looks for res:// paths relative to the executable)
+          mkdir -p dist/demo_client
+          cp -r dist/standard/addons dist/demo_client/
+
           cp -r dist/godot/* .
 
       - name: Setup Environment

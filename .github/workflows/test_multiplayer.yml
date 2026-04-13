@@ -35,6 +35,11 @@ jobs:
 
       - name: Deploy Binaries
         run: |
+          # Copy addons where the exported server expects them (relative to exe)
+          mkdir -p ./addons
+          cp -r dist/standard/addons/* ./addons/
+
+          # Copy server binary
           cp -r dist/demo_server/* .
 
       - name: Setup Server Environment
@@ -104,6 +109,11 @@ jobs:
 
       - name: Deploy Demo Client
         run: |
+          # Copy addons where the exported client expects them (relative to exe)
+          mkdir -p ./addons
+          cp -r dist/standard/addons/* ./addons/
+
+          # Copy client binary
           cp -r dist/demo_client/* .
 
       - name: Setup Client Environment
