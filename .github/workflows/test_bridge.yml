@@ -38,15 +38,23 @@ jobs:
       - name: Build godot-cpp (generates bindings incl. gdvirtual.gen.inc)
         shell: bash
         run: |
-          scons -C godot-cpp platform=linux arch=x86_64 target=editor -j$(nproc)
+          echo "=== Building godot-cpp ==="
+          scons -C godot-cpp platform=linux arch=x86_64 target=editor -j$(nproc) 2>&1 | tail -50
 
           # Verify gdvirtual.gen.inc was generated (it's in include subdirectory)
           if [ ! -f "godot-cpp/gen/include/godot_cpp/core/gdvirtual.gen.inc" ]; then
             echo "ERROR: gdvirtual.gen.inc not found after godot-cpp compilation"
             echo "Checking godot-cpp/gen directory:"
-            find godot-cpp/gen -type f 2>/dev/null | head -20
+            find godot-cpp/gen -type f 2>/dev/null | head -50
             exit 1
           fi
+          echo "✅ godot-cpp built successfully"
+
+      - name: Restore SCons Cache
+        uses: ./.github/actions/zyris-cache-restore
+        with:
+          scons-cache: ${{ github.workspace }}/.scons_cache
+          cache-name: infra-linux-${{ env.GODOT_VERSION }}
 
       - name: Setup Includes for Bridge Tests
         shell: bash
@@ -62,6 +70,18 @@ jobs:
           SCONS_CACHE: ${{ github.workspace }}/.scons_cache
         run: |
           scons target=editor platform=linux arch=x86_64 tests=bridge -j$(nproc)
+
+          # Verify binary was created
+          echo "=== Checking for compiled binaries ==="
+          find addons/ability_system/bin -type f -name "*.so" -o -name "*.dll"
+
+          if [ ! -f "addons/ability_system/bin/libability_system.linux.editor.x86_64.so" ]; then
+            echo "ERROR: Expected binary not found!"
+            echo "Checking addons/ability_system/bin contents:"
+            ls -la addons/ability_system/bin/ || echo "Directory doesn't exist!"
+            exit 1
+          fi
+          echo "✅ Binary found: libability_system.linux.editor.x86_64.so"
 
       - name: Download Godot Engine
         run: |
