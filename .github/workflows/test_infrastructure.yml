@@ -123,8 +123,8 @@ jobs:
           TEMPLATES_DIR="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.${GODOT_STATUS}"
           mkdir -p "$TEMPLATES_DIR"
 
-          TEMPLATES_FILE1="Godot_v${GODOT_VERSION_FOR_EXPORT}_export-templates.tpz"
-          TEMPLATES_FILE2="Godot_v${GODOT_VERSION}_export-templates.tpz"
+          TEMPLATES_FILE1="Godot_v${GODOT_VERSION_FOR_EXPORT}_export_templates.tpz"
+          TEMPLATES_FILE2="Godot_v${GODOT_VERSION}_export_templates.tpz"
 
           cd /tmp
           echo "Attempting to download templates: $TEMPLATES_FILE1"
