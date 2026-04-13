@@ -38,7 +38,7 @@ jobs:
       - name: Build godot-cpp (generates bindings incl. gdvirtual.gen.inc)
         shell: bash
         run: |
-          scons -C godot-cpp platform=linux arch=x86_64 target=template_debug -j$(nproc)
+          scons -C godot-cpp platform=linux arch=x86_64 target=editor -j$(nproc)
 
           # Verify gdvirtual.gen.inc was generated (it's in include subdirectory)
           if [ ! -f "godot-cpp/gen/include/godot_cpp/core/gdvirtual.gen.inc" ]; then
@@ -58,8 +58,10 @@ jobs:
 
       - name: Build GDExtension Bridge Tests
         shell: bash
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
         run: |
-          scons target=template_debug platform=linux arch=x86_64 tests=bridge -j$(nproc)
+          scons target=editor platform=linux arch=x86_64 tests=bridge -j$(nproc)
 
       - name: Download Godot Engine
         run: |

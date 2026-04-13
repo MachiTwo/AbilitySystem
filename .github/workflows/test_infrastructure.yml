@@ -71,9 +71,9 @@ jobs:
           mkdir -p dist/standard
           cp -r addons dist/standard/
 
-          # Copy compiled extension to demo for export
+          # Copy compiled extensions to demo (both editor and template_release for export)
           mkdir -p demo/addons/ability_system/bin
-          find . -name "libability_system.linux.template_release.x86_64.so" -exec cp {} demo/addons/ability_system/bin/ \;
+          find addons/ability_system/bin -name "libability_system.linux.*.so" -exec cp {} demo/addons/ability_system/bin/ \;
 
       - name: Save SCons Cache
         uses: ./.github/actions/zyris-cache-save
