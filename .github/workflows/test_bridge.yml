@@ -71,17 +71,21 @@ jobs:
         run: |
           scons target=editor platform=linux arch=x86_64 tests=bridge -j$(nproc)
 
-          # Verify binary was created
+          # Verify binary was created (it goes to bin/test-bridge/ when compiled with tests=bridge)
           echo "=== Checking for compiled binaries ==="
           find addons/ability_system/bin -type f -name "*.so" -o -name "*.dll"
 
-          if [ ! -f "addons/ability_system/bin/libability_system.linux.editor.x86_64.so" ]; then
+          if [ ! -f "addons/ability_system/bin/test-bridge/libability_system.linux.editor.x86_64.so" ]; then
             echo "ERROR: Expected binary not found!"
             echo "Checking addons/ability_system/bin contents:"
-            ls -la addons/ability_system/bin/ || echo "Directory doesn't exist!"
+            find addons/ability_system/bin -type f
             exit 1
           fi
-          echo "✅ Binary found: libability_system.linux.editor.x86_64.so"
+
+          # Copy to expected location for .gdextension
+          mkdir -p addons/ability_system/bin
+          cp addons/ability_system/bin/test-bridge/libability_system.linux.editor.x86_64.so addons/ability_system/bin/
+          echo "✅ Binary copied to correct location"
 
       - name: Download Godot Engine
         run: |

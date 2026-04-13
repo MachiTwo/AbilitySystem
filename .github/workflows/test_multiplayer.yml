@@ -39,6 +39,18 @@ jobs:
           mkdir -p ./addons
           cp -r dist/standard/addons/* ./addons/
 
+          # Verify GDExtension is present
+          echo "=== Checking GDExtension in server ==="
+          if [ -f "./addons/ability_system/bin/libability_system.linux.editor.x86_64.so" ]; then
+            echo "✅ GDExtension found!"
+            ls -lh ./addons/ability_system/bin/
+          else
+            echo "❌ GDExtension NOT found!"
+            echo "Contents of ./addons:"
+            find ./addons -type f | head -20
+            exit 1
+          fi
+
           # Copy server binary
           cp -r dist/demo_server/* .
 
@@ -112,6 +124,18 @@ jobs:
           # Copy addons where the exported client expects them (relative to exe)
           mkdir -p ./addons
           cp -r dist/standard/addons/* ./addons/
+
+          # Verify GDExtension is present
+          echo "=== Checking GDExtension in client ==="
+          if [ -f "./addons/ability_system/bin/libability_system.linux.editor.x86_64.so" ]; then
+            echo "✅ GDExtension found!"
+            ls -lh ./addons/ability_system/bin/
+          else
+            echo "❌ GDExtension NOT found!"
+            echo "Contents of ./addons:"
+            find ./addons -type f | head -20
+            exit 1
+          fi
 
           # Copy client binary
           cp -r dist/demo_client/* .

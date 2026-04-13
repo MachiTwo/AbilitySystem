@@ -75,6 +75,17 @@ jobs:
           mkdir -p demo/addons/ability_system/bin
           find addons/ability_system/bin -name "libability_system.linux.*.so" -exec cp {} demo/addons/ability_system/bin/ \;
 
+          # Verify binaries are in place
+          echo "=== Verifying compiled binaries ==="
+          echo "In addons/ability_system/bin/:"
+          ls -lh addons/ability_system/bin/*.so 2>/dev/null || echo "No .so files found!"
+
+          echo -e "\nIn dist/standard/addons/ability_system/bin/:"
+          ls -lh dist/standard/addons/ability_system/bin/*.so 2>/dev/null || echo "No .so files found!"
+
+          echo -e "\nIn demo/addons/ability_system/bin/:"
+          ls -lh demo/addons/ability_system/bin/*.so 2>/dev/null || echo "No .so files found!"
+
       - name: Save SCons Cache
         uses: ./.github/actions/zyris-cache-save
         with:
