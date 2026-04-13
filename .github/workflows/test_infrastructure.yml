@@ -58,11 +58,22 @@ jobs:
         run: |
           scons target=editor platform=linux -j$(nproc)
 
+      - name: Build Template Release (for export)
+        shell: bash
+        env:
+          SCONS_CACHE: ${{ github.workspace }}/.scons_cache
+        run: |
+          scons target=template_release platform=linux arch=x86_64 -j$(nproc)
+
       - name: Prepare Artifacts
         shell: bash
         run: |
           mkdir -p dist/standard
           cp -r addons dist/standard/
+
+          # Copy compiled extension to demo for export
+          mkdir -p demo/addons/ability_system/bin
+          find . -name "libability_system.linux.template_release.x86_64.so" -exec cp {} demo/addons/ability_system/bin/ \;
 
       - name: Save SCons Cache
         uses: ./.github/actions/zyris-cache-save
@@ -171,6 +182,8 @@ jobs:
           platform="Linux/X11"
           runnable=true
           export_filter="all_resources"
+          include_filter=""
+          exclude_filter=""
           export_path="../../dist/demo_client/demo_linux_client"
           [preset.0.options]
           application/run/main_scene="res://ui/user_registration.tscn"
@@ -180,6 +193,8 @@ jobs:
           platform="Linux/X11"
           runnable=true
           export_filter="all_resources"
+          include_filter=""
+          exclude_filter=""
           export_path="../../dist/demo_server/demo_linux_server"
           [preset.1.options]
           application/run/main_scene="res://server/server.tscn"
