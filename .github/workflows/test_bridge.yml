@@ -116,10 +116,23 @@ jobs:
           cp -r addons test_project/
           echo 'config_version=5' > test_project/project.godot
 
+          # Verify GDExtension binary is accessible from test_project
+          if [ -f "test_project/addons/ability_system/bin/libability_system.linux.editor.x86_64.so" ]; then
+            echo "✅ GDExtension binary accessible"
+            file test_project/addons/ability_system/bin/libability_system.linux.editor.x86_64.so
+          else
+            echo "❌ GDExtension binary NOT accessible!"
+            ls -la test_project/addons/ability_system/bin/ || echo "Directory missing!"
+            exit 1
+          fi
+
           echo '
           extends SceneTree
           func _init():
               print("Firing AS+LimboAI Integrated Tests...")
+              if not ClassDB.class_exists("AbilitySystem"):
+                  print("ERROR: AbilitySystem class not found!")
+                  quit(1)
               var result = AbilitySystem.run_tests()
               quit(result)
           ' > test_project/run_tests.gd
